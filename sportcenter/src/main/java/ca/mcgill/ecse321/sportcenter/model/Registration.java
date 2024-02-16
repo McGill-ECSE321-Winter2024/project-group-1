@@ -1,28 +1,28 @@
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.33.0.6934.a386b0a58 modeling language!*/
-
 package ca.mcgill.ecse321.sportcenter.model;
 
-// line 51 "../../../../../../model.ump"
-// line 128 "../../../../../../model.ump"
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+
+@Entity
 public class Registration
 {
 
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
 
-  //Registration Attributes
+  @Id //regId will be PM
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private int regId;
 
-  //Registration Associations
+  @ManyToOne(optional = false) //there are many registration for a schedule activity
   private ScheduledActivity scheduledActivity;
+  @ManyToOne(optional = false) //there are many customer performing a registration
   private Customer customer;
+  @ManyToOne(optional = false) //there are many registration for a sport center
   private SportCenter sportCenter;
 
-  //------------------------
-  // CONSTRUCTOR
-  //------------------------
 
   public Registration(int aRegId, ScheduledActivity aScheduledActivity, Customer aCustomer, SportCenter aSportCenter)
   {
@@ -35,16 +35,8 @@ public class Registration
     {
       throw new RuntimeException("Unable to create Registration due to aCustomer. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
-    boolean didAddSportCenter = setSportCenter(aSportCenter);
-    if (!didAddSportCenter)
-    {
-      throw new RuntimeException("Unable to create registration due to sportCenter. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
-  }
 
-  //------------------------
-  // INTERFACE
-  //------------------------
+  }
 
   public boolean setRegId(int aRegId)
   {
@@ -95,37 +87,7 @@ public class Registration
     }
     return wasSet;
   }
-  /* Code from template association_SetOneToMany */
-  public boolean setSportCenter(SportCenter aSportCenter)
-  {
-    boolean wasSet = false;
-    if (aSportCenter == null)
-    {
-      return wasSet;
-    }
 
-    SportCenter existingSportCenter = sportCenter;
-    sportCenter = aSportCenter;
-    if (existingSportCenter != null && !existingSportCenter.equals(aSportCenter))
-    {
-      existingSportCenter.removeRegistration(this);
-    }
-    sportCenter.addRegistration(this);
-    wasSet = true;
-    return wasSet;
-  }
-
-  public void delete()
-  {
-    scheduledActivity = null;
-    customer = null;
-    SportCenter placeholderSportCenter = sportCenter;
-    this.sportCenter = null;
-    if(placeholderSportCenter != null)
-    {
-      placeholderSportCenter.removeRegistration(this);
-    }
-  }
 
 
   public String toString()
