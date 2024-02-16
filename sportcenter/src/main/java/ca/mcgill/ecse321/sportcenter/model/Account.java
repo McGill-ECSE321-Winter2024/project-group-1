@@ -1,31 +1,44 @@
 package ca.mcgill.ecse321.sportcenter.model;
 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+
 public abstract class Account
 {
-  private User user;
 
-  public Account(User aUser)
+  @Id
+  @GeneratedValue
+  private int accountId;
+
+  public Account(int aAccountId)
   {
-    if (!setUser(aUser))
-    {
-      throw new RuntimeException("Unable to create Account due to aUser. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
+    accountId = aAccountId;
   }
 
-  public User getUser()
-  {
-    return user;
-  }
-  
-  public boolean setUser(User aNewUser)
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setAccountId(int aAccountId)
   {
     boolean wasSet = false;
-    if (aNewUser != null)
-    {
-      user = aNewUser;
-      wasSet = true;
-    }
+    accountId = aAccountId;
+    wasSet = true;
     return wasSet;
   }
 
+  public int getAccountId()
+  {
+    return accountId;
+  }
+
+  public void delete()
+  {}
+
+
+  public String toString()
+  {
+    return super.toString() + "["+
+            "accountId" + ":" + getAccountId()+ "]";
+  }
 }

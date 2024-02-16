@@ -1,19 +1,32 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.33.0.6934.a386b0a58 modeling language!*/
+
 package ca.mcgill.ecse321.sportcenter.model;
 
+// line 51 "../../../../../../model.ump"
+// line 128 "../../../../../../model.ump"
 public class Registration
 {
 
-  private static int nextRegId = 1;
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
 
+  //Registration Attributes
   private int regId;
 
+  //Registration Associations
   private ScheduledActivity scheduledActivity;
   private Customer customer;
   private SportCenter sportCenter;
 
-  public Registration(ScheduledActivity aScheduledActivity, Customer aCustomer, SportCenter aSportCenter)
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Registration(int aRegId, ScheduledActivity aScheduledActivity, Customer aCustomer, SportCenter aSportCenter)
   {
-    regId = nextRegId++;
+    regId = aRegId;
     if (!setScheduledActivity(aScheduledActivity))
     {
       throw new RuntimeException("Unable to create Registration due to aScheduledActivity. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
@@ -29,26 +42,38 @@ public class Registration
     }
   }
 
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setRegId(int aRegId)
+  {
+    boolean wasSet = false;
+    regId = aRegId;
+    wasSet = true;
+    return wasSet;
+  }
+
   public int getRegId()
   {
     return regId;
   }
-
+  /* Code from template association_GetOne */
   public ScheduledActivity getScheduledActivity()
   {
     return scheduledActivity;
   }
-
+  /* Code from template association_GetOne */
   public Customer getCustomer()
   {
     return customer;
   }
-
+  /* Code from template association_GetOne */
   public SportCenter getSportCenter()
   {
     return sportCenter;
   }
-
+  /* Code from template association_SetUnidirectionalOne */
   public boolean setScheduledActivity(ScheduledActivity aNewScheduledActivity)
   {
     boolean wasSet = false;
@@ -59,7 +84,7 @@ public class Registration
     }
     return wasSet;
   }
-
+  /* Code from template association_SetUnidirectionalOne */
   public boolean setCustomer(Customer aNewCustomer)
   {
     boolean wasSet = false;
@@ -70,7 +95,7 @@ public class Registration
     }
     return wasSet;
   }
-
+  /* Code from template association_SetOneToMany */
   public boolean setSportCenter(SportCenter aSportCenter)
   {
     boolean wasSet = false;
@@ -89,6 +114,19 @@ public class Registration
     wasSet = true;
     return wasSet;
   }
+
+  public void delete()
+  {
+    scheduledActivity = null;
+    customer = null;
+    SportCenter placeholderSportCenter = sportCenter;
+    this.sportCenter = null;
+    if(placeholderSportCenter != null)
+    {
+      placeholderSportCenter.removeRegistration(this);
+    }
+  }
+
 
   public String toString()
   {

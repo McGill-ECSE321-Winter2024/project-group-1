@@ -1,32 +1,40 @@
 package ca.mcgill.ecse321.sportcenter.model;
 import java.util.*;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+
+@Entity
 public class User
 {
 
-  private static Map<String, User> usersByUsername = new HashMap<String, User>();
-  private static int nextUserId = 1;
 
+  private static Map<String, User> usersByUsername = new HashMap<String, User>();
+
+  //User Attributes
   private String username;
   private String password;
 
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO) 
   private int userId;
 
+  @ManyToOne(optional = false) //there are many users in a sport center
   private SportCenter sportCenter;
 
-  public User(String aUsername, String aPassword, SportCenter aSportCenter)
+
+  public User(String aUsername, String aPassword, int aUserId, SportCenter aSportCenter)
   {
     password = aPassword;
+    userId = aUserId;
     if (!setUsername(aUsername))
     {
       throw new RuntimeException("Cannot create due to duplicate username. See http://manual.umple.org?RE003ViolationofUniqueness.html");
     }
-    userId = nextUserId++;
-    boolean didAddSportCenter = setSportCenter(aSportCenter);
-    if (!didAddSportCenter)
-    {
-      throw new RuntimeException("Unable to create user due to sportCenter. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
+    
   }
 
   public boolean setUsername(String aUsername)
@@ -56,16 +64,24 @@ public class User
     return wasSet;
   }
 
+  public boolean setUserId(int aUserId)
+  {
+    boolean wasSet = false;
+    userId = aUserId;
+    wasSet = true;
+    return wasSet;
+  }
+
   public String getUsername()
   {
     return username;
   }
-
+  /* Code from template attribute_GetUnique */
   public static User getWithUsername(String aUsername)
   {
     return usersByUsername.get(aUsername);
   }
-
+  /* Code from template attribute_HasUnique */
   public static boolean hasWithUsername(String aUsername)
   {
     return getWithUsername(aUsername) != null;
@@ -80,37 +96,20 @@ public class User
   {
     return userId;
   }
-
+  /* Code from template association_GetOne */
   public SportCenter getSportCenter()
   {
     return sportCenter;
   }
 
-  public boolean setSportCenter(SportCenter aSportCenter)
-  {
-    boolean wasSet = false;
-    if (aSportCenter == null)
-    {
-      return wasSet;
-    }
 
-    SportCenter existingSportCenter = sportCenter;
-    sportCenter = aSportCenter;
-    if (existingSportCenter != null && !existingSportCenter.equals(aSportCenter))
-    {
-      existingSportCenter.removeUser(this);
-    }
-    sportCenter.addUser(this);
-    wasSet = true;
-    return wasSet;
-  }
 
   public String toString()
   {
     return super.toString() + "["+
-            "userId" + ":" + getUserId()+ "," +
             "username" + ":" + getUsername()+ "," +
-            "password" + ":" + getPassword()+ "]" + System.getProperties().getProperty("line.separator") +
+            "password" + ":" + getPassword()+ "," +
+            "userId" + ":" + getUserId()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "sportCenter = "+(getSportCenter()!=null?Integer.toHexString(System.identityHashCode(getSportCenter())):"null");
   }
 }

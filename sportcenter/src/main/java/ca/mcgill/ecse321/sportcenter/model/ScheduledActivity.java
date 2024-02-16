@@ -1,20 +1,37 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.33.0.6934.a386b0a58 modeling language!*/
+
 package ca.mcgill.ecse321.sportcenter.model;
 import java.sql.Date;
 import java.sql.Time;
 
+// line 59 "../../../../../../model.ump"
+// line 137 "../../../../../../model.ump"
 public class ScheduledActivity
 {
 
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //ScheduledActivity Attributes
+  private int scheduledActivityId;
   private Date date;
   private Time startTime;
   private Time endTime;
 
+  //ScheduledActivity Associations
   private SportCenter sportCenter;
   private Instructor accounts;
   private Activity activity;
 
-  public ScheduledActivity(Date aDate, Time aStartTime, Time aEndTime, SportCenter aSportCenter, Instructor aAccounts, Activity aActivity)
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public ScheduledActivity(int aScheduledActivityId, Date aDate, Time aStartTime, Time aEndTime, SportCenter aSportCenter, Instructor aAccounts, Activity aActivity)
   {
+    scheduledActivityId = aScheduledActivityId;
     date = aDate;
     startTime = aStartTime;
     endTime = aEndTime;
@@ -31,6 +48,18 @@ public class ScheduledActivity
     {
       throw new RuntimeException("Unable to create ScheduledActivity due to aActivity. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setScheduledActivityId(int aScheduledActivityId)
+  {
+    boolean wasSet = false;
+    scheduledActivityId = aScheduledActivityId;
+    wasSet = true;
+    return wasSet;
   }
 
   public boolean setDate(Date aDate)
@@ -57,6 +86,11 @@ public class ScheduledActivity
     return wasSet;
   }
 
+  public int getScheduledActivityId()
+  {
+    return scheduledActivityId;
+  }
+
   public Date getDate()
   {
     return date;
@@ -71,22 +105,22 @@ public class ScheduledActivity
   {
     return endTime;
   }
-
+  /* Code from template association_GetOne */
   public SportCenter getSportCenter()
   {
     return sportCenter;
   }
-
+  /* Code from template association_GetOne */
   public Instructor getAccounts()
   {
     return accounts;
   }
-
+  /* Code from template association_GetOne */
   public Activity getActivity()
   {
     return activity;
   }
-
+  /* Code from template association_SetOneToMany */
   public boolean setSportCenter(SportCenter aSportCenter)
   {
     boolean wasSet = false;
@@ -105,7 +139,7 @@ public class ScheduledActivity
     wasSet = true;
     return wasSet;
   }
-
+  /* Code from template association_SetUnidirectionalOne */
   public boolean setAccounts(Instructor aNewAccounts)
   {
     boolean wasSet = false;
@@ -116,7 +150,7 @@ public class ScheduledActivity
     }
     return wasSet;
   }
-
+  /* Code from template association_SetUnidirectionalOne */
   public boolean setActivity(Activity aNewActivity)
   {
     boolean wasSet = false;
@@ -128,9 +162,23 @@ public class ScheduledActivity
     return wasSet;
   }
 
+  public void delete()
+  {
+    SportCenter placeholderSportCenter = sportCenter;
+    this.sportCenter = null;
+    if(placeholderSportCenter != null)
+    {
+      placeholderSportCenter.removeScheduledActivity(this);
+    }
+    accounts = null;
+    activity = null;
+  }
+
+
   public String toString()
   {
-    return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
+    return super.toString() + "["+
+            "scheduledActivityId" + ":" + getScheduledActivityId()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "date" + "=" + (getDate() != null ? !getDate().equals(this)  ? getDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "startTime" + "=" + (getStartTime() != null ? !getStartTime().equals(this)  ? getStartTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "endTime" + "=" + (getEndTime() != null ? !getEndTime().equals(this)  ? getEndTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +

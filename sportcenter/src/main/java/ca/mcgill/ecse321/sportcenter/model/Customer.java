@@ -2,23 +2,47 @@ package ca.mcgill.ecse321.sportcenter.model;
 
 public class Customer extends Account
 {
-  private SportCenter sportCenter;
 
-  public Customer(User aUser, SportCenter aSportCenter)
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Customer Associations
+  private SportCenter sportCenter;
+  private User user;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Customer(int aAccountId, SportCenter aSportCenter, User aUser)
   {
-    super(aUser);
+    super(aAccountId);
     boolean didAddSportCenter = setSportCenter(aSportCenter);
     if (!didAddSportCenter)
     {
       throw new RuntimeException("Unable to create customer due to sportCenter. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
+    if (!setUser(aUser))
+    {
+      throw new RuntimeException("Unable to create Customer due to aUser. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
   }
 
+  //------------------------
+  // INTERFACE
+  //------------------------
+  /* Code from template association_GetOne */
   public SportCenter getSportCenter()
   {
     return sportCenter;
   }
-
+  /* Code from template association_GetOne */
+  public User getUser()
+  {
+    return user;
+  }
+  /* Code from template association_SetOneToMany */
   public boolean setSportCenter(SportCenter aSportCenter)
   {
     boolean wasSet = false;
@@ -36,6 +60,29 @@ public class Customer extends Account
     sportCenter.addCustomer(this);
     wasSet = true;
     return wasSet;
+  }
+  /* Code from template association_SetUnidirectionalOne */
+  public boolean setUser(User aNewUser)
+  {
+    boolean wasSet = false;
+    if (aNewUser != null)
+    {
+      user = aNewUser;
+      wasSet = true;
+    }
+    return wasSet;
+  }
+
+  public void delete()
+  {
+    SportCenter placeholderSportCenter = sportCenter;
+    this.sportCenter = null;
+    if(placeholderSportCenter != null)
+    {
+      placeholderSportCenter.removeCustomer(this);
+    }
+    user = null;
+    super.delete();
   }
 
 }

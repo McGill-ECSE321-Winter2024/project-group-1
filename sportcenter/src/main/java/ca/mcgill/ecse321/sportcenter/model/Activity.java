@@ -1,15 +1,30 @@
+
 package ca.mcgill.ecse321.sportcenter.model;
 
 public class Activity
 {
 
+  //------------------------
+  // ENUMERATIONS
+  //------------------------
+
   public enum ClassCategory { Strength, Cardio, Stretch }
 
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Activity Attributes
   private ClassCategory subcategory;
   private String name;
   private boolean isApproved;
 
+  //Activity Associations
   private SportCenter sportCenter;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
 
   public Activity(ClassCategory aSubcategory, String aName, boolean aIsApproved, SportCenter aSportCenter)
   {
@@ -22,6 +37,10 @@ public class Activity
       throw new RuntimeException("Unable to create activity due to sportCenter. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
   }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
 
   public boolean setSubcategory(ClassCategory aSubcategory)
   {
@@ -61,12 +80,12 @@ public class Activity
   {
     return isApproved;
   }
-
+  /* Code from template association_GetOne */
   public SportCenter getSportCenter()
   {
     return sportCenter;
   }
-
+  /* Code from template association_SetOneToMany */
   public boolean setSportCenter(SportCenter aSportCenter)
   {
     boolean wasSet = false;
@@ -85,6 +104,17 @@ public class Activity
     wasSet = true;
     return wasSet;
   }
+
+  public void delete()
+  {
+    SportCenter placeholderSportCenter = sportCenter;
+    this.sportCenter = null;
+    if(placeholderSportCenter != null)
+    {
+      placeholderSportCenter.removeActivity(this);
+    }
+  }
+
 
   public String toString()
   {
