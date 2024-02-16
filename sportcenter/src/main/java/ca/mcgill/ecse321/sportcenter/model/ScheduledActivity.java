@@ -1,33 +1,30 @@
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.33.0.6934.a386b0a58 modeling language!*/
-
 package ca.mcgill.ecse321.sportcenter.model;
 import java.sql.Date;
 import java.sql.Time;
 
-// line 59 "../../../../../../model.ump"
-// line 137 "../../../../../../model.ump"
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+
+@Entity
 public class ScheduledActivity
 {
 
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //ScheduledActivity Attributes
+  @Id //scheduledActivityId will be PM
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private int scheduledActivityId;
   private Date date;
   private Time startTime;
   private Time endTime;
 
-  //ScheduledActivity Associations
+  @ManyToOne(optional = false) //there are many scheduled activities for a sport center
   private SportCenter sportCenter;
+  @ManyToOne(optional = false) //an instructor can teach many scheduled activities
   private Instructor accounts;
+  @ManyToOne(optional = false) //a scheduled activity consists of one activity, yet activities can have many Sched. activities
   private Activity activity;
-
-  //------------------------
-  // CONSTRUCTOR
-  //------------------------
 
   public ScheduledActivity(int aScheduledActivityId, Date aDate, Time aStartTime, Time aEndTime, SportCenter aSportCenter, Instructor aAccounts, Activity aActivity)
   {
@@ -35,11 +32,7 @@ public class ScheduledActivity
     date = aDate;
     startTime = aStartTime;
     endTime = aEndTime;
-    boolean didAddSportCenter = setSportCenter(aSportCenter);
-    if (!didAddSportCenter)
-    {
-      throw new RuntimeException("Unable to create scheduledActivity due to sportCenter. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
+
     if (!setAccounts(aAccounts))
     {
       throw new RuntimeException("Unable to create ScheduledActivity due to aAccounts. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
@@ -49,10 +42,6 @@ public class ScheduledActivity
       throw new RuntimeException("Unable to create ScheduledActivity due to aActivity. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
   }
-
-  //------------------------
-  // INTERFACE
-  //------------------------
 
   public boolean setScheduledActivityId(int aScheduledActivityId)
   {
@@ -120,25 +109,7 @@ public class ScheduledActivity
   {
     return activity;
   }
-  /* Code from template association_SetOneToMany */
-  public boolean setSportCenter(SportCenter aSportCenter)
-  {
-    boolean wasSet = false;
-    if (aSportCenter == null)
-    {
-      return wasSet;
-    }
 
-    SportCenter existingSportCenter = sportCenter;
-    sportCenter = aSportCenter;
-    if (existingSportCenter != null && !existingSportCenter.equals(aSportCenter))
-    {
-      existingSportCenter.removeScheduledActivity(this);
-    }
-    sportCenter.addScheduledActivity(this);
-    wasSet = true;
-    return wasSet;
-  }
   /* Code from template association_SetUnidirectionalOne */
   public boolean setAccounts(Instructor aNewAccounts)
   {
@@ -161,19 +132,6 @@ public class ScheduledActivity
     }
     return wasSet;
   }
-
-  public void delete()
-  {
-    SportCenter placeholderSportCenter = sportCenter;
-    this.sportCenter = null;
-    if(placeholderSportCenter != null)
-    {
-      placeholderSportCenter.removeScheduledActivity(this);
-    }
-    accounts = null;
-    activity = null;
-  }
-
 
   public String toString()
   {

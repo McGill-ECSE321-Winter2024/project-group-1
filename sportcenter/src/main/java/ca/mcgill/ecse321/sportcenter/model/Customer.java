@@ -1,37 +1,32 @@
 package ca.mcgill.ecse321.sportcenter.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+
+@Entity
 public class Customer extends Account
 {
 
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //Customer Associations
+  @ManyToOne(optional = false) //many customers in a sport center
   private SportCenter sportCenter;
+  @OneToOne(optional = true) //a user can at most have 1 customer account
+  @JoinColumn(name = "user_id") //user_id is a FK
   private User user;
-
-  //------------------------
-  // CONSTRUCTOR
-  //------------------------
 
   public Customer(int aAccountId, SportCenter aSportCenter, User aUser)
   {
     super(aAccountId);
-    boolean didAddSportCenter = setSportCenter(aSportCenter);
-    if (!didAddSportCenter)
-    {
-      throw new RuntimeException("Unable to create customer due to sportCenter. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
+    
+
     if (!setUser(aUser))
     {
       throw new RuntimeException("Unable to create Customer due to aUser. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
   }
 
-  //------------------------
-  // INTERFACE
-  //------------------------
+
   /* Code from template association_GetOne */
   public SportCenter getSportCenter()
   {
@@ -42,25 +37,7 @@ public class Customer extends Account
   {
     return user;
   }
-  /* Code from template association_SetOneToMany */
-  public boolean setSportCenter(SportCenter aSportCenter)
-  {
-    boolean wasSet = false;
-    if (aSportCenter == null)
-    {
-      return wasSet;
-    }
 
-    SportCenter existingSportCenter = sportCenter;
-    sportCenter = aSportCenter;
-    if (existingSportCenter != null && !existingSportCenter.equals(aSportCenter))
-    {
-      existingSportCenter.removeCustomer(this);
-    }
-    sportCenter.addCustomer(this);
-    wasSet = true;
-    return wasSet;
-  }
   /* Code from template association_SetUnidirectionalOne */
   public boolean setUser(User aNewUser)
   {
@@ -73,16 +50,5 @@ public class Customer extends Account
     return wasSet;
   }
 
-  public void delete()
-  {
-    SportCenter placeholderSportCenter = sportCenter;
-    this.sportCenter = null;
-    if(placeholderSportCenter != null)
-    {
-      placeholderSportCenter.removeCustomer(this);
-    }
-    user = null;
-    super.delete();
-  }
 
 }

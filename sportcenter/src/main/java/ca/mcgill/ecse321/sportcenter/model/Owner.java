@@ -1,19 +1,17 @@
 package ca.mcgill.ecse321.sportcenter.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToOne;
+
+@Entity
 public class Owner extends Account
 {
 
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //Owner Associations
+  @OneToOne(optional = false) //sport center can only have one owner
   private SportCenter sportCenter;
+  @OneToOne(optional = true) //a user can at most have 1 account
   private User user;
 
-  //------------------------
-  // CONSTRUCTOR
-  //------------------------
 
   public Owner(int aAccountId, SportCenter aSportCenter, User aUser)
   {
@@ -40,10 +38,6 @@ public class Owner extends Account
     }
   }
 
-  //------------------------
-  // INTERFACE
-  //------------------------
-  /* Code from template association_GetOne */
   public SportCenter getSportCenter()
   {
     return sportCenter;
@@ -65,16 +59,5 @@ public class Owner extends Account
     return wasSet;
   }
 
-  public void delete()
-  {
-    SportCenter existingSportCenter = sportCenter;
-    sportCenter = null;
-    if (existingSportCenter != null)
-    {
-      existingSportCenter.delete();
-    }
-    user = null;
-    super.delete();
-  }
 
 }

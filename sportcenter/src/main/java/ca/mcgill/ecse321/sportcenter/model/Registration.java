@@ -1,10 +1,12 @@
 package ca.mcgill.ecse321.sportcenter.model;
 
+
+//import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
@@ -13,13 +15,18 @@ public class Registration
 
 
   @Id //regId will be PM
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.AUTO) 
   private int regId;
 
+
   @ManyToOne(optional = false) //there are many registration for a schedule activity
+  @JoinColumn(name = "schedule_activity_id") //schedule_activity_id is a FK
   private ScheduledActivity scheduledActivity;
+
   @ManyToOne(optional = false) //there are many customer performing a registration
+  @JoinColumn(name = "customer_id") //customer_id is a FK
   private Customer customer;
+
   @ManyToOne(optional = false) //there are many registration for a sport center
   private SportCenter sportCenter;
 

@@ -1,30 +1,25 @@
 package ca.mcgill.ecse321.sportcenter.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+
+@Entity
 public class Instructor extends Account
 {
 
-  //------------------------
-  // ENUMERATIONS
-  //------------------------
-
   public enum InstructorStatus { Active, Inactive, Fired, Suspended }
 
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
 
-  //Instructor Attributes
   private InstructorStatus status;
   private String description;
   private String profilePicURL;
 
-  //Instructor Associations
+  @ManyToOne(optional = false) //many instructors in a sport center
   private SportCenter sportCenter;
+  @OneToOne(optional = true) //a user can at most have 1 instructor account
   private User user;
 
-  //------------------------
-  // CONSTRUCTOR
-  //------------------------
 
   public Instructor(int aAccountId, InstructorStatus aStatus, String aDescription, String aProfilePicURL, SportCenter aSportCenter, User aUser)
   {
@@ -32,20 +27,13 @@ public class Instructor extends Account
     status = aStatus;
     description = aDescription;
     profilePicURL = aProfilePicURL;
-    boolean didAddSportCenter = setSportCenter(aSportCenter);
-    if (!didAddSportCenter)
-    {
-      throw new RuntimeException("Unable to create instructor due to sportCenter. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
+    
+ 
     if (!setUser(aUser))
     {
       throw new RuntimeException("Unable to create Instructor due to aUser. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
   }
-
-  //------------------------
-  // INTERFACE
-  //------------------------
 
   public boolean setStatus(InstructorStatus aStatus)
   {
@@ -95,25 +83,7 @@ public class Instructor extends Account
   {
     return user;
   }
-  /* Code from template association_SetOneToMany */
-  public boolean setSportCenter(SportCenter aSportCenter)
-  {
-    boolean wasSet = false;
-    if (aSportCenter == null)
-    {
-      return wasSet;
-    }
-
-    SportCenter existingSportCenter = sportCenter;
-    sportCenter = aSportCenter;
-    if (existingSportCenter != null && !existingSportCenter.equals(aSportCenter))
-    {
-      existingSportCenter.removeInstructor(this);
-    }
-    sportCenter.addInstructor(this);
-    wasSet = true;
-    return wasSet;
-  }
+ 
   /* Code from template association_SetUnidirectionalOne */
   public boolean setUser(User aNewUser)
   {
@@ -124,18 +94,6 @@ public class Instructor extends Account
       wasSet = true;
     }
     return wasSet;
-  }
-
-  public void delete()
-  {
-    SportCenter placeholderSportCenter = sportCenter;
-    this.sportCenter = null;
-    if(placeholderSportCenter != null)
-    {
-      placeholderSportCenter.removeInstructor(this);
-    }
-    user = null;
-    super.delete();
   }
 
 
