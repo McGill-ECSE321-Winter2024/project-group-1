@@ -24,6 +24,7 @@ public class TestUserPersistence {
     public void testPersistAndLoadUser() {
         
         User user = new User();
+        int accountId = 123;
         String username = "John";
         String password = "password";
         
@@ -32,7 +33,7 @@ public class TestUserPersistence {
         userRepository.save(user);
 
         user = null;
-        user = userRepository.findUserByUsername(username);//could be by id
+        user = userRepository.findAccount(accountId);
 
         assertNotNull(user);
         assertEquals(username, user.getUsername());

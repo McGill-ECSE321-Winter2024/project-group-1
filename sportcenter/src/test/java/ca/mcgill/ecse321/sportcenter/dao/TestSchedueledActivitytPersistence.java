@@ -1,8 +1,12 @@
 package ca.mcgill.ecse321.sportcenter.dao;
+import java.sql.Date;
+import java.sql.Time;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.description;
 
+//import org.checkerframework.checker.units.qual.Time;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +28,13 @@ public class TestSchedueledActivitytPersistence {
     public void testPersistAndLoadScheduledActivity() {
         
         ScheduledActivity scheduledActivity = new ScheduledActivity();
-        String name = "Yoga";
-        String description = "Practice yoga with a professional instructor.";
-        String date = "2021-11-11";
-        String startTime = "12:00";
-        String endTime = "13:00";
+        int schedueledActivityId = 123;
+        Date date = new Date(2021, 11, 11);
+        Time startTime = new Time(10, 30, 00);
+        Time endTime = new Time(11, 30, 00);
+
         
-        scheduledActivity.setName(name);
-        scheduledActivity.setDescription(description);
+        scheduledActivity.setScheduledActivityId(schedueledActivityId);
         scheduledActivity.setDate(date);
         scheduledActivity.setStartTime(startTime);
         scheduledActivity.setEndTime(endTime);
@@ -39,11 +42,10 @@ public class TestSchedueledActivitytPersistence {
         scheduledActivityRepository.save(scheduledActivity);
 
         scheduledActivity = null;
-        scheduledActivity = scheduledActivityRepository.findScheduledActivityByName(name);
+        scheduledActivity = scheduledActivityRepository.findAccount(schedueledActivityId);
 
         assertNotNull(scheduledActivity);
-        assertEquals(name, scheduledActivity.getName());
-        assertEquals(description, scheduledActivity.getDescription());
+        assertEquals(schedueledActivityId, scheduledActivity.getScheduledActivityId());
         assertEquals(date, scheduledActivity.getDate());
         assertEquals(startTime, scheduledActivity.getStartTime()); 
         assertEquals(endTime, scheduledActivity.getEndTime());

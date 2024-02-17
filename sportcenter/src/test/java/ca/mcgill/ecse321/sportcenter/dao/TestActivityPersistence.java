@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.sportcenter.model.Activity;
+import ca.mcgill.ecse321.sportcenter.model.SportCenter;
+import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
 
 @SpringBootTest
 public class TestActivityPersistence {
@@ -24,20 +26,24 @@ public class TestActivityPersistence {
     public void testPersistAndLoadActivity() {
 
         Activity activity = new Activity();
+        ClassCategory subcategory = ClassCategory.Strength;
         String name = "Yoga";
-        String description = "Practice yoga with a professional instructor.";
+        //String description = "Practice yoga with a professional instructor.";
+        boolean isApproved = true;
 
 
         activity.setName(name);
-        activity.setDescription(description);
+        //activity.setDescription(description);
+        activity.setSubcategory(subcategory);
+        activity.setIsApproved(isApproved);
 
         activityRepository.save(activity);
 
         activity = null;
-        activity = activityRepository.findActivityByName(name);//could be by id
+        activity = activityRepository.findAccount(name);//could be by id
 
         assertNotNull(activity);
         assertEquals(name, activity.getName());
-        assertEquals(description, activity.getDescription());s
+        //assertEquals(description, activity.getDescription());
     }
 }

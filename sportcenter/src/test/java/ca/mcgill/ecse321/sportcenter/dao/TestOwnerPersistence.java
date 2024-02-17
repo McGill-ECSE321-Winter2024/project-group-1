@@ -24,21 +24,22 @@ public class TestOwnerPersistence {
     public void testPersistAndLoadOwner() {
         
         Owner owner = new Owner();
-        String name = "John";
-        String email = "john@gmail.com";
+        String username = "John";
         String password = "password";
+        int accountId = 123;
+
         
-        owner.setName(name);
-        owner.setEmail(email);
+        owner.setUsername(username);
         owner.setPassword(password);
+        owner.setAccountId(accountId);
         ownerRepository.save(owner);
 
         owner = null;
-        owner = ownerRepository.findownerByEmail(email);//could be by id
+        owner = ownerRepository.findAccount(accountId);//could be by id
 
         assertNotNull(owner);
-        assertEquals(name, owner.getName());
-        assertEquals(email, owner.getEmail());
+        assertEquals(name, owner.getUsername());
+        assertEquals(accountId, owner.getAccountId()); 
         assertEquals(password, owner.getPassword());
     }
 }

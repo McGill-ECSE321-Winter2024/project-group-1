@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.sportcenter.model.Customer;
+//import ca.mcgill.ecse321.sportcenter.model.User;
+
 
 @SpringBootTest
 public class TestCustomerPersistence {
@@ -25,22 +27,23 @@ public class TestCustomerPersistence {
     public void testPersistAndLoadCustomer() {
         
         Customer customer = new Customer();
-        String name = "John";
-        String email = "john@gmail.com";
+        int accountId = 123;
+        String username = "John";
         String password = "password";
 
+
         
-        customer.setName(name);
-        customer.setEmail(email);
+        customer.setAccountId(accountId);
+        customer.setUsername(username);
         customer.setPassword(password);
         customerRepository.save(customer);
 
         customer = null;
-        customer = customerRepository.findCustomerByEmail(email);//could be by id
+        Customer foundCustomer = customerRepository.findAccount(accountId);
 
-        assertNotNull(customer);
-        assertEquals(name, customer.getName());
-        assertEquals(email, customer.getEmail());
+        assertNotNull(foundCustomer);
+        assertEquals(accountId, customer.getAccountId());
+        assertEquals(username, customer.getUsername());
         assertEquals(password, customer.getPassword());
     }
 }

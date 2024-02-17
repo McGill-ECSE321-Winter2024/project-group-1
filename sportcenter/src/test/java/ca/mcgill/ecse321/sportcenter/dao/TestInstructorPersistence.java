@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.sportcenter.model.Instructor;
+import ca.mcgill.ecse321.sportcenter.model.Instructor.InstructorStatus;
 
 @SpringBootTest
 public class TestInstructorPersistence {
@@ -24,21 +25,24 @@ public class TestInstructorPersistence {
     public void testPersistAndLoadInstructor() {
         
         Instructor instructor = new Instructor();
-        String name = "John";
-        String email = "john@gmail.com";
+        int accountId = 123;
+        String username = "John";
         String password = "password";
+        InstructorStatus status = InstructorStatus.Active;
         
-        instructor.setName(name);
-        instructor.setEmail(email);
+        instructor.setAccountId(accountId);
+        instructor.setUsername(username);
         instructor.setPassword(password);
+        instructor.setStatus(status);
         instructorRepository.save(instructor);
 
         instructor = null;
-        instructor = instructorRepository.findInstructorByEmail(email);//could be by id
+        instructor = instructorRepository.findAccount(accountId);
 
         assertNotNull(instructor);
-        assertEquals(name, instructor.getName());
-        assertEquals(email, instructor.getEmail());
+        assertEquals(username, instructor.getUsername());
+        assertEquals(accountId, instructor.getAccountId());
         assertEquals(password, instructor.getPassword());
+        assertEquals(status, instructor.getStatus());
     }
 }

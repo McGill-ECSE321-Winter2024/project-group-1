@@ -24,21 +24,15 @@ public class TestRegistrationPersistence {
     public void testPersistAndLoadRegistration() {
         
         Registration registration = new Registration();
-        String name = "John";
-        String email = "john@gmail.com";
-        String password = "password";
-
-        registration.setName(name);
-        registration.setEmail(email);
-        registration.setPassword(password);
+        int regID = 123;
+        
+        registration.setRegId(regID);
         registrationRepository.save(registration);
 
         registration = null;
-        registration = registrationRepository.findRegistrationByEmail(email);//could be by id
+        registration = registrationRepository.findAccount(regID);//could be by id
 
         assertNotNull(registration);
-        assertEquals(name, registration.getName());
-        assertEquals(email, registration.getEmail());
-        assertEquals(password, registration.getPassword());
+        assertEquals(regID, registration.getRegId());
     }
 }
