@@ -28,7 +28,7 @@ public class TestActivityPersistence {
         Activity activity = new Activity();
         ClassCategory subcategory = ClassCategory.Strength;
         String name = "Yoga";
-        //String description = "Practice yoga with a professional instructor.";
+        String description = "Practice yoga with a professional instructor.";
         boolean isApproved = true;
 
 
@@ -44,6 +44,6 @@ public class TestActivityPersistence {
 
         assertNotNull(activity);
         assertEquals(name, activity.getName());
-        //assertEquals(description, activity.getDescription());
+        assertEquals(description, activity.getDescription());
     }
 }
