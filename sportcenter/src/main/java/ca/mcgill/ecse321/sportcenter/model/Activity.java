@@ -54,6 +54,13 @@ public class Activity
     wasSet = true;
     return wasSet;
   }
+  public boolean setDescription(String aDescription)
+  {
+    boolean wasSet = false;
+    description = aDescription;
+    wasSet = true;
+    return wasSet;
+  }
 
   public boolean setIsApproved(boolean aIsApproved)
   {

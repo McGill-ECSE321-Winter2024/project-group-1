@@ -32,7 +32,7 @@ public class TestActivityPersistence {
 
 
         activity.setName(name);
-        //activity.setDescription(description);
+        activity.setDescription(description);
         activity.setSubcategory(subcategory);
         activity.setIsApproved(isApproved);
 
