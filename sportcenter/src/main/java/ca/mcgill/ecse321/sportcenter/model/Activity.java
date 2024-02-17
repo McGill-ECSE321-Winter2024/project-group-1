@@ -18,15 +18,24 @@ public class Activity
   @Id //name is the PM
   private String name;
   private boolean isApproved;
+  private String description;
 
   @ManyToOne(optional = false) //many activities in SportCenter
   private SportCenter sportCenter;
 
-  public Activity(ClassCategory aSubcategory, String aName, boolean aIsApproved, SportCenter aSportCenter)
+
+  //CONSTRUCTORS
+
+  public Activity() {
+    
+  }
+
+  public Activity(ClassCategory aSubcategory, String aName, boolean aIsApproved, String aDescription, SportCenter aSportCenter)
   {
     subcategory = aSubcategory;
     name = aName;
     isApproved = aIsApproved;
+    description = aDescription;
   
   }
 
@@ -72,6 +81,11 @@ public class Activity
   public SportCenter getSportCenter()
   {
     return sportCenter;
+  }
+
+  public String getDescription() {
+
+    return description;
   }
 
 

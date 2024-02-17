@@ -13,9 +13,15 @@ public abstract class Account
   @GeneratedValue(strategy = GenerationType.AUTO) 
   private int accountId;
 
+  //CONSTRUCTOR
+
   public Account(int aAccountId)
   {
     accountId = aAccountId;
+  }
+
+  public Account() {
+    
   }
 
   public boolean setAccountId(int aAccountId)

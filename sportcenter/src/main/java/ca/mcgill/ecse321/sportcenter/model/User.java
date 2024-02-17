@@ -25,6 +25,11 @@ public class User
   @ManyToOne(optional = false) //there are many users in a sport center
   private SportCenter sportCenter;
 
+  //CONSTRUCTORS
+
+  public User() {
+
+  }
 
   public User(String aUsername, String aPassword, int aUserId, SportCenter aSportCenter)
   {

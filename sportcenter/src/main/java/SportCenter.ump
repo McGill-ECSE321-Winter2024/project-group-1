@@ -67,6 +67,7 @@ class Activity{
   enum ClassCategory {strength, cardio, stretch}
   ClassCategory subcategory;
   name;
+  description;
   boolean isApproved;
   1 <- * ScheduledActivity scheduledActivities;
 }

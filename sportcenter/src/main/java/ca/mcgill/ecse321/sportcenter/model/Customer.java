@@ -15,6 +15,13 @@ public class Customer extends Account
   @JoinColumn(name = "user_id") //user_id is a FK
   private User user;
 
+  
+  //CONSTRUCTORS
+
+  public Customer() {
+    
+  }
+
   public Customer(int aAccountId, SportCenter aSportCenter, User aUser)
   {
     super(aAccountId);

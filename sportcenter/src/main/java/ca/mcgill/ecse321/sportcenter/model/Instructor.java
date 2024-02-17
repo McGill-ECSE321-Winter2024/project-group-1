@@ -1,6 +1,7 @@
 package ca.mcgill.ecse321.sportcenter.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 
@@ -18,8 +19,15 @@ public class Instructor extends Account
   @ManyToOne(optional = false) //many instructors in a sport center
   private SportCenter sportCenter;
   @OneToOne(optional = true) //a user can at most have 1 instructor account
+  @JoinColumn(name = "user_id") //user_id is a FK
   private User user;
 
+  
+  //CONSTRUCTORS
+  
+  public Instructor() {
+
+  }
 
   public Instructor(int aAccountId, InstructorStatus aStatus, String aDescription, String aProfilePicURL, SportCenter aSportCenter, User aUser)
   {

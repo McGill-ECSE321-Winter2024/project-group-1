@@ -1,6 +1,7 @@
 package ca.mcgill.ecse321.sportcenter.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 
 @Entity
@@ -10,8 +11,15 @@ public class Owner extends Account
   @OneToOne(optional = false) //sport center can only have one owner
   private SportCenter sportCenter;
   @OneToOne(optional = true) //a user can at most have 1 account
+  @JoinColumn(name = "user_id") //user_id is a FK
   private User user;
 
+  
+  //CONSTRUCTORS
+
+  public Owner() {
+    
+  }
 
   public Owner(int aAccountId, SportCenter aSportCenter, User aUser)
   {

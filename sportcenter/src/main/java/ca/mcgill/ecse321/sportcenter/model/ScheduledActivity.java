@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
@@ -24,7 +25,15 @@ public class ScheduledActivity
   @ManyToOne(optional = false) //an instructor can teach many scheduled activities
   private Instructor accounts;
   @ManyToOne(optional = false) //a scheduled activity consists of one activity, yet activities can have many Sched. activities
+  @JoinColumn(name = "activity_name") //activity is a FK
   private Activity activity;
+
+  
+  //CONSTRUCTORS
+
+  public ScheduledActivity() {
+    
+  }
 
   public ScheduledActivity(int aScheduledActivityId, Date aDate, Time aStartTime, Time aEndTime, SportCenter aSportCenter, Instructor aAccounts, Activity aActivity)
   {

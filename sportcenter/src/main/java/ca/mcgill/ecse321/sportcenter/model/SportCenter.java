@@ -29,6 +29,12 @@ public class SportCenter
   @OneToMany
   private List<Activity> activities;
 
+    //CONSTRUCTORS
+
+  public SportCenter() {
+
+  }
+
   public SportCenter(Owner aOwner)
   {
     users = new ArrayList<User>();

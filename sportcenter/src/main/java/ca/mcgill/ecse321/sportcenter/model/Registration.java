@@ -30,6 +30,12 @@ public class Registration
   @ManyToOne(optional = false) //there are many registration for a sport center
   private SportCenter sportCenter;
 
+  
+  //CONSTRUCTORS
+
+  public Registration() {
+    
+  }
 
   public Registration(int aRegId, ScheduledActivity aScheduledActivity, Customer aCustomer, SportCenter aSportCenter)
   {
