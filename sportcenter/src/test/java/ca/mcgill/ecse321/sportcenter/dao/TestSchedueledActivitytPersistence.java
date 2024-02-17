@@ -13,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity;
+import ca.mcgill.ecse321.sportcenter.model.Activity;
+import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
+
 
 @SpringBootTest
 public class TestSchedueledActivitytPersistence {
@@ -28,16 +31,26 @@ public class TestSchedueledActivitytPersistence {
     public void testPersistAndLoadScheduledActivity() {
         
         ScheduledActivity scheduledActivity = new ScheduledActivity();
+        Activity activity = new Activity();
         int schedueledActivityId = 123;
         LocalDate date = LocalDate.of(2021, 11, 11);
         LocalTime startTime = LocalTime.of(10, 30, 00);
         LocalTime endTime = LocalTime.of(11, 30, 00);
+        ClassCategory subcategory = ClassCategory.Strength;
+        String name = "Yoga";
+        String description = "Practice yoga with a professional instructor.";
+        boolean isApproved = true;
+
 
         
         scheduledActivity.setScheduledActivityId(schedueledActivityId);
         scheduledActivity.setDate(date);
         scheduledActivity.setStartTime(startTime);
         scheduledActivity.setEndTime(endTime);
+        activity.setName(name);
+        activity.setDescription(description);
+        activity.setSubcategory(subcategory);
+        activity.setIsApproved(isApproved);
         
         scheduledActivityRepository.save(scheduledActivity);
 
@@ -49,6 +62,10 @@ public class TestSchedueledActivitytPersistence {
         assertEquals(date, scheduledActivity.getDate());
         assertEquals(startTime, scheduledActivity.getStartTime()); 
         assertEquals(endTime, scheduledActivity.getEndTime());
+        assertEquals(name, scheduledActivity.getActivity().getName());
+        assertEquals(description, scheduledActivity.getActivity().getDescription());
+        assertEquals(subcategory, scheduledActivity.getActivity().getSubcategory());
+        assertEquals(isApproved, scheduledActivity.getActivity().getIsApproved());
     }
 }
 
