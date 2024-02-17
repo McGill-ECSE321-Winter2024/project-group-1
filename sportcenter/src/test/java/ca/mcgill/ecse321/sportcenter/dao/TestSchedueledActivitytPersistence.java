@@ -6,9 +6,7 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.description;
 
-//import org.checkerframework.checker.units.qual.Time;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +32,6 @@ public class TestSchedueledActivitytPersistence {
         LocalDate date = LocalDate.of(2021, 11, 11);
         LocalTime startTime = LocalTime.of(10, 30, 00);
         LocalTime endTime = LocalTime.of(11, 30, 00);
-        //Date date = new Date(2021, 11, 11);
-        //Time startTime = new Time(10, 30, 00);
-        //Time endTime = new Time(11, 30, 00);
 
         
         scheduledActivity.setScheduledActivityId(schedueledActivityId);

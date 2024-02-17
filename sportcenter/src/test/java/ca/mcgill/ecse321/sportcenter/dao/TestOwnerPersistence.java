@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.sportcenter.model.Owner;
+import ca.mcgill.ecse321.sportcenter.model.User;
+
 
 @SpringBootTest
 public class TestOwnerPersistence {
@@ -24,13 +26,14 @@ public class TestOwnerPersistence {
     public void testPersistAndLoadOwner() {
         
         Owner owner = new Owner();
+        User user = new User();
         String username = "John";
         String password = "password";
         int accountId = 123;
 
         
-        //owner.setUsername(username);
-        //owner.setPassword(password);
+        user.setUsername(username);
+        user.setPassword(password);
         owner.setAccountId(accountId);
         ownerRepository.save(owner);
 
@@ -38,8 +41,8 @@ public class TestOwnerPersistence {
         owner = ownerRepository.findAccount(accountId);//could be by id
 
         assertNotNull(owner);
-        //assertEquals(username, owner.getUsername());
+        assertEquals(username, owner.getUser().getUsername());
+        assertEquals(password, owner.getUser().getPassword());
         assertEquals(accountId, owner.getAccountId()); 
-        //assertEquals(password, owner.getPassword());
     }
 }
