@@ -1,46 +1,34 @@
 
 package ca.mcgill.ecse321.sportcenter.model;
 
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+
+@Entity
 public class Activity
 {
 
-  //------------------------
-  // ENUMERATIONS
-  //------------------------
-
   public enum ClassCategory { Strength, Cardio, Stretch }
 
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //Activity Attributes
+ 
   private ClassCategory subcategory;
+
+  @Id //name is the PM
   private String name;
   private boolean isApproved;
 
-  //Activity Associations
+  @ManyToOne(optional = false) //many activities in SportCenter
   private SportCenter sportCenter;
-
-  //------------------------
-  // CONSTRUCTOR
-  //------------------------
 
   public Activity(ClassCategory aSubcategory, String aName, boolean aIsApproved, SportCenter aSportCenter)
   {
     subcategory = aSubcategory;
     name = aName;
     isApproved = aIsApproved;
-    boolean didAddSportCenter = setSportCenter(aSportCenter);
-    if (!didAddSportCenter)
-    {
-      throw new RuntimeException("Unable to create activity due to sportCenter. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
+  
   }
-
-  //------------------------
-  // INTERFACE
-  //------------------------
 
   public boolean setSubcategory(ClassCategory aSubcategory)
   {
@@ -85,35 +73,7 @@ public class Activity
   {
     return sportCenter;
   }
-  /* Code from template association_SetOneToMany */
-  public boolean setSportCenter(SportCenter aSportCenter)
-  {
-    boolean wasSet = false;
-    if (aSportCenter == null)
-    {
-      return wasSet;
-    }
 
-    SportCenter existingSportCenter = sportCenter;
-    sportCenter = aSportCenter;
-    if (existingSportCenter != null && !existingSportCenter.equals(aSportCenter))
-    {
-      existingSportCenter.removeActivity(this);
-    }
-    sportCenter.addActivity(this);
-    wasSet = true;
-    return wasSet;
-  }
-
-  public void delete()
-  {
-    SportCenter placeholderSportCenter = sportCenter;
-    this.sportCenter = null;
-    if(placeholderSportCenter != null)
-    {
-      placeholderSportCenter.removeActivity(this);
-    }
-  }
 
 
   public String toString()
