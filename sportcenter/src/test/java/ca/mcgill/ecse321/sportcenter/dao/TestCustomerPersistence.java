@@ -17,27 +17,35 @@ public class TestCustomerPersistence {
     @Autowired
     private CustomerRepository customerRepository;
     @Autowired
+    private UserRepository userRepository;
 
     @AfterEach
     public void clearDatabase() {
         customerRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
     public void testPersistAndLoadCustomer() {
-        
-        Customer customer = new Customer();
+
         User user = new User();
         int accountId = 123;
         String username = "John";
         String password = "password";
+
+        Customer customer = new Customer();
+        customer.setUser(user);
+
         user.setUsername(username);
         user.setPassword(password);
-        customer.setAccountId(accountId);
+        userRepository.save(user);
+
         customerRepository.save(customer);
 
         customer = null;
         Customer foundCustomer = customerRepository.findAccount(accountId);
+
+
 
         assertNotNull(foundCustomer);
         assertEquals(username, foundCustomer.getUser().getUsername());

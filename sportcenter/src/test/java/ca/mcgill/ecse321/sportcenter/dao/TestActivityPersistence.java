@@ -44,5 +44,7 @@ public class TestActivityPersistence {
         assertNotNull(activity);
         assertEquals(name, activity.getName());
         assertEquals(description, activity.getDescription());
+        assertEquals(subcategory, activity.getSubcategory());
+        assertEquals(isApproved, activity.getIsApproved());
     }
 }

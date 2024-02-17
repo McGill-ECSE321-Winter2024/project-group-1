@@ -38,5 +38,6 @@ public class TestUserPersistence {
         assertNotNull(user);
         assertEquals(username, user.getUsername());
         assertEquals(password, user.getPassword());
+        assertEquals(accountId, user.getUserId());
     }
 }

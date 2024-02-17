@@ -1,6 +1,5 @@
 package ca.mcgill.ecse321.sportcenter.dao;
-//import java.sql.Date;
-//import java.sql.Time;
+
 import java.time.LocalTime;
 import java.time.LocalDate;
 
@@ -21,21 +20,25 @@ import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
 public class TestSchedueledActivitytPersistence {
     @Autowired
     private ScheduledActivityRepository scheduledActivityRepository;
+    @Autowired
+    private ActivityRepository activityRepository;
 
     @AfterEach
     public void clearDatabase() {
         scheduledActivityRepository.deleteAll();
+        activityRepository.deleteAll();
     }
 
     @Test
     public void testPersistAndLoadScheduledActivity() {
         
         ScheduledActivity scheduledActivity = new ScheduledActivity();
-        Activity activity = new Activity();
         int schedueledActivityId = 123;
         LocalDate date = LocalDate.of(2021, 11, 11);
         LocalTime startTime = LocalTime.of(10, 30, 00);
         LocalTime endTime = LocalTime.of(11, 30, 00);
+
+        Activity activity = new Activity();
         ClassCategory subcategory = ClassCategory.Strength;
         String name = "Yoga";
         String description = "Practice yoga with a professional instructor.";
@@ -47,12 +50,17 @@ public class TestSchedueledActivitytPersistence {
         scheduledActivity.setDate(date);
         scheduledActivity.setStartTime(startTime);
         scheduledActivity.setEndTime(endTime);
+        scheduledActivity.setActivity(activity);
+                
+        scheduledActivityRepository.save(scheduledActivity);
+
         activity.setName(name);
         activity.setDescription(description);
         activity.setSubcategory(subcategory);
         activity.setIsApproved(isApproved);
-        
-        scheduledActivityRepository.save(scheduledActivity);
+
+        activityRepository.save(activity);
+
 
         scheduledActivity = null;
         scheduledActivity = scheduledActivityRepository.findAccount(schedueledActivityId);
@@ -62,6 +70,8 @@ public class TestSchedueledActivitytPersistence {
         assertEquals(date, scheduledActivity.getDate());
         assertEquals(startTime, scheduledActivity.getStartTime()); 
         assertEquals(endTime, scheduledActivity.getEndTime());
+        
+        assertEquals(activity, scheduledActivity.getActivity());
         assertEquals(name, scheduledActivity.getActivity().getName());
         assertEquals(description, scheduledActivity.getActivity().getDescription());
         assertEquals(subcategory, scheduledActivity.getActivity().getSubcategory());

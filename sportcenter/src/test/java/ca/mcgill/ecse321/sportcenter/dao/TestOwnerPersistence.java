@@ -16,16 +16,20 @@ import ca.mcgill.ecse321.sportcenter.model.User;
 public class TestOwnerPersistence {
     @Autowired
     private OwnerRepository ownerRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @AfterEach
     public void clearDatabase() {
         ownerRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
     public void testPersistAndLoadOwner() {
         
         Owner owner = new Owner();
+
         User user = new User();
         String username = "John";
         String password = "password";
@@ -34,6 +38,8 @@ public class TestOwnerPersistence {
         
         user.setUsername(username);
         user.setPassword(password);
+        userRepository.save(user);
+
         owner.setAccountId(accountId);
         ownerRepository.save(owner);
 

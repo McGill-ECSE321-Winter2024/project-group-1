@@ -16,29 +16,40 @@ import ca.mcgill.ecse321.sportcenter.model.User;
 public class TestInstructorPersistence {
     @Autowired
     private InstructorRepository instructorRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @AfterEach
     public void clearDatabase() {
         instructorRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
     public void testPersistAndLoadInstructor() {
         
-        Instructor instructor = new Instructor();
+        
         User user = new User();
         int accountId = 123;
         String username = "John";
         String password = "password";
+
+        Instructor instructor = new Instructor();
         InstructorStatus status = InstructorStatus.Active;
         String profilepicUrl = "https://www.google.com";
-        
+        String description = "Professional instructor with 10 years of experience.";
+
         instructor.setAccountId(accountId);
-        user.setUsername(username);
-        user.setPassword(password);
         instructor.setStatus(status);
         instructor.setProfilePicURL(profilepicUrl);
+        instructor.setDescription(description);
+        instructor.setUser(user);
         instructorRepository.save(instructor);
+
+        user.setUsername(username);
+        user.setPassword(password);
+        userRepository.save(user);
+
 
         instructor = null;
         instructor = instructorRepository.findAccount(accountId);
@@ -49,5 +60,6 @@ public class TestInstructorPersistence {
         assertEquals(accountId, instructor.getAccountId());
         assertEquals(profilepicUrl, instructor.getProfilePicURL());
         assertEquals(status, instructor.getStatus());
+        assertEquals(description, instructor.getDescription());
     }
 }
