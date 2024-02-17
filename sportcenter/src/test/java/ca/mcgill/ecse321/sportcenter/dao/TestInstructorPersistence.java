@@ -29,20 +29,23 @@ public class TestInstructorPersistence {
         String username = "John";
         String password = "password";
         InstructorStatus status = InstructorStatus.Active;
+        String profilepicUrl = "https://www.google.com";
         
         instructor.setAccountId(accountId);
-        instructor.setUsername(username);
-        instructor.setPassword(password);
+        //instructor.setUsername(username);
+        //instructor.setPassword(password);
         instructor.setStatus(status);
+        instructor.setProfilePicURL(profilepicUrl);
         instructorRepository.save(instructor);
 
         instructor = null;
         instructor = instructorRepository.findAccount(accountId);
 
         assertNotNull(instructor);
-        assertEquals(username, instructor.getUsername());
+        //assertEquals(username, instructor.getUsername());
         assertEquals(accountId, instructor.getAccountId());
-        assertEquals(password, instructor.getPassword());
+        //assertEquals(password, instructor.getPassword());
+        assertEquals(profilepicUrl, instructor.getProfilePicURL());
         assertEquals(status, instructor.getStatus());
     }
 }

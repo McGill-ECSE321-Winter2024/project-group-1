@@ -1,6 +1,8 @@
 package ca.mcgill.ecse321.sportcenter.dao;
-import java.sql.Date;
-import java.sql.Time;
+//import java.sql.Date;
+//import java.sql.Time;
+import java.time.LocalTime;
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -29,9 +31,12 @@ public class TestSchedueledActivitytPersistence {
         
         ScheduledActivity scheduledActivity = new ScheduledActivity();
         int schedueledActivityId = 123;
-        Date date = new Date(2021, 11, 11);
-        Time startTime = new Time(10, 30, 00);
-        Time endTime = new Time(11, 30, 00);
+        LocalDate date = LocalDate.of(2021, 11, 11);
+        LocalTime startTime = LocalTime.of(10, 30, 00);
+        LocalTime endTime = LocalTime.of(11, 30, 00);
+        //Date date = new Date(2021, 11, 11);
+        //Time startTime = new Time(10, 30, 00);
+        //Time endTime = new Time(11, 30, 00);
 
         
         scheduledActivity.setScheduledActivityId(schedueledActivityId);
