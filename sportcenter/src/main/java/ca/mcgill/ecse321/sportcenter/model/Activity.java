@@ -54,13 +54,6 @@ public class Activity
     wasSet = true;
     return wasSet;
   }
-  public boolean setDescription(String aDescription)
-  {
-    boolean wasSet = false;
-    description = aDescription;
-    wasSet = true;
-    return wasSet;
-  }
 
   public boolean setIsApproved(boolean aIsApproved)
   {
@@ -96,13 +89,4 @@ public class Activity
   }
 
 
-
-  public String toString()
-  {
-    return super.toString() + "["+
-            "name" + ":" + getName()+ "," +
-            "isApproved" + ":" + getIsApproved()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "subcategory" + "=" + (getSubcategory() != null ? !getSubcategory().equals(this)  ? getSubcategory().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "sportCenter = "+(getSportCenter()!=null?Integer.toHexString(System.identityHashCode(getSportCenter())):"null");
-  }
 }

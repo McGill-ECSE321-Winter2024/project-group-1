@@ -107,14 +107,4 @@ public class User
     return sportCenter;
   }
 
-
-
-  public String toString()
-  {
-    return super.toString() + "["+
-            "username" + ":" + getUsername()+ "," +
-            "password" + ":" + getPassword()+ "," +
-            "userId" + ":" + getUserId()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "sportCenter = "+(getSportCenter()!=null?Integer.toHexString(System.identityHashCode(getSportCenter())):"null");
-  }
 }

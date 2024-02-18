@@ -105,13 +105,4 @@ public class Instructor extends Account
   }
 
 
-  public String toString()
-  {
-    return super.toString() + "["+
-            "description" + ":" + getDescription()+ "," +
-            "profilePicURL" + ":" + getProfilePicURL()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "status" + "=" + (getStatus() != null ? !getStatus().equals(this)  ? getStatus().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "sportCenter = "+(getSportCenter()!=null?Integer.toHexString(System.identityHashCode(getSportCenter())):"null") + System.getProperties().getProperty("line.separator") +
-            "  " + "user = "+(getUser()!=null?Integer.toHexString(System.identityHashCode(getUser())):"null");
-  }
 }

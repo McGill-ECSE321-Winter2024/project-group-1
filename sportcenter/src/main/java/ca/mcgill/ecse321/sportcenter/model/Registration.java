@@ -102,13 +102,4 @@ public class Registration
   }
 
 
-
-  public String toString()
-  {
-    return super.toString() + "["+
-            "regId" + ":" + getRegId()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "scheduledActivity = "+(getScheduledActivity()!=null?Integer.toHexString(System.identityHashCode(getScheduledActivity())):"null") + System.getProperties().getProperty("line.separator") +
-            "  " + "customer = "+(getCustomer()!=null?Integer.toHexString(System.identityHashCode(getCustomer())):"null") + System.getProperties().getProperty("line.separator") +
-            "  " + "sportCenter = "+(getSportCenter()!=null?Integer.toHexString(System.identityHashCode(getSportCenter())):"null");
-  }
 }

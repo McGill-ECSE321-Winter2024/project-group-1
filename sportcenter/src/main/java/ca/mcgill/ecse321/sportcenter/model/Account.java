@@ -37,9 +37,4 @@ public abstract class Account
     return accountId;
   }
 
-  public String toString()
-  {
-    return super.toString() + "["+
-            "accountId" + ":" + getAccountId()+ "]";
-  }
 }
