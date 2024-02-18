@@ -33,7 +33,9 @@ public class Activity
   public Activity(ClassCategory aSubcategory, String aName, boolean aIsApproved, String aDescription, SportCenter aSportCenter)
   {
     subcategory = aSubcategory;
-    name = aName;
+    if (!setName(aName)){
+      throw new RuntimeException("Cannot create due to duplicate name.");
+    }
     isApproved = aIsApproved;
     description = aDescription;
   

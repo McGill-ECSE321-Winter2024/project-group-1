@@ -8,47 +8,36 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import ca.mcgill.ecse321.sportcenter.model.Customer;
 import ca.mcgill.ecse321.sportcenter.model.Account;
 
-
 @SpringBootTest
-public class TestCustomerPersistence {
-    @Autowired
-    private CustomerRepository customerRepository;
+public class TestAccountPersistence {
     @Autowired
     private AccountRepository accountRepository;
 
     @AfterEach
     public void clearDatabase() {
-        customerRepository.deleteAll();
         accountRepository.deleteAll();
     }
 
     @Test
-    public void testPersistAndLoadCustomer() {
-
+    public void testPersistAndLoadAccount() {
+        
         Account account = new Account();
-        int accountRoleId = 123;
+        int accountId = 123;
         String username = "John";
         String password = "password";
+        
         account.setUsername(username);
         account.setPassword(password);
         accountRepository.save(account);
-        
-        Customer customer = new Customer();
-        customer.setAccount(account);
-        customerRepository.save(customer);
 
-        customer = null;
-        Customer foundCustomer = customerRepository.findAccountRole(accountRoleId);
+        account = null;
+        account = accountRepository.findAccount(accountId);
 
-
-
-        assertNotNull(foundCustomer);
-        assertEquals(username, foundCustomer.getAccount().getUsername());
-        assertEquals(password, foundCustomer.getAccount().getPassword());
-        assertEquals(accountRoleId, foundCustomer.getAccountRoleId());
+        assertNotNull(account);
+        assertEquals(username, account.getUsername());
+        assertEquals(password, account.getPassword());
+        assertEquals(accountId, account.getAccountId());
     }
 }
-

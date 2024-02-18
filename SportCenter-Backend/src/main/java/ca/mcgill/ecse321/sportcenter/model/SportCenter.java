@@ -12,7 +12,7 @@ public class SportCenter
   //all associations. Comments are made in their own java class
 
   @OneToMany
-  private List<User> users; 
+  private List<Account> users; 
   @OneToOne
   private Owner owner;
   @OneToMany
@@ -34,7 +34,7 @@ public class SportCenter
 
   public SportCenter(Owner aOwner)
   {
-    users = new ArrayList<User>();
+    users = new ArrayList<Account>();
     if (aOwner == null || aOwner.getSportCenter() != null)
     {
       throw new RuntimeException("Unable to create SportCenter due to aOwner.");
@@ -47,9 +47,9 @@ public class SportCenter
     activities = new ArrayList<Activity>();
   }
 
-  public SportCenter(int aAccountIdForOwner, User aUserForOwner)
+  public SportCenter(int aAccountIdForOwner, Account aUserForOwner)
   {
-    users = new ArrayList<User>();
+    users = new ArrayList<Account>();
     owner = new Owner(aAccountIdForOwner, this, aUserForOwner);
     instructors = new ArrayList<Instructor>();
     customers = new ArrayList<Customer>();
@@ -60,15 +60,15 @@ public class SportCenter
 
   //GETTERS
 
-  public User getUser(int index)
+  public Account getUser(int index)
   {
-    User aUser = users.get(index);
+    Account aUser = users.get(index);
     return aUser;
   }
 
-  public List<User> getUsers()
+  public List<Account> getUsers()
   {
-    List<User> newUsers = Collections.unmodifiableList(users);
+    List<Account> newUsers = Collections.unmodifiableList(users);
     return newUsers;
   }
 

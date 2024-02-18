@@ -17,7 +17,7 @@ import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
 
 
 @SpringBootTest
-public class TestSchedueledActivitytPersistence {
+public class TestScheduledActivitytPersistence {
     @Autowired
     private ScheduledActivityRepository scheduledActivityRepository;
     @Autowired

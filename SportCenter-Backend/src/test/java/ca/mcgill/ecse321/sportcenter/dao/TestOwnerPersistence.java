@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.sportcenter.model.Owner;
-import ca.mcgill.ecse321.sportcenter.model.User;
+import ca.mcgill.ecse321.sportcenter.model.Account;
 
 
 @SpringBootTest
@@ -17,38 +17,37 @@ public class TestOwnerPersistence {
     @Autowired
     private OwnerRepository ownerRepository;
     @Autowired
-    private UserRepository userRepository;
+    private AccountRepository accountRepository;
 
     @AfterEach
     public void clearDatabase() {
         ownerRepository.deleteAll();
-        userRepository.deleteAll();
+        accountRepository.deleteAll();
     }
 
     @Test
     public void testPersistAndLoadOwner() {
         
-        Owner owner = new Owner();
+        
 
-        User user = new User();
+        Account user = new Account();
+        int accountRoleId = 123;
         String username = "John";
         String password = "password";
-        int accountId = 123;
-
-        
         user.setUsername(username);
         user.setPassword(password);
-        userRepository.save(user);
+        accountRepository.save(user);
 
-        owner.setAccountId(accountId);
+        Owner owner = new Owner();
+        owner.setAccountRoleId(accountRoleId);
         ownerRepository.save(owner);
 
         owner = null;
-        owner = ownerRepository.findAccount(accountId);//could be by id
+        owner = ownerRepository.findAccountRole(accountRoleId);//could be by id
 
         assertNotNull(owner);
-        assertEquals(username, owner.getUser().getUsername());
-        assertEquals(password, owner.getUser().getPassword());
-        assertEquals(accountId, owner.getAccountId()); 
+        assertEquals(username, owner.getAccount().getUsername());
+        assertEquals(password, owner.getAccount().getPassword());
+        assertEquals(accountRoleId, owner.getAccountRoleId()); 
     }
 }

@@ -39,7 +39,7 @@ public class TestActivityPersistence {
         activityRepository.save(activity);
 
         activity = null;
-        activity = activityRepository.findAccount(name);
+        activity = activityRepository.findActivity(name);
 
         assertNotNull(activity);
         assertEquals(name, activity.getName());

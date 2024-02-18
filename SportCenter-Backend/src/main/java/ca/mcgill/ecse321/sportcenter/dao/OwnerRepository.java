@@ -5,6 +5,6 @@ import ca.mcgill.ecse321.sportcenter.model.Owner;
 
 public interface OwnerRepository extends CrudRepository<Owner, Integer>{
  
-    public Owner findAccount(Integer iD);
+    public Owner findAccountRole(Integer iD);
 
 }

@@ -5,15 +5,15 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 
 @Entity
-public class Owner extends Account
+public class Owner extends AccountRole
 {
 
   @OneToOne(optional = false) //sport center can only have one owner
   private SportCenter sportCenter;
   
-  @OneToOne(optional = true) //a user can at most have 1 account
-  @JoinColumn(name = "user_id") //user_id is a FK
-  private User user;
+  @OneToOne(optional = true) //an account can have at most 1 owner account role
+  @JoinColumn(name = "account_id") //account_id is a FK
+  private Account account;
 
   
   //CONSTRUCTORS
@@ -22,28 +22,28 @@ public class Owner extends Account
     
   }
 
-  public Owner(int aAccountId, SportCenter aSportCenter, User aUser)
+  public Owner(int aAccountRoleId, SportCenter aSportCenter, Account aAccount)
   {
-    super(aAccountId);
+    super(aAccountRoleId);
     if (aSportCenter == null || aSportCenter.getOwner() != null)
     {
       throw new RuntimeException("Unable to create Owner due to aSportCenter.");
     }
     sportCenter = aSportCenter;
-    if (!setUser(aUser))
+    if (!setAccount(aAccount))
     {
-      throw new RuntimeException("Unable to create Owner due to aUser.");
+      throw new RuntimeException("Unable to create Owner due to aAccount.");
     }
   }
 
-  public Owner(int aAccountId, User aUser)
+  public Owner(int aAccountRoleId, Account aAccount)
   {
-    super(aAccountId);
+    super(aAccountRoleId);
     sportCenter = new SportCenter(this);
-    boolean didAddUser = setUser(aUser);
+    boolean didAddUser = setAccount(aAccount);
     if (!didAddUser)
     {
-      throw new RuntimeException("Unable to create owner due to user.");
+      throw new RuntimeException("Unable to create owner due to aAccount.");
     }
   }
 
@@ -55,19 +55,19 @@ public class Owner extends Account
   }
 
 
-  public User getUser()
+  public Account getAccount()
   {
-    return user;
+    return account;
   }
 
   //SETTERS
 
-  public boolean setUser(User aNewUser)
+  public boolean setAccount(Account aNewAccount)
   {
     boolean wasSet = false;
-    if (aNewUser != null)
+    if (aNewAccount != null)
     {
-      user = aNewUser;
+      account = aNewAccount;
       wasSet = true;
     }
     return wasSet;

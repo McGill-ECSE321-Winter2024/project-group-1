@@ -6,15 +6,15 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 
 @Entity
-public class Customer extends Account
+public class Customer extends AccountRole
 {
 
   @ManyToOne(optional = false) //many customers in a sport center
   private SportCenter sportCenter;
   
-  @OneToOne(optional = true) //a user can at most have 1 customer account
-  @JoinColumn(name = "user_id") //user_id is a FK
-  private User user;
+  @OneToOne(optional = true) //an account can at most have 1 customer account role
+  @JoinColumn(name = "account_id") //account_id is a FK
+  private Account account;
 
   
   //CONSTRUCTORS
@@ -23,14 +23,13 @@ public class Customer extends Account
     
   }
 
-  public Customer(int aAccountId, SportCenter aSportCenter, User aUser)
+  public Customer(int aAccountRoleId, SportCenter aSportCenter, Account aAccount)
   {
-    super(aAccountId);
+    super(aAccountRoleId);
     
-
-    if (!setUser(aUser))
+    if (!setAccount(aAccount))
     {
-      throw new RuntimeException("Unable to create Customer due to aUser.");
+      throw new RuntimeException("Unable to create Customer due to aAccount.");
     }
   }
 
@@ -41,19 +40,19 @@ public class Customer extends Account
     return sportCenter;
   }
 
-  public User getUser()
+  public Account getAccount()
   {
-    return user;
+    return account;
   }
 
   //SETTERS
 
-  public boolean setUser(User aNewUser)
+  public boolean setAccount(Account aNewAccount)
   {
     boolean wasSet = false;
-    if (aNewUser != null)
+    if (aNewAccount != null)
     {
-      user = aNewUser;
+      account = aNewAccount;
       wasSet = true;
     }
     return wasSet;
