@@ -1,6 +1,6 @@
 package ca.mcgill.ecse321.sportcenter.model;
-import java.sql.Date;
-import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,9 +16,9 @@ public class ScheduledActivity
   @Id //scheduledActivityId will be PM
   @GeneratedValue(strategy = GenerationType.AUTO)
   private int scheduledActivityId;
-  private Date date;
-  private Time startTime;
-  private Time endTime;
+  private LocalDate date;
+  private LocalTime startTime;
+  private LocalTime endTime;
 
   @ManyToOne(optional = false) //there are many scheduled activities for a sport center
   private SportCenter sportCenter;
@@ -35,7 +35,7 @@ public class ScheduledActivity
     
   }
 
-  public ScheduledActivity(int aScheduledActivityId, Date aDate, Time aStartTime, Time aEndTime, SportCenter aSportCenter, Instructor aAccounts, Activity aActivity)
+  public ScheduledActivity(int aScheduledActivityId, LocalDate aDate, LocalTime aStartTime, LocalTime aEndTime, SportCenter aSportCenter, Instructor aAccounts, Activity aActivity)
   {
     scheduledActivityId = aScheduledActivityId;
     date = aDate;
@@ -60,7 +60,7 @@ public class ScheduledActivity
     return wasSet;
   }
 
-  public boolean setDate(Date aDate)
+  public boolean setDate(LocalDate aDate)
   {
     boolean wasSet = false;
     date = aDate;
@@ -68,7 +68,7 @@ public class ScheduledActivity
     return wasSet;
   }
 
-  public boolean setStartTime(Time aStartTime)
+  public boolean setStartTime(LocalTime aStartTime)
   {
     boolean wasSet = false;
     startTime = aStartTime;
@@ -76,7 +76,7 @@ public class ScheduledActivity
     return wasSet;
   }
 
-  public boolean setEndTime(Time aEndTime)
+  public boolean setEndTime(LocalTime aEndTime)
   {
     boolean wasSet = false;
     endTime = aEndTime;
@@ -89,17 +89,17 @@ public class ScheduledActivity
     return scheduledActivityId;
   }
 
-  public Date getDate()
+  public LocalDate getDate()
   {
     return date;
   }
 
-  public Time getStartTime()
+  public LocalTime getStartTime()
   {
     return startTime;
   }
 
-  public Time getEndTime()
+  public LocalTime getEndTime()
   {
     return endTime;
   }

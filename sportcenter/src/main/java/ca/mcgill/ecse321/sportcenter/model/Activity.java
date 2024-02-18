@@ -63,6 +63,14 @@ public class Activity
     return wasSet;
   }
 
+  public boolean setDescription(String aDescription)
+  {
+    boolean wasSet = false;
+    description = aDescription;
+    wasSet = true;
+    return wasSet;
+  }
+
   public ClassCategory getSubcategory()
   {
     return subcategory;
