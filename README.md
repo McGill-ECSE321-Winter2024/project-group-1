@@ -1,4 +1,4 @@
-# Sport Center Web Application - GR1 <br> _Are you ready to workout?_
+# Sport Center Web Application 💪 - GR1 <br> _Are you ready to workout?_
 
 # Project Scope <br>
 [Insert Reworded Project Description]
