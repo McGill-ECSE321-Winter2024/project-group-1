@@ -24,6 +24,8 @@ public abstract class Account
     
   }
 
+  //SETTERS
+
   public boolean setAccountId(int aAccountId)
   {
     boolean wasSet = false;
@@ -31,6 +33,8 @@ public abstract class Account
     wasSet = true;
     return wasSet;
   }
+
+  //GETTERS
 
   public int getAccountId()
   {

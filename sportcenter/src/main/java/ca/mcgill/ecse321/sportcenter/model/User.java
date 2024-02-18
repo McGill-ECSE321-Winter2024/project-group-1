@@ -37,10 +37,12 @@ public class User
     userId = aUserId;
     if (!setUsername(aUsername))
     {
-      throw new RuntimeException("Cannot create due to duplicate username. See http://manual.umple.org?RE003ViolationofUniqueness.html");
+      throw new RuntimeException("Cannot create due to duplicate username.");
     }
     
   }
+
+  //SETTERS
 
   public boolean setUsername(String aUsername)
   {
@@ -77,16 +79,18 @@ public class User
     return wasSet;
   }
 
+  //GETTERS
+
   public String getUsername()
   {
     return username;
   }
-  /* Code from template attribute_GetUnique */
+  
   public static User getWithUsername(String aUsername)
   {
     return usersByUsername.get(aUsername);
   }
-  /* Code from template attribute_HasUnique */
+  
   public static boolean hasWithUsername(String aUsername)
   {
     return getWithUsername(aUsername) != null;
@@ -101,7 +105,7 @@ public class User
   {
     return userId;
   }
-  /* Code from template association_GetOne */
+ 
   public SportCenter getSportCenter()
   {
     return sportCenter;

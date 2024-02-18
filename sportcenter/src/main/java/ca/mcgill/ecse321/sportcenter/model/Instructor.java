@@ -11,13 +11,14 @@ public class Instructor extends Account
 
   public enum InstructorStatus { Active, Inactive, Fired, Suspended }
 
-
-  private InstructorStatus status;
+  //attributes
+  private InstructorStatus status; 
   private String description;
   private String profilePicURL;
 
   @ManyToOne(optional = false) //many instructors in a sport center
   private SportCenter sportCenter;
+  
   @OneToOne(optional = true) //a user can at most have 1 instructor account
   @JoinColumn(name = "user_id") //user_id is a FK
   private User user;
@@ -39,9 +40,11 @@ public class Instructor extends Account
  
     if (!setUser(aUser))
     {
-      throw new RuntimeException("Unable to create Instructor due to aUser. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new RuntimeException("Unable to create Instructor due to aUser.");
     }
   }
+
+  //SETTERS
 
   public boolean setStatus(InstructorStatus aStatus)
   {
@@ -67,6 +70,19 @@ public class Instructor extends Account
     return wasSet;
   }
 
+  public boolean setUser(User aNewUser)
+  {
+    boolean wasSet = false;
+    if (aNewUser != null)
+    {
+      user = aNewUser;
+      wasSet = true;
+    }
+    return wasSet;
+  }
+
+  //GETTERS
+
   public InstructorStatus getStatus()
   {
     return status;
@@ -81,28 +97,17 @@ public class Instructor extends Account
   {
     return profilePicURL;
   }
-  /* Code from template association_GetOne */
+
   public SportCenter getSportCenter()
   {
     return sportCenter;
   }
-  /* Code from template association_GetOne */
+
   public User getUser()
   {
     return user;
   }
  
-  /* Code from template association_SetUnidirectionalOne */
-  public boolean setUser(User aNewUser)
-  {
-    boolean wasSet = false;
-    if (aNewUser != null)
-    {
-      user = aNewUser;
-      wasSet = true;
-    }
-    return wasSet;
-  }
 
 
 }

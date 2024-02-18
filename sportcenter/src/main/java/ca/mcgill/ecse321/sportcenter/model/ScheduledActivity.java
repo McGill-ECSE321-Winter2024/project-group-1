@@ -16,14 +16,18 @@ public class ScheduledActivity
   @Id //scheduledActivityId will be PM
   @GeneratedValue(strategy = GenerationType.AUTO)
   private int scheduledActivityId;
+  
+  //attributes
   private LocalDate date;
   private LocalTime startTime;
   private LocalTime endTime;
 
   @ManyToOne(optional = false) //there are many scheduled activities for a sport center
   private SportCenter sportCenter;
+ 
   @ManyToOne(optional = false) //an instructor can teach many scheduled activities
   private Instructor accounts;
+ 
   @ManyToOne(optional = false) //a scheduled activity consists of one activity, yet activities can have many Sched. activities
   @JoinColumn(name = "activity_name") //activity is a FK
   private Activity activity;
@@ -44,13 +48,15 @@ public class ScheduledActivity
 
     if (!setAccounts(aAccounts))
     {
-      throw new RuntimeException("Unable to create ScheduledActivity due to aAccounts. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new RuntimeException("Unable to create ScheduledActivity due to aAccounts.");
     }
     if (!setActivity(aActivity))
     {
-      throw new RuntimeException("Unable to create ScheduledActivity due to aActivity. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new RuntimeException("Unable to create ScheduledActivity due to aActivity.");
     }
   }
+
+  //SETTERS
 
   public boolean setScheduledActivityId(int aScheduledActivityId)
   {
@@ -84,6 +90,30 @@ public class ScheduledActivity
     return wasSet;
   }
 
+  public boolean setAccounts(Instructor aNewAccounts)
+  {
+    boolean wasSet = false;
+    if (aNewAccounts != null)
+    {
+      accounts = aNewAccounts;
+      wasSet = true;
+    }
+    return wasSet;
+  }
+
+  public boolean setActivity(Activity aNewActivity)
+  {
+    boolean wasSet = false;
+    if (aNewActivity != null)
+    {
+      activity = aNewActivity;
+      wasSet = true;
+    }
+    return wasSet;
+  }
+
+  //GETTERS
+
   public int getScheduledActivityId()
   {
     return scheduledActivityId;
@@ -103,43 +133,21 @@ public class ScheduledActivity
   {
     return endTime;
   }
-  /* Code from template association_GetOne */
+
   public SportCenter getSportCenter()
   {
     return sportCenter;
   }
-  /* Code from template association_GetOne */
+
   public Instructor getAccounts()
   {
     return accounts;
   }
-  /* Code from template association_GetOne */
+
   public Activity getActivity()
   {
     return activity;
   }
 
-  /* Code from template association_SetUnidirectionalOne */
-  public boolean setAccounts(Instructor aNewAccounts)
-  {
-    boolean wasSet = false;
-    if (aNewAccounts != null)
-    {
-      accounts = aNewAccounts;
-      wasSet = true;
-    }
-    return wasSet;
-  }
-  /* Code from template association_SetUnidirectionalOne */
-  public boolean setActivity(Activity aNewActivity)
-  {
-    boolean wasSet = false;
-    if (aNewActivity != null)
-    {
-      activity = aNewActivity;
-      wasSet = true;
-    }
-    return wasSet;
-  }
 
 }

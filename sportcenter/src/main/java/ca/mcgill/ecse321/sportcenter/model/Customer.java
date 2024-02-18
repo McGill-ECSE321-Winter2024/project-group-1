@@ -11,6 +11,7 @@ public class Customer extends Account
 
   @ManyToOne(optional = false) //many customers in a sport center
   private SportCenter sportCenter;
+  
   @OneToOne(optional = true) //a user can at most have 1 customer account
   @JoinColumn(name = "user_id") //user_id is a FK
   private User user;
@@ -29,23 +30,24 @@ public class Customer extends Account
 
     if (!setUser(aUser))
     {
-      throw new RuntimeException("Unable to create Customer due to aUser. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new RuntimeException("Unable to create Customer due to aUser.");
     }
   }
 
+  //GETTERS
 
-  /* Code from template association_GetOne */
   public SportCenter getSportCenter()
   {
     return sportCenter;
   }
-  /* Code from template association_GetOne */
+
   public User getUser()
   {
     return user;
   }
 
-  /* Code from template association_SetUnidirectionalOne */
+  //SETTERS
+
   public boolean setUser(User aNewUser)
   {
     boolean wasSet = false;

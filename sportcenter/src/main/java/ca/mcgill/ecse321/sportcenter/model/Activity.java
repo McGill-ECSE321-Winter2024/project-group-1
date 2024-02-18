@@ -39,6 +39,8 @@ public class Activity
   
   }
 
+  //SETTERS
+
   public boolean setSubcategory(ClassCategory aSubcategory)
   {
     boolean wasSet = false;
@@ -63,6 +65,8 @@ public class Activity
     return wasSet;
   }
 
+  //GETTERS
+
   public boolean setDescription(String aDescription)
   {
     boolean wasSet = false;
@@ -85,7 +89,7 @@ public class Activity
   {
     return isApproved;
   }
-  /* Code from template association_GetOne */
+
   public SportCenter getSportCenter()
   {
     return sportCenter;

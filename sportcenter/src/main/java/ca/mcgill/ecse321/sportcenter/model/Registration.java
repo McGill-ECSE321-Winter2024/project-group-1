@@ -13,11 +13,9 @@ import jakarta.persistence.ManyToOne;
 public class Registration
 {
 
-
   @Id //regId will be PM
   @GeneratedValue(strategy = GenerationType.AUTO) 
   private int regId;
-
 
   @ManyToOne(optional = false) //there are many registration for a schedule activity
   @JoinColumn(name = "schedule_activity_id") //schedule_activity_id is a FK
@@ -42,14 +40,16 @@ public class Registration
     regId = aRegId;
     if (!setScheduledActivity(aScheduledActivity))
     {
-      throw new RuntimeException("Unable to create Registration due to aScheduledActivity. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new RuntimeException("Unable to create Registration due to aScheduledActivity.");
     }
     if (!setCustomer(aCustomer))
     {
-      throw new RuntimeException("Unable to create Registration due to aCustomer. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new RuntimeException("Unable to create Registration due to aCustomer.");
     }
 
   }
+
+  //GETTERS
 
   public boolean setRegId(int aRegId)
   {
@@ -63,22 +63,24 @@ public class Registration
   {
     return regId;
   }
-  /* Code from template association_GetOne */
+
   public ScheduledActivity getScheduledActivity()
   {
     return scheduledActivity;
   }
-  /* Code from template association_GetOne */
+ 
   public Customer getCustomer()
   {
     return customer;
   }
-  /* Code from template association_GetOne */
+
   public SportCenter getSportCenter()
   {
     return sportCenter;
   }
-  /* Code from template association_SetUnidirectionalOne */
+
+  //SETTERS
+
   public boolean setScheduledActivity(ScheduledActivity aNewScheduledActivity)
   {
     boolean wasSet = false;
@@ -89,7 +91,7 @@ public class Registration
     }
     return wasSet;
   }
-  /* Code from template association_SetUnidirectionalOne */
+
   public boolean setCustomer(Customer aNewCustomer)
   {
     boolean wasSet = false;
