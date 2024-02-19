@@ -2,6 +2,7 @@ package ca.mcgill.ecse321.sportcenter.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTimeout;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -41,7 +42,7 @@ public class TestCustomerPersistence {
          * Create an Account
          */
         Account account = new Account();
-        int accountRoleId = 123;
+        int accountId = 001;
         String username = "John";
         String password = "password";
 
@@ -50,7 +51,7 @@ public class TestCustomerPersistence {
          */
         account.setUsername(username);
         account.setPassword(password);
-        account.setAccountRoleId(accountRoleId);
+        account.setAccountId(accountId);
 
         /**
          * Save the Account
@@ -61,6 +62,7 @@ public class TestCustomerPersistence {
          * Create a Customer
          */
         Customer customer = new Customer();
+        int accountRoleId = 100;
         /**
          * Set the attributes of the Customer
          */
@@ -80,9 +82,11 @@ public class TestCustomerPersistence {
          * Check the attributes of the Customer
          */    
         assertNotNull(foundCustomer);
+        assertEquals(accountRoleId, foundCustomer.getAccountRoleId());
         assertEquals(username, foundCustomer.getAccount().getUsername());
         assertEquals(password, foundCustomer.getAccount().getPassword());
-        assertEquals(accountRoleId, foundCustomer.getAccountRoleId());
+        assertEquals(accountId,foundCustomer.getAccount().getAccountId());
+        
     }
 }
 

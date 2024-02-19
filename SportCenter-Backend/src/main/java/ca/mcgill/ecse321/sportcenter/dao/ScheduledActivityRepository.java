@@ -5,6 +5,6 @@ import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity;
 
 public interface ScheduledActivityRepository extends CrudRepository<ScheduledActivity, Integer>{
 
-    public ScheduledActivity findAccount(Integer scheduledActivityId); //iD is the PM
+    public ScheduledActivity findActivity(Integer scheduledActivityId); //iD is the PM
     
 }

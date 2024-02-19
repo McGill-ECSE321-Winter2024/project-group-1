@@ -54,7 +54,7 @@ public class TestScheduledActivitytPersistence {
         scheduledActivity.setDate(date);
         scheduledActivity.setStartTime(startTime);
         scheduledActivity.setEndTime(endTime);
-        scheduledActivity.setActivity(activity);
+        
         scheduledActivityRepository.save(scheduledActivity);
 
         /**
@@ -65,6 +65,8 @@ public class TestScheduledActivitytPersistence {
         String name = "Yoga";
         String description = "Practice yoga with a professional instructor.";
         boolean isApproved = true;
+        
+        scheduledActivity.setActivity(activity);
 
         activity.setName(name);
         activity.setDescription(description);
@@ -76,7 +78,7 @@ public class TestScheduledActivitytPersistence {
          * Load the ScheduledActivity
          */
         scheduledActivity = null;
-        scheduledActivity = scheduledActivityRepository.findAccount(schedueledActivityId);
+        scheduledActivity = scheduledActivityRepository.findActivity(schedueledActivityId);
 
         /**
          * Check the attributes of the ScheduledActivity
