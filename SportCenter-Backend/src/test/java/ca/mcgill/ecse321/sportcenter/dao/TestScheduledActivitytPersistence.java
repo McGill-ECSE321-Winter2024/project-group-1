@@ -15,6 +15,9 @@ import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity;
 import ca.mcgill.ecse321.sportcenter.model.Activity;
 import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
 
+/**
+ * Author: Andrew Nemr
+ */
 
 @SpringBootTest
 public class TestScheduledActivitytPersistence {
@@ -23,48 +26,61 @@ public class TestScheduledActivitytPersistence {
     @Autowired
     private ActivityRepository activityRepository;
 
+    /**
+     * Clear the database after each test
+     */
     @AfterEach
     public void clearDatabase() {
         scheduledActivityRepository.deleteAll();
         activityRepository.deleteAll();
     }
 
+    /**
+     * Test the persistence of a ScheduledActivity
+     */
     @Test
     public void testPersistAndLoadScheduledActivity() {
         
+        /**
+         * Create a ScheduledActivity, set the attributes of the ScheduledActivity, and save the ScheduledActivity
+         */
         ScheduledActivity scheduledActivity = new ScheduledActivity();
         int schedueledActivityId = 123;
         LocalDate date = LocalDate.of(2021, 11, 11);
         LocalTime startTime = LocalTime.of(10, 30, 00);
         LocalTime endTime = LocalTime.of(11, 30, 00);
 
+        scheduledActivity.setScheduledActivityId(schedueledActivityId);
+        scheduledActivity.setDate(date);
+        scheduledActivity.setStartTime(startTime);
+        scheduledActivity.setEndTime(endTime);
+        scheduledActivity.setActivity(activity);
+        scheduledActivityRepository.save(scheduledActivity);
+
+        /**
+         * Create an Activity, set the attributes of the Activity, and save the Activity
+         */
         Activity activity = new Activity();
         ClassCategory subcategory = ClassCategory.Strength;
         String name = "Yoga";
         String description = "Practice yoga with a professional instructor.";
         boolean isApproved = true;
 
-
-        
-        scheduledActivity.setScheduledActivityId(schedueledActivityId);
-        scheduledActivity.setDate(date);
-        scheduledActivity.setStartTime(startTime);
-        scheduledActivity.setEndTime(endTime);
-        scheduledActivity.setActivity(activity);
-                
-        scheduledActivityRepository.save(scheduledActivity);
-
         activity.setName(name);
         activity.setDescription(description);
         activity.setSubcategory(subcategory);
         activity.setIsApproved(isApproved);
-
         activityRepository.save(activity);
 
-
+        /**
+         * Load the ScheduledActivity
+         */
         scheduledActivity = null;
         scheduledActivity = scheduledActivityRepository.findAccount(schedueledActivityId);
 
+        /**
+         * Check the attributes of the ScheduledActivity
+         */
         assertNotNull(scheduledActivity);
         assertEquals(schedueledActivityId, scheduledActivity.getScheduledActivityId());
         assertEquals(date, scheduledActivity.getDate());
