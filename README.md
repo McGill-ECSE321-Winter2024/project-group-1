@@ -55,12 +55,3 @@ Our team of developers have been put in charge of creating a fully functional we
 | Andrew Nemr |[andrewnemr123](https://github.com/andrewnemr123)| 10 | | | |
 
 ***
-
-> ## Deliverable 1
-> *Released later in the development process*
-
-> ## Deliverable 2
-> *Released later in the development process*
-
-> ## Deliverable 3
-> *Released later in the development process*
