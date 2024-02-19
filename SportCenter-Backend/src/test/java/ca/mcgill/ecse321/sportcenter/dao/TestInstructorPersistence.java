@@ -13,7 +13,7 @@ import ca.mcgill.ecse321.sportcenter.model.Instructor.InstructorStatus;
 import ca.mcgill.ecse321.sportcenter.model.Account;
 /**
  * Author: Andrew Nemr
- 
+
  */
 
 @SpringBootTest
@@ -42,18 +42,19 @@ public class TestInstructorPersistence {
         * Create an Account, set the attributes of the Account, and save the Account
         */
         Account account = new Account();
-        int accountRoleId = 123;
+        int accountId = 001;
         String username = "John";
         String password = "password";
         account.setUsername(username);
         account.setPassword(password);
-        account.setAccountRoleId(accountRoleId);
+        account.setAccountId(accountId);
         accountRepository.save(account);
 
         /**
          * Create an Instructor, set the attributes of the Instructor, and save the Instructor
          */
         Instructor instructor = new Instructor();
+        int accountRoleId = 100;
         InstructorStatus status = InstructorStatus.Active;
         String profilepicUrl = "https://www.google.com";
         String description = "Professional instructor with 10 years of experience.";

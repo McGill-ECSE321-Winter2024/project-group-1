@@ -41,18 +41,19 @@ public class TestOwnerPersistence {
          * Create an Account, set the attributes of the Account, and save the Account
          */
         Account account = new Account();
-        int accountRoleId = 123;
+        int accountId = 001;
         String username = "John";
         String password = "password";
         account.setUsername(username);
         account.setPassword(password);
-        account.setAccountRoleId(accountRoleId);
+        account.setAccountId(accountId);
         accountRepository.save(account);
 
         /**
          * Create an Owner, set the attributes of the Owner, and save the Owner
          */
         Owner owner = new Owner();
+        int accountRoleId = 100;
         owner.setAccountRoleId(accountRoleId);
         ownerRepository.save(owner);
 
@@ -60,14 +61,15 @@ public class TestOwnerPersistence {
          * Load the Owner
          */
         owner = null;
-        owner = ownerRepository.findAccountRole(accountRoleId);//could be by id
+        owner = ownerRepository.findAccountRole(accountRoleId);
 
         /**
          * Check the attributes of the Owner
          */
         assertNotNull(owner);
         assertEquals(username, owner.getAccount().getUsername());
+        assertEquals(account, owner.getAccount().getAccountId());
         assertEquals(password, owner.getAccount().getPassword());
-        assertEquals(accountRoleId, owner.getAccountRoleId()); 
+        assertEquals(accountRoleId, owner.getAccountRoleId());
     }
 }

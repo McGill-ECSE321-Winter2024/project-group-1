@@ -86,7 +86,6 @@ public class TestCustomerPersistence {
         assertEquals(username, foundCustomer.getAccount().getUsername());
         assertEquals(password, foundCustomer.getAccount().getPassword());
         assertEquals(accountId,foundCustomer.getAccount().getAccountId());
-        
     }
 }
 
