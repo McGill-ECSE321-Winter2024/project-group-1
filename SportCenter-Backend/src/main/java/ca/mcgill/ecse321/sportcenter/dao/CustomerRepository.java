@@ -9,6 +9,6 @@ import ca.mcgill.ecse321.sportcenter.model.Customer;
  */
 public interface CustomerRepository extends CrudRepository<Customer, Integer>{
     
-    public Customer findAccountRole(Integer iD); //Account role is parent class. Primary Key iD
+    public Customer findAccountRole(Integer accountRoleId); //Account role is parent class. Primary Key accountRoleId
 
 }
