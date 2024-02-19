@@ -79,7 +79,7 @@ public class TestRegistrationPersistence {
          * Load the Registration and check the attributes of the Registration
          */
         registration = null;
-        registration = registrationRepository.findAccount(regID);//could be by id
+        registration = registrationRepository.findRegistration(regID);//could be by id
 
         /**
          * Check the attributes of the Registration

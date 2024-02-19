@@ -45,12 +45,12 @@ public class TestScheduledActivitytPersistence {
          * Create a ScheduledActivity, set the attributes of the ScheduledActivity, and save the ScheduledActivity
          */
         ScheduledActivity scheduledActivity = new ScheduledActivity();
-        int schedueledActivityId = 123;
+        int scheduledActivityId = 123;
         LocalDate date = LocalDate.of(2021, 11, 11);
         LocalTime startTime = LocalTime.of(10, 30, 00);
         LocalTime endTime = LocalTime.of(11, 30, 00);
 
-        scheduledActivity.setScheduledActivityId(schedueledActivityId);
+        scheduledActivity.setScheduledActivityId(scheduledActivityId);
         scheduledActivity.setDate(date);
         scheduledActivity.setStartTime(startTime);
         scheduledActivity.setEndTime(endTime);
@@ -78,13 +78,13 @@ public class TestScheduledActivitytPersistence {
          * Load the ScheduledActivity
          */
         scheduledActivity = null;
-        scheduledActivity = scheduledActivityRepository.findActivity(schedueledActivityId);
+        scheduledActivity = scheduledActivityRepository.findScheduledActivity(scheduledActivityId);
 
         /**
          * Check the attributes of the ScheduledActivity
          */
         assertNotNull(scheduledActivity);
-        assertEquals(schedueledActivityId, scheduledActivity.getScheduledActivityId());
+        assertEquals(scheduledActivityId, scheduledActivity.getScheduledActivityId());
         assertEquals(date, scheduledActivity.getDate());
         assertEquals(startTime, scheduledActivity.getStartTime()); 
         assertEquals(endTime, scheduledActivity.getEndTime());
