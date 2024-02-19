@@ -30,13 +30,13 @@ public class TestOwnerPersistence {
         
         
 
-        Account user = new Account();
+        Account account = new Account();
         int accountRoleId = 123;
         String username = "John";
         String password = "password";
-        user.setUsername(username);
-        user.setPassword(password);
-        accountRepository.save(user);
+        account.setUsername(username);
+        account.setPassword(password);
+        accountRepository.save(account);
 
         Owner owner = new Owner();
         owner.setAccountRoleId(accountRoleId);
