@@ -59,10 +59,13 @@ Our team of developers have been put in charge of creating a fully functional we
 ## Deliverable 1
 TODO
 
+***
+
+## Deliverable 1
+TODO
+
 > ## Deliverable 2
 > *Released later in the development process*
-
-<br>
 
 > ## Deliverable 3
 > *Released later in the development process*
