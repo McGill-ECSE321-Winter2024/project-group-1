@@ -11,6 +11,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import ca.mcgill.ecse321.sportcenter.model.Owner;
 import ca.mcgill.ecse321.sportcenter.model.Account;
 
+/**
+ * Author: Andrew Nemr
+ */
 
 @SpringBootTest
 public class TestOwnerPersistence {
@@ -19,35 +22,54 @@ public class TestOwnerPersistence {
     @Autowired
     private AccountRepository accountRepository;
 
+    /**
+     * Clear the database after each test
+     */
     @AfterEach
     public void clearDatabase() {
         ownerRepository.deleteAll();
         accountRepository.deleteAll();
     }
 
+    /**
+     * Test the persistence of an Owner
+     */
     @Test
     public void testPersistAndLoadOwner() {
         
-        
-
-        Account user = new Account();
-        int accountRoleId = 123;
+        /**
+         * Create an Account, set the attributes of the Account, and save the Account
+         */
+        Account account = new Account();
+        int accountId = 001;
         String username = "John";
         String password = "password";
-        user.setUsername(username);
-        user.setPassword(password);
-        accountRepository.save(user);
+        account.setUsername(username);
+        account.setPassword(password);
+        account.setAccountId(accountId);
+        accountRepository.save(account);
 
+        /**
+         * Create an Owner, set the attributes of the Owner, and save the Owner
+         */
         Owner owner = new Owner();
+        int accountRoleId = 100;
         owner.setAccountRoleId(accountRoleId);
         ownerRepository.save(owner);
 
+        /**
+         * Load the Owner
+         */
         owner = null;
-        owner = ownerRepository.findAccountRole(accountRoleId);//could be by id
+        owner = ownerRepository.findAccountRole(accountRoleId);
 
+        /**
+         * Check the attributes of the Owner
+         */
         assertNotNull(owner);
         assertEquals(username, owner.getAccount().getUsername());
+        assertEquals(account, owner.getAccount().getAccountId());
         assertEquals(password, owner.getAccount().getPassword());
-        assertEquals(accountRoleId, owner.getAccountRoleId()); 
+        assertEquals(accountRoleId, owner.getAccountRoleId());
     }
 }

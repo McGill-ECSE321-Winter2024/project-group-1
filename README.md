@@ -47,12 +47,17 @@ Our team of developers have been put in charge of creating a fully functional we
 ## Team Members
 | Name | GitHub Username| Deliverable 1 | Deliverable 2 | Deliverable 3 | Total Hours |
 | :----: | :----------------:| :---: | :---: | :---: | :---: |
-| Mathias Nahuel Pacheco Lemina |[mathias-pl](https://github.com/mathias-pl)| | | | |
-| Patrick Zakaria |[Nomber1-1](https://github.com/Nomber1-1)| | | | |
-| Anslean Albert Jeyaras |[GumballGB](https://github.com/GumballGB)| | | | |
-| Fabian Saldana |[FabianSaldana](https://github.com/FabianSaldana)| | | | |
-| Emilie Ruel |[emilieruel](https://github.com/emilieruel)| | | | |
-| Andrew Nemr |[andrewnemr123](https://github.com/andrewnemr123)| | | | |
+| Mathias Nahuel Pacheco Lemina |[mathias-pl](https://github.com/mathias-pl)| 10 | | | |
+| Patrick Zakaria |[Nomber1-1](https://github.com/Nomber1-1)| 10 | | | |
+| Anslean Albert Jeyaras |[GumballGB](https://github.com/GumballGB)| 10 | | | |
+| Fabian Saldana |[FabianSaldana](https://github.com/FabianSaldana)| 10 | | | |
+| Emilie Ruel |[emilieruel](https://github.com/emilieruel)| 10 | | | |
+| Andrew Nemr |[andrewnemr123](https://github.com/andrewnemr123)| 10 | | | |
+
+***
+
+## Deliverable 1
+TODO
 
 ***
 
