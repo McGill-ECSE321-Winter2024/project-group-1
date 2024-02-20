@@ -9,6 +9,6 @@ import ca.mcgill.ecse321.sportcenter.model.Instructor;
  */
 public interface InstructorRepository extends CrudRepository<Instructor, Integer> {
 
-    public Instructor findAccountRole(Integer accountRoleId); //Account role is parent class. Primary Key accountRoleId
+    public Instructor findAccountRoleByaccountRoleId(Integer accountRoleId); //Account role is parent class. Primary Key accountRoleId
 
 }

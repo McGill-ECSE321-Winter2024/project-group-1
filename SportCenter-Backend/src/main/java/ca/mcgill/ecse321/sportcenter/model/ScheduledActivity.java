@@ -26,7 +26,7 @@ public class ScheduledActivity
   private SportCenter sportCenter;
  
   @ManyToOne(optional = false) //an instructor can teach many scheduled activities
-  private Instructor accounts;
+  private Instructor supervisor;
  
   @ManyToOne(optional = false) //a scheduled activity consists of one activity, yet activities can have many Sched. activities
   @JoinColumn(name = "activity_name") //activity is a FK
@@ -46,7 +46,7 @@ public class ScheduledActivity
     startTime = aStartTime;
     endTime = aEndTime;
 
-    if (!setAccounts(aAccounts))
+    if (!setSupervisor(aAccounts))
     {
       throw new RuntimeException("Unable to create ScheduledActivity due to aAccounts.");
     }
@@ -90,12 +90,12 @@ public class ScheduledActivity
     return wasSet;
   }
 
-  public boolean setAccounts(Instructor aNewAccounts)
+  public boolean setSupervisor(Instructor aNewAccounts)
   {
     boolean wasSet = false;
     if (aNewAccounts != null)
     {
-      accounts = aNewAccounts;
+      supervisor = aNewAccounts;
       wasSet = true;
     }
     return wasSet;
@@ -139,9 +139,9 @@ public class ScheduledActivity
     return sportCenter;
   }
 
-  public Instructor getAccounts()
+  public Instructor getSupervisor()
   {
-    return accounts;
+    return supervisor;
   }
 
   public Activity getActivity()

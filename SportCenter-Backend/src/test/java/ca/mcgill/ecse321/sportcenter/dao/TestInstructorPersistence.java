@@ -69,7 +69,7 @@ public class TestInstructorPersistence {
          * Load the Instructor and check the attributes of the Instructor
          */
         instructor = null;
-        instructor = instructorRepository.findAccountRole(accountRoleId);
+        instructor = instructorRepository.findAccountRoleByaccountRoleId(accountRoleId);
 
         /**
          * Check the attributes of the Instructor

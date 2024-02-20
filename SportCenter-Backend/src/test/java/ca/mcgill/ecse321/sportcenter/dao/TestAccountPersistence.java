@@ -51,7 +51,7 @@ public class TestAccountPersistence {
          * Load the Account
          */
         account = null;
-        account = accountRepository.findAccount(accountId);
+        account = accountRepository.findAccountByaccountId(accountId);
 
         /*
          * Check the attributes of the Account

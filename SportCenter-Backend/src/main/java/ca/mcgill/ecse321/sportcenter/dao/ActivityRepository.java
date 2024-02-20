@@ -9,6 +9,6 @@ import ca.mcgill.ecse321.sportcenter.model.Activity;
  */
 public interface ActivityRepository extends CrudRepository<Activity, String>{
     
-    public Activity findActivity(String name); //name is the Primary Key
+    public Activity findActivityByname(String name); //name is the Primary Key
 
 }

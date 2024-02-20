@@ -62,7 +62,7 @@ public class TestActivityPersistence {
          * Load the Activity from the database
          */
         activity = null;
-        activity = activityRepository.findActivity(name);
+        activity = activityRepository.findActivityByname(name);
 
         /*
          * Check if the Activity was saved and loaded correctly and has the correct attributes

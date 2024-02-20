@@ -61,7 +61,7 @@ public class TestOwnerPersistence {
          * Load the Owner
          */
         owner = null;
-        owner = ownerRepository.findAccountRole(accountRoleId);
+        owner = ownerRepository.findAccountRoleByaccountRoleId(accountRoleId);
 
         /**
          * Check the attributes of the Owner

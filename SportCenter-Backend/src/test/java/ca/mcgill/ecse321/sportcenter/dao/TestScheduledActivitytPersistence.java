@@ -78,7 +78,7 @@ public class TestScheduledActivitytPersistence {
          * Load the ScheduledActivity
          */
         scheduledActivity = null;
-        scheduledActivity = scheduledActivityRepository.findScheduledActivity(scheduledActivityId);
+        scheduledActivity = scheduledActivityRepository.findScheduledActivityByscheduledActivityId(scheduledActivityId);
 
         /**
          * Check the attributes of the ScheduledActivity

@@ -9,6 +9,6 @@ import ca.mcgill.ecse321.sportcenter.model.Owner;
  */
 public interface OwnerRepository extends CrudRepository<Owner, Integer>{
  
-    public Owner findAccountRole(Integer accountRoleId); //Account role is parent class. Primary Key accountRoleId
+    public Owner findAccountRoleByaccountRoleId(Integer accountRoleId); //Account role is parent class. Primary Key accountRoleId
 
 }

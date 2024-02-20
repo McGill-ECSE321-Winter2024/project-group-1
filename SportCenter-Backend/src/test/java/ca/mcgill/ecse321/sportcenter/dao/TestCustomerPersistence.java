@@ -75,7 +75,7 @@ public class TestCustomerPersistence {
          * Load the Customer
          */
         customer = null;
-        Customer foundCustomer = customerRepository.findAccountRole(accountRoleId);
+        Customer foundCustomer = customerRepository.findAccountRoleByaccountRoleId(accountRoleId);
 
         /**
          * Check the attributes of the Customer

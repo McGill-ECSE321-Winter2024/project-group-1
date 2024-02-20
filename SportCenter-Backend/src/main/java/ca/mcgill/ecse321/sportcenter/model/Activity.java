@@ -23,7 +23,6 @@ public class Activity
   @ManyToOne(optional = false) //many activities in SportCenter
   private SportCenter sportCenter;
 
-
   //CONSTRUCTORS
 
   public Activity() {

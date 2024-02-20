@@ -9,6 +9,6 @@ import ca.mcgill.ecse321.sportcenter.model.Account;
  */
 public interface AccountRepository extends CrudRepository<Account, Integer>{
     
-    public Account findAccount(Integer accoundId); //accoundId is the Primary Key
+    public Account findAccountByaccountId(Integer accoundId); //accoundId is the Primary Key
 
 }

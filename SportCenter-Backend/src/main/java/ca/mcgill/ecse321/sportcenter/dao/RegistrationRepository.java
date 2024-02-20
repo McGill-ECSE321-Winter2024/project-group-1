@@ -9,5 +9,5 @@ import ca.mcgill.ecse321.sportcenter.model.Registration;
  */
 public interface RegistrationRepository extends CrudRepository<Registration, Integer>{
 
-    public Registration findRegistration(Integer regId); //regId is the Primary Key
+    public Registration findRegistrationByregId(Integer regId); //regId is the Primary Key
 } 
