@@ -57,6 +57,7 @@ public class TestActivityPersistence {
          * Save the Activity
          */
         activityRepository.save(activity);
+        name = activity.getName();
 
         /*
          * Load the Activity from the database

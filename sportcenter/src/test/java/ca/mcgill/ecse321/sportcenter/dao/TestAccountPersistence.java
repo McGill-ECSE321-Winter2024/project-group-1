@@ -33,7 +33,7 @@ public class TestAccountPersistence {
     public void testPersistAndLoadAccount() {
         
         // Create an Account
-        String username = "John";
+        String username = "Pablo";
         String password = "password";
         Account account = new Account(username, password);
 
@@ -42,12 +42,12 @@ public class TestAccountPersistence {
         int accountId = account.getAccountId();
 
         // Load from the database
-        Account accountDB = accountRepository.findAccountByAccountId(accountId);
+        account = accountRepository.findAccountByAccountId(accountId);
 
         // Check the attributes
-        assertNotNull(accountDB);
-        assertEquals(accountId, accountDB.getAccountId());
-        assertEquals(username, accountDB.getUsername());
-        assertEquals(password, accountDB.getPassword());
+        assertNotNull(account);
+        assertEquals(accountId, account.getAccountId());
+        assertEquals(username, account.getUsername());
+        assertEquals(password, account.getPassword());
     }
 }

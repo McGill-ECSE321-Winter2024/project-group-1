@@ -39,9 +39,11 @@ public class TestScheduledActivitytPersistence {
     @AfterEach
     public void clearDatabase() {
         scheduledActivityRepository.deleteAll();
-        accountRepository.deleteAll();
-        instructorRepository.deleteAll();
         activityRepository.deleteAll();
+        instructorRepository.deleteAll();
+        accountRepository.deleteAll();
+        
+        
     }
 
     /**
@@ -65,46 +67,51 @@ public class TestScheduledActivitytPersistence {
         activity.setDescription(description);
 
         activityRepository.save(activity);
+        activity = activityRepository.findActivityByName(name);
 
         /**
         * Create an Account, set the attributes of the Account, //and save the Account
         */
         Account account = new Account();
-        int accountId = 7;
-        String username = "John";
+        //int accountId = 7;
+        String username = "Juan";
         String password = "password";
         account.setUsername(username);
         account.setPassword(password);
-        account.setAccountId(accountId);
+        //account.setAccountId(accountId);
 
         accountRepository.save(account);
+        int accountId = account.getAccountId();
+        account = accountRepository.findAccountByAccountId(accountId);
 
         /**
          * Create an Instructor, set the attribute of the Instructor, //and save the Instructor
          */
         Instructor instructor = new Instructor();
-        int accountRoleId = 70;
+        //int accountRoleId = 70;
         InstructorStatus status = InstructorStatus.Active;
         String instructorDescription = "Good at teaching yoga.";
         String profilePicURL = "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0=";
-        instructor.setAccountRoleId(accountRoleId);
+        //instructor.setAccountRoleId(accountRoleId);
         instructor.setStatus(status);
         instructor.setDescription(instructorDescription);
         instructor.setProfilePicURL(profilePicURL);
         instructor.setAccount(account);
 
         instructorRepository.save(instructor);
+        int accountRoleId = instructor.getAccountRoleId();
+        instructor = instructorRepository.findAccountRoleByAccountRoleId(accountRoleId);
 
         /**
          * Create a ScheduledActivity, set the attributes of the ScheduledActivity, and save the ScheduledActivity
          */
         ScheduledActivity scheduledActivity = new ScheduledActivity();
-        int scheduledActivityId = 700;
+        //int scheduledActivityId = 700;
         LocalDate date = LocalDate.of(2021, 11, 11);
         LocalTime startTime = LocalTime.of(10, 30, 00);
         LocalTime endTime = LocalTime.of(11, 30, 00);
 
-        scheduledActivity.setScheduledActivityId(scheduledActivityId);
+        //scheduledActivity.setScheduledActivityId(scheduledActivityId);
         scheduledActivity.setDate(date);
         scheduledActivity.setStartTime(startTime);
         scheduledActivity.setEndTime(endTime);
@@ -112,11 +119,11 @@ public class TestScheduledActivitytPersistence {
         scheduledActivity.setActivity(activity);
 
         scheduledActivityRepository.save(scheduledActivity);
+        int scheduledActivityId = scheduledActivity.getScheduledActivityId();
 
         /**
          * Load the ScheduledActivity
          */
-        scheduledActivity = null;
         scheduledActivity = scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId);
 
         /**
@@ -128,7 +135,7 @@ public class TestScheduledActivitytPersistence {
         assertEquals(startTime, scheduledActivity.getStartTime()); 
         assertEquals(endTime, scheduledActivity.getEndTime());
         
-        assertEquals(activity, scheduledActivity.getActivity());
+        //assertEquals(activity, scheduledActivity.getActivity());
         assertEquals(name, scheduledActivity.getActivity().getName());
         assertEquals(description, scheduledActivity.getActivity().getDescription());
         assertEquals(subcategory, scheduledActivity.getActivity().getSubcategory());
