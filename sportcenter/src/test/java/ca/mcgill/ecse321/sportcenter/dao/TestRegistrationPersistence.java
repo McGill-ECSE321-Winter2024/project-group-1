@@ -47,8 +47,9 @@ public class TestRegistrationPersistence {
      */
     @AfterEach
     public void clearDatabase() {
-        scheduledActivityRepository.deleteAll();
         registrationRepository.deleteAll();
+        scheduledActivityRepository.deleteAll();
+        activityRepository.deleteAll();
         customerRepository.deleteAll();
         instructorRepository.deleteAll();
         accountRepository.deleteAll();
@@ -131,29 +132,51 @@ public class TestRegistrationPersistence {
         /**
          * Load the ScheduledActivity
          */
-        scheduledActivity = scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId);
+        scheduledActivity = scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId);        
 
         /**
-         * Create an Account, set the attributes of the Account, and save the Account
+         * Create an Account
          */
-        Account account = new Account();
-        String username = "Marco";
-        String password = "password";
-        account.setUsername(username);
-        account.setPassword(password);
-        accountRepository.save(account);
-        int accountId = account.getAccountId();
-        account = accountRepository.findAccountByAccountId(accountId);
+        Account account1 = new Account();
+        //int accountId = 3;
+        String username1 = "Maria";
+        String password1 = "password";
 
         /**
-         * Create a Customer, set the attributes of the Customer, and save the Customer
+         * Set the attributes of the Account
+         */
+        account1.setUsername(username1);
+        account1.setPassword(password1);
+        //account.setAccountId(accountId);
+
+        /**
+         * Save the Account
+         */
+        accountRepository.save(account1);
+        int accountId1 = account.getAccountId();
+        account1 = accountRepository.findAccountByAccountId(accountId1);
+
+        /**
+         * Create a Customer
          */
         Customer customer = new Customer();
+        //int accountRoleId = 300;
+        /**
+         * Set the attributes of the Customer
+         */
+        //customer.setAccountRoleId(accountRoleId);
         customer.setAccount(account);
+        /**
+         * Save the Customer
+         */
         customerRepository.save(customer);
-        int accountRoleId = customer.getAccountRoleId();
-        customer = customerRepository.findAccountRoleByAccountRoleId(accountRoleId);
-        
+        int accountRoleId1 = customer.getAccountRoleId();
+
+        /**
+         * Load the Customer
+         */
+        customer = customerRepository.findAccountRoleByAccountRoleId(accountRoleId1);        
+
         /**
          * Create a Registration, set the attributes of the Registration, and save the Registration
          */
