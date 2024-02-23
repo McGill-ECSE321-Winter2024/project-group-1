@@ -2,7 +2,6 @@ package ca.mcgill.ecse321.sportcenter.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 
 @Entity
@@ -15,12 +14,9 @@ public class Instructor extends AccountRole
   private InstructorStatus status; 
   private String description;
   private String profilePicURL;
-
-  @ManyToOne(optional = false) //many instructors in a sport center
-  private SportCenter sportCenter;
   
   @OneToOne(optional = true) //an account can at most have 1 instructor account role
-  @JoinColumn(name = "account_id") //account_id is a FK
+  @JoinColumn(name = "accountId") //account_id is a FK
   private Account account;
 
   
@@ -30,9 +26,8 @@ public class Instructor extends AccountRole
 
   }
 
-  public Instructor(int aAccountRoleId, InstructorStatus aStatus, String aDescription, String aProfilePicURL, SportCenter aSportCenter, Account aAccount)
+  public Instructor(InstructorStatus aStatus, String aDescription, String aProfilePicURL, Account aAccount)
   {
-    super(aAccountRoleId);
     status = aStatus;
     description = aDescription;
     profilePicURL = aProfilePicURL;
@@ -45,14 +40,6 @@ public class Instructor extends AccountRole
   }
 
   //SETTERS
-
-  public boolean setSportCenter(SportCenter aSportCenter)
-  {
-    boolean wasSet = false;
-    sportCenter = aSportCenter;
-    wasSet = true;
-    return wasSet;
-  }
 
   public boolean setStatus(InstructorStatus aStatus)
   {
@@ -104,11 +91,6 @@ public class Instructor extends AccountRole
   public String getProfilePicURL()
   {
     return profilePicURL;
-  }
-
-  public SportCenter getSportCenter()
-  {
-    return sportCenter;
   }
 
   public Account getAccount()

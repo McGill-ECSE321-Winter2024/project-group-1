@@ -9,11 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.sportcenter.model.Owner;
-import ca.mcgill.ecse321.sportcenter.model.SportCenter;
 import ca.mcgill.ecse321.sportcenter.model.Account;
 
 /**
- * Author: Andrew Nemr
+ * @author Andrew Nemr and Patrick Zakaria
  */
 
 @SpringBootTest
@@ -41,30 +40,26 @@ public class TestOwnerPersistence {
         /**
          * Create an Account, set the attributes of the Account, and save the Account
          */
-        SportCenter sportCenter = new SportCenter();
         Account account = new Account();
-        int accountId = 001;
+        int accountId = 5;
         String username = "John";
         String password = "password";
         account.setUsername(username);
         account.setPassword(password);
         account.setAccountId(accountId);
-        account.setSportCenter(sportCenter);
         accountRepository.save(account);
 
         /**
          * Create an Owner, set the attributes of the Owner, and save the Owner
          */
         Owner owner = new Owner();
-        int accountRoleId = 100;
+        int accountRoleId = 500;
         owner.setAccountRoleId(accountRoleId);
-        owner.setSportCenter(sportCenter);
         ownerRepository.save(owner);
 
         /**
          * Load the Owner
          */
-        owner = null;
         owner = ownerRepository.findAccountRoleByAccountRoleId(accountRoleId);
 
         /**

@@ -9,11 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.sportcenter.model.Customer;
-import ca.mcgill.ecse321.sportcenter.model.SportCenter;
 import ca.mcgill.ecse321.sportcenter.model.Account;
 
 /**
- * Author: Andrew Nemr
+ * @author Andrew Nemr and Patrick Zakaria
  */
 
 @SpringBootTest
@@ -41,10 +40,9 @@ public class TestCustomerPersistence {
         /**
          * Create an Account
          */
-        SportCenter sportCenter = new SportCenter();
         Account account = new Account();
-        int accountId = 001;
-        String username = "John";
+        int accountId = 3;
+        String username = "Mary";
         String password = "password";
 
         /**
@@ -53,7 +51,6 @@ public class TestCustomerPersistence {
         account.setUsername(username);
         account.setPassword(password);
         account.setAccountId(accountId);
-        account.setSportCenter(sportCenter);
 
         /**
          * Save the Account
@@ -64,12 +61,12 @@ public class TestCustomerPersistence {
          * Create a Customer
          */
         Customer customer = new Customer();
-        int accountRoleId = 100;
+        int accountRoleId = 300;
         /**
          * Set the attributes of the Customer
          */
+        customer.setAccountRoleId(accountRoleId);
         customer.setAccount(account);
-        customer.setSportCenter(sportCenter);
         /**
          * Save the Customer
          */
@@ -78,17 +75,16 @@ public class TestCustomerPersistence {
         /**
          * Load the Customer
          */
-        customer = null;
-        Customer foundCustomer = customerRepository.findAccountRoleByAccountRoleId(accountRoleId);
+        customer = customerRepository.findAccountRoleByAccountRoleId(accountRoleId);
 
         /**
          * Check the attributes of the Customer
          */    
-        assertNotNull(foundCustomer);
-        assertEquals(accountRoleId, foundCustomer.getAccountRoleId());
-        assertEquals(username, foundCustomer.getAccount().getUsername());
-        assertEquals(password, foundCustomer.getAccount().getPassword());
-        assertEquals(accountId,foundCustomer.getAccount().getAccountId());
+        assertNotNull(customer);
+        assertEquals(accountRoleId, customer.getAccountRoleId());
+        assertEquals(username, customer.getAccount().getUsername());
+        assertEquals(password, customer.getAccount().getPassword());
+        assertEquals(accountId, customer.getAccount().getAccountId());
     }
 }
 

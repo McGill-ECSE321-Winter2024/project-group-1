@@ -9,9 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.sportcenter.model.Account;
-import ca.mcgill.ecse321.sportcenter.model.SportCenter;
 /**
- * Author: Andrew Nemr
+ * @author Andrew Nemr and Patrick Zakaria
  */
 
 @SpringBootTest
@@ -33,36 +32,22 @@ public class TestAccountPersistence {
     @Test
     public void testPersistAndLoadAccount() {
         
-        /*
-         * Create an Account
-         */
-
-        SportCenter sportCenter = new SportCenter();
-        Account account = new Account();
-        int accountId = 123;
+        // Create an Account
         String username = "John";
         String password = "password";
-        
-        /*
-         * Set the attributes of the Account
-         */
-        account.setUsername(username);
-        account.setPassword(password);
-        account.setSportCenter(sportCenter);
-        accountRepository.save(account);
+        Account account = new Account(username, password);
 
-        /*
-         * Load the Account
-         */
-        account = null;
-        account = accountRepository.findAccountByAccountId(accountId);
+        // Save in the database
+        account = accountRepository.save(account);
+        int accountId = account.getAccountId();
 
-        /*
-         * Check the attributes of the Account
-         */
-        assertNotNull(account);
-        assertEquals(username, account.getUsername());
-        assertEquals(password, account.getPassword());
-        assertEquals(accountId, account.getAccountId());
+        // Load from the database
+        Account accountDB = accountRepository.findAccountByAccountId(accountId);
+
+        // Check the attributes
+        assertNotNull(accountDB);
+        assertEquals(accountId, accountDB.getAccountId());
+        assertEquals(username, accountDB.getUsername());
+        assertEquals(password, accountDB.getPassword());
     }
 }

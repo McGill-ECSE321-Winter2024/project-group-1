@@ -5,7 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Account
@@ -15,15 +14,12 @@ public class Account
   private static Map<String, Account> accountsByUsername = new HashMap<String, Account>();
 
   //User Attributes
-  private String username;
+  private String username; // unique turn into primary key? -Patrick
   private String password;
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO) 
   private int accountId;
-
-  @ManyToOne(optional = false) //there are many user accounts in a sport center
-  private SportCenter sportCenter;
 
   //CONSTRUCTORS
 
@@ -31,10 +27,9 @@ public class Account
 
   }
 
-  public Account(String aUsername, String aPassword, int aAccountId, SportCenter aSportCenter)
+  public Account(String aUsername, String aPassword)
   {
     password = aPassword;
-    accountId = aAccountId;
     if (!setUsername(aUsername))
     {
       throw new RuntimeException("Cannot create due to duplicate username.");
@@ -43,14 +38,6 @@ public class Account
   }
 
   //SETTERS
-
-  public boolean setSportCenter(SportCenter aSportCenter)
-  {
-    boolean wasSet = false;
-    sportCenter = aSportCenter;
-    wasSet = true;
-    return wasSet;
-  }
 
   public boolean setUsername(String aUsername)
   {
@@ -112,11 +99,6 @@ public class Account
   public int getAccountId()
   {
     return accountId;
-  }
- 
-  public SportCenter getSportCenter()
-  {
-    return sportCenter;
   }
 
 }

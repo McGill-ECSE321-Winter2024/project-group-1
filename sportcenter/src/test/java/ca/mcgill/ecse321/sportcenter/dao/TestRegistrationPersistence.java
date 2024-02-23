@@ -16,10 +16,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import ca.mcgill.ecse321.sportcenter.model.Registration;
 import ca.mcgill.ecse321.sportcenter.model.Customer;
 import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity;
-import ca.mcgill.ecse321.sportcenter.model.SportCenter;
 
 /**
- * Author: Andrew Nemr
+ * @author Andrew Nemr and Patrick Zakaria
  */
 @SpringBootTest
 public class TestRegistrationPersistence {
@@ -49,9 +48,8 @@ public class TestRegistrationPersistence {
         /**
          * Create a ScheduledActivity, set the attributes of the ScheduledActivity, and save the ScheduledActivity
          */
-        SportCenter sportCenter = new SportCenter();
         ScheduledActivity scheduledActivity = new ScheduledActivity();
-        int scheduledActivityId = 123;
+        int scheduledActivityId = 6;
         LocalDate date = LocalDate.of(2021, 11, 11);
         LocalTime startTime = LocalTime.of(10, 30, 00);
         LocalTime endTime = LocalTime.of(11, 30, 00);
@@ -59,7 +57,6 @@ public class TestRegistrationPersistence {
         scheduledActivity.setStartTime(startTime);
         scheduledActivity.setEndTime(endTime);
         scheduledActivity.setScheduledActivityId(scheduledActivityId);
-        scheduledActivity.setSportCenter(sportCenter);
         scheduledActivityRepository.save(scheduledActivity);
 
         /**
@@ -72,17 +69,15 @@ public class TestRegistrationPersistence {
          * Create a Registration, set the attributes of the Registration, and save the Registration
          */
         Registration registration = new Registration();
-        int regID = 123;
+        int regID = 600;
         registration.setCustomer(customer);
         registration.setScheduledActivity(scheduledActivity);
         registration.setRegId(regID);
-        registration.setSportCenter(sportCenter);
         registrationRepository.save(registration);
 
         /**
          * Load the Registration and check the attributes of the Registration
          */
-        registration = null;
         registration = registrationRepository.findRegistrationByRegId(regID);//could be by id
 
         /**

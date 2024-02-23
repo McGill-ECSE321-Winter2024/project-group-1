@@ -9,12 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.sportcenter.model.Instructor;
-import ca.mcgill.ecse321.sportcenter.model.SportCenter;
 import ca.mcgill.ecse321.sportcenter.model.Instructor.InstructorStatus;
 import ca.mcgill.ecse321.sportcenter.model.Account;
 /**
- * Author: Andrew Nemr
-
+ * @author Andrew Nemr and Patrick Zakaria
  */
 
 @SpringBootTest
@@ -43,35 +41,36 @@ public class TestInstructorPersistence {
         * Create an Account, set the attributes of the Account, and save the Account
         */
         Account account = new Account();
-        int accountId = 001;
+        int accountId = 4;
         String username = "John";
         String password = "password";
+
         account.setUsername(username);
         account.setPassword(password);
         account.setAccountId(accountId);
+
         accountRepository.save(account);
 
         /**
          * Create an Instructor, set the attributes of the Instructor, and save the Instructor
          */
-        SportCenter sportCenter = new SportCenter();
         Instructor instructor = new Instructor();
-        int accountRoleId = 100;
+        int accountRoleId = 400;
         InstructorStatus status = InstructorStatus.Active;
-        String profilepicUrl = "https://www.google.com";
+        String profilepicUrl = "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0=";
         String description = "Professional instructor with 10 years of experience.";
+
         instructor.setAccountRoleId(accountRoleId);
         instructor.setStatus(status);
         instructor.setProfilePicURL(profilepicUrl);
         instructor.setDescription(description);
         instructor.setAccount(account);
-        instructor.setSportCenter(sportCenter);
+
         instructorRepository.save(instructor);
 
         /**
          * Load the Instructor and check the attributes of the Instructor
          */
-        instructor = null;
         instructor = instructorRepository.findAccountRoleByAccountRoleId(accountRoleId);
 
         /**

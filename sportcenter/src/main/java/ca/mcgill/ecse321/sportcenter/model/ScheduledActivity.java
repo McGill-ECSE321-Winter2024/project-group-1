@@ -21,15 +21,12 @@ public class ScheduledActivity
   private LocalDate date;
   private LocalTime startTime;
   private LocalTime endTime;
-
-  @ManyToOne(optional = false) //there are many scheduled activities for a sport center
-  private SportCenter sportCenter;
  
   @ManyToOne(optional = false) //an instructor can teach many scheduled activities
   private Instructor supervisor;
  
   @ManyToOne(optional = false) //a scheduled activity consists of one activity, yet activities can have many Sched. activities
-  @JoinColumn(name = "activity_name") //activity is a FK
+  @JoinColumn(name = "name") //activity is a FK
   private Activity activity;
 
   
@@ -39,9 +36,8 @@ public class ScheduledActivity
     
   }
 
-  public ScheduledActivity(int aScheduledActivityId, LocalDate aDate, LocalTime aStartTime, LocalTime aEndTime, SportCenter aSportCenter, Instructor aAccounts, Activity aActivity)
+  public ScheduledActivity(LocalDate aDate, LocalTime aStartTime, LocalTime aEndTime, Instructor aAccounts, Activity aActivity)
   {
-    scheduledActivityId = aScheduledActivityId;
     date = aDate;
     startTime = aStartTime;
     endTime = aEndTime;
@@ -57,14 +53,6 @@ public class ScheduledActivity
   }
 
   //SETTERS
-  
-  public boolean setSportCenter(SportCenter aSportCenter)
-  {
-    boolean wasSet = false;
-    sportCenter = aSportCenter;
-    wasSet = true;
-    return wasSet;
-  }
 
   public boolean setScheduledActivityId(int aScheduledActivityId)
   {
@@ -141,12 +129,7 @@ public class ScheduledActivity
   {
     return endTime;
   }
-
-  public SportCenter getSportCenter()
-  {
-    return sportCenter;
-  }
-
+  
   public Instructor getSupervisor()
   {
     return supervisor;

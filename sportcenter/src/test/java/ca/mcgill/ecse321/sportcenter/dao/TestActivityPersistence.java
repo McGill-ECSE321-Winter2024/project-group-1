@@ -9,11 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.sportcenter.model.Activity;
-import ca.mcgill.ecse321.sportcenter.model.SportCenter;
 import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
 
 /**
- * @author Andrew Nemr
+ * @author Andrew Nemr and Patrick Zakaria
  */
 
 @SpringBootTest
@@ -40,7 +39,6 @@ public class TestActivityPersistence {
         /*
          * Create an Activity
          */
-        SportCenter sportCenter = new SportCenter();
         Activity activity = new Activity();
         ClassCategory subcategory = ClassCategory.Strength;
         String name = "Yoga";
@@ -54,7 +52,6 @@ public class TestActivityPersistence {
         activity.setDescription(description);
         activity.setSubcategory(subcategory);
         activity.setIsApproved(isApproved);
-        activity.setSportCenter(sportCenter);
 
         /*
          * Save the Activity
@@ -64,7 +61,6 @@ public class TestActivityPersistence {
         /*
          * Load the Activity from the database
          */
-        activity = null;
         activity = activityRepository.findActivityByName(name);
 
         /*
