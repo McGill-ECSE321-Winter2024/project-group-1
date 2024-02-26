@@ -37,7 +37,7 @@ public class TestActivityPersistence {
     public void testPersistAndLoadActivity() {
 
         /*
-         * Create an Activity
+         * Create an Activity, set the attributes of the Activity, and save the Activity
          */
         Activity activity = new Activity();
         ClassCategory subcategory = ClassCategory.Strength;
@@ -45,22 +45,16 @@ public class TestActivityPersistence {
         String description = "Practice yoga with a professional instructor.";
         boolean isApproved = true;
 
-        /*
-         * Set the attributes of the Activity
-         */
         activity.setName(name);
         activity.setDescription(description);
         activity.setSubcategory(subcategory);
         activity.setIsApproved(isApproved);
 
-        /*
-         * Save the Activity
-         */
         activityRepository.save(activity);
         name = activity.getName();
 
         /*
-         * Load the Activity from the database
+         * Load the Activity from the database, using the name as the key
          */
         activity = activityRepository.findActivityByName(name);
 

@@ -32,16 +32,14 @@ public class TestAccountPersistence {
     @Test
     public void testPersistAndLoadAccount() {
         
-        // Create an Account
+        // Create an Account, Save in the database and Load from the database
         String username = "Pablo";
         String password = "password";
         Account account = new Account(username, password);
 
-        // Save in the database
         account = accountRepository.save(account);
         int accountId = account.getAccountId();
 
-        // Load from the database
         account = accountRepository.findAccountByAccountId(accountId);
 
         // Check the attributes

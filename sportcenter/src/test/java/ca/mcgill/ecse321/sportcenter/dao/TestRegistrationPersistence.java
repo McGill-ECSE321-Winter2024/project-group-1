@@ -7,8 +7,6 @@ import java.time.LocalTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.ignoreStubs;
-import static org.mockito.Mockito.inOrder;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -81,12 +79,10 @@ public class TestRegistrationPersistence {
         * Create an Account, set the attributes of the Account, //and save the Account
         */
         Account account = new Account();
-        //int accountId = 7;
         String username = "Juan";
         String password = "password";
         account.setUsername(username);
         account.setPassword(password);
-        //account.setAccountId(accountId);
 
         accountRepository.save(account);
         int accountId = account.getAccountId();
@@ -96,11 +92,9 @@ public class TestRegistrationPersistence {
          * Create an Instructor, set the attribute of the Instructor, //and save the Instructor
          */
         Instructor instructor = new Instructor();
-        //int accountRoleId = 70;
         InstructorStatus status = InstructorStatus.Active;
         String instructorDescription = "Good at teaching yoga.";
         String profilePicURL = "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0=";
-        //instructor.setAccountRoleId(accountRoleId);
         instructor.setStatus(status);
         instructor.setDescription(instructorDescription);
         instructor.setProfilePicURL(profilePicURL);
@@ -114,12 +108,10 @@ public class TestRegistrationPersistence {
          * Create a ScheduledActivity, set the attributes of the ScheduledActivity, and save the ScheduledActivity
          */
         ScheduledActivity scheduledActivity = new ScheduledActivity();
-        //int scheduledActivityId = 700;
         LocalDate date = LocalDate.of(2021, 11, 11);
         LocalTime startTime = LocalTime.of(10, 30, 00);
         LocalTime endTime = LocalTime.of(11, 30, 00);
 
-        //scheduledActivity.setScheduledActivityId(scheduledActivityId);
         scheduledActivity.setDate(date);
         scheduledActivity.setStartTime(startTime);
         scheduledActivity.setEndTime(endTime);
@@ -138,7 +130,6 @@ public class TestRegistrationPersistence {
          * Create an Account
          */
         Account account1 = new Account();
-        //int accountId = 3;
         String username1 = "Maria";
         String password1 = "password";
 
@@ -147,7 +138,6 @@ public class TestRegistrationPersistence {
          */
         account1.setUsername(username1);
         account1.setPassword(password1);
-        //account.setAccountId(accountId);
 
         /**
          * Save the Account
@@ -160,11 +150,9 @@ public class TestRegistrationPersistence {
          * Create a Customer
          */
         Customer customer = new Customer();
-        //int accountRoleId = 300;
         /**
          * Set the attributes of the Customer
          */
-        //customer.setAccountRoleId(accountRoleId);
         customer.setAccount(account);
         /**
          * Save the Customer
@@ -181,10 +169,8 @@ public class TestRegistrationPersistence {
          * Create a Registration, set the attributes of the Registration, and save the Registration
          */
         Registration registration = new Registration();
-        //int regID = 600;
         registration.setCustomer(customer);
         registration.setScheduledActivity(scheduledActivity);
-        //registration.setRegId(regID);
         registrationRepository.save(registration);
         int regId = registration.getRegId();
 
@@ -198,8 +184,6 @@ public class TestRegistrationPersistence {
          */
         assertNotNull(registration);
         assertEquals(regId, registration.getRegId());
-        //assertEquals(customer, registration.getCustomer());
-        //assertEquals(scheduledActivity, registration.getScheduledActivity());
         assertEquals(date, registration.getScheduledActivity().getDate());
         assertEquals(startTime, registration.getScheduledActivity().getStartTime());
         assertEquals(endTime, registration.getScheduledActivity().getEndTime());

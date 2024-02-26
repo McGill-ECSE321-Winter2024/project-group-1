@@ -2,7 +2,6 @@ package ca.mcgill.ecse321.sportcenter.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assumptions.abort;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -39,40 +38,26 @@ public class TestCustomerPersistence {
     public void testPersistAndLoadCustomer() {
 
         /**
-         * Create an Account
+         * Create an Account, set the attributes of the Account, and save the Account
          */
         Account account = new Account();
-        //int accountId = 3;
         String username = "Maria";
         String password = "password";
 
-        /**
-         * Set the attributes of the Account
-         */
         account.setUsername(username);
         account.setPassword(password);
-        //account.setAccountId(accountId);
 
-        /**
-         * Save the Account
-         */
         accountRepository.save(account);
         int accountId = account.getAccountId();
         account = accountRepository.findAccountByAccountId(accountId);
 
         /**
-         * Create a Customer
+         * Create a Customer, set the attributes of the Customer, and save the Customer
          */
         Customer customer = new Customer();
-        //int accountRoleId = 300;
-        /**
-         * Set the attributes of the Customer
-         */
-        //customer.setAccountRoleId(accountRoleId);
+
         customer.setAccount(account);
-        /**
-         * Save the Customer
-         */
+
         customerRepository.save(customer);
         int accountRoleId = customer.getAccountRoleId();
 
