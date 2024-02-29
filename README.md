@@ -1,4 +1,4 @@
-# Sport Center Web Application 💪 (GR1) <br> _Are you ready to workout?_
+# Sport Center Web Application 💪 (GR1) <br> _Ready to get your workout in?_
 
 ## Project Scope
 Our team of developers have been put in charge of creating a fully functional web application for a local sport center. In addition of this main task, we also have to deliver extensive documentation that includes requirements, use cases, details about the implementation process, and replicable testing procedures. The deployment of the application also requires the use of a local database.
