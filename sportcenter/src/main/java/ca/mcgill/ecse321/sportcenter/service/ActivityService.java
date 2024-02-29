@@ -42,21 +42,33 @@ public class ActivityService {
     }
 
     /**
-     * Create an activity
+     * Create an activity where only the instructor can create an activity
      * @param name
      * @param description
      * @param isApproved
      * @param subcategory
      * @return Activity
      */
+
     @Transactional
     public Activity createActivity(String name, String description, Boolean isApproved, ClassCategory subcategory) {
+        if (name == null || name.trim().length() == 0) {
+            throw new IllegalArgumentException("Name cannot be empty!");
+        }
+        if (description == null || description.trim().length() == 0) {
+            throw new IllegalArgumentException("Description cannot be empty!");
+        }
+        if (isApproved == null) {
+            throw new IllegalArgumentException("Approval status cannot be empty!");
+        }
+        if (subcategory == null) {
+            throw new IllegalArgumentException("Subcategory cannot be empty!");
+        }
         Activity activity = new Activity();
         activity.setName(name);
+        activity.setDescription(description);
         activity.setIsApproved(isApproved);
         activity.setSubcategory(subcategory);
-        activity.setDescription(description);
-
         activityRepository.save(activity);
         return activity;
     }

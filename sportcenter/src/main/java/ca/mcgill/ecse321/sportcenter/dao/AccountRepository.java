@@ -11,6 +11,6 @@ public interface AccountRepository extends CrudRepository<Account, Integer>{
     
     public Account findAccountByAccountId(int accoundId); //accoundId is the Primary Key
     
-    public Account findAccountByUsername(String username);
+    public Account findAccountByUsername(String username);//check with TA if we want an accountId or username to be the primary key
 
 }
