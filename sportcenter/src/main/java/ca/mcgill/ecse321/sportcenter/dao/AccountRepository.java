@@ -10,5 +10,7 @@ import ca.mcgill.ecse321.sportcenter.model.Account;
 public interface AccountRepository extends CrudRepository<Account, Integer>{
     
     public Account findAccountByAccountId(int accoundId); //accoundId is the Primary Key
+    
+    public Account findAccountByUsername(String username);
 
 }

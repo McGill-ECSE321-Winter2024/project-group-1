@@ -14,6 +14,15 @@ public class ActivityService {
     @Autowired
     ActivityRepository activityRepository;
 
+
+    private <T> List<T> toList(Iterable<T> iterable) {
+        List<T> resultList = new ArrayList<T>();
+        for (T t : iterable) {
+            resultList.add(t);
+        }
+        return resultList;
+    }
+
     public List<Activity> getActivities() {
         return toList(activityRepository.findAll());
     }
@@ -128,7 +137,12 @@ public class ActivityService {
         }
         else{
             Activity activity = activityRepository.findActivityByName(name);
-            activityRepository.delete(activity);
+            if (activity == null) {
+                throw new IllegalArgumentException("Activity does not exist!");
+            }
+            else{
+                activityRepository.delete(activity);
+            }
         }
     }
 
@@ -174,14 +188,4 @@ public class ActivityService {
         }
         return activitiesByIsApproved;
     }
-
-    private <T> List<T> toList(Iterable<T> iterable) {
-        List<T> resultList = new ArrayList<T>();
-        for (T t : iterable) {
-            resultList.add(t);
-        }
-        return resultList;
-    }
-
-
 }

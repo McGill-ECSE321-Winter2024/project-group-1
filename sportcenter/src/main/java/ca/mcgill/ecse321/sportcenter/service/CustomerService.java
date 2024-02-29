@@ -14,16 +14,6 @@ public class CustomerService {
     @Autowired
     CustomerRepository customerRepository;
 
-    public List<Customer> getCustomers() {
-        return toList(customerRepository.findAll());
-    }
-
-    /**
-     * Converts an Iterable to a List.
-     * 
-     * @param iterable the Iterable to convert
-     * @return a List containing the elements of the Iterable
-     */
     private <T> List<T> toList(Iterable<T> iterable) {
         List<T> list = new ArrayList<>();
         iterable.forEach(list::add);
@@ -38,6 +28,63 @@ public class CustomerService {
 
     @Transactional
     public Customer getCustomer(int accountRoleId) {
+        if (accountRoleId < 0) {
+            throw new IllegalArgumentException("AccountRoleId cannot be negative!");
+        }
+        return customerRepository.findAccountRoleByAccountRoleId(accountRoleId);
+    }
+
+    /**
+     * Create a customer
+     * @param accountRoleId
+     * @return Customer
+     */
+    @Transactional
+    public Customer createCustomer(int accountRoleId) {
+        Customer customer = new Customer();
+        customer.setAccountRoleId(accountRoleId);
+        customerRepository.save(customer);
+        return customer;
+    }
+    /**
+     * Get all customers
+     * @return List<Customer>
+     */
+    @Transactional
+    public List<Customer> getAllCustomers() {
+        return toList(customerRepository.findAll());
+    }
+
+    /**
+     * Update a customer's accountRoleId
+     * @param accountRoleId
+     * @param newAccountRoleId
+     * @return Customer
+     */
+    @Transactional
+    public Customer updateCustomer(int accountRoleId, int newAccountRoleId) {
+        Customer customer = customerRepository.findAccountRoleByAccountRoleId(accountRoleId);
+        customer.setAccountRoleId(newAccountRoleId);
+        customerRepository.save(customer);
+        return customer;
+    }
+
+    /**
+     * Delete a customer by its accountRoleId (primary key)
+     * @param accountRoleId
+     */
+    @Transactional
+    public void deleteCustomer(int accountRoleId) {
+        customerRepository.deleteById(accountRoleId);
+    }
+
+    /**
+     * Get a customer by its accountRoleId (primary key)
+     * @param accountRoleId
+     * @return Customer
+     */
+    @Transactional
+    public Customer getCustomerByRoleId(int accountRoleId) {
         if (accountRoleId < 0) {
             throw new IllegalArgumentException("AccountRoleId cannot be negative!");
         }

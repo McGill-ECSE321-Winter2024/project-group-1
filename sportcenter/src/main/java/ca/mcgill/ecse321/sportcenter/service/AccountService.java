@@ -14,14 +14,22 @@ import ca.mcgill.ecse321.sportcenter.model.Account;
 public class AccountService {
     @Autowired
     AccountRepository accountRepository;
+    
+    private <T> List<T> toList(Iterable<T> iterable) {
+        List<T> resultList = new ArrayList<T>();
+        for (T t : iterable) {
+            resultList.add(t);
+        }
+        return resultList;
+    }
+
     /**
-     * Get an account by its account ID (primary key)
-     * @param accountId
+     * Create an account
+     * @param username
+     * @param password
      * @return Account
-     * 
      * @author Andrew Nemr
      */
-
     @Transactional
     public Account createAccount(String username, String password) {
         Account account = new Account();
@@ -30,7 +38,12 @@ public class AccountService {
         accountRepository.save(account);
         return account;
     }
-
+    /**
+     * Get an account by its account ID (primary key)
+     * @param accountId
+     * @return Account
+     * 
+     */
     @Transactional
     public Account getAccountById(int accountId) {
         Account account = accountRepository.findAccountByAccountId(accountId);
@@ -39,6 +52,11 @@ public class AccountService {
         }
         return account;
     }
+    /**
+     * Validate an account's username and password
+     * @param username
+     * @param password
+     */
 
     private void validateAccount(String username, String password) {
         String error = "";
@@ -63,13 +81,6 @@ public class AccountService {
         return toList(accountRepository.findAll());
     }
 
-    private <T> List<T> toList(Iterable<T> iterable) {
-        List<T> resultList = new ArrayList<T>();
-        for (T t : iterable) {
-            resultList.add(t);
-        }
-        return resultList;
-    }
     /**
      * Delete an account by its account ID (primary key)
      * @param accountId
@@ -95,5 +106,26 @@ public class AccountService {
         account.setPassword(password);
         accountRepository.save(account);
         return account;
+    }
+    /**
+     * Get an account by its username
+     * @param username
+     * @return Account
+     */
+    @Transactional
+    public Account getAccountByUsername(String username) {
+        Account account = accountRepository.findAccountByUsername(username);
+        if (account == null) {
+            throw new IllegalArgumentException("Account does not exist");
+        }
+        return account;
+    }
+    /**
+     * Delete all accounts
+     * @return void
+     */
+    @Transactional
+    public void deleteAllAccounts() {
+        accountRepository.deleteAll();
     }
 }
