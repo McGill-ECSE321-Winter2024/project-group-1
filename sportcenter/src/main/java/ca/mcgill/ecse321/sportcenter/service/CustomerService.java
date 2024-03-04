@@ -23,7 +23,7 @@ public class CustomerService {
      * Get a customer by its accountRole Id (primary key)
      * @param accountRoleId
      * @return Customer
-     * 
+     * @Author Andrew Nemr
      */
 
     @Transactional
