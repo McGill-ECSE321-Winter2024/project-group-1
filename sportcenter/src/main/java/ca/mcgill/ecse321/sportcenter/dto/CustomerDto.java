@@ -11,5 +11,15 @@ public class CustomerDto{
         this.accountRoleId = accountRoleId;
     }
 
+    public int getAccountRoleId() {
+        return accountRoleId;
+    }
 
+    public void setAccountRoleId(int accountRoleId) {
+        this.accountRoleId = accountRoleId;
+    }
+
+    public static CustomerDto convertToDto(Customer customer) {
+        return new CustomerDto(customer.getAccountRoleId());
+    }
 }

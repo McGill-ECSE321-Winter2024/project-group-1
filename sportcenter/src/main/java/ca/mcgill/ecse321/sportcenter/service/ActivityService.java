@@ -45,21 +45,17 @@ public class ActivityService {
      * Create an activity where only the instructor can create an activity
      * @param name
      * @param description
-     * @param isApproved
      * @param subcategory
      * @return Activity
      */
 
     @Transactional
-    public Activity createActivity(String name, String description, Boolean isApproved, ClassCategory subcategory) {
+    public Activity createActivity(String name, String description, ClassCategory subcategory) {
         if (name == null || name.trim().length() == 0) {
             throw new IllegalArgumentException("Name cannot be empty!");
         }
         if (description == null || description.trim().length() == 0) {
             throw new IllegalArgumentException("Description cannot be empty!");
-        }
-        if (isApproved == null) {
-            throw new IllegalArgumentException("Approval status cannot be empty!");
         }
         if (subcategory == null) {
             throw new IllegalArgumentException("Subcategory cannot be empty!");
@@ -67,7 +63,6 @@ public class ActivityService {
         Activity activity = new Activity();
         activity.setName(name);
         activity.setDescription(description);
-        activity.setIsApproved(isApproved);
         activity.setSubcategory(subcategory);
         activityRepository.save(activity);
         return activity;
@@ -82,68 +77,29 @@ public class ActivityService {
     }
 
     /**
-     * Update an activity's name
+     * Update an activity
      * @param name
      * @param newName
      * @return Activity
      **/
     @Transactional
-    public Activity updateActivityName(String name, String newName) {
+    public Activity updateActivity(String name, String newName, String newDescription, ClassCategory newSubcategory) {
         Activity activity = activityRepository.findActivityByName(name);
         activity.setName(newName);
-        activityRepository.save(activity);
-        return activity;
-    }
-
-    /**
-     * Update an activity's description
-     * @param name
-     * @param newDescription
-     * @return Activity
-     **/
-    @Transactional
-    public Activity updateActivityDescription(String name, String newDescription) {
-        Activity activity = activityRepository.findActivityByName(name);
         activity.setDescription(newDescription);
-        activityRepository.save(activity);
-        return activity;
-    }
-
-    /**
-     * Update an activity's approval status
-     * @param name
-     * @param newIsApproved
-     * @return Activity
-     **/
-    @Transactional
-    public Activity updateActivityIsApproved(String name, Boolean newIsApproved) {
-        Activity activity = activityRepository.findActivityByName(name);
-        activity.setIsApproved(newIsApproved);
-        activityRepository.save(activity);
-        return activity;
-    }
-
-    /**????????????????????????????????????
-     * Update an activity's subcategory
-     * @param name
-     * @param newSubcategory
-     * @return Activity
-     **/
-    @Transactional
-    public Activity updateActivitySubcategory(String name, ClassCategory newSubcategory) {
-        Activity activity = activityRepository.findActivityByName(name);
         activity.setSubcategory(newSubcategory);
         activityRepository.save(activity);
         return activity;
     }
 
+
     /**
      * Delete an activity
      * @param name
-     * @return void
+     * @return Activity
      **/
     @Transactional
-    public void deleteActivity(String name) {
+    public Activity deleteActivity(String name) {
         if (name == null || name.trim().length() == 0) {
             throw new IllegalArgumentException("Name cannot be empty!");
         }
@@ -154,6 +110,7 @@ public class ActivityService {
             }
             else{
                 activityRepository.delete(activity);
+                return activity;
             }
         }
     }

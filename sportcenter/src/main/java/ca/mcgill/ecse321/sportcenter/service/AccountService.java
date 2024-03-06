@@ -96,8 +96,8 @@ public class AccountService {
      * @param password
      */
     @Transactional
-    public Account updateAccount(int accountId, String username, String password) {
-        Account account = accountRepository.findAccountByAccountId(accountId);
+    public Account updateAccount(String oldUsername, String username, String password) {
+        Account account = accountRepository.findAccountByUsername(oldUsername);
         if (account == null) {
             throw new IllegalArgumentException("Account does not exist");
         }
@@ -128,4 +128,7 @@ public class AccountService {
     public void deleteAllAccounts() {
         accountRepository.deleteAll();
     }
+
+    // check group 14 of winter 2022 good ideas for checking for stuff
+
 }

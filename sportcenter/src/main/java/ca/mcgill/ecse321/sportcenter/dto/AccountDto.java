@@ -15,12 +15,20 @@ public class AccountDto {
         this.username = username;
         this.password = password;
     }
-
+    //converts an account to an accountDto and wants to know what type of person the account is
     public static AccountDto convertAccountDto(Account account) {
+        if (account == null){
+            throw new IllegalArgumentException("There is no account to convert");
+        }
         return new AccountDto(account.getAccountId(), account.getUsername(), account.getPassword());
     }
     public static List<AccountDto> convertAccountDto(List<Account> accounts) {
-        return accounts.stream().map(x -> convertAccountDto(x)).collect(Collectors.toList());
+        List<AccountDto> accountDto = new ArrayList<AccountDto>(accounts.size());
+
+        for (Account account : accounts) {
+            accountDto.add(new AccountDto(account.getAccountId(), account.getUsername(), account.getPassword()));
+        }
+        return accountDto;
     }
 
     public int getAccountId() {
@@ -58,6 +66,4 @@ public class AccountDto {
         }
         return true;
     }
-
-
 }
