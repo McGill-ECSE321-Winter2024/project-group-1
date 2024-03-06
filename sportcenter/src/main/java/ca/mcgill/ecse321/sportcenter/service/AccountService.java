@@ -131,4 +131,47 @@ public class AccountService {
 
     // check group 14 of winter 2022 good ideas for checking for stuff
 
+    //check for email uniqueness
+    public boolean checkUsernameUniqueness(String username) {
+        for (Account account : getAllAccounts()) {
+            if (account.getUsername().equals(username)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    //check for password correctness
+    public boolean checkPasswordCorrectness(String username, String password) {
+        for (Account account : getAllAccounts()) {
+            if (account.getUsername().equals(username)) {
+                if (account.getPassword().equals(password)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    //check for account existence
+    public boolean checkAccountExistence(String username) {
+        for (Account account : getAllAccounts()) {
+            if (account.getUsername().equals(username)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //check all input parameters for account creation
+    public boolean checkAccountCreation(String username, String password) {
+        if (username == null || username.trim().length() == 0) {
+            return false;
+        }
+        if (password == null || password.trim().length() == 0) {
+            return false;
+        }
+        return true;
+    }
+
 }

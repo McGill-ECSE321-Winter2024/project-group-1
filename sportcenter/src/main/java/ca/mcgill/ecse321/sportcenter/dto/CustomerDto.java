@@ -22,4 +22,8 @@ public class CustomerDto{
     public static CustomerDto convertToDto(Customer customer) {
         return new CustomerDto(customer.getAccountRoleId());
     }
+
+    public static List<CustomerDto> convertToDto(List<Customer> customers) {
+        return customers.stream().map(x -> convertToDto(x)).collect(Collectors.toList());
+    }
 }

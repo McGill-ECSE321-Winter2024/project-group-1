@@ -8,11 +8,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ca.mcgill.ecse321.sportcenter.dao.CustomerRepository;
 import ca.mcgill.ecse321.sportcenter.model.Customer;
+import ca.mcgill.ecse321.sportcenter.model.Account;
+import ca.mcgill.ecse321.sportcenter.dao.AccountRepository;
 
 public class CustomerService {
     
     @Autowired
     CustomerRepository customerRepository;
+
+    @Autowired
+    AccountRepository accountRepository;
 
     private <T> List<T> toList(Iterable<T> iterable) {
         List<T> list = new ArrayList<>();
@@ -35,17 +40,23 @@ public class CustomerService {
     }
 
     /**
-     * Create a customer
-     * @param accountRoleId
+     * Create a customer from account username
+     * @param username
      * @return Customer
      */
-    @Transactional
-    public Customer createCustomer(int accountRoleId) {
-        Customer customer = new Customer();
-        customer.setAccountRoleId(accountRoleId);
-        customerRepository.save(customer);
-        return customer;
-    }
+
+     @Transactional
+     public Customer createCustomer(String username) {
+         Customer customer = new Customer();
+         Account account = accountRepository.findAccountByUsername(username);
+         if (account == null) {
+             throw new IllegalArgumentException("Account does not exist!");
+         }
+         customer.setAccount(account);
+         customerRepository.save(customer);
+         return customer;
+     }
+
     /**
      * Get all customers
      * @return List<Customer>
@@ -53,20 +64,6 @@ public class CustomerService {
     @Transactional
     public List<Customer> getAllCustomers() {
         return toList(customerRepository.findAll());
-    }
-
-    /**
-     * Update a customer's accountRoleId
-     * @param accountRoleId
-     * @param newAccountRoleId
-     * @return Customer
-     */
-    @Transactional
-    public Customer updateCustomer(int accountRoleId, int newAccountRoleId) {
-        Customer customer = customerRepository.findAccountRoleByAccountRoleId(accountRoleId);
-        customer.setAccountRoleId(newAccountRoleId);
-        customerRepository.save(customer);
-        return customer;
     }
 
     /**
@@ -79,6 +76,21 @@ public class CustomerService {
     }
 
     /**
+     * delete customer by username
+     * @param username
+     * @return
+     */
+    @Transactional
+    public void deleteCustomerByUsername(String username) {
+        Customer customer = new Customer();
+        Account account = accountRepository.findAccountByUsername(username);
+        if (account == null) {
+            throw new IllegalArgumentException("Account does not exist!");
+        }
+        customer.setAccount(account);
+        customerRepository.delete(customer);
+    }
+    /**
      * Get a customer by its accountRoleId (primary key)
      * @param accountRoleId
      * @return Customer
@@ -89,5 +101,47 @@ public class CustomerService {
             throw new IllegalArgumentException("AccountRoleId cannot be negative!");
         }
         return customerRepository.findAccountRoleByAccountRoleId(accountRoleId);
+    }
+
+    /**
+     * Get a customer by its account username
+     * @param username
+     * @return Customer
+     */
+    @Transactional
+    public Customer getCustomerByUsername(String username) {
+        Account account = accountRepository.findAccountByUsername(username);
+        if (account == null) {
+            throw new IllegalArgumentException("Account does not exist!");
+        }
+        return customerRepository.findAccountRoleByAccountRoleId(account.getAccountId());
+    }
+
+    /**
+     * Update a custormer username ??????????????????
+     * @param accountRoleId
+     * @param username
+     * @return Customer
+     */
+    @Transactional
+    public Customer updateCustomer(int accountRoleId, String username) {
+        Customer customer = customerRepository.findAccountRoleByAccountRoleId(accountRoleId);
+        Account account = accountRepository.findAccountByUsername(username);
+        if (account != null) {
+            throw new IllegalArgumentException("Account does not exist!");
+        }
+        account.setUsername(username);
+        accountRepository.save(account);
+        customer.setAccount(account);
+        return customer;
+    }
+
+    /**
+     * Delete all customers
+     * @return void
+     */
+    @Transactional
+    public void deleteAllCustomers() {
+        customerRepository.deleteAll();
     }
 }

@@ -157,4 +157,20 @@ public class ActivityService {
         }
         return activitiesByIsApproved;
     }
+
+    //check activity uniqueness
+    public boolean checkActivityUniqueness(String name) {
+        if (name == null || name.trim().length() == 0) {
+            throw new IllegalArgumentException("Name cannot be empty!");
+        }
+        Activity activity = activityRepository.findActivityByName(name);
+        if (activity == null) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    //check for creator
 }
