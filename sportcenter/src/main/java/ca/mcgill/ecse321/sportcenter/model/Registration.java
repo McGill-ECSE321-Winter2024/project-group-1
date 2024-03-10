@@ -44,7 +44,7 @@ public class Registration
 
   //GETTERS
 
-  public boolean setRegId(int aRegId)
+  public boolean setRegistrationId(int aRegId)
   {
     boolean wasSet = false;
     regId = aRegId;
@@ -52,7 +52,7 @@ public class Registration
     return wasSet;
   }
 
-  public int getRegId()
+  public int getRegistrationId()
   {
     return regId;
   }

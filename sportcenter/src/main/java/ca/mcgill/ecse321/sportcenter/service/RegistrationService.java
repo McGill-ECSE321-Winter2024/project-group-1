@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ca.mcgill.ecse321.sportcenter.dao.CustomerRepository;
 import ca.mcgill.ecse321.sportcenter.dao.ScheduledActivityRepository;
+import ca.mcgill.ecse321.sportcenter.dto.RegistrationDto;
 import ca.mcgill.ecse321.sportcenter.dao.RegistrationRepository;
 import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity;
 import ca.mcgill.ecse321.sportcenter.model.Account;
@@ -37,6 +38,23 @@ public class RegistrationService {
             return resultList;
         }
 
+    //converts an Registration to an RegistrationDto
+    public static RegistrationDto convertRegistrationDto(Registration registration) {
+        if (registration == null){
+            throw new IllegalArgumentException("There is no registration to convert");
+        }
+        return new RegistrationDto(registration.getCustomer().convertCustomerDto(), registration.getScheduledActivity().convertScheduledActivityDto(), registration.getRegistrationId());
+    }
+    public static List<RegistrationDto> convertRegistrationDto(List<Registration> registrations) {
+        List<RegistrationDto> registrationDto = new ArrayList<RegistrationDto>(registrations.size());
+
+        for (Registration registration : registrations) {
+            registrationDto.add(RegistrationDto registration.convertRegistrationDto);
+        }
+        return registrationDto;
+    }
+
+
     /**
      * Create an registration
      * @param Customer
@@ -47,7 +65,7 @@ public class RegistrationService {
     @Transactional
 	public Registration register(Customer customer, ScheduledActivity scheduledActivity) {
 		Registration registration = new Registration();
-		registration.setRegId(customer.getAccountRoleId() * scheduledActivity.getScheduledActivityId());
+		registration.setRegistrationId(customer.getAccountRoleId() * scheduledActivity.getScheduledActivityId());
 		registration.setCustomer(customer);
 		registration.setScheduledActivity(scheduledActivity);
 
@@ -81,6 +99,7 @@ public class RegistrationService {
 	public List<Registration> getAllRegistrations(){
 		return toList(registrationRepository.findAll());
 	}
+
 
     /**
      * Get acheduled activities attended by a costumer
@@ -142,7 +161,7 @@ public class RegistrationService {
      * @return void
      */
     @Transactional
-    public void deleteAllAccounts() {
+    public void deleteAllRegistrations() {
         registrationRepository.deleteAll();
     }
 }
