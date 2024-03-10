@@ -1,5 +1,5 @@
 package ca.mcgill.ecse321.sportcenter.controller;
 
-public class OwnerDto {
+public class OwnerController {
     
 }

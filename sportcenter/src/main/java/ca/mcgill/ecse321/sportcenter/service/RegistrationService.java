@@ -40,7 +40,7 @@ public class RegistrationService {
     /**
      * Create an registration
      * @param Customer
-     * @param ScheduledActivity
+     * @param ScheduledController
      * @return Regitration
      * @author Emilie Ruel
      */
