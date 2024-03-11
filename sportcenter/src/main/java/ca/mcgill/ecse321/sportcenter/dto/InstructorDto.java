@@ -14,6 +14,29 @@ public class InstructorDto {
     private String profilePicURL;
     private AccountDto account;
 
+    public InstructorDto(int accountRoleId) {
+        this.accountRoleId = accountRoleId;
+    }
+
+
+    public int getAccountRoleId() {
+        return accountRoleId;
+    }
+
+    public void setAccountRoleId(int accountRoleId) {
+        this.accountRoleId = accountRoleId;
+    }
+
+    
+    public static InstructorDto convertToDto(Instructor instructor) {
+        return new InstructorDto(instructor.getAccountRoleId());
+    }
+
+    public static List<InstructorDto> convertToDto(List<Instructor> instructors) {
+        return instructors.stream().map(x -> convertToDto(x)).collect(Collectors.toList());
+    }
+
+
     public InstructorDto(int accountRoleId, InstructorStatus status, String description, String profilePicURL, AccountDto account) {
         this.accountRoleId = accountRoleId;
         this.status = status;
@@ -21,6 +44,8 @@ public class InstructorDto {
         this.profilePicURL = profilePicURL;
         this.account = account;
     }
+
+
 
     
 }
