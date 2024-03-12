@@ -9,11 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.sportcenter.model.Owner;
-import ca.mcgill.ecse321.sportcenter.model.SportCenter;
 import ca.mcgill.ecse321.sportcenter.model.Account;
 
 /**
- * Author: Andrew Nemr
+ * @author Andrew Nemr and Patrick Zakaria
  */
 
 @SpringBootTest
@@ -41,30 +40,26 @@ public class TestOwnerPersistence {
         /**
          * Create an Account, set the attributes of the Account, and save the Account
          */
-        SportCenter sportCenter = new SportCenter();
         Account account = new Account();
-        int accountId = 001;
-        String username = "John";
+        String username = "Pepe";
         String password = "password";
         account.setUsername(username);
         account.setPassword(password);
-        account.setAccountId(accountId);
-        account.setSportCenter(sportCenter);
         accountRepository.save(account);
+        int accountId = account.getAccountId();
+        account = accountRepository.findAccountByAccountId(accountId);
 
         /**
          * Create an Owner, set the attributes of the Owner, and save the Owner
          */
         Owner owner = new Owner();
-        int accountRoleId = 100;
-        owner.setAccountRoleId(accountRoleId);
-        owner.setSportCenter(sportCenter);
+        owner.setAccount(account);
         ownerRepository.save(owner);
+        int accountRoleId = owner.getAccountRoleId();
 
         /**
          * Load the Owner
          */
-        owner = null;
         owner = ownerRepository.findAccountRoleByAccountRoleId(accountRoleId);
 
         /**
@@ -72,7 +67,6 @@ public class TestOwnerPersistence {
          */
         assertNotNull(owner);
         assertEquals(username, owner.getAccount().getUsername());
-        assertEquals(account, owner.getAccount().getAccountId());
         assertEquals(password, owner.getAccount().getPassword());
         assertEquals(accountRoleId, owner.getAccountRoleId());
     }

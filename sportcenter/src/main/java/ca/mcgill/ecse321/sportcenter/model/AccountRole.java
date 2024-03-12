@@ -15,11 +15,6 @@ public abstract class AccountRole
 
   //CONSTRUCTOR
 
-  public AccountRole(int aAccountRoleId)
-  {
-    accountRoleId = aAccountRoleId;
-  }
-
   public AccountRole() {
     
   }

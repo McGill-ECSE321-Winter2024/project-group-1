@@ -9,11 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.sportcenter.model.Customer;
-import ca.mcgill.ecse321.sportcenter.model.SportCenter;
 import ca.mcgill.ecse321.sportcenter.model.Account;
 
 /**
- * Author: Andrew Nemr
+ * @author Andrew Nemr and Patrick Zakaria
  */
 
 @SpringBootTest
@@ -39,56 +38,42 @@ public class TestCustomerPersistence {
     public void testPersistAndLoadCustomer() {
 
         /**
-         * Create an Account
+         * Create an Account, set the attributes of the Account, and save the Account
          */
-        SportCenter sportCenter = new SportCenter();
         Account account = new Account();
-        int accountId = 001;
-        String username = "John";
+        String username = "Maria";
         String password = "password";
 
-        /**
-         * Set the attributes of the Account
-         */
         account.setUsername(username);
         account.setPassword(password);
-        account.setAccountId(accountId);
-        account.setSportCenter(sportCenter);
 
-        /**
-         * Save the Account
-         */
         accountRepository.save(account);
+        int accountId = account.getAccountId();
+        account = accountRepository.findAccountByAccountId(accountId);
 
         /**
-         * Create a Customer
+         * Create a Customer, set the attributes of the Customer, and save the Customer
          */
         Customer customer = new Customer();
-        int accountRoleId = 100;
-        /**
-         * Set the attributes of the Customer
-         */
+
         customer.setAccount(account);
-        customer.setSportCenter(sportCenter);
-        /**
-         * Save the Customer
-         */
+
         customerRepository.save(customer);
+        int accountRoleId = customer.getAccountRoleId();
 
         /**
          * Load the Customer
          */
-        customer = null;
-        Customer foundCustomer = customerRepository.findAccountRoleByAccountRoleId(accountRoleId);
+        customer = customerRepository.findAccountRoleByAccountRoleId(accountRoleId);
 
         /**
          * Check the attributes of the Customer
          */    
-        assertNotNull(foundCustomer);
-        assertEquals(accountRoleId, foundCustomer.getAccountRoleId());
-        assertEquals(username, foundCustomer.getAccount().getUsername());
-        assertEquals(password, foundCustomer.getAccount().getPassword());
-        assertEquals(accountId,foundCustomer.getAccount().getAccountId());
+        assertNotNull(customer);
+        assertEquals(accountRoleId, customer.getAccountRoleId());
+        assertEquals(username, customer.getAccount().getUsername());
+        assertEquals(password, customer.getAccount().getPassword());
+        assertEquals(accountId, customer.getAccount().getAccountId());
     }
 }
 

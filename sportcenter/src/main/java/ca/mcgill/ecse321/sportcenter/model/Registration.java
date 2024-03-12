@@ -1,7 +1,5 @@
 package ca.mcgill.ecse321.sportcenter.model;
 
-
-//import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,26 +16,21 @@ public class Registration
   private int regId;
 
   @ManyToOne(optional = false) //there are many registration for a schedule activity
-  @JoinColumn(name = "schedule_activity_id") //schedule_activity_id is a FK
+  @JoinColumn(name = "scheduledActivityId") //schedule_activity_id is a FK
   private ScheduledActivity scheduledActivity;
 
   @ManyToOne(optional = false) //there are many customer performing a registration
-  @JoinColumn(name = "customer_id") //customer_id is a FK
+  @JoinColumn(name = "accountRoleId") //customer_id is a FK
   private Customer customer;
-
-  @ManyToOne(optional = false) //there are many registration for a sport center
-  private SportCenter sportCenter;
-
-  
+ 
   //CONSTRUCTORS
 
   public Registration() {
     
   }
 
-  public Registration(int aRegId, ScheduledActivity aScheduledActivity, Customer aCustomer, SportCenter aSportCenter)
+  public Registration(ScheduledActivity aScheduledActivity, Customer aCustomer)
   {
-    regId = aRegId;
     if (!setScheduledActivity(aScheduledActivity))
     {
       throw new RuntimeException("Unable to create Registration due to aScheduledActivity.");
@@ -51,7 +44,7 @@ public class Registration
 
   //GETTERS
 
-  public boolean setRegId(int aRegId)
+  public boolean setRegistrationId(int aRegId)
   {
     boolean wasSet = false;
     regId = aRegId;
@@ -59,7 +52,7 @@ public class Registration
     return wasSet;
   }
 
-  public int getRegId()
+  public int getRegistrationId()
   {
     return regId;
   }
@@ -74,20 +67,7 @@ public class Registration
     return customer;
   }
 
-  public SportCenter getSportCenter()
-  {
-    return sportCenter;
-  }
-
   //SETTERS
-
-  public boolean setSportCenter(SportCenter aSportCenter)
-  {
-    boolean wasSet = false;
-    sportCenter = aSportCenter;
-    wasSet = true;
-    return wasSet;
-  }
 
   public boolean setScheduledActivity(ScheduledActivity aNewScheduledActivity)
   {

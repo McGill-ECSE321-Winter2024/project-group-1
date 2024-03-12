@@ -9,9 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.sportcenter.model.Account;
-import ca.mcgill.ecse321.sportcenter.model.SportCenter;
 /**
- * Author: Andrew Nemr
+ * @author Andrew Nemr and Patrick Zakaria
  */
 
 @SpringBootTest
@@ -33,36 +32,20 @@ public class TestAccountPersistence {
     @Test
     public void testPersistAndLoadAccount() {
         
-        /*
-         * Create an Account
-         */
-
-        SportCenter sportCenter = new SportCenter();
-        Account account = new Account();
-        int accountId = 123;
-        String username = "John";
+        // Create an Account, Save in the database and Load from the database
+        String username = "Pablo";
         String password = "password";
-        
-        /*
-         * Set the attributes of the Account
-         */
-        account.setUsername(username);
-        account.setPassword(password);
-        account.setSportCenter(sportCenter);
-        accountRepository.save(account);
+        Account account = new Account(username, password);
 
-        /*
-         * Load the Account
-         */
-        account = null;
+        account = accountRepository.save(account);
+        int accountId = account.getAccountId();
+
         account = accountRepository.findAccountByAccountId(accountId);
 
-        /*
-         * Check the attributes of the Account
-         */
+        // Check the attributes
         assertNotNull(account);
+        assertEquals(accountId, account.getAccountId());
         assertEquals(username, account.getUsername());
         assertEquals(password, account.getPassword());
-        assertEquals(accountId, account.getAccountId());
     }
 }

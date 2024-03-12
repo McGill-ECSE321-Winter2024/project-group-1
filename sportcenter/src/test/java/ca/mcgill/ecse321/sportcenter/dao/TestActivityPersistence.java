@@ -9,11 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.sportcenter.model.Activity;
-import ca.mcgill.ecse321.sportcenter.model.SportCenter;
 import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
 
 /**
- * @author Andrew Nemr
+ * @author Andrew Nemr and Patrick Zakaria
  */
 
 @SpringBootTest
@@ -38,33 +37,25 @@ public class TestActivityPersistence {
     public void testPersistAndLoadActivity() {
 
         /*
-         * Create an Activity
+         * Create an Activity, set the attributes of the Activity, and save the Activity
          */
-        SportCenter sportCenter = new SportCenter();
         Activity activity = new Activity();
         ClassCategory subcategory = ClassCategory.Strength;
         String name = "Yoga";
         String description = "Practice yoga with a professional instructor.";
         boolean isApproved = true;
 
-        /*
-         * Set the attributes of the Activity
-         */
         activity.setName(name);
         activity.setDescription(description);
         activity.setSubcategory(subcategory);
         activity.setIsApproved(isApproved);
-        activity.setSportCenter(sportCenter);
 
-        /*
-         * Save the Activity
-         */
         activityRepository.save(activity);
+        name = activity.getName();
 
         /*
-         * Load the Activity from the database
+         * Load the Activity from the database, using the name as the key
          */
-        activity = null;
         activity = activityRepository.findActivityByName(name);
 
         /*

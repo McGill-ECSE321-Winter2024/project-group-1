@@ -4,14 +4,12 @@ package ca.mcgill.ecse321.sportcenter.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Activity
 {
 
   public enum ClassCategory { Strength, Cardio, Stretch }
-
  
   private ClassCategory subcategory;
 
@@ -20,16 +18,13 @@ public class Activity
   private boolean isApproved;
   private String description;
 
-  @ManyToOne(optional = false) //many activities in SportCenter
-  private SportCenter sportCenter;
-
   //CONSTRUCTORS
 
   public Activity() {
     
   }
 
-  public Activity(ClassCategory aSubcategory, String aName, boolean aIsApproved, String aDescription, SportCenter aSportCenter)
+  public Activity(ClassCategory aSubcategory, String aName, boolean aIsApproved, String aDescription)
   {
     subcategory = aSubcategory;
     if (!setName(aName)){
@@ -41,14 +36,6 @@ public class Activity
   }
 
   //SETTERS
-
-  public boolean setSportCenter(SportCenter aSportCenter)
-  {
-    boolean wasSet = false;
-    sportCenter = aSportCenter;
-    wasSet = true;
-    return wasSet;
-  }
 
   public boolean setSubcategory(ClassCategory aSubcategory)
   {
@@ -97,11 +84,6 @@ public class Activity
   public boolean getIsApproved()
   {
     return isApproved;
-  }
-
-  public SportCenter getSportCenter()
-  {
-    return sportCenter;
   }
 
   public String getDescription() {
