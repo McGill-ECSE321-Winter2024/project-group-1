@@ -40,34 +40,39 @@ public class ScheduledActivityService{
      * @return Activity
      */
     @Transactional
-    public ScheduledActivity createScheduledActivity(String name, String description, ClassCategory subcategory){
+    public ScheduledActivity createScheduledActivity(int scheduledActivityId, Date date, Time startTime, Time endTime){
         //create a scheduled activity 
         //Change params
-        if (name == null || name.trim().length() == 0) {
-            throw new IllegalArgumentException("Name cannot be empty!");
+        if (scheduledActivityId == null || scheduledActivityId.trim().length() == 0) {
+            throw new IllegalArgumentException("Id cannot be null!");
         }
-        if (description == null || description.trim().length() == 0) {
-            throw new IllegalArgumentException("Description cannot be empty!");
+        if (date == null || date.trim().length() == 0) {
+            throw new IllegalArgumentException("Date cannot be empty!");
         }
-        if (subcategory == null) {
-            throw new IllegalArgumentException("Subcategory cannot be empty!");
+        if (startTime == null || startTime > endTime) {
+            throw new IllegalArgumentException("Start time cannot be empty!");
+        }
+        if (endTime == null) {
+            throw new IllegalArgumentException("End time cannot be empty!");
         }
         ScheduledActivity scheduledActivity = new ScheduledActivity();
-        scheduledActivity.setName(name);
-        scheduledActivity.setDescription(description);
-        scheduledActivity.setSubcategory(subcategory);
+        scheduledActivity.setScheduledActivityId(name);
+        scheduledActivity.setDate(date);
+        scheduledActivity.setStartTime(startTime);
+        scheduledActivity.setStartTime(endTime);
         scheduledActivityRepository.save(scheduledActivity);
-        return activity;
+        return scheduledActivity;
     } 
     //
-    public ScheduledActivity updateScheduledActivity(String name, String newName, String newDescription, ClassCategory newSubcategory){
+    public ScheduledActivity updateScheduledActivity(int scheduledActivityId, Date date, Time startTime, Time endTime){
         //modify the activity once scheduled
         //Amount of instructors 
         //Date,timeslot, duration
-        ScheduledActivity scheduledActivity = scheduledActivityRepository.findScheduledActivityByName(name);
-        scheduledActivity.setName(name);
-        scheduledActivity.setDescription(description);
-        scheduledActivity.setSubcategory(subcategory);
+        ScheduledActivity scheduledActivity = scheduledActivityRepository.findScheduledActivityById(scheduledActivityId);
+        scheduledActivity.setScheduledActivityId(name);
+        scheduledActivity.setDate(date);
+        scheduledActivity.setStartTime(startTime);
+        scheduledActivity.setStartTime(endTime);
         scheduledActivityRepository.save(scheduledActivity);
         return activity;
     } 
@@ -78,19 +83,19 @@ public class ScheduledActivityService{
      * @param subcategory
      * @return Activity
      */
-    public ScheduledActivity deleteScheduledActivity(String name){
+    public ScheduledActivity deleteScheduledActivity(int scheduledActivityId){
         //delete activity once scheduled
         //Need to take the functions from the exceptions file to do throw new ...
-        if (name == null || name.trim().length() == 0) {
+        if (scheduledActivityId == null || scheduledActivityId.trim().length() == 0) {
             throw new IllegalArgumentException("Name cannot be empty!");
         }
         else{
-            ScheduledActivity scheduledActivity = scheduledActivityRepository.findScheduledActivityByName(name);
+            ScheduledActivity scheduledActivity = scheduledActivityRepository.findScheduledActivityById(scheduledActivityId);
             if (scheduledActivity == null) {
                 throw new IllegalArgumentException("Activity does not exist!");
             }
             else{
-                activityRepository.delete(scheduledActivity);
+                scheduledActivityRepository.delete(scheduledActivity);
                 return scheduledActivity;
             }
         }
