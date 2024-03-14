@@ -172,7 +172,7 @@ public class TestRegistrationPersistence {
         registration.setCustomer(customer);
         registration.setScheduledActivity(scheduledActivity);
         registrationRepository.save(registration);
-        int regId = registration.getRegId();
+        int regId = registration.getRegistrationId();
 
         /**
          * Load the Registration and check the attributes of the Registration
@@ -183,7 +183,7 @@ public class TestRegistrationPersistence {
          * Check the attributes of the Registration
          */
         assertNotNull(registration);
-        assertEquals(regId, registration.getRegId());
+        assertEquals(regId, registration.getRegistrationId());
         assertEquals(date, registration.getScheduledActivity().getDate());
         assertEquals(startTime, registration.getScheduledActivity().getStartTime());
         assertEquals(endTime, registration.getScheduledActivity().getEndTime());
