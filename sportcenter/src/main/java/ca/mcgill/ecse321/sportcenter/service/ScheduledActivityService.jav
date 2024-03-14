@@ -12,9 +12,10 @@ import ca.mcgill.ecse321.sportcenter.model.Activity;
 
 public class ScheduledActivityService{
 
+    //Need to know all the different autowired that need to get here
     @Autowired
     ActivityRepository activityRepository;
-
+    // Know wtf this is
     private <T> List<T> toList(Iterable<T> iterable) {
         List<T> resultList = new ArrayList<T>();
         for (T t : iterable) {
@@ -22,27 +23,81 @@ public class ScheduledActivityService{
         }
         return resultList;
     }
-
+    /**
+     * Create an activity where only the instructor can create an activity
+     * @return Activity
+     * 
+     * @Author FabianSaldana
+     */
     public List<Activity> getActivities() {
         return toList(activityRepository.findAll());
     }
-
-    public ScheduledActivity setScheduledActivity(){
-        //get the all activities
-        //set it on the table (duration, date, instructor)
-        
-        
-        
+    /**
+     * Create an activity where only the instructor can create an activity
+     * @param name
+     * @param description
+     * @param subcategory
+     * @return Activity
+     */
+    @Transactional
+    public ScheduledActivity createScheduledActivity(String name, String description, ClassCategory subcategory){
+        //create a scheduled activity 
+        //Change params
+        if (name == null || name.trim().length() == 0) {
+            throw new IllegalArgumentException("Name cannot be empty!");
+        }
+        if (description == null || description.trim().length() == 0) {
+            throw new IllegalArgumentException("Description cannot be empty!");
+        }
+        if (subcategory == null) {
+            throw new IllegalArgumentException("Subcategory cannot be empty!");
+        }
+        ScheduledActivity scheduledActivity = new ScheduledActivity();
+        scheduledActivity.setName(name);
+        scheduledActivity.setDescription(description);
+        scheduledActivity.setSubcategory(subcategory);
+        scheduledActivityRepository.save(scheduledActivity);
+        return activity;
     } 
-
-    public ScheduledActivity modifyScheduledActivity(){
+    //
+    public ScheduledActivity updateScheduledActivity(String name, String newName, String newDescription, ClassCategory newSubcategory){
         //modify the activity once scheduled
+        //Amount of instructors 
+        //Date,timeslot, duration
+        ScheduledActivity scheduledActivity = scheduledActivityRepository.findScheduledActivityByName(name);
+        scheduledActivity.setName(name);
+        scheduledActivity.setDescription(description);
+        scheduledActivity.setSubcategory(subcategory);
+        scheduledActivityRepository.save(scheduledActivity);
+        return activity;
     } 
-
-    public ScheduledActivity deleteScheduledActivity(){
+    /**
+     * Create an activity where only the instructor can create an activity
+     * @param name
+     * @param description
+     * @param subcategory
+     * @return Activity
+     */
+    public ScheduledActivity deleteScheduledActivity(String name){
         //delete activity once scheduled
+        //Need to take the functions from the exceptions file to do throw new ...
+        if (name == null || name.trim().length() == 0) {
+            throw new IllegalArgumentException("Name cannot be empty!");
+        }
+        else{
+            ScheduledActivity scheduledActivity = scheduledActivityRepository.findScheduledActivityByName(name);
+            if (scheduledActivity == null) {
+                throw new IllegalArgumentException("Activity does not exist!");
+            }
+            else{
+                activityRepository.delete(scheduledActivity);
+                return scheduledActivity;
+            }
+        }
 
     }
+
+    //The following code is from the Activity service
     /**
      * Get all activities by subcategory
      * @param subcategory
@@ -75,8 +130,11 @@ public class ScheduledActivityService{
         }
         return activitiesByIsApproved;
     }
-
-    //check activity uniqueness
+    /**
+     * Check activity uniqueness
+     * @param name
+     * @return Activity
+     */
     public boolean checkActivityUniqueness(String name) {
         if (name == null || name.trim().length() == 0) {
             throw new IllegalArgumentException("Name cannot be empty!");
