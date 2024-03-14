@@ -25,6 +25,7 @@ public class ActivityService {
     public List<Activity> getActivities() {
         return toList(activityRepository.findAll());
     }
+
     /**
      * Get an activity by its name (primary key)
      * @param name
@@ -47,7 +48,6 @@ public class ActivityService {
      * @param subcategory
      * @return Activity
      */
-
     @Transactional
     public Activity createActivity(String name, String description, ClassCategory subcategory) {
         if (name == null || name.trim().length() == 0) {
