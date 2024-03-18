@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ca.mcgill.ecse321.sportcenter.dao.OwnerRepository;
 import ca.mcgill.ecse321.sportcenter.model.Owner;
+import ca.mcgill.ecse321.sportcenter.model.AccountRole;
 
 import ca.mcgill.ecse321.sportcenter.model.Activity;
 
@@ -29,22 +30,38 @@ public class OwnerService {
     }
 
     /**
-     * 
+     * Get owner by accountRoleId
+     * @param accountRoleId
+     * @return
      */
-    public static Owner convertOwnerDto(Owner owner) {
-        if (owner == null){
-            throw new IllegalArgumentException("There is no owner to convert");
-        }
-        return new Owner(owner.getOwnerName(), owner.getOwnerEmail(), owner.getOwnerPassword());
+    @Transactional
+    public Owner getOwnerByAccountRoleId(int accountRoleId) {
+        return ownerRepository.findAccountRoleByAccountRoleId(accountRoleId);
     }
 
-    public static List<Owner> convertOwnerDto(List<Owner> owners) {
-        List<Owner> ownerDto = new ArrayList<Owner>(owners.size());
-
-        for (Owner owner : owners) {
-            ownerDto.add(OwnerService.convertOwnerDto(owner));
-        }
-        return ownerDto;
+    /**
+    * Get owner by accountRoleId
+    * @return
+    */
+    @Transactional
+    public List<Owner> getOwners() {
+        return toList(ownerRepository.findAll());
     }
-    
+
+    /**
+     * Check if accountRoleId is an owner
+     * @param accountRoleId
+     * @return
+     */
+    @Transactional
+    public Owner checkAccountOwner(int accountRoleId) {
+        AccountRole role = ownerRepository.findAccountRoleByAccountRoleId(accountRoleId);
+        if (role instanceof Owner) {//check if role is an instance of Owner
+            throw new IllegalArgumentException("AccountRole does not exist!");
+        }
+        return (Owner) role;
+
+        
+    }
+
 }

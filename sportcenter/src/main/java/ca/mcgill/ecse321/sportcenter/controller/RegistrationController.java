@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ca.mcgill.ecse321.sportcenter.dto.*;
+import ca.mcgill.ecse321.sportcenter.model.Customer;
 import ca.mcgill.ecse321.sportcenter.model.Registration;
 import ca.mcgill.ecse321.sportcenter.service.RegistrationService;
 
@@ -141,7 +142,7 @@ public class RegistrationController {
     * @return
     * @Author Emilie Ruel
     */
-    @DeleteMapping(value = {"/registrations/deleteAll", "/registrations/deleteAll/"})
+    @DeleteMapping(value = {"/registrations/delete", "/registrations/delete/"})
     public ResponseEntity<?> deleteAllRegistrations() {
         try {
             registrationService.deleteAllRegistrations();
