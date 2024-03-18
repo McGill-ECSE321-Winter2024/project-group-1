@@ -21,8 +21,10 @@ public class ScheduledActivityService{
     @Autowired
     ScheduledActivityRepository scheduledActivityRepository;
 
+    /*
     @Autowired
     ActivityRepository activityRepository;
+    */
 
     private <T> List<T> toList(Iterable<T> iterable) {
         List<T> resultList = new ArrayList<T>();
@@ -86,7 +88,7 @@ public class ScheduledActivityService{
         scheduledActivityRepository.save(scheduledActivity);
         return scheduledActivity;
     } 
-    
+    @Transactional
     public ScheduledActivity updateScheduledActivity(int scheduledActivityId, Date date, Time startTime, Time endTime){
         ScheduledActivity scheduledActivity = scheduledActivityRepository.findScheduledActivityById(scheduledActivityId);
         scheduledActivity.setScheduledActivityId(name);
@@ -104,6 +106,7 @@ public class ScheduledActivityService{
      * @param endTime
      * @return ScheduledActivity
      */
+    @Transactional
     public ScheduledActivity deleteScheduledActivity(int scheduledActivityId){
         //delete activity once scheduled
         //Need to take the functions from the exceptions file to do throw new ...
@@ -120,7 +123,6 @@ public class ScheduledActivityService{
                 return scheduledActivity;
             }
         }
-
     }
 
     //The following code is from the Activity service
