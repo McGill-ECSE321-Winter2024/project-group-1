@@ -29,7 +29,7 @@ public class RegistrationDto{
         List<RegistrationDto> registrationDto = new ArrayList<RegistrationDto>(registrations.size());
 
         for (Registration registration : registrations) {
-            registrationDto.add(RegistrationDto convertToDto(registration));
+            registrationDto.add(RegistrationDto.convertToDto(registration));
         }
         return registrationDto;
     }

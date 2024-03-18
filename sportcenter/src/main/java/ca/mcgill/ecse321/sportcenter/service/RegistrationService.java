@@ -46,15 +46,13 @@ public class RegistrationService {
      */
     @Transactional
 	public Registration register(int accountRoleId, int scheduledActivityId) {
-		Registration registration = new Registration();
-        CustomerService customerService;
-        Customer customer= customerService.getCustomerByRoleId(accountRoleId);
-        ScheduledActivityService ScheduledActivityService;
-        ScheduledActivity scheduledActivity = scheduledActivityService.getScheduledActivityById(scheduledActivityId);
-
-
+        Registration registration = new Registration();
+        ScheduledActivity scheduledActivity = scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId);
+        if (scheduledActivity == null) {
+            throw new IllegalArgumentException("Scheduled activity does not exist");
+        }
 		registration.setRegistrationId(accountRoleId * scheduledActivityId);
-		registration.setCustomer(customer);
+		//registration.setCustomer(customer);
 		registration.setScheduledActivity(scheduledActivity);
 
 		registrationRepository.save(registration);
