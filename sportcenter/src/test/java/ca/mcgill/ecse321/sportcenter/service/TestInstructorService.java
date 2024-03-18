@@ -11,6 +11,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.never;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -23,11 +25,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
+import static org.mockito.Mockito.times;
 
 import ca.mcgill.ecse321.sportcenter.dao.AccountRepository;
 import ca.mcgill.ecse321.sportcenter.dao.ActivityRepository;
@@ -55,45 +59,15 @@ public class TestInstructorService {
 
     @InjectMocks private InstructorService service;
 
-    private static final Integer INSTRUCTOR_KEY = Integer.valueOf(1);
-
-    @BeforeEach
-    public void setMockOutput() {
-        //check if the instructor exists. ID = 1
-        lenient()
-            .when(instructorRepository.findById(INSTRUCTOR_KEY))
-            .thenAnswer(
-                
-                (InvocationOnMock invocation) -> {
-                    
-                    if(invocation.getArgument(0).equals(INSTRUCTOR_KEY)) {
-                        
-                        Instructor instructor = new Instructor();
-                        instructor.setAccountRoleId(INSTRUCTOR_KEY);
-                        return instructor;
-                    }
-                    else {
-                        return null;
-                    }
-                }
-            );
-            // Whenever anything is saved, just return the parameter object
-		    Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> {
-			return invocation.getArgument(0);
-		};
-        lenient().when(instructorRepository.save(any(Instructor.class))).thenAnswer(returnParameterAsAnswer);
-        
-    }
-
     @Test
-    public void testCreateInstructor() { //testing the creating of an instructor
+    public void testCreateInstructor() {
 
-        assertEquals(0, service.getAllInstructors().size()); //checks if no instructors
+        when(instructorRepository.save(any(Instructor.class))).thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
 
-        String username = "Dwayne";
+        final String username = "gumball";
         Instructor instructor = null;
         Account account = null;
-
+        
         try {
             instructor = service.createInstructor(username);
         } catch (IllegalArgumentException e) {
@@ -111,7 +85,64 @@ public class TestInstructorService {
         assertNotNull(instructor);
         assertEquals(username, account.getUsername());
 
+        //check if all was added
+        verify(instructorRepository, times(1)).save(instructor);
+
     }
+
+    @Test
+    public void testCreateInstructorNull() { //make an empty username
+
+        when(instructorRepository.save(any(Instructor.class))).thenThrow(IllegalArgumentException.class);
+
+        //this system should not allow null usernames right??
+        String username = null;
+        String error = null;
+
+        Instructor instructor = null;
+
+        try {
+            instructor = service.createInstructor(username);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        } 
+
+        assertNull(instructor);
+        //check error
+        assertEquals("Instructor name can not be empty!", error); //error won't happen
+
+        verify(instructorRepository, never()).save(any(Instructor.class));
+ 
+    }
+
+    @Test
+    public void testCreateInstructorSpaces() { //make an empty username
+
+        when(instructorRepository.save(any(Instructor.class))).thenThrow(IllegalArgumentException.class);
+
+        //this system should not allow null usernames right??
+        String username = " ";
+        String error = null;
+
+        Instructor instructor = null;
+
+        try {
+            instructor = service.createInstructor(username);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        } 
+
+        assertNull(instructor);
+        //check error
+        assertEquals("Instructor name can not be empty!", error); //error won't happen
+
+
+        verify(instructorRepository, never()).save(any(Instructor.class));
+ 
+    }
+
+    //TEST THE REST.
+
 
 
 

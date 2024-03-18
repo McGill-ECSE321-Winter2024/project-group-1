@@ -17,6 +17,7 @@ import ca.mcgill.ecse321.sportcenter.model.Customer;
 import ca.mcgill.ecse321.sportcenter.model.Registration;
 
 
+
 @Service
 public class RegistrationService {
 
@@ -49,7 +50,7 @@ public class RegistrationService {
         CustomerService customerService;
         Customer customer= customerService.getCustomerByRoleId(accountRoleId);
         ScheduledActivityService ScheduledActivityService;
-        ScheduledActivity scheduledActivity=scheduledActivityService.getScheduledActivityById(scheduledActivityId);
+        ScheduledActivity scheduledActivity = scheduledActivityService.getScheduledActivityById(scheduledActivityId);
 
 
 		registration.setRegistrationId(accountRoleId * scheduledActivityId);

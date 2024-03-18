@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ca.mcgill.ecse321.sportcenter.dao.ScheduledActivityRepository;
 import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity;
-import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity.ClassCategory;
+//import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity.ClassCategory;
 
 /* 
 import ca.mcgill.ecse321.sportcenter.dao.ActivityRepository;
@@ -38,7 +38,7 @@ public class ScheduledActivityService{
      * @Author FabianSaldana
      */
     public List<ScheduledActivity> getScheduledActivities() {
-        return toList(schduledActivityRepository.findAll());
+        return toList(scheduledActivityRepository.findAll());
     }
     /**
      * Get an activity by its Id (primary key)
