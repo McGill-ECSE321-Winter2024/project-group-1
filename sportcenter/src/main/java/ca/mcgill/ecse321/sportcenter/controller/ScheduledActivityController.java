@@ -3,6 +3,9 @@ package ca.mcgill.ecse321.sportcenter.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +40,7 @@ public class ScheduledActivityController {
      * @Author Victor Fabian Saldana Arteaga
      */
     @PostMapping(value = {"/createScheduledActivity/{scheduledActivityId}/{date}/{startTime}/{endTime}", "/createScheduledActivity/{scheduledActivityId}/{date}/{startTime}/{endTime}/"})
-    public ResponseEntity<?> createScheduledActivity(@PathVariable("scheduledActivityId") Integer scheduledActivityId, @PathVariable("date") Date date, @PathVariable("startTime") Time startTime, @PathVariable("startTime") Time endTime) {
+    public ResponseEntity<?> createScheduledActivity(@PathVariable("scheduledActivityId") Integer scheduledActivityId, @PathVariable("date") LocalDate date, @PathVariable("startTime") LocalTime startTime, @PathVariable("startTime") LocalTime endTime) {
         try {
             ScheduledActivity scheduledActivity = scheduledActivityService.createScheduledActivity(scheduledActivityId, date, startTime, endTime);
             return ResponseEntity.ok(ScheduledActivityDto.convertToDto(scheduledActivity));
@@ -52,10 +55,10 @@ public class ScheduledActivityController {
      * @return
      */
     @GetMapping(value = {"/scheduledActivity/{scheduledActivityId}", "/scheduledActivity/{scheduledActivityId}/"})
-    public ResponseEntity<?> getActivity(@PathVariable("scheduledActivityId") Integer scheduledActivityId) {
+    public ResponseEntity<?> getScheduledActivity(@PathVariable("scheduledActivityId") Integer scheduledActivityId) {
         try {
             ScheduledActivity scheduledActivity = scheduledActivityService.getScheduledActivity(scheduledActivityId);
-            return ResponseEntity.ok(ActivityDto.convertToDto(scheduledActivity));
+            return ResponseEntity.ok(ScheduledActivityDto.convertToDto(scheduledActivity));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -65,8 +68,9 @@ public class ScheduledActivityController {
      * Get all schduled activities
      * @return
      */
+    /*
     @GetMapping(value = {"/activities", "/activities/"})
-    public List<ActivityDto> getActivities() {
+    public List<ActivityDto> getScheduledActivities() {
         List<ScheduledActivity> scheduledActivities = scheduledActivityService.getScheduledActivities();
         List<ScheduledActivity> schduledActivityDtos = new ArrayList<ScheduledActivityDto>();
         for (ScheduledActivity scheduledActivity : scheduledActivities) {
@@ -74,6 +78,7 @@ public class ScheduledActivityController {
         }
         return scheduledActivityDtos;
     }
+    */
     /**
      * Update an scheduled activity
      * @param scheduledActivityId
@@ -83,7 +88,7 @@ public class ScheduledActivityController {
      * @return
      */
     @PutMapping(value = {"/activity/update/{name}/{newName}/{newDescription}/{newSubcategory}", "/activity/update/{name}/{newName}/{newDescription}/{newSubcategory}/"})
-    public ResponseEntity<?> updateScheduledActivity(@PathVariable("scheduledActivityId") Integer scheduledActivityId, @PathVariable("date") Date date, @PathVariable("startTime") Time startTime, @PathVariable("startTime") Time endTime) {
+    public ResponseEntity<?> updateScheduledActivity(@PathVariable("scheduledActivityId") Integer scheduledActivityId, @PathVariable("date") LocalDate date, @PathVariable("startTime") LocalTime startTime, @PathVariable("startTime") LocalTime endTime) {
         try {
             ScheduledActivity scheduledActivity = scheduledActivityService.updateScheduledActivity(scheduledActivityId, date, startTime, endTime);
             return ResponseEntity.ok(ScheduledActivityDto.convertToDto(scheduledActivity));
@@ -97,15 +102,17 @@ public class ScheduledActivityController {
      */
     @DeleteMapping(value = {"/scheduledActivity/delete/{scheduledActivityId}", "/scheduledActivity/delete/{scheduledActivityId}/"})
     public ScheduledActivityDto deleteScheduledActivity(@PathVariable("scheduledActivityId") Integer scheduledActivityId) {
-        ScheduledActivity scheduledActivity = scheduledActivityService.deleteActivity(scheduledActivity);
+        ScheduledActivity scheduledActivity = scheduledActivityService.deleteScheduledActivity(scheduledActivityId);
         return ScheduledActivityDto.convertToDto(scheduledActivity);
     }
     /**
      * Delete all scheduled activities
      */
+    /* 
     @DeleteMapping(value = {"/scheduledActivities/delete", "/scheduledActivities/delete/"})
     public void deleteAllScheduledActivities() {
         scheduledActivityService.deleteAllScheduledActivities();
     }
+    */
     
 }

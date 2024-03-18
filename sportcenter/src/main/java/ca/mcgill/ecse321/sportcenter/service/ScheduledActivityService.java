@@ -2,6 +2,10 @@ package ca.mcgill.ecse321.sportcenter.service;
 import java.util.ArrayList;
 import java.util.List;
 
+
+import java.time.LocalTime;
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,10 +55,10 @@ public class ScheduledActivityService{
      */
     @Transactional
     public ScheduledActivity getScheduledActivity(int scheduledActivityId) {
-        if (scheduledActivityId == null || scheduledActivityId.trim().length() == 0) {
+        if (scheduledActivityId == -1) {
             throw new IllegalArgumentException("Id cannot be empty!");
         }
-        return scheduledActivityRepository.findScheduledActivityById(scheduledActivityId);
+        return scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId);
     }
     /**
      * Create an activity where only the instructor can create an activity
@@ -65,16 +69,16 @@ public class ScheduledActivityService{
      * @return ScheduledActivity
      */
     @Transactional
-    public ScheduledActivity createScheduledActivity(int scheduledActivityId, Date date, Time startTime, Time endTime){
+    public ScheduledActivity createScheduledActivity(int scheduledActivityId, LocalDate date, LocalTime startTime, LocalTime endTime){
         //create a scheduled activity 
         //Change params
-        if (scheduledActivityId == null || scheduledActivityId.trim().length() == 0) {
+        if (scheduledActivityId == -1) {
             throw new IllegalArgumentException("Id cannot be null!");
         }
-        if (date == null || date.trim().length() == 0) {
+        if (date == null) {
             throw new IllegalArgumentException("Date cannot be empty!");
         }
-        if (startTime == null || startTime > endTime) {
+        if (startTime == null || startTime.isAfter(endTime)) {
             throw new IllegalArgumentException("Start time cannot be empty!");
         }
         if (endTime == null) {
@@ -89,14 +93,14 @@ public class ScheduledActivityService{
         return scheduledActivity;
     } 
     @Transactional
-    public ScheduledActivity updateScheduledActivity(int scheduledActivityId, Date date, Time startTime, Time endTime){
-        ScheduledActivity scheduledActivity = scheduledActivityRepository.findScheduledActivityById(scheduledActivityId);
-        scheduledActivity.setScheduledActivityId(name);
+    public ScheduledActivity updateScheduledActivity(int scheduledActivityId, LocalDate date, LocalTime startTime, LocalTime endTime){
+        ScheduledActivity scheduledActivity = scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId);
+        scheduledActivity.setScheduledActivityId(scheduledActivityId);
         scheduledActivity.setDate(date);
         scheduledActivity.setStartTime(startTime);
         scheduledActivity.setStartTime(endTime);
         scheduledActivityRepository.save(scheduledActivity);
-        return activity;
+        return scheduledActivity;
     } 
     /**
      * Delete a scheduled activity
@@ -110,11 +114,11 @@ public class ScheduledActivityService{
     public ScheduledActivity deleteScheduledActivity(int scheduledActivityId){
         //delete activity once scheduled
         //Need to take the functions from the exceptions file to do throw new ...
-        if (scheduledActivityId == null || scheduledActivityId.trim().length() == 0) {
+        if (scheduledActivityId == -1) {
             throw new IllegalArgumentException("Name cannot be empty!");
         }
         else{
-            ScheduledActivity scheduledActivity = scheduledActivityRepository.findScheduledActivityById(scheduledActivityId);
+            ScheduledActivity scheduledActivity = scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId);
             if (scheduledActivity == null) {
                 throw new IllegalArgumentException("Activity does not exist!");
             }
