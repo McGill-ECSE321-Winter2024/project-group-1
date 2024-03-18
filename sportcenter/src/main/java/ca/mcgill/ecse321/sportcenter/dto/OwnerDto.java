@@ -12,14 +12,18 @@ public class OwnerDto {
         this.accountRoleId = accountRoleId;
     }
 
-    public void setAccountRoleId(int accountRoleId) {
-        this.accountRoleId = accountRoleId;
-    }
-    
     public int getAccountRoleId() {
         return accountRoleId;
     }
 
+    public void setAccountRoleId(int accountRoleId) {
+        this.accountRoleId = accountRoleId;
+    }
 
-
+    public static OwnerDto convertToDto(Owner owner) {
+        if (owner == null) {
+            throw new IllegalArgumentException("There is no owner!");
+        }
+        return new OwnerDto(owner.getAccountRoleId());
+    }
 }

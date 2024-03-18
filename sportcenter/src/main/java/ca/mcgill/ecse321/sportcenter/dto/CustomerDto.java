@@ -24,6 +24,10 @@ public class CustomerDto{
     }
 
     public static List<CustomerDto> convertToDto(List<Customer> customers) {
-        return customers.stream().map(x -> convertToDto(x)).collect(Collectors.toList());
-    }
+        List <CustomerDto> customerDto = new ArrayList<CustomerDto>(customers.size());
+        for (Customer customer : customers) {
+            customerDto.add(CustomerDto.convertToDto(customer));
+        }
+        return customerDto;
+        }
 }

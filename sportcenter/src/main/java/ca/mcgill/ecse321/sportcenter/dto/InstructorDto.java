@@ -33,7 +33,11 @@ public class InstructorDto {
     }
 
     public static List<InstructorDto> convertToDto(List<Instructor> instructors) {
-        return instructors.stream().map(x -> convertToDto(x)).collect(Collectors.toList());
+        List<InstructorDto> instructorDto = new ArrayList<InstructorDto>(instructors.size());
+        for (Instructor instructor : instructors) {
+            instructorDto.add(InstructorDto.convertToDto(instructor));
+        }
+        return instructorDto;
     }
 
 
