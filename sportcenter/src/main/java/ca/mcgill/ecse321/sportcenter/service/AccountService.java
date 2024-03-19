@@ -32,6 +32,7 @@ public class AccountService {
      */
     @Transactional
     public Account createAccount(String username, String password) {
+
         Account account = new Account();
         account.setUsername(username);
         account.setPassword(password);
@@ -58,7 +59,15 @@ public class AccountService {
      * @param password
      */
 
-    private void validateAccount(String username, String password) {
+   public void validateAccount(String username, String password) {
+
+        Account account = accountRepository.findAccountByUsername(username);
+        if (account != null) {
+            throw new IllegalArgumentException("Username already exists!");
+        }
+        if (!account.getPassword().equals(password)) {
+            throw new IllegalArgumentException("Password is incorrect");
+        }
         String error = "";
         if (username == null || username.trim().length() == 0) {
             error = error + "Username cannot be empty! ";

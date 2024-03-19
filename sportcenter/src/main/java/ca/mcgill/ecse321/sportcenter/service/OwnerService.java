@@ -37,6 +37,7 @@ public class OwnerService {
      * Get owner by accountRoleId
      * @param accountRoleId
      * @return
+     * @author Andrew Nemr
      */
     @Transactional
     public Owner getOwnerByAccountRoleId(int accountRoleId) {
@@ -58,14 +59,9 @@ public class OwnerService {
      * @return
      */
     @Transactional
-    public Owner checkAccountOwner(int accountRoleId) {
+    public boolean checkAccountOwner(int accountRoleId) {
         AccountRole role = ownerRepository.findAccountRoleByAccountRoleId(accountRoleId);
-        if (role instanceof Owner) {//check if role is an instance of Owner
-            throw new IllegalArgumentException("AccountRole does not exist!");
-        }
-        return (Owner) role;
-
-        
+        return role instanceof Owner;
     }
 
     /**

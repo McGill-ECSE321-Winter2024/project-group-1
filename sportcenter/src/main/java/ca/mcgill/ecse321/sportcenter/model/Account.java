@@ -66,14 +66,6 @@ public class Account
     return wasSet;
   }
 
-  public boolean setAccountId(int aAccountId)
-  {
-    boolean wasSet = false;
-    accountId = aAccountId;
-    wasSet = true;
-    return wasSet;
-  }
-
   //GETTERS
 
   public String getUsername()
