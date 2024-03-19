@@ -34,21 +34,6 @@ public class OwnerController {
     }
 
     /**
-     * Check if accountRoleId is an owner
-     * @param accountRoleId
-     * @return
-     */
-    @GetMapping(value = { "/owner/check/{accountRoleId}", "/owner/check/{accountRoleId}/" })
-    public ResponseEntity<?> checkAccountOwner(@PathVariable("accountRoleId") int accountRoleId) {
-        try {
-            Owner owner = ownerService.checkAccountOwner(accountRoleId);
-            return ResponseEntity.ok(OwnerDto.convertToDto(owner));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    /**
      * Approve Activity
      * @return
      */
