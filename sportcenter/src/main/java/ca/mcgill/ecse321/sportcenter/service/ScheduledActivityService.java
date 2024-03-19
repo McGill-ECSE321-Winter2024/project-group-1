@@ -75,12 +75,8 @@ public class ScheduledActivityService{
      * @return ScheduledActivity
      */
     @Transactional
-    public ScheduledActivity createScheduledActivity(int scheduledActivityId, LocalDate date, LocalTime startTime, LocalTime endTime, Instructor instructor, Activity activity) {
+    public ScheduledActivity createScheduledActivity(LocalDate date, LocalTime startTime, LocalTime endTime, Instructor instructor, Activity activity) {
         //create a scheduled activity 
-        //Change params
-        if (scheduledActivityId == -1) {
-            throw new IllegalArgumentException("Id cannot be empty!");
-        }
         if (date == null) {
             throw new IllegalArgumentException("Date cannot be empty!");
         }
@@ -101,7 +97,6 @@ public class ScheduledActivityService{
         }
 
         ScheduledActivity scheduledActivity = new ScheduledActivity();
-        scheduledActivity.setScheduledActivityId(scheduledActivityId);
         scheduledActivity.setDate(date);
         scheduledActivity.setStartTime(startTime);
         scheduledActivity.setStartTime(endTime);
