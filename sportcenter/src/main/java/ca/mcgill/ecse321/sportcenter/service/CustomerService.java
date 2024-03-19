@@ -3,12 +3,15 @@ package ca.mcgill.ecse321.sportcenter.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import ca.mcgill.ecse321.sportcenter.dao.CustomerRepository;
 import ca.mcgill.ecse321.sportcenter.model.Customer;
+import ca.mcgill.ecse321.sportcenter.model.Instructor;
 import ca.mcgill.ecse321.sportcenter.model.Account;
+import ca.mcgill.ecse321.sportcenter.model.AccountRole;
 import ca.mcgill.ecse321.sportcenter.dao.AccountRepository;
 
 public class CustomerService {
@@ -143,5 +146,17 @@ public class CustomerService {
     @Transactional
     public void deleteAllCustomers() {
         customerRepository.deleteAll();
+    }
+
+    /**
+     * Check if account is a customer
+     * @param accountRoleId
+     * @return boolean
+     */
+    @Transactional
+    public boolean isCustomer(int accountRoleId) {
+        AccountRole role = customerRepository.findAccountRoleByAccountRoleId(accountRoleId);
+        return role instanceof Customer;
+        //return customerRepository.existsById(accountRoleId);
     }
 }

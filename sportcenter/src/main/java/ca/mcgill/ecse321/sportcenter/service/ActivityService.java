@@ -163,7 +163,7 @@ public class ActivityService {
         return activitiesByIsApproved;
     }
 
-    //check activity uniqueness
+    //check activity uniqueness dont need since when does it????????????????????????????
     public boolean checkActivityUniqueness(String name) {
         if (name == null || name.trim().length() == 0) {
             throw new IllegalArgumentException("Name cannot be empty!");

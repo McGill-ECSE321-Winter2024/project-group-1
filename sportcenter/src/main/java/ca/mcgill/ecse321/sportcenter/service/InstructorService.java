@@ -10,6 +10,7 @@ import ca.mcgill.ecse321.sportcenter.dao.AccountRepository;
 import ca.mcgill.ecse321.sportcenter.dao.InstructorRepository;
 import ca.mcgill.ecse321.sportcenter.model.Instructor;
 import ca.mcgill.ecse321.sportcenter.model.Account;
+import ca.mcgill.ecse321.sportcenter.model.AccountRole;
 import ca.mcgill.ecse321.sportcenter.model.Customer;
 
 public class InstructorService {
@@ -149,6 +150,17 @@ public class InstructorService {
     @Transactional
     public void deleteAllInstructors() {
         instructorRepository.deleteAll();
+    }
+
+    /**
+     * Check if account is an instructor
+     * @param accountRoleId
+     * @return boolean
+     */
+    @Transactional
+    public boolean checkAccountInstructor(int accountRoleId) {
+        AccountRole role = instructorRepository.findAccountRoleByAccountRoleId(accountRoleId);
+        return role instanceof Instructor;
     }
 
     
