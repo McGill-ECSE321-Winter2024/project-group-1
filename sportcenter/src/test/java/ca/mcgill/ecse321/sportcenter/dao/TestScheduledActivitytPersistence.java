@@ -59,7 +59,7 @@ public class TestScheduledActivitytPersistence {
         String description = "Practice yoga with a professional instructor.";
         boolean isApproved = true;
         
-        activity.setSubcategory(subcategory);
+        activity.setSubCategory(subcategory);
         activity.setName(name);
         activity.setIsApproved(isApproved);
         activity.setDescription(description);
@@ -129,7 +129,7 @@ public class TestScheduledActivitytPersistence {
         
         assertEquals(name, scheduledActivity.getActivity().getName());
         assertEquals(description, scheduledActivity.getActivity().getDescription());
-        assertEquals(subcategory, scheduledActivity.getActivity().getSubcategory());
+        assertEquals(subcategory, scheduledActivity.getActivity().getSubCategory());
         assertEquals(isApproved, scheduledActivity.getActivity().getIsApproved());
     }
 }

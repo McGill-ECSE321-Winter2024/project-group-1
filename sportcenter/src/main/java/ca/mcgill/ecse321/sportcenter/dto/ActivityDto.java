@@ -43,7 +43,7 @@ public class ActivityDto {
     }
 
     public static ActivityDto convertToDto(Activity activity) {
-        return new ActivityDto(activity.getName(), activity.getDescription(), activity.getSubcategory());
+        return new ActivityDto(activity.getName(), activity.getDescription(), activity.getSubCategory());
     }
 
     public static List<ActivityDto> convertToDto(List<Activity> activities) {

@@ -274,16 +274,6 @@ public class InstructorService {
 
     }
 
-    /**
-     * Check if account is an instructor
-     * @param accountRoleId
-     * @return boolean
-     */
-    @Transactional
-    public boolean checkAccountInstructor(int accountRoleId) {
-        AccountRole role = instructorRepository.findAccountRoleByAccountRoleId(accountRoleId);
-        return role instanceof Instructor;
-    }
 
     /**
      * Check if account is an instructor

@@ -47,7 +47,7 @@ public class TestActivityPersistence {
 
         activity.setName(name);
         activity.setDescription(description);
-        activity.setSubcategory(subcategory);
+        activity.setSubCategory(subcategory);
         activity.setIsApproved(isApproved);
 
         activityRepository.save(activity);
@@ -64,7 +64,7 @@ public class TestActivityPersistence {
         assertNotNull(activity);
         assertEquals(name, activity.getName());
         assertEquals(description, activity.getDescription());
-        assertEquals(subcategory, activity.getSubcategory());
+        assertEquals(subcategory, activity.getSubCategory());
         assertEquals(isApproved, activity.getIsApproved());
     }
 }
