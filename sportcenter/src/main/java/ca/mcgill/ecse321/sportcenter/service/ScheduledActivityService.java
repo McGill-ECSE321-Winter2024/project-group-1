@@ -1,7 +1,7 @@
 package ca.mcgill.ecse321.sportcenter.service;
+
 import java.util.ArrayList;
 import java.util.List;
-
 
 import java.time.LocalTime;
 import java.time.LocalDate;
@@ -22,16 +22,16 @@ import ca.mcgill.ecse321.sportcenter.model.Activity;
 import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
 */
 
-public class ScheduledActivityService{
+public class ScheduledActivityService {
 
-    //Need to know all the different autowired that need to get here
+    // Need to know all the different autowired that need to get here
     @Autowired
     ScheduledActivityRepository scheduledActivityRepository;
 
     /*
-    @Autowired
-    ActivityRepository activityRepository;
-    */
+     * @Autowired
+     * ActivityRepository activityRepository;
+     */
 
     private <T> List<T> toList(Iterable<T> iterable) {
         List<T> resultList = new ArrayList<T>();
@@ -40,8 +40,10 @@ public class ScheduledActivityService{
         }
         return resultList;
     }
+
     /**
      * Create an activity where only the instructor can create an activity
+     * 
      * @return SchedueledActivity
      * 
      * @Author FabianSaldana
@@ -49,8 +51,10 @@ public class ScheduledActivityService{
     public List<ScheduledActivity> getScheduledActivities() {
         return toList(scheduledActivityRepository.findAll());
     }
+
     /**
      * Get an activity by its Id (primary key)
+     * 
      * @param scheduledActivityId
      * @return ScheduledActivity
      * 
@@ -63,8 +67,10 @@ public class ScheduledActivityService{
         }
         return scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId);
     }
+
     /**
      * Create an activity where only the instructor can create an activity
+     * 
      * @param scheduledActivityId
      * @param date
      * @param startTime
@@ -76,8 +82,9 @@ public class ScheduledActivityService{
      * @return ScheduledActivity
      */
     @Transactional
-    public ScheduledActivity createScheduledActivity(LocalDate date, LocalTime startTime, LocalTime endTime, Instructor instructor, Activity activity, int capacity) {
-        //create a scheduled activity 
+    public ScheduledActivity createScheduledActivity(LocalDate date, LocalTime startTime, LocalTime endTime,
+            Instructor instructor, Activity activity, int capacity) {
+        // create a scheduled activity
         if (date == null) {
             throw new IllegalArgumentException("Date cannot be empty!");
         }
@@ -106,11 +113,13 @@ public class ScheduledActivityService{
 
         scheduledActivityRepository.save(scheduledActivity);
         return scheduledActivity;
-    } 
+    }
 
     @Transactional
-    public ScheduledActivity updateScheduledActivity(int scheduledActivityId, LocalDate date, LocalTime startTime, LocalTime endTime, Instructor instructor, Activity activity, int capacity){
-        ScheduledActivity scheduledActivity = scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId);
+    public ScheduledActivity updateScheduledActivity(int scheduledActivityId, LocalDate date, LocalTime startTime,
+            LocalTime endTime, Instructor instructor, Activity activity, int capacity) {
+        ScheduledActivity scheduledActivity = scheduledActivityRepository
+                .findScheduledActivityByScheduledActivityId(scheduledActivityId);
         if (date == null) {
             throw new IllegalArgumentException("Date cannot be empty!");
         }
@@ -139,9 +148,11 @@ public class ScheduledActivityService{
         scheduledActivity.setSupervisor(instructor);
         scheduledActivityRepository.save(scheduledActivity);
         return scheduledActivity;
-    } 
+    }
+
     /**
      * Delete a scheduled activity
+     * 
      * @param scheduledActivityId
      * @param date
      * @param startTime
@@ -149,18 +160,17 @@ public class ScheduledActivityService{
      * @return ScheduledActivity
      */
     @Transactional
-    public ScheduledActivity deleteScheduledActivity(int scheduledActivityId){
-        //delete activity once scheduled
-        //Need to take the functions from the exceptions file to do throw new ...
+    public ScheduledActivity deleteScheduledActivity(int scheduledActivityId) {
+        // delete activity once scheduled
+        // Need to take the functions from the exceptions file to do throw new ...
         if (scheduledActivityId == -1) {
             throw new IllegalArgumentException("Id cannot be empty!");
-        }
-        else{
-            ScheduledActivity scheduledActivity = scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId);
+        } else {
+            ScheduledActivity scheduledActivity = scheduledActivityRepository
+                    .findScheduledActivityByScheduledActivityId(scheduledActivityId);
             if (scheduledActivity == null) {
                 throw new IllegalArgumentException("Scheduled Activity does not exist!");
-            }
-            else{
+            } else {
                 scheduledActivityRepository.delete(scheduledActivity);
                 return scheduledActivity;
             }
