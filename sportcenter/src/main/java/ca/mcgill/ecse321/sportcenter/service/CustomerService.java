@@ -47,6 +47,7 @@ public class CustomerService {
 
      @Transactional
      public Customer createCustomer(String username) {
+        
          Customer customer = new Customer();
          Account account = accountRepository.findAccountByUsername(username);
          if (account == null) {

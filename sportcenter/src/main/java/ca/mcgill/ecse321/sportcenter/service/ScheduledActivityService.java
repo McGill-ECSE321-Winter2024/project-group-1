@@ -9,6 +9,9 @@ import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import ca.mcgill.ecse321.sportcenter.model.Instructor;
+import ca.mcgill.ecse321.sportcenter.model.Activity;
+
 import ca.mcgill.ecse321.sportcenter.dao.ScheduledActivityRepository;
 import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity;
 //import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity.ClassCategory;
@@ -69,7 +72,7 @@ public class ScheduledActivityService{
      * @return ScheduledActivity
      */
     @Transactional
-    public ScheduledActivity createScheduledActivity(int scheduledActivityId, LocalDate date, LocalTime startTime, LocalTime endTime){
+    public ScheduledActivity createScheduledActivity(int scheduledActivityId, LocalDate date, LocalTime startTime, LocalTime endTime, Instructor instructor, Activity activity) {
         //create a scheduled activity 
         //Change params
         if (scheduledActivityId == -1) {
@@ -89,6 +92,9 @@ public class ScheduledActivityService{
         scheduledActivity.setDate(date);
         scheduledActivity.setStartTime(startTime);
         scheduledActivity.setStartTime(endTime);
+        scheduledActivity.setSupervisor(instructor);
+        scheduledActivity.setActivity(activity);
+
         scheduledActivityRepository.save(scheduledActivity);
         return scheduledActivity;
     } 

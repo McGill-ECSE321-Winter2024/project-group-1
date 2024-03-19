@@ -79,9 +79,9 @@ public class InstructorController {
      * @return InstructorDto
      */
     @PutMapping(value = {"/updateInstructor/{accountRoleId}", "/updateInstructor/{accountRoleId}/"})
-    public ResponseEntity<?> updateInstructor(@PathVariable("accountRoleId") int accountRoleId, @RequestParam("username") String username) {
+    public ResponseEntity<?> updateInstructor(@PathVariable("accountRoleId") int accountRoleId, @RequestParam("username") String username, @RequestParam("newUsername") String newUsername) {
         try {
-            Instructor instructor = instructorService.updateInstructor(accountRoleId, username);
+            Instructor instructor = instructorService.updateInstructorUsername(accountRoleId, username, newUsername);
             return ResponseEntity.ok(InstructorDto.convertToDto(instructor));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
