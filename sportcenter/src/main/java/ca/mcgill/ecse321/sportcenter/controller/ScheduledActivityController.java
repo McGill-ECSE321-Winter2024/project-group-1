@@ -1,28 +1,30 @@
 package ca.mcgill.ecse321.sportcenter.controller;
 
-import java.util.ArrayList;
-import java.util.List;
+//import java.util.ArrayList;
+//import java.util.List;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import org.checkerframework.checker.units.qual.A;
+//import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
+//import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+//import org.springframework.web.bind.annotation.RequestParam;
+//import org.springframework.web.bind.annotation.RestController;
 
-import ca.mcgill.ecse321.sportcenter.dto.ActivityDto;
+//import ca.mcgill.ecse321.sportcenter.dto.ActivityDto;
 import ca.mcgill.ecse321.sportcenter.dto.ScheduledActivityDto;
 import ca.mcgill.ecse321.sportcenter.model.Activity;
+import ca.mcgill.ecse321.sportcenter.model.Instructor;
 import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity;
-import ca.mcgill.ecse321.sportcenter.service.ActivityService;
+//import ca.mcgill.ecse321.sportcenter.service.ActivityService;
+//import ca.mcgill.ecse321.sportcenter.service.InstructorService;
 import ca.mcgill.ecse321.sportcenter.service.ScheduledActivityService; //Need to make changes to the dao I think
 
 public class ScheduledActivityController {
@@ -30,19 +32,25 @@ public class ScheduledActivityController {
     @Autowired
     private ScheduledActivityService scheduledActivityService;
 
+    //@Autowired
+    //private InstructorService instructorService;
+
     /**
      * Create an activity
      * @param scheduledActivityId
      * @param date
      * @param startTime
      * @param endTime
+     * @param instructor
+     * @param activity
      * @return
      * @Author Victor Fabian Saldana Arteaga
      */
-    @PostMapping(value = {"/createScheduledActivity/{scheduledActivityId}/{date}/{startTime}/{endTime}", "/createScheduledActivity/{scheduledActivityId}/{date}/{startTime}/{endTime}/"})
-    public ResponseEntity<?> createScheduledActivity(@PathVariable("scheduledActivityId") Integer scheduledActivityId, @PathVariable("date") LocalDate date, @PathVariable("startTime") LocalTime startTime, @PathVariable("startTime") LocalTime endTime) {
+    @PostMapping(value = {"/createScheduledActivity/{scheduledActivityId}/{date}/{startTime}/{endTime}/{instructor}/{activity}", "/createScheduledActivity/{scheduledActivityId}/{date}/{startTime}/{endTime}/{instructor}/{activity}/"})
+    public ResponseEntity<?> createScheduledActivity(@PathVariable("scheduledActivityId") Integer scheduledActivityId, @PathVariable("date") LocalDate date, @PathVariable("startTime") LocalTime startTime, 
+    @PathVariable("startTime") LocalTime endTime, @PathVariable("instructor") Instructor instructor, @PathVariable("activity") Activity activity) {
         try {
-            ScheduledActivity scheduledActivity = scheduledActivityService.createScheduledActivity(scheduledActivityId, date, startTime, endTime);
+            ScheduledActivity scheduledActivity = scheduledActivityService.createScheduledActivity(scheduledActivityId, date, startTime, endTime, instructor, activity);
             return ResponseEntity.ok(ScheduledActivityDto.convertToDto(scheduledActivity));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -88,9 +96,10 @@ public class ScheduledActivityController {
      * @return
      */
     @PutMapping(value = {"/activity/update/{name}/{newName}/{newDescription}/{newSubcategory}", "/activity/update/{name}/{newName}/{newDescription}/{newSubcategory}/"})
-    public ResponseEntity<?> updateScheduledActivity(@PathVariable("scheduledActivityId") Integer scheduledActivityId, @PathVariable("date") LocalDate date, @PathVariable("startTime") LocalTime startTime, @PathVariable("startTime") LocalTime endTime) {
+    public ResponseEntity<?> updateScheduledActivity(@PathVariable("scheduledActivityId") Integer scheduledActivityId, @PathVariable("date") LocalDate date, 
+    @PathVariable("startTime") LocalTime startTime, @PathVariable("startTime") LocalTime endTime, @PathVariable("instructor") Instructor instructor, @PathVariable("activity") Activity activity) {
         try {
-            ScheduledActivity scheduledActivity = scheduledActivityService.updateScheduledActivity(scheduledActivityId, date, startTime, endTime);
+            ScheduledActivity scheduledActivity = scheduledActivityService.updateScheduledActivity(scheduledActivityId, date, startTime, endTime, instructor, activity);
             return ResponseEntity.ok(ScheduledActivityDto.convertToDto(scheduledActivity));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
