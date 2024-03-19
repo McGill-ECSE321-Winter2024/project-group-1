@@ -1,8 +1,5 @@
 package ca.mcgill.ecse321.sportcenter.dto;
 
-import ca.mcgill.ecse321.sportcenter.model.*;
-import java.util.*;
-
 /**
  * Data transfer object for the Account entity
  * 
