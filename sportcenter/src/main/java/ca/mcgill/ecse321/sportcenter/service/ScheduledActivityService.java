@@ -99,7 +99,7 @@ public class ScheduledActivityService{
         return scheduledActivity;
     } 
     @Transactional
-    public ScheduledActivity updateScheduledActivity(int scheduledActivityId, LocalDate date, LocalTime startTime, LocalTime endTime){
+    public ScheduledActivity updateScheduledActivity(int scheduledActivityId, LocalDate date, LocalTime startTime, LocalTime endTime, Instructor instructor, Activity activity){
         ScheduledActivity scheduledActivity = scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId);
         scheduledActivity.setScheduledActivityId(scheduledActivityId);
         scheduledActivity.setDate(date);
