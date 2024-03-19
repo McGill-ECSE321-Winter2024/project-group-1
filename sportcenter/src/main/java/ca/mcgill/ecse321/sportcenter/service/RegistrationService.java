@@ -75,7 +75,6 @@ public class RegistrationService {
         return registration;
 
     }
-
     /**
      * Get a list of all registrations
      * @return List<Registration>

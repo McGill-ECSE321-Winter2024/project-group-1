@@ -50,15 +50,17 @@ public class TestScheduledActivityService {
 
     @InjectMocks
     private ScheduledActivityService scheduledActivityService;
-    private AccountService accountService;
-    private InstructorService instructorService;
-    private ActivityService activityService;
+    //private AccountService accountService;
+    //private InstructorService instructorService;
+    //private ActivityService activityService;
 
     private int instructorId;
     private Instructor instructor;
+    private Instructor newInstructor;
     
     private String activityName;
     private Activity activity;
+    private Activity newActivity;
 
     @BeforeEach
     public void setInstructorAndActivity(){
@@ -90,8 +92,6 @@ public class TestScheduledActivityService {
         LocalDate date = LocalDate.of(2024, 3, 19);
         LocalTime startTime = LocalTime.of(10, 0, 0);
         LocalTime endTime = LocalTime.of(12,0,0);
-        //Instructor instructor = ; //How to initialize the variable.
-        //Activity activity = ; //How to initialize the variable
 
         when(scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId)).thenReturn(null);//this checks if the activity already exists, and if it does, it will return null
         //when(scheduledActivityRepository(instructorId)).thenReturn(true);//this checks if the instructor exists, if not, it will return false which will throw an exception
@@ -121,12 +121,9 @@ public class TestScheduledActivityService {
     @Test
     public void testCreateScheduledActivityNullDate() {
         int scheduledActivityId = 1;
-        LocalDate date = LocalDate.of(2024, 3, 19);
+        LocalDate date = null;
         LocalTime startTime = LocalTime.of(10, 0, 0);
         LocalTime endTime = LocalTime.of(12,0,0);
-        //Instructor instructor = ; //How to initialize the variable.
-        //Activity activity = ; //How to initialize the variable
-
         String error = null;
         //when(activityService.(instructorId)).thenReturn(true);//this checks if the instructor exists, if not, it will return false which will throw an exception
         try {
@@ -135,7 +132,7 @@ public class TestScheduledActivityService {
             error = e.getMessage();
         }
 
-        assertEquals("Name cannot be empty!", error);
+        assertEquals("Date cannot be empty!", error);
     }
 
     @Test
@@ -155,7 +152,7 @@ public class TestScheduledActivityService {
             error = e.getMessage();
         }
 
-        assertEquals("Name cannot be empty!", error);
+        assertEquals("Start time cannot be empty!", error);
     }
 
     @Test
@@ -175,7 +172,7 @@ public class TestScheduledActivityService {
             error = e.getMessage();
         }
 
-        assertEquals("Name cannot be empty!", error);
+        assertEquals("End time cannot be empty!", error);
     }
 
     @Test
@@ -195,7 +192,7 @@ public class TestScheduledActivityService {
             error = e.getMessage();
         }
 
-        assertEquals("Name cannot be empty!", error);
+        assertEquals("Instructor cannot be empty!", error);
     }
 
     @Test
@@ -215,7 +212,7 @@ public class TestScheduledActivityService {
             error = e.getMessage();
         }
 
-        assertEquals("Name cannot be empty!", error);
+        assertEquals("Activity cannot be empty!", error);
     }
 
     @Test
@@ -235,7 +232,7 @@ public class TestScheduledActivityService {
             error = e.getMessage();
         }
 
-        assertEquals("Name cannot be empty!", error);
+        assertEquals("Start time cannot be after end time!", error);
     }
 
     @Test
@@ -244,8 +241,33 @@ public class TestScheduledActivityService {
         LocalDate newDate = LocalDate.of(2025, 3, 19);
         LocalTime newStartTime = LocalTime.of(10, 0, 0);
         LocalTime newEndTime = LocalTime.of(12,0,0);
-        Instructor newInstructor = new Instructor(); //How to initialize the variable.
-        Activity newActivity = new Activity(); //How to initialize the variable
+
+        //#region Creating new instructor and activity
+
+        Account newAccount = new Account();
+        newAccount.setUsername("Person2");
+        newAccount.setPassword("Password3");
+        accountRepository.save(newAccount);
+
+        newInstructor = new Instructor();
+        newInstructor.setAccount(newAccount);
+
+        int newInstructorId;
+        newInstructorId = newInstructor.getAccountRoleId();
+        instructorRepository.save(newInstructor);
+        newInstructor = instructorRepository.findAccountRoleByAccountRoleId(newInstructorId);
+
+        newActivity = new Activity(); //How to initialize the variable
+        newActivity.setName("Cardio2");
+        newActivity.setDescription("Cardio3");
+        ClassCategory subcategory = ClassCategory.Strength;
+        newActivity.setSubCategory(subcategory);
+        activityRepository.save(newActivity);
+        String newActivityName;
+        newActivityName = newActivity.getName();
+        newActivity = activityRepository.findActivityByName(newActivityName);
+
+        //#endregion
 
         when(scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId)).thenReturn(null);//this checks if the activity already exists, and if it does, it will return null
         //when(scheduledActivityRepository(instructorId)).thenReturn(true);//this checks if the instructor exists, if not, it will return false which will throw an exception
@@ -278,10 +300,36 @@ public class TestScheduledActivityService {
         LocalDate newDate = null;
         LocalTime newStartTime = LocalTime.of(10, 0, 0);
         LocalTime newEndTime = LocalTime.of(12,0,0);
-        Instructor newInstructor = new Instructor(); //How to initialize the variable.
-        Activity newActivity = new Activity(); //How to initialize the variable
+        
+        //#region Creating new instructor and activity
+
+        Account newAccount = new Account();
+        newAccount.setUsername("Person2");
+        newAccount.setPassword("Password3");
+        accountRepository.save(newAccount);
+
+        newInstructor = new Instructor();
+        newInstructor.setAccount(newAccount);
+
+        int newInstructorId;
+        newInstructorId = newInstructor.getAccountRoleId();
+        instructorRepository.save(newInstructor);
+        newInstructor = instructorRepository.findAccountRoleByAccountRoleId(newInstructorId);
+
+        newActivity = new Activity(); //How to initialize the variable
+        newActivity.setName("Cardio2");
+        newActivity.setDescription("Cardio3");
+        ClassCategory subcategory = ClassCategory.Strength;
+        newActivity.setSubCategory(subcategory);
+        activityRepository.save(newActivity);
+        String newActivityName;
+        newActivityName = newActivity.getName();
+        newActivity = activityRepository.findActivityByName(newActivityName);
+
+        //#endregion
 
         String error = null;
+        //when(scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId)).thenReturn(null);
         //when(activityService.(instructorId)).thenReturn(true);//this checks if the instructor exists, if not, it will return false which will throw an exception
         try {
             ScheduledActivity updatedScheduledActivity = scheduledActivityService.createScheduledActivity(scheduledActivityId, newDate, newStartTime, newEndTime, newInstructor, newActivity);
@@ -292,14 +340,39 @@ public class TestScheduledActivityService {
         assertEquals("Name cannot be empty!", error);
     }
 
-    @Test 
-    public void testUpdateScheduledActivityNullStartTime(){
+    @Test
+    public void testUpdateScheduledActivityInvalidDate(){
         int scheduledActivityId = 1;
-        LocalDate newDate = LocalDate.of(2025, 3, 19);
-        LocalTime newStartTime = null;
+        LocalDate newDate = LocalDate.of(2010, 3, 19);
+        LocalTime newStartTime = LocalTime.of(10, 0, 0);
         LocalTime newEndTime = LocalTime.of(12,0,0);
-        Instructor newInstructor = new Instructor(); //How to initialize the variable.
-        Activity newActivity = new Activity(); //How to initialize the variable
+
+        //#region Creating new instructor and activity
+
+        Account newAccount = new Account();
+        newAccount.setUsername("Person2");
+        newAccount.setPassword("Password3");
+        accountRepository.save(newAccount);
+
+        newInstructor = new Instructor();
+        newInstructor.setAccount(newAccount);
+
+        int newInstructorId;
+        newInstructorId = newInstructor.getAccountRoleId();
+        instructorRepository.save(newInstructor);
+        newInstructor = instructorRepository.findAccountRoleByAccountRoleId(newInstructorId);
+
+        newActivity = new Activity(); //How to initialize the variable
+        newActivity.setName("Cardio2");
+        newActivity.setDescription("Cardio3");
+        ClassCategory subcategory = ClassCategory.Strength;
+        newActivity.setSubCategory(subcategory);
+        activityRepository.save(newActivity);
+        String newActivityName;
+        newActivityName = newActivity.getName();
+        newActivity = activityRepository.findActivityByName(newActivityName);
+
+        //#endregion
 
         String error = null;
         //when(activityService.(instructorId)).thenReturn(true);//this checks if the instructor exists, if not, it will return false which will throw an exception
@@ -309,7 +382,51 @@ public class TestScheduledActivityService {
             error = e.getMessage();
         }
 
-        assertEquals("Name cannot be empty!", error);
+        assertEquals("Date cannot be before the current date!", error);
+    } 
+
+    @Test 
+    public void testUpdateScheduledActivityNullStartTime(){
+        int scheduledActivityId = 1;
+        LocalDate newDate = LocalDate.of(2025, 3, 19);
+        LocalTime newStartTime = null;
+        LocalTime newEndTime = LocalTime.of(12,0,0);
+        //#region Creating new instructor and activity
+
+        Account newAccount = new Account();
+        newAccount.setUsername("Person2");
+        newAccount.setPassword("Password3");
+        accountRepository.save(newAccount);
+
+        newInstructor = new Instructor();
+        newInstructor.setAccount(newAccount);
+
+        int newInstructorId;
+        newInstructorId = newInstructor.getAccountRoleId();
+        instructorRepository.save(newInstructor);
+        newInstructor = instructorRepository.findAccountRoleByAccountRoleId(newInstructorId);
+
+        newActivity = new Activity(); //How to initialize the variable
+        newActivity.setName("Cardio2");
+        newActivity.setDescription("Cardio3");
+        ClassCategory subcategory = ClassCategory.Strength;
+        newActivity.setSubCategory(subcategory);
+        activityRepository.save(newActivity);
+        String newActivityName;
+        newActivityName = newActivity.getName();
+        newActivity = activityRepository.findActivityByName(newActivityName);
+
+        //#endregion
+
+        String error = null;
+        //when(activityService.(instructorId)).thenReturn(true);//this checks if the instructor exists, if not, it will return false which will throw an exception
+        try {
+            ScheduledActivity updatedScheduledActivity = scheduledActivityService.createScheduledActivity(scheduledActivityId, newDate, newStartTime, newEndTime, newInstructor, newActivity);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+
+        assertEquals("Start time cannot be empty!", error);
     }
 
     @Test 
@@ -318,8 +435,32 @@ public class TestScheduledActivityService {
         LocalDate newDate = LocalDate.of(2025, 3, 19);
         LocalTime newStartTime = LocalTime.of(10, 0, 0);
         LocalTime newEndTime = null;
-        Instructor newInstructor = new Instructor(); //How to initialize the variable.
-        Activity newActivity = new Activity(); //How to initialize the variable
+        //#region Creating new instructor and activity
+
+        Account newAccount = new Account();
+        newAccount.setUsername("Person2");
+        newAccount.setPassword("Password3");
+        accountRepository.save(newAccount);
+
+        newInstructor = new Instructor();
+        newInstructor.setAccount(newAccount);
+
+        int newInstructorId;
+        newInstructorId = newInstructor.getAccountRoleId();
+        instructorRepository.save(newInstructor);
+        newInstructor = instructorRepository.findAccountRoleByAccountRoleId(newInstructorId);
+
+        newActivity = new Activity(); //How to initialize the variable
+        newActivity.setName("Cardio2");
+        newActivity.setDescription("Cardio3");
+        ClassCategory subcategory = ClassCategory.Strength;
+        newActivity.setSubCategory(subcategory);
+        activityRepository.save(newActivity);
+        String newActivityName;
+        newActivityName = newActivity.getName();
+        newActivity = activityRepository.findActivityByName(newActivityName);
+
+        //#endregion
 
         String error = null;
         //when(activityService.(instructorId)).thenReturn(true);//this checks if the instructor exists, if not, it will return false which will throw an exception
@@ -329,7 +470,7 @@ public class TestScheduledActivityService {
             error = e.getMessage();
         }
 
-        assertEquals("Name cannot be empty!", error);
+        assertEquals("End time cannot be empty!", error);
     }
 
     @Test 
@@ -339,7 +480,34 @@ public class TestScheduledActivityService {
         LocalTime newStartTime = LocalTime.of(10, 0, 0);
         LocalTime newEndTime = LocalTime.of(12,0,0);
         Instructor newInstructor = null; //How to initialize the variable.
-        Activity newActivity = new Activity(); //How to initialize the variable
+        //#region Creating new instructor and activity
+
+        /* 
+        Account newAccount = new Account();
+        newAccount.setUsername("Person2");
+        newAccount.setPassword("Password3");
+        accountRepository.save(newAccount);
+
+        newInstructor = new Instructor();
+        newInstructor.setAccount(newAccount);
+
+        int newInstructorId;
+        newInstructorId = newInstructor.getAccountRoleId();
+        instructorRepository.save(newInstructor);
+        newInstructor = instructorRepository.findAccountRoleByAccountRoleId(newInstructorId);
+
+        */
+        newActivity = new Activity(); //How to initialize the variable
+        newActivity.setName("Cardio2");
+        newActivity.setDescription("Cardio3");
+        ClassCategory subcategory = ClassCategory.Strength;
+        newActivity.setSubCategory(subcategory);
+        activityRepository.save(newActivity);
+        String newActivityName;
+        newActivityName = newActivity.getName();
+        newActivity = activityRepository.findActivityByName(newActivityName);
+
+        //#endregion
 
         String error = null;
         //when(activityService.(instructorId)).thenReturn(true);//this checks if the instructor exists, if not, it will return false which will throw an exception
@@ -349,7 +517,7 @@ public class TestScheduledActivityService {
             error = e.getMessage();
         }
 
-        assertEquals("Name cannot be empty!", error);
+        assertEquals("Instructor cannot be empty!", error);
     }
 
     @Test 
@@ -358,8 +526,35 @@ public class TestScheduledActivityService {
         LocalDate newDate = LocalDate.of(2025, 3, 19);
         LocalTime newStartTime = LocalTime.of(10, 0, 0);
         LocalTime newEndTime = LocalTime.of(12,0,0);
-        Instructor newInstructor = new Instructor(); //How to initialize the variable.
-        Activity newActivity = null; //How to initialize the variable
+        Activity newActivity = null;
+        //#region Creating new instructor and activity
+
+        Account newAccount = new Account();
+        newAccount.setUsername("Person2");
+        newAccount.setPassword("Password3");
+        accountRepository.save(newAccount);
+
+        newInstructor = new Instructor();
+        newInstructor.setAccount(newAccount);
+
+        int newInstructorId;
+        newInstructorId = newInstructor.getAccountRoleId();
+        instructorRepository.save(newInstructor);
+        newInstructor = instructorRepository.findAccountRoleByAccountRoleId(newInstructorId);
+
+        /*
+        newActivity = new Activity(); //How to initialize the variable
+        newActivity.setName("Cardio2");
+        newActivity.setDescription("Cardio3");
+        ClassCategory subcategory = ClassCategory.Strength;
+        newActivity.setSubCategory(subcategory);
+        activityRepository.save(newActivity);
+        String newActivityName;
+        newActivityName = newActivity.getName();
+        newActivity = activityRepository.findActivityByName(newActivityName);
+        */
+
+        //#endregion
 
         String error = null;
         //when(activityService.(instructorId)).thenReturn(true);//this checks if the instructor exists, if not, it will return false which will throw an exception
@@ -369,7 +564,7 @@ public class TestScheduledActivityService {
             error = e.getMessage();
         }
 
-        assertEquals("Name cannot be empty!", error);
+        assertEquals("Activity cannot be empty!", error);
     }
 
     @Test 
@@ -378,8 +573,32 @@ public class TestScheduledActivityService {
         LocalDate newDate = LocalDate.of(2025, 3, 19);
         LocalTime newStartTime = LocalTime.of(20, 0, 0);
         LocalTime newEndTime = LocalTime.of(18,0,0);
-        Instructor newInstructor = new Instructor(); //How to initialize the variable.
-        Activity newActivity = new Activity(); //How to initialize the variable
+        //#region Creating new instructor and activity
+
+        Account newAccount = new Account();
+        newAccount.setUsername("Person2");
+        newAccount.setPassword("Password3");
+        accountRepository.save(newAccount);
+
+        newInstructor = new Instructor();
+        newInstructor.setAccount(newAccount);
+
+        int newInstructorId;
+        newInstructorId = newInstructor.getAccountRoleId();
+        instructorRepository.save(newInstructor);
+        newInstructor = instructorRepository.findAccountRoleByAccountRoleId(newInstructorId);
+
+        newActivity = new Activity(); //How to initialize the variable
+        newActivity.setName("Cardio2");
+        newActivity.setDescription("Cardio3");
+        ClassCategory subcategory = ClassCategory.Strength;
+        newActivity.setSubCategory(subcategory);
+        activityRepository.save(newActivity);
+        String newActivityName;
+        newActivityName = newActivity.getName();
+        newActivity = activityRepository.findActivityByName(newActivityName);
+
+        //#endregion
 
         String error = null;
         //when(activityService.(instructorId)).thenReturn(true);//this checks if the instructor exists, if not, it will return false which will throw an exception
@@ -389,7 +608,7 @@ public class TestScheduledActivityService {
             error = e.getMessage();
         }
 
-        assertEquals("Name cannot be empty!", error);
+        assertEquals("Start time cannot be after end time!", error);
     }
 
     @Test
@@ -419,7 +638,7 @@ public class TestScheduledActivityService {
             error = e.getMessage();
         }
 
-        assertEquals("Activity does not exist!", error);
+        assertEquals("Scheduled Activity does not exist!", error);
     }
 
 }

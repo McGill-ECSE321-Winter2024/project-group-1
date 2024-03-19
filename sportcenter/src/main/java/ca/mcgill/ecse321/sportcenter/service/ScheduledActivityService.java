@@ -79,10 +79,13 @@ public class ScheduledActivityService{
         //create a scheduled activity 
         //Change params
         if (scheduledActivityId == -1) {
-            throw new IllegalArgumentException("Id cannot be null!");
+            throw new IllegalArgumentException("Id cannot be empty!");
         }
         if (date == null) {
             throw new IllegalArgumentException("Date cannot be empty!");
+        }
+        if (date.isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException("Date cannot be before the current date!");
         }
         if (startTime == null || startTime.isAfter(endTime)) {
             throw new IllegalArgumentException("Start time cannot be empty!");
@@ -91,10 +94,10 @@ public class ScheduledActivityService{
             throw new IllegalArgumentException("End time cannot be empty!");
         }
         if (instructor == null) {
-            throw new IllegalArgumentException("End time cannot be empty!");
+            throw new IllegalArgumentException("Instructor cannot be empty!");
         }
         if (activity == null) {
-            throw new IllegalArgumentException("End time cannot be empty!");
+            throw new IllegalArgumentException("Activity cannot be empty!");
         }
 
         ScheduledActivity scheduledActivity = new ScheduledActivity();
@@ -112,6 +115,27 @@ public class ScheduledActivityService{
     @Transactional
     public ScheduledActivity updateScheduledActivity(int scheduledActivityId, LocalDate date, LocalTime startTime, LocalTime endTime, Instructor instructor, Activity activity){
         ScheduledActivity scheduledActivity = scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId);
+        if (date == null) {
+            throw new IllegalArgumentException("Date cannot be empty!");
+        }
+        if (date.isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException("Date cannot be before the current date!");
+        }
+        if (startTime == null) {
+            throw new IllegalArgumentException("Start time cannot be empty!");
+        }
+        if (startTime.isAfter(endTime)) {
+            throw new IllegalArgumentException("Start time cannot be before end time!");
+        }
+        if (endTime == null) {
+            throw new IllegalArgumentException("End time cannot be empty!");
+        }
+        if (instructor == null) {
+            throw new IllegalArgumentException("Instructor cannot be empty!");
+        }
+        if (activity == null) {
+            throw new IllegalArgumentException("Activity cannot be empty!");
+        }
         scheduledActivity.setScheduledActivityId(scheduledActivityId);
         scheduledActivity.setDate(date);
         scheduledActivity.setStartTime(startTime);
@@ -133,12 +157,12 @@ public class ScheduledActivityService{
         //delete activity once scheduled
         //Need to take the functions from the exceptions file to do throw new ...
         if (scheduledActivityId == -1) {
-            throw new IllegalArgumentException("Name cannot be empty!");
+            throw new IllegalArgumentException("Id cannot be empty!");
         }
         else{
             ScheduledActivity scheduledActivity = scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId);
             if (scheduledActivity == null) {
-                throw new IllegalArgumentException("Activity does not exist!");
+                throw new IllegalArgumentException("Scheduled Activity does not exist!");
             }
             else{
                 scheduledActivityRepository.delete(scheduledActivity);
