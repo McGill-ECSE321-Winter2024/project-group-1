@@ -24,28 +24,34 @@ import ca.mcgill.ecse321.sportcenter.dao.CustomerRepository;
 import ca.mcgill.ecse321.sportcenter.model.Customer;
 import ca.mcgill.ecse321.sportcenter.service.CustomerService;
 
+import ca.mcgill.ecse321.sportcenter.dao.AccountRepository;
+import ca.mcgill.ecse321.sportcenter.model.Account;
+import ca.mcgill.ecse321.sportcenter.service.AccountService;
+
 public class TestCustomerService {
     @Mock
     private CustomerRepository customerRepository;
+
+    @Mock
+    private AccountRepository accountRepository;
 
     @InjectMocks
     private CustomerService customerService;
 
     @Test
-    public void testCreateCustomer() {//this is wrong, cant think of a way to test this (should check if username exists in account then make that account a customer)
+    public void testCreateCustomer() {
         String username = "testUsername";
-        when(customerRepository.findCustomerByUserName(username)).thenReturn(null);
+        when(accountRepository.findAccountByUsername(username)).thenReturn(new Account());//if account exists, then it will be returned, if not, null will be returned
         when(customerRepository.save(any(Customer.class))).thenAnswer( (invocation) -> invocation.getArgument(0));
         Customer customer = null;
         try {
-            customer = customerService.createCustomer(username);}
-        catch (IllegalArgumentException e)
-        {
+            customer = customerService.createCustomer(username);
+        } catch (IllegalArgumentException e) {
             // Check that no error occurred
             assertEquals("Username cannot be empty!", e.getMessage());
         }
+        // check model in memory
         assertNotNull(customer);
-        //assertEquals(username, customer.getUserName());
     }
 
     @Test
