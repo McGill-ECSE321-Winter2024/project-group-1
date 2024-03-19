@@ -10,8 +10,7 @@ public class AccountDto {
     private String username;
     private String password;
 
-    public AccountDto(int accountId, String username, String password) {
-        this.accountId = accountId;
+    public AccountDto(String username, String password) {
         this.username = username;
         this.password = password;
     }
@@ -20,13 +19,13 @@ public class AccountDto {
         if (account == null){
             throw new IllegalArgumentException("There is no account to convert");
         }
-        return new AccountDto(account.getAccountId(), account.getUsername(), account.getPassword());
+        return new AccountDto(account.getUsername(), account.getPassword());
     }
     public static List<AccountDto> convertAccountDto(List<Account> accounts) {
         List<AccountDto> accountDto = new ArrayList<AccountDto>(accounts.size());
 
         for (Account account : accounts) {
-            accountDto.add(new AccountDto(account.getAccountId(), account.getUsername(), account.getPassword()));
+            accountDto.add(new AccountDto(account.getUsername(), account.getPassword()));
         }
         return accountDto;
     }

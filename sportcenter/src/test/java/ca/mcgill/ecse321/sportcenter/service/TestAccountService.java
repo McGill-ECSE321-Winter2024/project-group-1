@@ -107,16 +107,17 @@ public class TestAccountService {
 
     @Test
     public void testCreateAccountUsernameExists() {
-        String username = "username";
+        String username1 = "username";
+        String username2 = "username";
         String password = "password";
         String error = null;
         Account account1 = new Account();
         when(accountRepository.save(any(Account.class))).thenReturn(account1);
-        when(accountRepository.findAccountByUsername(username)).thenReturn(account1);
+        when(accountRepository.findAccountByUsername(username1)).thenReturn(account1);
 
         try {
-            Account createdAccount = accountService.createAccount(username, password);
-            accountService.validateAccount(username, password);
+            Account createdAccount = accountService.createAccount(username1, password);
+            accountService.validateAccount(username2, password);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }

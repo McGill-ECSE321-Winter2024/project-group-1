@@ -50,7 +50,6 @@ public class CustomerService {
 
      @Transactional
      public Customer createCustomer(String username) {
-        
          Customer customer = new Customer();
          Account account = accountRepository.findAccountByUsername(username);
          if (account == null) {
@@ -101,8 +100,12 @@ public class CustomerService {
      */
     @Transactional
     public Customer getCustomerByRoleId(int accountRoleId) {
-        if (accountRoleId < 0) {
-            throw new IllegalArgumentException("AccountRoleId cannot be negative!");
+        Customer customer = customerRepository.findAccountRoleByAccountRoleId(accountRoleId);
+        if (customer == null) {
+            throw new IllegalArgumentException("Customer does not exist!");
+        }
+        if (accountRoleId < 0 || accountRoleId == 0) {//to check if accountRolle is null?????
+            throw new IllegalArgumentException("AccountRoleId is not valid!");
         }
         return customerRepository.findAccountRoleByAccountRoleId(accountRoleId);
     }

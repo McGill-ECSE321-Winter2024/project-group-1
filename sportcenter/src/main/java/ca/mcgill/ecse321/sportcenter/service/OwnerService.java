@@ -44,14 +44,6 @@ public class OwnerService {
         return ownerRepository.findAccountRoleByAccountRoleId(accountRoleId);
     }
 
-    /**
-    * Get owner by accountRoleId
-    * @return
-    */
-    @Transactional
-    public List<Owner> getOwners() {
-        return toList(ownerRepository.findAll());
-    }
 
     /**
      * Check if accountRoleId is an owner
