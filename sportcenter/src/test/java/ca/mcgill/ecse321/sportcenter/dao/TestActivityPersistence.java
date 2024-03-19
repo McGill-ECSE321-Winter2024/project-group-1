@@ -30,6 +30,7 @@ public class TestActivityPersistence {
     public void clearDatabase() {
         activityRepository.deleteAll();
     }
+
     /**
      * Test the persistence of an Activity
      */
@@ -59,7 +60,8 @@ public class TestActivityPersistence {
         activity = activityRepository.findActivityByName(name);
 
         /*
-         * Check if the Activity was saved and loaded correctly and has the correct attributes
+         * Check if the Activity was saved and loaded correctly and has the correct
+         * attributes
          */
         assertNotNull(activity);
         assertEquals(name, activity.getName());

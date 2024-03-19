@@ -59,7 +59,7 @@ public class ScheduledActivityService{
     @Transactional
     public ScheduledActivity getScheduledActivity(int scheduledActivityId) {
         if (scheduledActivityId == -1) {
-            throw new IllegalArgumentException("Id cannot be empty!");
+            throw new IllegalArgumentException("Id cannot be negative!");
         }
         return scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId);
     }
@@ -72,7 +72,7 @@ public class ScheduledActivityService{
      * @return ScheduledActivity
      */
     @Transactional
-    public ScheduledActivity createScheduledActivity(int scheduledActivityId, LocalDate date, LocalTime startTime, LocalTime endTime, Instructor instructor, Activity activity) {
+    public ScheduledActivity createScheduledActivity(int scheduledActivityId, LocalDate date, LocalTime startTime, LocalTime endTime, Instructor instructor, Activity activity, int capacity) {
         //create a scheduled activity 
         //Change params
         if (scheduledActivityId == -1) {

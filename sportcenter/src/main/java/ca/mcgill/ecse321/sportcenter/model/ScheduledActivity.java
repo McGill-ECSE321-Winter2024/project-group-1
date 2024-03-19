@@ -21,6 +21,7 @@ public class ScheduledActivity
   private LocalDate date;
   private LocalTime startTime;
   private LocalTime endTime;
+  private int capacity;
  
   @ManyToOne(optional = false) //an instructor can teach many scheduled activities
   private Instructor supervisor;
@@ -36,11 +37,12 @@ public class ScheduledActivity
     
   }
 
-  public ScheduledActivity(LocalDate aDate, LocalTime aStartTime, LocalTime aEndTime, Instructor aAccounts, Activity aActivity)
+  public ScheduledActivity(LocalDate aDate, LocalTime aStartTime, LocalTime aEndTime, Instructor aAccounts, Activity aActivity, int aCapacity)
   {
     date = aDate;
     startTime = aStartTime;
     endTime = aEndTime;
+    capacity = aCapacity;
 
     if (!setSupervisor(aAccounts))
     {
@@ -108,6 +110,14 @@ public class ScheduledActivity
     return wasSet;
   }
 
+  public boolean setCapacity(int aCapacity)
+  {
+    boolean wasSet = false;
+    capacity = aCapacity;
+    wasSet = true;
+    return wasSet;
+  }
+
   //GETTERS
 
   public int getScheduledActivityId()
@@ -140,5 +150,9 @@ public class ScheduledActivity
     return activity;
   }
 
+  public int getCapacity()
+  {
+    return capacity;
+  }
 
 }
