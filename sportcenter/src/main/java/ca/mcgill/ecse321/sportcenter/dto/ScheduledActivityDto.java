@@ -23,15 +23,17 @@ public class ScheduledActivityDto {
     private LocalTime endTime;
     private Instructor instructor;
     private Activity activity;
+    private int capacity;
 
 
-    public ScheduledActivityDto(int scheduledActivityId, LocalDate date, LocalTime startTime, LocalTime endTime, Instructor instructor, Activity activity) {
+    public ScheduledActivityDto(int scheduledActivityId, LocalDate date, LocalTime startTime, LocalTime endTime, Instructor instructor, Activity activity, int capacity) {
         this.scheduledActivityId = scheduledActivityId;
         this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
         this.instructor = instructor;
         this.activity = activity;
+        this.capacity = capacity;
     }
 
     public int getScheduledActivityId() {
@@ -58,6 +60,10 @@ public class ScheduledActivityDto {
         return activity;
     }
 
+    public int getCapacity(){
+        return capacity;
+    }
+
     public void setScheduledActivityId(Integer scheduledActivityId) {
         this.scheduledActivityId = scheduledActivityId;
     }
@@ -82,9 +88,13 @@ public class ScheduledActivityDto {
         this.activity = activity;
     }
 
+    public void setCapacity(int capacity){
+        this.capacity = capacity;
+    }
+
     public static ScheduledActivityDto convertToDto(ScheduledActivity scheduledActivity) {
         return new ScheduledActivityDto(scheduledActivity.getScheduledActivityId(), 
         scheduledActivity.getDate(),  scheduledActivity.getStartTime(), scheduledActivity.getEndTime(),
-        scheduledActivity.getSupervisor(), scheduledActivity.getActivity());
+        scheduledActivity.getSupervisor(), scheduledActivity.getActivity(), scheduledActivity.getCapacity());
     }
 }

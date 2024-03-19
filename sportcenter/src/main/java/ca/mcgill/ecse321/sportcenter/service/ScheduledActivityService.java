@@ -71,11 +71,12 @@ public class ScheduledActivityService{
      * @param endTime
      * @param instructorId
      * @param activityName
+     * @param capacity
      * 
      * @return ScheduledActivity
      */
     @Transactional
-    public ScheduledActivity createScheduledActivity(LocalDate date, LocalTime startTime, LocalTime endTime, Instructor instructor, Activity activity) {
+    public ScheduledActivity createScheduledActivity(LocalDate date, LocalTime startTime, LocalTime endTime, Instructor instructor, Activity activity, int capacity) {
         //create a scheduled activity 
         if (date == null) {
             throw new IllegalArgumentException("Date cannot be empty!");
@@ -108,7 +109,7 @@ public class ScheduledActivityService{
     } 
 
     @Transactional
-    public ScheduledActivity updateScheduledActivity(int scheduledActivityId, LocalDate date, LocalTime startTime, LocalTime endTime, Instructor instructor, Activity activity){
+    public ScheduledActivity updateScheduledActivity(int scheduledActivityId, LocalDate date, LocalTime startTime, LocalTime endTime, Instructor instructor, Activity activity, int capacity){
         ScheduledActivity scheduledActivity = scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId);
         if (date == null) {
             throw new IllegalArgumentException("Date cannot be empty!");

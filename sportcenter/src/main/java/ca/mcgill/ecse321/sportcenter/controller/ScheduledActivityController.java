@@ -46,11 +46,11 @@ public class ScheduledActivityController {
      * @return
      * @Author Victor Fabian Saldana Arteaga
      */
-    @PostMapping(value = {"/createScheduledActivity/{scheduledActivityId}/{date}/{startTime}/{endTime}/{instructor}/{activity}", "/createScheduledActivity/{scheduledActivityId}/{date}/{startTime}/{endTime}/{instructor}/{activity}/"})
+    @PostMapping(value = {"/createScheduledActivity/{scheduledActivityId}/{date}/{startTime}/{endTime}/{instructor}/{activity}/{capacity}", "/createScheduledActivity/{scheduledActivityId}/{date}/{startTime}/{endTime}/{instructor}/{activity}/{capacity}/"})
     public ResponseEntity<?> createScheduledActivity(@PathVariable("date") LocalDate date, @PathVariable("startTime") LocalTime startTime, 
-    @PathVariable("startTime") LocalTime endTime, @PathVariable("instructor") Instructor instructor, @PathVariable("activity") Activity activity) {
+    @PathVariable("startTime") LocalTime endTime, @PathVariable("instructor") Instructor instructor, @PathVariable("activity") Activity activity, @PathVariable("capacity") Integer capacity) {
         try {
-            ScheduledActivity scheduledActivity = scheduledActivityService.createScheduledActivity(date, startTime, endTime, instructor, activity);
+            ScheduledActivity scheduledActivity = scheduledActivityService.createScheduledActivity(date, startTime, endTime, instructor, activity, capacity);
             return ResponseEntity.ok(ScheduledActivityDto.convertToDto(scheduledActivity));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -97,9 +97,9 @@ public class ScheduledActivityController {
      */
     @PutMapping(value = {"/activity/update/{name}/{newName}/{newDescription}/{newSubcategory}", "/activity/update/{name}/{newName}/{newDescription}/{newSubcategory}/"})
     public ResponseEntity<?> updateScheduledActivity(@PathVariable("scheduledActivityId") Integer scheduledActivityId, @PathVariable("date") LocalDate date, 
-    @PathVariable("startTime") LocalTime startTime, @PathVariable("startTime") LocalTime endTime, @PathVariable("instructor") Instructor instructor, @PathVariable("activity") Activity activity) {
+    @PathVariable("startTime") LocalTime startTime, @PathVariable("startTime") LocalTime endTime, @PathVariable("instructor") Instructor instructor, @PathVariable("activity") Activity activity, @PathVariable("capacity") Integer capacity) {
         try {
-            ScheduledActivity scheduledActivity = scheduledActivityService.updateScheduledActivity(scheduledActivityId, date, startTime, endTime, instructor, activity);
+            ScheduledActivity scheduledActivity = scheduledActivityService.updateScheduledActivity(scheduledActivityId, date, startTime, endTime, instructor, activity, capacity);
             return ResponseEntity.ok(ScheduledActivityDto.convertToDto(scheduledActivity));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
