@@ -13,6 +13,7 @@ import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity;
 import ca.mcgill.ecse321.sportcenter.model.Account;
 import ca.mcgill.ecse321.sportcenter.dao.ActivityRepository;
 import ca.mcgill.ecse321.sportcenter.model.Activity;
+import ca.mcgill.ecse321.sportcenter.model.AccountRole;
 import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
 
 import java.time.LocalDate;
@@ -271,6 +272,28 @@ public class InstructorService {
 
         instructorRepository.deleteAll();
 
+    }
+
+    /**
+     * Check if account is an instructor
+     * @param accountRoleId
+     * @return boolean
+     */
+    @Transactional
+    public boolean checkAccountInstructor(int accountRoleId) {
+        AccountRole role = instructorRepository.findAccountRoleByAccountRoleId(accountRoleId);
+        return role instanceof Instructor;
+    }
+
+    /**
+     * Check if account is an instructor
+     * @param accountRoleId
+     * @return boolean
+     */
+    @Transactional
+    public boolean checkAccountInstructor(int accountRoleId) {
+        AccountRole role = instructorRepository.findAccountRoleByAccountRoleId(accountRoleId);
+        return role instanceof Instructor;
     }
 
     //UNIQUE METHODS

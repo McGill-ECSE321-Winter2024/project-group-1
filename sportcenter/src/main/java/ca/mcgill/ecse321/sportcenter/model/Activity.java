@@ -37,7 +37,7 @@ public class Activity
 
   //SETTERS
 
-  public boolean setSubcategory(ClassCategory aSubcategory)
+  public boolean setSubCategory(ClassCategory aSubcategory)
   {
     boolean wasSet = false;
     subcategory = aSubcategory;
@@ -71,7 +71,7 @@ public class Activity
     return wasSet;
   }
 
-  public ClassCategory getSubcategory()
+  public ClassCategory getSubCategory()
   {
     return subcategory;
   }
