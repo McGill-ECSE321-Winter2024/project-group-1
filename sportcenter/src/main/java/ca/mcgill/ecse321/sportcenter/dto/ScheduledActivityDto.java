@@ -14,6 +14,8 @@ import ca.mcgill.ecse321.sportcenter.model.Activity;
 import ca.mcgill.ecse321.sportcenter.model.Instructor;
 
 public class ScheduledActivityDto {
+
+    //private InstructorDto instructor;
     
     private int scheduledActivityId;
     private LocalDate date;
@@ -30,7 +32,7 @@ public class ScheduledActivityDto {
         this.endTime = endTime;
         this.instructor = instructor;
         this.activity = activity;
-        }
+    }
 
     public int getScheduledActivityId() {
         return scheduledActivityId;

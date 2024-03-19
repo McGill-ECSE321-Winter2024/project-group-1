@@ -54,12 +54,12 @@ public class ScheduledActivityService{
      * @param scheduledActivityId
      * @return ScheduledActivity
      * 
-     * @Author Andrew Nemr
+     * @Author Fabian Saldana
      */
     @Transactional
     public ScheduledActivity getScheduledActivity(int scheduledActivityId) {
         if (scheduledActivityId == -1) {
-            throw new IllegalArgumentException("Id cannot be negative!");
+            throw new IllegalArgumentException("Id cannot be empty!");
         }
         return scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId);
     }
@@ -69,10 +69,13 @@ public class ScheduledActivityService{
      * @param date
      * @param startTime
      * @param endTime
+     * @param instructorId
+     * @param activityName
+     * 
      * @return ScheduledActivity
      */
     @Transactional
-    public ScheduledActivity createScheduledActivity(int scheduledActivityId, LocalDate date, LocalTime startTime, LocalTime endTime, Instructor instructor, Activity activity, int capacity) {
+    public ScheduledActivity createScheduledActivity(int scheduledActivityId, LocalDate date, LocalTime startTime, LocalTime endTime, Instructor instructor, Activity activity) {
         //create a scheduled activity 
         //Change params
         if (scheduledActivityId == -1) {
@@ -87,6 +90,13 @@ public class ScheduledActivityService{
         if (endTime == null) {
             throw new IllegalArgumentException("End time cannot be empty!");
         }
+        if (instructor == null) {
+            throw new IllegalArgumentException("End time cannot be empty!");
+        }
+        if (activity == null) {
+            throw new IllegalArgumentException("End time cannot be empty!");
+        }
+
         ScheduledActivity scheduledActivity = new ScheduledActivity();
         scheduledActivity.setScheduledActivityId(scheduledActivityId);
         scheduledActivity.setDate(date);
@@ -98,6 +108,7 @@ public class ScheduledActivityService{
         scheduledActivityRepository.save(scheduledActivity);
         return scheduledActivity;
     } 
+
     @Transactional
     public ScheduledActivity updateScheduledActivity(int scheduledActivityId, LocalDate date, LocalTime startTime, LocalTime endTime, Instructor instructor, Activity activity){
         ScheduledActivity scheduledActivity = scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId);
@@ -105,6 +116,7 @@ public class ScheduledActivityService{
         scheduledActivity.setDate(date);
         scheduledActivity.setStartTime(startTime);
         scheduledActivity.setStartTime(endTime);
+        scheduledActivity.setSupervisor(instructor);
         scheduledActivityRepository.save(scheduledActivity);
         return scheduledActivity;
     } 
@@ -134,62 +146,4 @@ public class ScheduledActivityService{
             }
         }
     }
-
-    //The following code is from the Activity service
-    /**
-     * Get all activities by subcategory
-     * @param subcategory
-     * @return List<Activity>
-     **/
-    /*
-    @Transactional
-    public List<Activity> getActivitiesBySubcategory(ClassCategory subcategory) {
-        List<Activity> activities = toList(activityRepository.findAll());
-        List<Activity> activitiesBySubcategory = new ArrayList<Activity>();
-        for (Activity activity : activities) {
-            if (activity.getSubcategory() == subcategory) {
-                activitiesBySubcategory.add(activity);
-            }
-        }
-        return activitiesBySubcategory;
-    }
-    */
-    /**
-     * Get all activities by approval status
-     * @param isApproved
-     * @return List<Activity>
-     **/
-    /*
-    @Transactional
-    public List<Activity> getActivitiesByIsApproved(Boolean isApproved) {
-        List<Activity> activities = toList(activityRepository.findAll());
-        List<Activity> activitiesByIsApproved = new ArrayList<Activity>();
-        for (Activity activity : activities) {
-            if (activity.getIsApproved() == isApproved) {
-                activitiesByIsApproved.add(activity);
-            }
-        }
-        return activitiesByIsApproved;
-    }
-    */
-    
-    /**
-     * Check activity uniqueness
-     * @param name
-     * @return Activity
-     */
-    /*
-    public boolean checkActivityUniqueness(String name) {
-        if (name == null || name.trim().length() == 0) {
-            throw new IllegalArgumentException("Name cannot be empty!");
-        }
-        Activity activity = activityRepository.findActivityByName(name);
-        if (activity == null) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-    */
 }

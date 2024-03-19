@@ -16,6 +16,7 @@ import java.time.LocalTime;
 import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
 import org.aspectj.lang.annotation.SuppressAjWarnings;
 import org.checkerframework.checker.units.qual.A;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -27,6 +28,7 @@ import ca.mcgill.ecse321.sportcenter.dao.ActivityRepository;
 import ca.mcgill.ecse321.sportcenter.model.Activity;
 import ca.mcgill.ecse321.sportcenter.service.ActivityService;
 import ca.mcgill.ecse321.sportcenter.dao.InstructorRepository;
+
 import ca.mcgill.ecse321.sportcenter.dao.ScheduledActivityRepository;
 import ca.mcgill.ecse321.sportcenter.service.ScheduledActivityService;
 import ca.mcgill.ecse321.sportcenter.model.Instructor;
@@ -34,16 +36,53 @@ import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity;
 import ca.mcgill.ecse321.sportcenter.service.InstructorService;
 import jakarta.persistence.criteria.CriteriaBuilder.In;
 
+import ca.mcgill.ecse321.sportcenter.model.Account;
+import ca.mcgill.ecse321.sportcenter.service.AccountService;
+import ca.mcgill.ecse321.sportcenter.dao.AccountRepository;
+
 @SpringBootTest
 public class TestScheduledActivityService {
     @Mock
     private ScheduledActivityRepository scheduledActivityRepository;
+    private AccountRepository accountRepository;
+    private InstructorRepository instructorRepository;
+    private ActivityRepository activityRepository;
 
     @InjectMocks
     private ScheduledActivityService scheduledActivityService;
+    private AccountService accountService;
+    private InstructorService instructorService;
+    private ActivityService activityService;
 
-    Instructor instructor = new Instructor();
-    Activity activity = new Activity();
+    private int instructorId;
+    private Instructor instructor;
+    
+    private String activityName;
+    private Activity activity;
+
+    @BeforeEach
+    public void setInstructorAndActivity(){
+        Account account = new Account();
+        account.setUsername("Person1");
+        account.setPassword("Password1");
+        accountRepository.save(account);
+
+        instructor = new Instructor();
+        instructor.setAccount(account);
+        instructorRepository.save(instructor);
+
+        instructorId = instructor.getAccountRoleId();
+        instructor = instructorRepository.findAccountRoleByAccountRoleId(instructorId);
+        
+        activity = new Activity();
+        activity.setName("Cardio1");
+        activity.setDescription("Cardio2");
+        ClassCategory subcategory = ClassCategory.Cardio;
+        activity.setSubCategory(subcategory);
+        activityRepository.save(activity);
+        activityName = activity.getName();
+        activity = activityRepository.findActivityByName(activityName);
+    }
 
     @Test
     public void testCreateScheduledActivity(){
