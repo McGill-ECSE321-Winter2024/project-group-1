@@ -6,13 +6,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import ca.mcgill.ecse321.sportcenter.dao.ActivityRepository;
+import ca.mcgill.ecse321.sportcenter.model.AccountRole;
 import ca.mcgill.ecse321.sportcenter.model.Activity;
 import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
+import ca.mcgill.ecse321.sportcenter.dao.InstructorRepository;
+import ca.mcgill.ecse321.sportcenter.model.Instructor;
 
 
 public class ActivityService {
     @Autowired
     ActivityRepository activityRepository;
+
+    @Autowired
+    InstructorRepository instructorRepository;
 
     private <T> List<T> toList(Iterable<T> iterable) {
         List<T> resultList = new ArrayList<T>();
@@ -62,7 +68,7 @@ public class ActivityService {
         Activity activity = new Activity();
         activity.setName(name);
         activity.setDescription(description);
-        activity.setSubcategory(subcategory);
+        activity.setSubCategory(subcategory);
         activityRepository.save(activity);
         return activity;
     }
@@ -86,7 +92,7 @@ public class ActivityService {
         Activity activity = activityRepository.findActivityByName(name);
         activity.setName(newName);
         activity.setDescription(newDescription);
-        activity.setSubcategory(newSubcategory);
+        activity.setSubCategory(newSubcategory);
         activityRepository.save(activity);
         return activity;
     }
@@ -133,7 +139,7 @@ public class ActivityService {
         List<Activity> activities = toList(activityRepository.findAll());
         List<Activity> activitiesBySubcategory = new ArrayList<Activity>();
         for (Activity activity : activities) {
-            if (activity.getSubcategory() == subcategory) {
+            if (activity.getSubCategory() == subcategory) {
                 activitiesBySubcategory.add(activity);
             }
         }
@@ -171,5 +177,9 @@ public class ActivityService {
         }
     }
 
-    //check for creator
+    @Transactional
+    public boolean checkAccountInstructor(int accountRoleId) {
+        AccountRole role = instructorRepository.findAccountRoleByAccountRoleId(accountRoleId);
+        return role instanceof Instructor;
+    }
 }
