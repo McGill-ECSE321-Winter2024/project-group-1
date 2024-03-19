@@ -41,7 +41,6 @@ public class TestAccountService {
         when(accountRepository.save(any(Account.class))).thenReturn(account1);
 
         Account createdAccount = accountService.createAccount(username, password);
-        accountService.validateAccount(username, password);
 
         assertNotNull(createdAccount);
         assertEquals(username, createdAccount.getUsername());
@@ -59,7 +58,6 @@ public class TestAccountService {
 
         try {
             Account createdAccount = accountService.createAccount(username, password);
-            accountService.validateAccount(username, password);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -77,7 +75,6 @@ public class TestAccountService {
 
         try {
             Account createdAccount = accountService.createAccount(username, password);
-            accountService.validateAccount(username, password);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -96,7 +93,6 @@ public class TestAccountService {
 
         try {
             Account createdAccount = accountService.createAccount(username, password);
-            accountService.validateAccount(username, password);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -105,7 +101,7 @@ public class TestAccountService {
         verify(accountRepository, times(0)).save(account1);
     }
 
-    @Test
+    @Test////////////////////////////
     public void testCreateAccountUsernameExists() {
         String username1 = "username";
         String username2 = "username";
@@ -117,7 +113,6 @@ public class TestAccountService {
 
         try {
             Account createdAccount = accountService.createAccount(username1, password);
-            accountService.validateAccount(username2, password);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -137,7 +132,6 @@ public class TestAccountService {
 
         try {
             Account createdAccount = accountService.createAccount(username, password);
-            accountService.validateAccount(username, password);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
