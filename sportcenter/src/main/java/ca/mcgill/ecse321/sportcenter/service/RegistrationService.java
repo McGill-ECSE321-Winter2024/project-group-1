@@ -48,9 +48,6 @@ public class RegistrationService {
     @Transactional
     public Registration register(int accountRoleId, int scheduledActivityId) {
         Registration registration = new Registration();
-        if (accountRoleId <= 0 || scheduledActivityId <= 0) {
-            throw new IllegalArgumentException("Id is not a customer account role");
-        }
         ScheduledActivity scheduledActivity = scheduledActivityRepository
                 .findScheduledActivityByScheduledActivityId(scheduledActivityId);
         if (scheduledActivity == null) {
@@ -58,7 +55,7 @@ public class RegistrationService {
         }
         Customer customer = customerRepository.findAccountRoleByAccountRoleId(accountRoleId);
         if (customer == null) {
-            throw new IllegalArgumentException("Id is not a customer account role");
+            throw new IllegalArgumentException("Customer does not exist");
         }
 
         Registration existingRegistration = getRegistrationByCustomerAndScheduledActivity(accountRoleId,
