@@ -1,4 +1,5 @@
 package ca.mcgill.ecse321.sportcenter.repository;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -39,8 +40,6 @@ public class TestAccountRepository {
         account.setPassword(password);
         accountRepository.save(account);
 
-        account = null;
-
         account = accountRepository.findAccountByUsername(username);
         assertNotNull(account);
         assertEquals(username, account.getUsername());
@@ -55,8 +54,6 @@ public class TestAccountRepository {
         account.setUsername(username);
         account.setPassword(password);
         accountRepository.save(account);
-
-        account = null;
 
         AccountDto accountDto = new AccountDto(username, password);
         accountDto.setUsername(username);

@@ -44,13 +44,9 @@ public class CustomerController {
      * @return CustomerDto
      */
     @GetMapping(value = { "/getCustomer/{accountRoleId}", "/getCustomer/{accountRoleId}/" })
-    public ResponseEntity<?> getCustomer(@PathVariable("accountRoleId") int accountRoleId) {
-        try {
-            Customer customer = customerService.getCustomer(accountRoleId);
-            return ResponseEntity.ok(convertToDto(customer));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public CustomerDto getCustomer(@PathVariable("accountRoleId") int accountRoleId) throws IllegalArgumentException {
+        Customer customer = customerService.getCustomer(accountRoleId);
+        return convertToDto(customer);
     }
 
     /**
@@ -60,28 +56,9 @@ public class CustomerController {
      * @return
      */
     @DeleteMapping(value = { "/deleteCustomer/{accountRoleId}", "/deleteCustomer/{accountRoleId}/" })
-    public ResponseEntity<?> deleteCustomer(@PathVariable("accountRoleId") int accountRoleId) {
-        try {
-            customerService.deleteCustomer(accountRoleId);
-            return ResponseEntity.ok("Customer deleted successfully");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    /**
-     * Get all customers
-     * 
-     * @return List<CustomerDto>
-     */
-    @GetMapping(value = { "/getAllCustomers", "/getAllCustomers/" })
-    public ResponseEntity<?> getAllCustomers() {
-        try {
-            List<Customer> customers = customerService.getAllCustomers();
-            return ResponseEntity.ok(convertToDto(customers));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public void deleteCustomer(@PathVariable("accountRoleId") int accountRoleId)
+            throws IllegalArgumentException {
+        customerService.deleteCustomerByAccountRoleId(accountRoleId);
     }
 
     /**
@@ -91,32 +68,19 @@ public class CustomerController {
      * @return
      */
     @DeleteMapping(value = { "/deleteCustomer/{username}", "/deleteCustomer/{username}/" })
-    public ResponseEntity<?> deleteCustomerByUsername(@PathVariable("username") String username) {
-        try {
-            customerService.deleteCustomerByUsername(username);
-            return ResponseEntity.ok("Customer deleted successfully");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public void deleteCustomer(@PathVariable("username") String username) throws IllegalArgumentException {
+        customerService.deleteCustomerByUsername(username);
     }
 
     /**
-     * Update a customer's username
+     * Get all customers
      * 
-     * @param accountRoleId
-     * @param username
-     * @return CustomerDto
+     * @return List<CustomerDto>
      */
-
-    @PutMapping(value = { "/updateCustomer/{accountRoleId}", "/updateCustomer/{accountRoleId}/" })
-    public ResponseEntity<?> updateCustomer(@PathVariable("accountRoleId") int accountRoleId,
-            @RequestParam("username") String username) {
-        try {
-            Customer customer = customerService.updateCustomer(accountRoleId, username);
-            return ResponseEntity.ok(convertToDto(customer));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    @GetMapping(value = { "/getAllCustomers", "/getAllCustomers/" })
+    public List<CustomerDto> getAllCustomers() {
+        List<Customer> customers = customerService.getAllCustomers();
+        return convertToDto(customers);
     }
 
     /**
@@ -126,13 +90,9 @@ public class CustomerController {
      * @return CustomerDto
      */
     @GetMapping(value = { "/getCustomer{username}", "/getCustomer/{username}/" })
-    public ResponseEntity<?> getCustomerByUsername(@PathVariable("username") String username) {
-        try {
-            Customer customer = customerService.getCustomerByUsername(username);
-            return ResponseEntity.ok(convertToDto(customer));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public CustomerDto getCustomer(@PathVariable("username") String username) throws IllegalArgumentException {
+        Customer customer = customerService.getCustomerByUsername(username);
+        return convertToDto(customer);
     }
 
     /**
@@ -141,13 +101,8 @@ public class CustomerController {
      * @return
      */
     @DeleteMapping(value = { "/deleteAllCustomers", "/deleteAllCustomers/" })
-    public ResponseEntity<?> deleteAllCustomers() {
-        try {
-            customerService.deleteAllCustomers();
-            return ResponseEntity.ok("Customers deleted successfully");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public void deleteAllCustomers() {
+        customerService.deleteAllCustomers();
     }
 
     /**

@@ -1,4 +1,5 @@
 package ca.mcgill.ecse321.sportcenter.service;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +12,6 @@ import ca.mcgill.ecse321.sportcenter.model.Activity;
 import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
 import ca.mcgill.ecse321.sportcenter.dao.InstructorRepository;
 import ca.mcgill.ecse321.sportcenter.model.Instructor;
-
 
 public class ActivityService {
     @Autowired
@@ -34,6 +34,7 @@ public class ActivityService {
 
     /**
      * Get an activity by its name (primary key)
+     * 
      * @param name
      * @return Activity
      * 
@@ -41,7 +42,7 @@ public class ActivityService {
      */
     @Transactional
     public Activity getActivity(String name) {
-        if (name == null || name.trim().length() == 0) {//trim removes any whitespace
+        if (name == null || name.trim().length() == 0) {// trim removes any whitespace
             throw new IllegalArgumentException("Name cannot be empty!");
         }
         return activityRepository.findActivityByName(name);
@@ -49,6 +50,7 @@ public class ActivityService {
 
     /**
      * Create an activity where only the instructor can create an activity
+     * 
      * @param name
      * @param description
      * @param subcategory
@@ -72,8 +74,10 @@ public class ActivityService {
         activityRepository.save(activity);
         return activity;
     }
+
     /**
      * Get all activities
+     * 
      * @return List<Activity>
      */
     @Transactional
@@ -83,6 +87,7 @@ public class ActivityService {
 
     /**
      * Update an activity
+     * 
      * @param name
      * @param newName
      * @return Activity
@@ -97,31 +102,29 @@ public class ActivityService {
         return activity;
     }
 
-
     /**
      * Delete an activity
+     * 
      * @param name
      * @return Activity
      **/
     @Transactional
-    public Activity deleteActivity(String name) {
+    public void deleteActivity(String name) {
         if (name == null || name.trim().length() == 0) {
             throw new IllegalArgumentException("Name cannot be empty!");
-        }
-        else{
+        } else {
             Activity activity = activityRepository.findActivityByName(name);
             if (activity == null) {
                 throw new IllegalArgumentException("Activity does not exist!");
-            }
-            else{
+            } else {
                 activityRepository.delete(activity);
-                return activity;
             }
         }
     }
 
     /**
      * Delete all activities
+     * 
      * @return void
      **/
     @Transactional
@@ -131,6 +134,7 @@ public class ActivityService {
 
     /**
      * Get all activities by subcategory
+     * 
      * @param subcategory
      * @return List<Activity>
      **/
@@ -148,6 +152,7 @@ public class ActivityService {
 
     /**
      * Get all activities by approval status
+     * 
      * @param isApproved
      * @return List<Activity>
      **/
@@ -163,7 +168,8 @@ public class ActivityService {
         return activitiesByIsApproved;
     }
 
-    //check activity uniqueness dont need since when does it????????????????????????????
+    // check activity uniqueness dont need since when does
+    // it????????????????????????????
     public boolean checkActivityUniqueness(String name) {
         if (name == null || name.trim().length() == 0) {
             throw new IllegalArgumentException("Name cannot be empty!");
@@ -171,8 +177,7 @@ public class ActivityService {
         Activity activity = activityRepository.findActivityByName(name);
         if (activity == null) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }

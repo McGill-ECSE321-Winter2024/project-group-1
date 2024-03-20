@@ -15,7 +15,7 @@ import ca.mcgill.ecse321.sportcenter.model.AccountRole;
 import ca.mcgill.ecse321.sportcenter.dao.AccountRepository;
 
 public class CustomerService {
-    
+
     @Autowired
     CustomerRepository customerRepository;
 
@@ -27,8 +27,10 @@ public class CustomerService {
         iterable.forEach(list::add);
         return list;
     }
+
     /**
      * Get a customer by its accountRole Id (primary key)
+     * 
      * @param accountRoleId
      * @return Customer
      * @Author Andrew Nemr
@@ -44,24 +46,26 @@ public class CustomerService {
 
     /**
      * Create a customer from account username
+     * 
      * @param username
      * @return Customer
      */
 
-     @Transactional
-     public Customer createCustomer(String username) {
-         Customer customer = new Customer();
-         Account account = accountRepository.findAccountByUsername(username);
-         if (account == null) {
-             throw new IllegalArgumentException("Account does not exist!");
-         }
-         customer.setAccount(account);
-         customerRepository.save(customer);
-         return customer;
-     }
+    @Transactional
+    public Customer createCustomer(String username) {
+        Customer customer = new Customer();
+        Account account = accountRepository.findAccountByUsername(username);
+        if (account == null) {
+            throw new IllegalArgumentException("Account does not exist!");
+        }
+        customer.setAccount(account);
+        customerRepository.save(customer);
+        return customer;
+    }
 
     /**
      * Get all customers
+     * 
      * @return List<Customer>
      */
     @Transactional
@@ -71,15 +75,17 @@ public class CustomerService {
 
     /**
      * Delete a customer by its accountRoleId (primary key)
+     * 
      * @param accountRoleId
      */
     @Transactional
-    public void deleteCustomer(int accountRoleId) {
+    public void deleteCustomerByAccountRoleId(int accountRoleId) {
         customerRepository.deleteById(accountRoleId);
     }
 
     /**
      * delete customer by username
+     * 
      * @param username
      * @return
      */
@@ -93,8 +99,10 @@ public class CustomerService {
         customer.setAccount(account);
         customerRepository.delete(customer);
     }
+
     /**
      * Get a customer by its accountRoleId (primary key)
+     * 
      * @param accountRoleId
      * @return Customer
      */
@@ -104,7 +112,7 @@ public class CustomerService {
         if (customer == null) {
             throw new IllegalArgumentException("Customer does not exist!");
         }
-        if (accountRoleId < 0 || accountRoleId == 0) {//to check if accountRolle is null?????
+        if (accountRoleId < 0 || accountRoleId == 0) {// to check if accountRolle is null?????
             throw new IllegalArgumentException("AccountRoleId is not valid!");
         }
         return customerRepository.findAccountRoleByAccountRoleId(accountRoleId);
@@ -112,6 +120,7 @@ public class CustomerService {
 
     /**
      * Get a customer by its account username
+     * 
      * @param username
      * @return Customer
      */
@@ -126,6 +135,7 @@ public class CustomerService {
 
     /**
      * Update a custormer username ??????????????????
+     * 
      * @param accountRoleId
      * @param username
      * @return Customer
@@ -145,6 +155,7 @@ public class CustomerService {
 
     /**
      * Delete all customers
+     * 
      * @return void
      */
     @Transactional
@@ -154,6 +165,7 @@ public class CustomerService {
 
     /**
      * Check if account is a customer
+     * 
      * @param accountRoleId
      * @return boolean
      */
@@ -161,6 +173,6 @@ public class CustomerService {
     public boolean isCustomer(int accountRoleId) {
         AccountRole role = customerRepository.findAccountRoleByAccountRoleId(accountRoleId);
         return role instanceof Customer;
-        //return customerRepository.existsById(accountRoleId);
+        // return customerRepository.existsById(accountRoleId);
     }
 }

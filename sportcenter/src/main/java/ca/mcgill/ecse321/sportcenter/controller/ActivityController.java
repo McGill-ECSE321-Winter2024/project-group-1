@@ -49,13 +49,9 @@ public class ActivityController {
      * @return
      */
     @GetMapping(value = { "/activity/{name}", "/activity/{name}/" })
-    public ResponseEntity<?> getActivity(@PathVariable("name") String name) {
-        try {
-            Activity activity = activityService.getActivity(name);
-            return ResponseEntity.ok(convertToDto(activity));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ActivityDto getActivity(@PathVariable("name") String name) throws IllegalArgumentException {
+        Activity activity = activityService.getActivity(name);
+        return convertToDto(activity);
     }
 
     /**
@@ -83,15 +79,11 @@ public class ActivityController {
      */
     @PutMapping(value = { "/activity/update/{name}/{newName}/{newDescription}/{newSubcategory}",
             "/activity/update/{name}/{newName}/{newDescription}/{newSubcategory}/" })
-    public ResponseEntity<?> updateActivity(@PathVariable("name") String name, @PathVariable("newName") String newName,
+    public ActivityDto updateActivity(@PathVariable("name") String name, @PathVariable("newName") String newName,
             @PathVariable("newDescription") String newDescription,
-            @PathVariable("newSubcategory") Activity.ClassCategory newSubcategory) {
-        try {
-            Activity activity = activityService.updateActivity(name, newName, newDescription, newSubcategory);
-            return ResponseEntity.ok(convertToDto(activity));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+            @PathVariable("newSubcategory") Activity.ClassCategory newSubcategory) throws IllegalArgumentException {
+        Activity activity = activityService.updateActivity(name, newName, newDescription, newSubcategory);
+        return convertToDto(activity);
     }
 
     /**
