@@ -131,7 +131,7 @@ public class AccountController {
      * @param account
      * @return
      */
-    private AccountDto convertAccountDto(Account account) {
+    static AccountDto convertAccountDto(Account account) {
         if (account == null) {
             throw new IllegalArgumentException("There is no account to convert");
         }
@@ -144,7 +144,7 @@ public class AccountController {
      * @param accounts
      * @return
      */
-    private List<AccountDto> convertAccountsToDto(List<Account> accounts) {
+    static List<AccountDto> convertAccountsToDto(List<Account> accounts) {
         List<AccountDto> accountDtos = new ArrayList<AccountDto>(accounts.size());
 
         for (Account account : accounts) {

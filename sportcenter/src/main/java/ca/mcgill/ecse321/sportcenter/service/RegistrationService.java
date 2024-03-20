@@ -216,7 +216,7 @@ public class RegistrationService {
             throw new IllegalArgumentException("There is no registration to convert");
         }
         return new RegistrationDto(CustomerDto.convertToDto(registration.getCustomer()),
-                ScheduledActivityService.convertToDto(registration.getScheduledActivity()),
+                ScheduledActivityService.convertCustomersDto(registration.getScheduledActivity()),
                 registration.getRegistrationId());
     }
 
