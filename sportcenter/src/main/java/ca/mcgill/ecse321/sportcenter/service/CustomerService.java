@@ -3,13 +3,11 @@ package ca.mcgill.ecse321.sportcenter.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import ca.mcgill.ecse321.sportcenter.dao.CustomerRepository;
 import ca.mcgill.ecse321.sportcenter.model.Customer;
-import ca.mcgill.ecse321.sportcenter.model.Instructor;
 import ca.mcgill.ecse321.sportcenter.model.Account;
 import ca.mcgill.ecse321.sportcenter.model.AccountRole;
 import ca.mcgill.ecse321.sportcenter.dao.AccountRepository;
@@ -29,6 +27,24 @@ public class CustomerService {
     }
 
     /**
+     * Create a customer from account username
+     * 
+     * @param username
+     * @return Customer
+     */
+    @Transactional
+    public Customer createCustomer(String username) {
+        Customer customer = new Customer();
+        Account account = accountRepository.findAccountByUsername(username);
+        if (account == null) {
+            throw new IllegalArgumentException("Account does not exist!");
+        }
+        customer.setAccount(account);
+        customerRepository.save(customer);
+        return customer;
+    }
+
+    /**
      * Get a customer by its accountRole Id (primary key)
      * 
      * @param accountRoleId
@@ -42,25 +58,6 @@ public class CustomerService {
             throw new IllegalArgumentException("AccountRoleId cannot be negative!");
         }
         return customerRepository.findAccountRoleByAccountRoleId(accountRoleId);
-    }
-
-    /**
-     * Create a customer from account username
-     * 
-     * @param username
-     * @return Customer
-     */
-
-    @Transactional
-    public Customer createCustomer(String username) {
-        Customer customer = new Customer();
-        Account account = accountRepository.findAccountByUsername(username);
-        if (account == null) {
-            throw new IllegalArgumentException("Account does not exist!");
-        }
-        customer.setAccount(account);
-        customerRepository.save(customer);
-        return customer;
     }
 
     /**

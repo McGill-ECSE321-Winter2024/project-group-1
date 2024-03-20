@@ -24,6 +24,20 @@ public class ActivityService {
     InstructorRepository instructorRepository;
 
     /**
+     * Convert an iterable to a list
+     * 
+     * @param iterable
+     * @return List<T>
+     **/
+    private <T> List<T> toList(Iterable<T> iterable) {
+        List<T> resultList = new ArrayList<T>();
+        for (T t : iterable) {
+            resultList.add(t);
+        }
+        return resultList;
+    }
+
+    /**
      * Create an activity where only the instructor can create an activity
      * 
      * @param name
@@ -63,20 +77,6 @@ public class ActivityService {
             throw new IllegalArgumentException("Name cannot be empty!");
         }
         return activityRepository.findActivityByName(name);
-    }
-
-    /**
-     * Convert an iterable to a list
-     * 
-     * @param iterable
-     * @return List<T>
-     **/
-    private <T> List<T> toList(Iterable<T> iterable) {
-        List<T> resultList = new ArrayList<T>();
-        for (T t : iterable) {
-            resultList.add(t);
-        }
-        return resultList;
     }
 
     /**
