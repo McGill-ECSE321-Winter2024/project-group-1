@@ -54,6 +54,9 @@ public class AccountService {
      */
     @Transactional
     public Account getAccountById(int accountId) {
+        if (accountId <= 0) {
+            throw new IllegalArgumentException("Account ID must be greater than 0");
+        }
         Account account = accountRepository.findAccountByAccountId(accountId);
         if (account == null) {
             throw new IllegalArgumentException("Account does not exist");
@@ -69,6 +72,9 @@ public class AccountService {
      */
     @Transactional
     public Account getAccountByUsername(String username) {
+        if (username == null || username.trim().length() == 0) {
+            throw new IllegalArgumentException("Username cannot be empty");
+        }
         Account account = accountRepository.findAccountByUsername(username);
         if (account == null) {
             throw new IllegalArgumentException("Account does not exist");

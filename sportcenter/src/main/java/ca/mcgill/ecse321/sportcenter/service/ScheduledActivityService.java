@@ -6,6 +6,7 @@ import java.util.List;
 import java.time.LocalTime;
 import java.time.LocalDate;
 
+import org.checkerframework.checker.units.qual.s;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,17 +15,14 @@ import ca.mcgill.ecse321.sportcenter.model.Activity;
 
 import ca.mcgill.ecse321.sportcenter.dao.ScheduledActivityRepository;
 import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity;
-//import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity.ClassCategory;
 
-/* 
-import ca.mcgill.ecse321.sportcenter.dao.ActivityRepository;
-import ca.mcgill.ecse321.sportcenter.model.Activity;
-import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
-*/
-
+/**
+ * Service class for ScheduledActivity entity
+ * 
+ * @author Fabian Saldana
+ */
 public class ScheduledActivityService {
 
-    // Need to know all the different autowired that need to get here
     @Autowired
     ScheduledActivityRepository scheduledActivityRepository;
 
@@ -32,7 +30,6 @@ public class ScheduledActivityService {
      * @Autowired
      * ActivityRepository activityRepository;
      */
-
     private <T> List<T> toList(Iterable<T> iterable) {
         List<T> resultList = new ArrayList<T>();
         for (T t : iterable) {
@@ -44,7 +41,7 @@ public class ScheduledActivityService {
     /**
      * Create an activity where only the instructor can create an activity
      * 
-     * @return SchedueledActivity
+     * @return ScheduledActivity
      * 
      * @Author FabianSaldana
      */
@@ -62,8 +59,8 @@ public class ScheduledActivityService {
      */
     @Transactional
     public ScheduledActivity getScheduledActivity(int scheduledActivityId) {
-        if (scheduledActivityId == -1) {
-            throw new IllegalArgumentException("Id cannot be empty!");
+        if (scheduledActivityId <= 0) {
+            throw new IllegalArgumentException("Id cannot be negative!");
         }
         return scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId);
     }
@@ -103,14 +100,15 @@ public class ScheduledActivityService {
         if (activity == null) {
             throw new IllegalArgumentException("Activity cannot be empty!");
         }
-
+        if (capacity <= 0) {
+            throw new IllegalArgumentException("Capacity must be greater than 0!");
+        }
         ScheduledActivity scheduledActivity = new ScheduledActivity();
         scheduledActivity.setDate(date);
         scheduledActivity.setStartTime(startTime);
         scheduledActivity.setStartTime(endTime);
         scheduledActivity.setSupervisor(instructor);
         scheduledActivity.setActivity(activity);
-        scheduledActivity.setCapacity(capacity);
 
         scheduledActivityRepository.save(scheduledActivity);
         return scheduledActivity;
@@ -142,6 +140,9 @@ public class ScheduledActivityService {
         if (activity == null) {
             throw new IllegalArgumentException("Activity cannot be empty!");
         }
+        if (capacity <= 0) {
+            throw new IllegalArgumentException("Capacity must be greater than 0!");
+        }
         scheduledActivity.setScheduledActivityId(scheduledActivityId);
         scheduledActivity.setDate(date);
         scheduledActivity.setStartTime(startTime);
@@ -149,6 +150,7 @@ public class ScheduledActivityService {
         scheduledActivity.setSupervisor(instructor);
         scheduledActivity.setActivity(activity);
         scheduledActivity.setCapacity(capacity);
+
         scheduledActivityRepository.save(scheduledActivity);
         return scheduledActivity;
     }
@@ -164,19 +166,15 @@ public class ScheduledActivityService {
      */
     @Transactional
     public ScheduledActivity deleteScheduledActivity(int scheduledActivityId) {
-        // delete activity once scheduled
-        // Need to take the functions from the exceptions file to do throw new ...
-        if (scheduledActivityId == -1) {
-            throw new IllegalArgumentException("Id cannot be empty!");
-        } else {
-            ScheduledActivity scheduledActivity = scheduledActivityRepository
-                    .findScheduledActivityByScheduledActivityId(scheduledActivityId);
-            if (scheduledActivity == null) {
-                throw new IllegalArgumentException("Scheduled Activity does not exist!");
-            } else {
-                scheduledActivityRepository.delete(scheduledActivity);
-                return scheduledActivity;
-            }
+        if (scheduledActivityId <= 0) {
+            throw new IllegalArgumentException("Id cannot be negative!");
         }
+        ScheduledActivity scheduledActivity = scheduledActivityRepository
+                .findScheduledActivityByScheduledActivityId(scheduledActivityId);
+        if (scheduledActivity == null) {
+            throw new IllegalArgumentException("Scheduled Activity does not exist!");
+        }
+        scheduledActivityRepository.delete(scheduledActivity);
+        return scheduledActivity;
     }
 }
