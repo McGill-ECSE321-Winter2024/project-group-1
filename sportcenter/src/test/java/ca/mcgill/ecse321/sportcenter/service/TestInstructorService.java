@@ -42,6 +42,7 @@ import ca.mcgill.ecse321.sportcenter.dao.RegistrationRepository;
 import ca.mcgill.ecse321.sportcenter.dao.ScheduledActivityRepository;
 
 import ca.mcgill.ecse321.sportcenter.model.Instructor;
+import ca.mcgill.ecse321.sportcenter.model.Instructor.InstructorStatus;
 import ca.mcgill.ecse321.sportcenter.model.Account;
 
 @SpringBootTest
@@ -59,31 +60,39 @@ public class TestInstructorService {
 
     @InjectMocks private InstructorService service;
 
+    //First you need to check if your getters are working before creation and deletion.
+
+
+
     @Test
     public void testCreateInstructor() {
 
         when(instructorRepository.save(any(Instructor.class))).thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
 
         final String username = "gumball";
+        final String password = "fiddlesticks";
+        final String description = "He can beat Goku";
+        final String image = "image";
+        
+        Account account = new Account();
         Instructor instructor = null;
-        Account account = null;
         
         try {
-            instructor = service.createInstructor(username);
-        } catch (IllegalArgumentException e) {
-            fail();
-        }
-        
-        //now check if an account was actually created
 
-        try {
-           account = account.getWithUsername(username);
+            //note this method also create the account.
+            instructor = service.createInstructor(username, password, InstructorStatus.Active, description, image);
+
         } catch (IllegalArgumentException e) {
-            fail(); //account was not found!
+
+            fail("IllegalArgumentException not expected here");
+
         }
 
         assertNotNull(instructor);
         assertEquals(username, account.getUsername());
+        assertEquals(password, account.getPassword());
+        assertEquals(description, instructor.getDescription());
+        assertEquals(image, instructor.getProfilePicURL());
 
         //check if all was added
         verify(instructorRepository, times(1)).save(instructor);
@@ -93,55 +102,127 @@ public class TestInstructorService {
     @Test
     public void testCreateInstructorNull() { //make an empty username
 
-        when(instructorRepository.save(any(Instructor.class))).thenThrow(IllegalArgumentException.class);
+        when(instructorRepository.save(any(Instructor.class))).thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
 
-        //this system should not allow null usernames right??
-        String username = null;
-        String error = null;
-
+        final String username = "";
+        final String password = "fiddlesticks";
+        final String description = "He can beat Goku";
+        final String image = "image";
+        
+        Account account = new Account();
         Instructor instructor = null;
-
+        
         try {
-            instructor = service.createInstructor(username);
+
+            //note this method also create the account.
+            instructor = service.createInstructor(username, password, InstructorStatus.Active, description, image);
+            fail("IllegalArgumentException expected!");
+
         } catch (IllegalArgumentException e) {
-            error = e.getMessage();
-        } 
 
-        assertNull(instructor);
-        //check error
-        assertEquals("Instructor name can not be empty!", error); //error won't happen
+            //expected here!
+            assertNull(instructor);
 
-        verify(instructorRepository, never()).save(any(Instructor.class));
+        }
+
+        //check if all was added
+        verify(instructorRepository, times(0)).save(instructor);
  
     }
 
     @Test
     public void testCreateInstructorSpaces() { //make an empty username
 
-        when(instructorRepository.save(any(Instructor.class))).thenThrow(IllegalArgumentException.class);
+        when(instructorRepository.save(any(Instructor.class))).thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
 
-        //this system should not allow null usernames right??
-        String username = " ";
-        String error = null;
-
+        final String username = "  ";
+        final String password = "fiddlesticks";
+        final String description = "He can beat Goku";
+        final String image = "image";
+        
+        Account account = new Account();
         Instructor instructor = null;
-
+        
         try {
-            instructor = service.createInstructor(username);
+
+            //note this method also create the account.
+            instructor = service.createInstructor(username, password, InstructorStatus.Active, description, image);
+            fail("IllegalArgumentException expected!");
+
         } catch (IllegalArgumentException e) {
-            error = e.getMessage();
-        } 
 
-        assertNull(instructor);
-        //check error
-        assertEquals("Instructor name can not be empty!", error); //error won't happen
+            //expected here!
+            assertNull(instructor);
 
+        }
 
-        verify(instructorRepository, never()).save(any(Instructor.class));
+        //check if all was added
+        verify(instructorRepository, times(0)).save(instructor);
  
     }
 
-    //TEST THE REST.
+
+    @Test
+    public void testCreateInstructorAndModifyUsername() {
+
+        when(instructorRepository.save(any(Instructor.class))).thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
+
+        final String username = "gumball";
+        final String password = "fiddlesticks";
+        final String description = "He can beat Goku";
+        final String image = "image";
+        
+        Account account = new Account();
+        Instructor instructor = null;
+        
+        try {
+
+            //note this method also create the account.
+            instructor = service.createInstructor(username, password, InstructorStatus.Active, description, image);
+
+        } catch (IllegalArgumentException e) {
+
+            fail("IllegalArgumentException not expected here");
+
+        }
+
+        //NEXT STEP WE NEED TO MODIFY
+
+        final String newUsername = "Vegeta";
+        int accountID = account.getAccountId();
+
+        //To this point, we want 
+        assertEquals(username, account.getUsername());
+
+        try {
+
+            service.updateInstructorUsername(accountID, username, newUsername);
+
+        } catch (IllegalArgumentException e) {
+
+            fail("IllegalArgumentException not expected here");
+
+        }
+
+        //assertion check
+        assertNotNull(instructor);
+        assertEquals(newUsername, account.getUsername());
+        assertEquals(password, account.getPassword());
+        assertEquals(description, instructor.getDescription());
+        assertEquals(image, instructor.getProfilePicURL());
+
+        //check if all was added
+        verify(instructorRepository, times(1)).save(instructor);
+
+    }
+
+
+
+    //Test Updating
+
+    //Test Deleting
+
+    //Test unique methods!
 
 
 

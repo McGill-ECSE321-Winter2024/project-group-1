@@ -223,18 +223,50 @@ public class InstructorService {
      * @author Anslean AJ
      */
     @Transactional
-    public Instructor updateInstructorUsername(int accountRoleId, String username, String newUsername) {
-        
+    public void updateInstructorUsername(int accountRoleId, String username, String newUsername) {
+
+        // Check if the username is null or consists only of whitespace characters
+        if (newUsername == null || newUsername.trim().isEmpty() || newUsername.contains(" ")) {
+            throw new IllegalArgumentException("New username cannot be null, empty and spaces!");
+        }
+
         Instructor instructor = instructorRepository.findAccountRoleByAccountRoleId(accountRoleId);
         Account account = accountRepository.findAccountByUsername(username);
-        if (account != null) {
+        if (account == null) {
             throw new IllegalArgumentException("Account does not exist!");
         }
 
         account.setUsername(newUsername);
+        instructor.setAccount(account);
+
+        accountRepository.save(account);
+    }
+
+    /**
+     * This method allows to update the instructor's username.
+     * @param accountRoleId
+     * @param username
+     * @param newUsername
+     * @return Instructor
+     * @author Anslean AJ
+     */
+    @Transactional
+    public void updateInstructorPassword(int accountRoleId, String password, String newPassword) {
+
+        // Check if the username is null or consists only of whitespace characters
+        if (newPassword == null || newPassword.trim().isEmpty() || newPassword.contains(" ")) {
+            throw new IllegalArgumentException("New password cannot be null, empty and spaces!");
+        }
+        
+        Instructor instructor = instructorRepository.findAccountRoleByAccountRoleId(accountRoleId);
+        Account account = accountRepository.findAccountByUsername(password);
+        if (account == null) {
+            throw new IllegalArgumentException("Account does not exist!");
+        }
+
+        account.setUsername(newPassword);
         accountRepository.save(account);
         instructor.setAccount(account);
-        return instructor;
     }
 
 
@@ -247,11 +279,16 @@ public class InstructorService {
      * @author Anslean AJ
      */
     @Transactional
-    public Instructor updateInstructorDescription(int accountRoleId, String username, String description) {
+    public void updateInstructorDescription(int accountRoleId, String username, String description) {
+
+        // Check if the username is null or consists only of whitespace characters
+        if (description == null || description.trim().isEmpty() || description.contains(" ")) {
+            throw new IllegalArgumentException("Description cannot be null, empty and spaces!");
+        }
         
         Instructor instructor = instructorRepository.findAccountRoleByAccountRoleId(accountRoleId);
         Account account = accountRepository.findAccountByUsername(username);
-        if (account != null) {
+        if (account == null) {
             throw new IllegalArgumentException("Account does not exist!");
         }
 
@@ -259,7 +296,6 @@ public class InstructorService {
         instructor.setDescription(description);
         accountRepository.save(account);
         instructor.setAccount(account);
-        return instructor;
     }
 
     /**
@@ -271,11 +307,16 @@ public class InstructorService {
      * @author Anslean AJ
      */
     @Transactional
-    public Instructor updateInstructorProfilePic(int accountRoleId, String username, String picture) {
+    public void updateInstructorProfilePic(int accountRoleId, String username, String picture) {
+
+        // Check if the username is null or consists only of whitespace characters
+        if (picture == null || picture.trim().isEmpty() || picture.contains(" ")) {
+            throw new IllegalArgumentException("Profile pictures cannot be null, empty and spaces!");
+        }
         
         Instructor instructor = instructorRepository.findAccountRoleByAccountRoleId(accountRoleId);
         Account account = accountRepository.findAccountByUsername(username);
-        if (account != null) {
+        if (account == null) {
             throw new IllegalArgumentException("Account does not exist!");
         }
 
@@ -283,7 +324,6 @@ public class InstructorService {
         instructor.setProfilePicURL(picture);
         accountRepository.save(account);
         instructor.setAccount(account);
-        return instructor;
     }
 
     /**
