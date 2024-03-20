@@ -29,7 +29,7 @@ public class RegistrationController {
     @GetMapping(value = {"/regitrations/getAll", "/registrations/getAll/"})
     public RegistrationDto getAllRegistrations() throws IllegalArgumentException{
         List<Registration> registrations = registrationService.getAllRegistrations();
-        return RegistrationDto.convertToDto(registrations);
+        return Registration.convertToDto(registrations);
 
 
      /**
@@ -42,7 +42,7 @@ public class RegistrationController {
     public ResponseEntity<?> getRegistrationById(@PathVariable("registrationId") int registrationId) {
         try {
             Registration registration = registrationService.getRegistrationById(registrationId);
-            return ResponseEntity.ok(RegistrationDto.convertToDto(registration));
+            return ResponseEntity.ok(Registration.convertToDto(registration));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -59,7 +59,7 @@ public class RegistrationController {
     public ResponseEntity<?> getRegistrationByCustomerId(@PathVariable("accountRoleId") int accountRoleId) {
         try {
             List<Registration> registrations = registrationService.getRegistrationByCostumerId(accountRoleId);
-            return ResponseEntity.ok(RegistrationDto.convertToDto(registrations));
+            return ResponseEntity.ok(Registration.convertToDto(registrations));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -76,7 +76,7 @@ public class RegistrationController {
         try {
             List<Registration> registrations = registrationService
                     .getRegistrationByScheduledActivityId(scheduledActivityId);
-            return ResponseEntity.ok(RegistrationDto.convertToDto(registrations));
+            return ResponseEntity.ok(Registration.convertToDto(registrations));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -96,7 +96,7 @@ public class RegistrationController {
         try {
             Registration registrations = registrationService
                     .getRegistrationByCustomerAndScheduledActivity(accountRoleId, scheduledActivityId);
-            return ResponseEntity.ok(RegistrationDto.convertToDto(registrations));
+            return ResponseEntity.ok(Registration.convertToDto(registrations));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -117,7 +117,7 @@ public class RegistrationController {
             @PathVariable("accountRoleId") int accountRoleId) {
         try {
             Registration registration = registrationService.register(accountRoleId, scheduledActivityId);
-            return ResponseEntity.ok(RegistrationDto.convertToDto(registration));
+            return ResponseEntity.ok(Registration.convertToDto(registration));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
