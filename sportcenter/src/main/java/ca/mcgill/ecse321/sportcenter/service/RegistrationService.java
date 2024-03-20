@@ -104,6 +104,9 @@ public class RegistrationService {
         if (registration == null) {
             throw new IllegalArgumentException("Registartion does not exist");
         }
+        if (registrationId < 0) {
+            throw new IllegalArgumentException("Id not valid!");
+        }
         return registration;
 
     }
@@ -147,6 +150,9 @@ public class RegistrationService {
     @Transactional
     public List<Registration> getRegistrationByScheduledActivityId(int scheduledActivityId) {
         List<Registration> customersAttendingScheduledActivity = new ArrayList<>();
+        if (scheduledActivityId < 0) {
+            throw new IllegalArgumentException("Id not valid!");
+        }
         for (Registration r : registrationRepository.findAll()) {
             if (r.getScheduledActivity().getScheduledActivityId() == scheduledActivityId) {
                 customersAttendingScheduledActivity.add(r);
@@ -166,6 +172,9 @@ public class RegistrationService {
     @Transactional
     public Registration getRegistrationByCustomerAndScheduledActivity(int accountRoleId, int scheduledActivityId) {
         Registration registration;
+        if (accountRoleId < 0 || scheduledActivityId < 0) {
+            throw new IllegalArgumentException("Id not valid!");
+        }
         for (Registration r : registrationRepository.findAll()) {
             if (r.getCustomer().getAccountRoleId() == accountRoleId) {
                 if (r.getScheduledActivity().getScheduledActivityId() == scheduledActivityId) {
@@ -208,7 +217,7 @@ public class RegistrationService {
             throw new IllegalArgumentException("There is no registration to convert");
         }
         return new RegistrationDto(CustomerDto.convertToDto(registration.getCustomer()),
-                ScheduledActivityDto.convertToDto(registration.getScheduledActivity()),
+                ScheduledActivityService.convertToDto(registration.getScheduledActivity()),
                 registration.getRegistrationId());
     }
 
