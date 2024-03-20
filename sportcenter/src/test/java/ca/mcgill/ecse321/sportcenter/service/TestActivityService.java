@@ -182,14 +182,14 @@ public class TestActivityService {
         String name = "Soccer";
         String description = "Soccer for beginners";
         ClassCategory subCategory = ClassCategory.Cardio;
-        int instructorId = 1;
+        // int instructorId = 1;
 
         String error = null;
         // when(activityService.checkAccountInstructor(instructorId)).thenReturn(false);//this
         // checks if the instructor exists, if not, it will return false which will
         // throw an exception
         try {
-            Activity createdActivity = activityService.createActivity(name, description, subCategory);
+            activityService.createActivity(name, description, subCategory);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }

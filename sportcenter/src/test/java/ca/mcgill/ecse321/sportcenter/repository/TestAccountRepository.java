@@ -13,9 +13,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 import ca.mcgill.ecse321.sportcenter.model.Account;
 import ca.mcgill.ecse321.sportcenter.dto.AccountDto;
 import ca.mcgill.ecse321.sportcenter.dao.AccountRepository;
@@ -55,7 +52,8 @@ public class TestAccountRepository {
         account.setPassword(password);
         accountRepository.save(account);
 
-        AccountDto accountDto = new AccountDto(username, password);
+        AccountDto accountDto = new AccountDto(username, password); // AccountDto needs an accountId -> int accountId,
+                                                                    // String username, String password
         accountDto.setUsername(username);
         accountDto.setPassword(password);
         account = accountRepository.findAccountByUsername(username);
