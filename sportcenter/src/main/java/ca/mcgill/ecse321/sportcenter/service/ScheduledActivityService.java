@@ -110,6 +110,7 @@ public class ScheduledActivityService {
         scheduledActivity.setStartTime(endTime);
         scheduledActivity.setSupervisor(instructor);
         scheduledActivity.setActivity(activity);
+        scheduledActivity.setCapacity(capacity);
 
         scheduledActivityRepository.save(scheduledActivity);
         return scheduledActivity;
@@ -146,6 +147,8 @@ public class ScheduledActivityService {
         scheduledActivity.setStartTime(startTime);
         scheduledActivity.setStartTime(endTime);
         scheduledActivity.setSupervisor(instructor);
+        scheduledActivity.setActivity(activity);
+        scheduledActivity.setCapacity(capacity);
         scheduledActivityRepository.save(scheduledActivity);
         return scheduledActivity;
     }
