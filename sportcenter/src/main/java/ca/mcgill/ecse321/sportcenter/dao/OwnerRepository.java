@@ -14,4 +14,6 @@ public interface OwnerRepository extends CrudRepository<Owner, Integer> {
 
     public Owner findOwnerByAccountRoleId(int accountRoleId); // Account role is parent class. Primary Key accountRoleId
 
+    public Owner findOwnerByName(String name);
+
 }
