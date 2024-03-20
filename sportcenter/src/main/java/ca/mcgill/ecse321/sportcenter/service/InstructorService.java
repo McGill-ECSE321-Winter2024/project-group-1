@@ -8,7 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ca.mcgill.ecse321.sportcenter.dao.AccountRepository;
 import ca.mcgill.ecse321.sportcenter.dao.InstructorRepository;
+//import ca.mcgill.ecse321.sportcenter.dto.InstructorDto.InstructorStatus;
 import ca.mcgill.ecse321.sportcenter.model.Instructor;
+import ca.mcgill.ecse321.sportcenter.model.Instructor.InstructorStatus;
 import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity;
 import ca.mcgill.ecse321.sportcenter.model.Account;
 import ca.mcgill.ecse321.sportcenter.dao.ActivityRepository;
@@ -61,23 +63,45 @@ public class InstructorService {
      * @author Anslean AJ
      */
     @Transactional
-    public Instructor createInstructor(String username) {
+    public Instructor createInstructor(String username, String password, InstructorStatus status, String description, String profilePicURL) {
         
-        Instructor instructor = new Instructor();
-        
+
         // Check if the username is null or consists only of whitespace characters
         if (username == null || username.trim().isEmpty() || username.contains(" ")) {
             throw new IllegalArgumentException("Username cannot be null, empty and spaces!");
         }
 
+        // Check if the password is null or consists only of whitespace characters
+        if (password == null || password.trim().isEmpty() || password.contains(" ")) {
+            throw new IllegalArgumentException("Password cannot be null, empty and spaces!");
+        }
+
+        // Check if the description is null or consists only of whitespace characters
+        if (description == null || description.trim().isEmpty() || description.contains(" ")) {
+            throw new IllegalArgumentException("Description cannot be null, empty and spaces!");
+        }
+
+        // Check if the profilePicURL is null or consists only of whitespace characters
+        if (profilePicURL == null || profilePicURL.trim().isEmpty() || profilePicURL.contains(" ")) {
+            throw new IllegalArgumentException("ProfilePic URL cannot be null, empty and spaces!");
+        }
+
         //check if the account already exists
-        Account account = accountRepository.findAccountByUsername(username);
-        if (account != null) {
+        Account verifyAccount = accountRepository.findAccountByUsername(username);
+        if (verifyAccount != null) {
             throw new IllegalArgumentException("Account already exists!");
         }
 
+        //All checks are made now.
+
+        Account account = new Account(username, password);
+
+        Instructor instructor = new Instructor(InstructorStatus.Active, description, profilePicURL, account);
+
         instructor.setAccount(account);
+
         instructorRepository.save(instructor);
+        
         return instructor;
     }
 
@@ -314,13 +338,13 @@ public class InstructorService {
      * @author Anslean AJ
      */
     @Transactional
-    public ScheduledActivity makeScheduledActivity(int iD, LocalDate date, LocalDate startTime, LocalTime endTime, Instructor instructor, Activity activity) {
+    public ScheduledActivity makeScheduledActivity(LocalDate date, LocalDate startTime, LocalTime endTime, Instructor instructor, Activity activity, int capacity) {
 
         ScheduledActivityService scheduledActivityService = new ScheduledActivityService();
 
         try {
 
-            return scheduledActivityService.createScheduledActivity(iD, date, endTime, endTime, instructor, activity);
+            return scheduledActivityService.createScheduledActivity(date, endTime, endTime, instructor, activity, capacity);
 
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Invalid inputs!");
