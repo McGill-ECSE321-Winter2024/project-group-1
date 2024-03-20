@@ -13,28 +13,27 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
 public class OwnerController {
-    
+
     @Autowired
     private OwnerService ownerService;
 
     /**
      * Get owner by accountRoleId
+     * 
      * @param accountRoleId
      * @return
      */
     @GetMapping(value = { "/owner/{accountRoleId}", "/owner/{accountRoleId}/" })
-    public ResponseEntity<?> getOwnerByAccountRoleId(@PathVariable("accountRoleId") int accountRoleId) {
-        try {
-            Owner owner = ownerService.getOwnerByAccountRoleId(accountRoleId);
-            return ResponseEntity.ok(OwnerDto.convertToDto(owner));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public OwnerDto getOwner(@PathVariable("accountRoleId") int accountRoleId) {
+        Owner owner = ownerService.getOwnerByAccountRoleId(accountRoleId);
+        return convertToDto(owner);
     }
 
     /**
      * Approve Activity
+     * 
      * @return
      */
     @PutMapping(value = { "/owner/aprooveActivity", "/owner/aprooveActivity/" })
@@ -49,6 +48,7 @@ public class OwnerController {
 
     /**
      * Disapprove Activity
+     * 
      * @return
      */
     @PutMapping(value = { "/owner/disaproveActivity", "/owner/disaproveActivity/" })
@@ -60,5 +60,11 @@ public class OwnerController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    
+
+    public static OwnerDto convertToDto(Owner owner) {
+        if (owner == null) {
+            throw new IllegalArgumentException("There is no owner!");
+        }
+        return new OwnerDto(owner.getAccountRoleId());
+    }
 }

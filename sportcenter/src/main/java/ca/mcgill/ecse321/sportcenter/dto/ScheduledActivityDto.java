@@ -7,7 +7,6 @@ package ca.mcgill.ecse321.sportcenter.dto;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-
 //import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
 import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity;
 import ca.mcgill.ecse321.sportcenter.model.Activity;
@@ -15,8 +14,8 @@ import ca.mcgill.ecse321.sportcenter.model.Instructor;
 
 public class ScheduledActivityDto {
 
-    //private InstructorDto instructor;
-    
+    // private InstructorDto instructor;
+
     private int scheduledActivityId;
     private LocalDate date;
     private LocalTime startTime;
@@ -25,8 +24,8 @@ public class ScheduledActivityDto {
     private Activity activity;
     private int capacity;
 
-
-    public ScheduledActivityDto(int scheduledActivityId, LocalDate date, LocalTime startTime, LocalTime endTime, Instructor instructor, Activity activity, int capacity) {
+    public ScheduledActivityDto(int scheduledActivityId, LocalDate date, LocalTime startTime, LocalTime endTime,
+            Instructor instructor, Activity activity, int capacity) {
         this.scheduledActivityId = scheduledActivityId;
         this.date = date;
         this.startTime = startTime;
@@ -52,15 +51,15 @@ public class ScheduledActivityDto {
         return endTime;
     }
 
-    public Instructor getSupervisor(){
+    public Instructor getSupervisor() {
         return instructor;
     }
 
-    public Activity getActivity(){
+    public Activity getActivity() {
         return activity;
     }
 
-    public int getCapacity(){
+    public int getCapacity() {
         return capacity;
     }
 
@@ -69,7 +68,7 @@ public class ScheduledActivityDto {
     }
 
     public void setDate(LocalDate date) {
-        this.date  = date;
+        this.date = date;
     }
 
     public void setStartTime(LocalTime startTime) {
@@ -80,21 +79,15 @@ public class ScheduledActivityDto {
         this.endTime = endTime;
     }
 
-    public void setSupervisor(Instructor instructor){
+    public void setSupervisor(Instructor instructor) {
         this.instructor = instructor;
     }
 
-    public void setActivity(Activity activity){
+    public void setActivity(Activity activity) {
         this.activity = activity;
     }
 
-    public void setCapacity(int capacity){
+    public void setCapacity(int capacity) {
         this.capacity = capacity;
-    }
-
-    public static ScheduledActivityDto convertToDto(ScheduledActivity scheduledActivity) {
-        return new ScheduledActivityDto(scheduledActivity.getScheduledActivityId(), 
-        scheduledActivity.getDate(),  scheduledActivity.getStartTime(), scheduledActivity.getEndTime(),
-        scheduledActivity.getSupervisor(), scheduledActivity.getActivity(), scheduledActivity.getCapacity());
     }
 }

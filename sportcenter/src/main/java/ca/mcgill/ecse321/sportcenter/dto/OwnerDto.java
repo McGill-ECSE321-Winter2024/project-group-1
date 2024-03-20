@@ -4,7 +4,6 @@ import ca.mcgill.ecse321.sportcenter.model.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
 public class OwnerDto {
     private int accountRoleId;
 
@@ -26,4 +25,5 @@ public class OwnerDto {
         }
         return new OwnerDto(owner.getAccountRoleId());
     }
+
 }
