@@ -1,10 +1,5 @@
 package ca.mcgill.ecse321.sportcenter.dto;
 
-import ca.mcgill.ecse321.sportcenter.model.*;
-import java.util.*;
-
-import org.checkerframework.checker.units.qual.s;
-
 public class RegistrationDto {
     private int registrationId;
     private CustomerDto customer;

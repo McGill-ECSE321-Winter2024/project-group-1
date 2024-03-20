@@ -55,7 +55,10 @@ public class TestAccountRepository {
         account.setPassword(password);
         accountRepository.save(account);
 
-        AccountDto accountDto = new AccountDto(username, password);
+        int id = account.getAccountId(); // Added
+
+        // id was missing. I took the id from the newly created account
+        AccountDto accountDto = new AccountDto(id, username, password); // Changed
         accountDto.setUsername(username);
         accountDto.setPassword(password);
         account = accountRepository.findAccountByUsername(username);
