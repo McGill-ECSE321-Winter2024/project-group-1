@@ -6,34 +6,32 @@ import java.util.List;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-//import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-//import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-//import org.springframework.web.bind.annotation.RequestParam;
-//import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RestController;
 
-//import ca.mcgill.ecse321.sportcenter.dto.ActivityDto;
 import ca.mcgill.ecse321.sportcenter.dto.ScheduledActivityDto;
 import ca.mcgill.ecse321.sportcenter.model.Activity;
 import ca.mcgill.ecse321.sportcenter.model.Instructor;
 import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity;
-//import ca.mcgill.ecse321.sportcenter.service.ActivityService;
-//import ca.mcgill.ecse321.sportcenter.service.InstructorService;
-import ca.mcgill.ecse321.sportcenter.service.ScheduledActivityService; //Need to make changes to the dao I think
+import ca.mcgill.ecse321.sportcenter.service.ScheduledActivityService;
 
+/**
+ * Controller class for the ScheduledActivity entity
+ * 
+ * @author Fabian Saldana
+ */
+@CrossOrigin(origins = "*")
+@RestController
 public class ScheduledActivityController {
 
     @Autowired
     private ScheduledActivityService scheduledActivityService;
-
-    // @Autowired
-    // private InstructorService instructorService;
 
     /**
      * Create an activity
@@ -50,17 +48,14 @@ public class ScheduledActivityController {
     @PostMapping(value = {
             "/createScheduledActivity/{scheduledActivityId}/{date}/{startTime}/{endTime}/{instructor}/{activity}/{capacity}",
             "/createScheduledActivity/{scheduledActivityId}/{date}/{startTime}/{endTime}/{instructor}/{activity}/{capacity}/" })
-    public ResponseEntity<?> createScheduledActivity(@PathVariable("date") LocalDate date,
+    public ScheduledActivityDto createScheduledActivity(@PathVariable("date") LocalDate date,
             @PathVariable("startTime") LocalTime startTime,
             @PathVariable("startTime") LocalTime endTime, @PathVariable("instructor") Instructor instructor,
-            @PathVariable("activity") Activity activity, @PathVariable("capacity") Integer capacity) {
-        try {
-            ScheduledActivity scheduledActivity = scheduledActivityService.createScheduledActivity(date, startTime,
-                    endTime, instructor, activity, capacity);
-            return ResponseEntity.ok(convertToDto(scheduledActivity));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+            @PathVariable("activity") Activity activity, @PathVariable("capacity") int capacity)
+            throws IllegalArgumentException {
+        return convertToDto(
+                scheduledActivityService.createScheduledActivity(date, startTime, endTime, instructor, activity,
+                        capacity));
     }
 
     /**
@@ -70,34 +65,34 @@ public class ScheduledActivityController {
      * @return
      */
     @GetMapping(value = { "/scheduledActivity/{scheduledActivityId}", "/scheduledActivity/{scheduledActivityId}/" })
-    public ResponseEntity<?> getScheduledActivity(@PathVariable("scheduledActivityId") Integer scheduledActivityId) {
-        try {
-            ScheduledActivity scheduledActivity = scheduledActivityService.getScheduledActivity(scheduledActivityId);
-            return ResponseEntity.ok(convertToDto(scheduledActivity));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ScheduledActivityDto getScheduledActivity(@PathVariable("scheduledActivityId") int scheduledActivityId)
+            throws IllegalArgumentException {
+        return convertToDto(scheduledActivityService.getScheduledActivity(scheduledActivityId));
+    }
+
+    /**
+     * Get a scheduled activity by its date
+     * 
+     * @param date
+     * 
+     * @return
+     */
+    @GetMapping(value = { "/scheduledActivity/getByDate/{date}", "/scheduledActivity/getByDate/{date}/" })
+    public List<ScheduledActivityDto> getScheduledActivityByDate(@PathVariable("date") LocalDate date)
+            throws IllegalArgumentException {
+        return convertToDto(scheduledActivityService.getScheduledActivityByDate(date));
     }
 
     /**
      * Get all schduled activities
      * 
-     * @return
+     * @return List<ScheduledActivityDto>
      */
-    /*
-     * @GetMapping(value = {"/activities", "/activities/"})
-     * public List<ActivityDto> getScheduledActivities() {
-     * List<ScheduledActivity> scheduledActivities =
-     * scheduledActivityService.getScheduledActivities();
-     * List<ScheduledActivity> schduledActivityDtos = new
-     * ArrayList<ScheduledActivityDto>();
-     * for (ScheduledActivity scheduledActivity : scheduledActivities) {
-     * scheduledActivityDtos.add(ScheduledActivityDto.convertToDto(scheduledActivity
-     * ));
-     * }
-     * return scheduledActivityDtos;
-     * }
-     */
+    @GetMapping(value = { "/scheduledActivity/getAll", "/scheduledActivity/getAll/" })
+    public List<ScheduledActivityDto> getAllScheduledActivities() {
+        return convertToDto(scheduledActivityService.getAllScheduledActivities());
+    }
+
     /**
      * Update an scheduled activity
      * 
@@ -109,18 +104,17 @@ public class ScheduledActivityController {
      */
     @PutMapping(value = { "/activity/update/{name}/{newName}/{newDescription}/{newSubcategory}",
             "/activity/update/{name}/{newName}/{newDescription}/{newSubcategory}/" })
-    public ResponseEntity<?> updateScheduledActivity(@PathVariable("scheduledActivityId") Integer scheduledActivityId,
+    public ScheduledActivityDto updateScheduledActivity(
+            @PathVariable("scheduledActivityId") Integer scheduledActivityId,
             @PathVariable("date") LocalDate date,
-            @PathVariable("startTime") LocalTime startTime, @PathVariable("startTime") LocalTime endTime,
-            @PathVariable("instructor") Instructor instructor, @PathVariable("activity") Activity activity,
-            @PathVariable("capacity") Integer capacity) {
-        try {
-            ScheduledActivity scheduledActivity = scheduledActivityService.updateScheduledActivity(scheduledActivityId,
-                    date, startTime, endTime, instructor, activity, capacity);
-            return ResponseEntity.ok(convertToDto(scheduledActivity));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+            @PathVariable("startTime") LocalTime startTime,
+            @PathVariable("startTime") LocalTime endTime,
+            @PathVariable("instructor") Instructor instructor,
+            @PathVariable("activity") Activity activity,
+            @PathVariable("capacity") Integer capacity) throws IllegalArgumentException {
+        return convertToDto(
+                scheduledActivityService.updateScheduledActivity(scheduledActivityId, date, startTime, endTime,
+                        instructor, activity, capacity));
     }
 
     /**
@@ -139,20 +133,29 @@ public class ScheduledActivityController {
     /**
      * Delete all scheduled activities
      */
-    /*
-     * @DeleteMapping(value = {"/scheduledActivities/delete",
-     * "/scheduledActivities/delete/"})
-     * public void deleteAllScheduledActivities() {
-     * scheduledActivityService.deleteAllScheduledActivities();
-     * }
-     */
+    @DeleteMapping(value = { "/scheduledActivity/deleteAll", "/scheduledActivity/deleteAll/" })
+    public void deleteAllScheduledActivities() {
+        scheduledActivityService.deleteAllScheduledActivities();
+    }
 
+    /**
+     * Convert a ScheduledActivity to a ScheduledActivityDto
+     * 
+     * @param scheduledActivity
+     * @return ScheduledActivityDto
+     */
     public static ScheduledActivityDto convertToDto(ScheduledActivity scheduledActivity) {
         return new ScheduledActivityDto(scheduledActivity.getScheduledActivityId(), scheduledActivity.getDate(),
-                scheduledActivity.getStartTime(), scheduledActivity.getEndTime(), scheduledActivity.getInstructor(),
+                scheduledActivity.getStartTime(), scheduledActivity.getEndTime(), scheduledActivity.getSupervisor(),
                 scheduledActivity.getActivity(), scheduledActivity.getCapacity());
     }
 
+    /**
+     * Convert a list of ScheduledActivity to a list of ScheduledActivityDto
+     * 
+     * @param scheduledActivities
+     * @return List<ScheduledActivityDto>
+     */
     public static List<ScheduledActivityDto> convertToDto(List<ScheduledActivity> scheduledActivities) {
         List<ScheduledActivityDto> scheduledActivityDtos = new ArrayList<ScheduledActivityDto>(
                 scheduledActivities.size());

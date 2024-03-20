@@ -7,14 +7,15 @@ package ca.mcgill.ecse321.sportcenter.dto;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-//import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
-import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity;
 import ca.mcgill.ecse321.sportcenter.model.Activity;
 import ca.mcgill.ecse321.sportcenter.model.Instructor;
 
+/**
+ * Data Transfer Object for ScheduledActivity
+ * 
+ * @author Fabian Saldana
+ */
 public class ScheduledActivityDto {
-
-    // private InstructorDto instructor;
 
     private int scheduledActivityId;
     private LocalDate date;
@@ -23,6 +24,9 @@ public class ScheduledActivityDto {
     private Instructor instructor;
     private Activity activity;
     private int capacity;
+
+    public ScheduledActivityDto() {
+    }
 
     public ScheduledActivityDto(int scheduledActivityId, LocalDate date, LocalTime startTime, LocalTime endTime,
             Instructor instructor, Activity activity, int capacity) {
@@ -63,7 +67,7 @@ public class ScheduledActivityDto {
         return capacity;
     }
 
-    public void setScheduledActivityId(Integer scheduledActivityId) {
+    public void setScheduledActivityId(int scheduledActivityId) {
         this.scheduledActivityId = scheduledActivityId;
     }
 
