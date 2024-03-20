@@ -42,17 +42,5 @@ public class ActivityDto {
         this.subcategory = subcategory;
     }
 
-    public static ActivityDto convertToDto(Activity activity) {
-        return new ActivityDto(activity.getName(), activity.getDescription(), activity.getSubCategory());
-    }
-
-    public static List<ActivityDto> convertToDto(List<Activity> activities) {
-        List<ActivityDto> activityDto = new ArrayList<>(activities.size());
-        for (Activity activity : activities) {
-            activityDto.add(ActivityDto.convertToDto(activity));
-        }
-        return activityDto;
-    }
-
 
 }

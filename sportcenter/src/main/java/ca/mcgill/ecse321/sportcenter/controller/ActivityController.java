@@ -26,32 +26,33 @@ public class ActivityController {
 
     /**
      * Create an activity
+     * 
      * @param name
      * @param description
      * @param price
      * @return
      * @Author Andrew Nemr
      */
-    @PostMapping(value = {"/createActivity/{name}/{description}/{subcategory}", "/createActivity/{name}/{description}/{subcategory}/"})
-    public ResponseEntity<?> createActivity(@PathVariable("name") String name, @PathVariable("description") String description, @PathVariable("subcategory") Activity.ClassCategory subcategory) {
-        try {
-            Activity activity = activityService.createActivity(name, description, subcategory);
-            return ResponseEntity.ok(ActivityDto.convertToDto(activity));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    @PostMapping(value = { "/createActivity/{name}/{description}/{subcategory}",
+            "/createActivity/{name}/{description}/{subcategory}/" })
+    public ActivityDto createActivity(@PathVariable("name") String name,
+            @PathVariable("description") String description,
+            @PathVariable("subcategory") Activity.ClassCategory subcategory) throws IllegalArgumentException {
+        Activity activity = activityService.createActivity(name, description, subcategory);
+        return convertToDto(activity);
     }
 
     /**
      * Get an activity by its name
+     * 
      * @param name
      * @return
      */
-    @GetMapping(value = {"/activity/{name}", "/activity/{name}/"})
+    @GetMapping(value = { "/activity/{name}", "/activity/{name}/" })
     public ResponseEntity<?> getActivity(@PathVariable("name") String name) {
         try {
             Activity activity = activityService.getActivity(name);
-            return ResponseEntity.ok(ActivityDto.convertToDto(activity));
+            return ResponseEntity.ok(convertToDto(activity));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -59,30 +60,35 @@ public class ActivityController {
 
     /**
      * Get all activities
+     * 
      * @return
      */
-    @GetMapping(value = {"/activities", "/activities/"})
+    @GetMapping(value = { "/activities", "/activities/" })
     public List<ActivityDto> getActivities() {
         List<Activity> activities = activityService.getActivities();
         List<ActivityDto> activityDtos = new ArrayList<ActivityDto>();
         for (Activity activity : activities) {
-            activityDtos.add(ActivityDto.convertToDto(activity));
+            activityDtos.add(convertToDto(activity));
         }
         return activityDtos;
     }
 
     /**
      * Update an activity
+     * 
      * @param name
      * @param description
      * @param subcategory
      * @return
      */
-    @PutMapping(value = {"/activity/update/{name}/{newName}/{newDescription}/{newSubcategory}", "/activity/update/{name}/{newName}/{newDescription}/{newSubcategory}/"})
-    public ResponseEntity<?> updateActivity(@PathVariable("name") String name, @PathVariable("newName") String newName, @PathVariable("newDescription") String newDescription, @PathVariable("newSubcategory") Activity.ClassCategory newSubcategory) {
+    @PutMapping(value = { "/activity/update/{name}/{newName}/{newDescription}/{newSubcategory}",
+            "/activity/update/{name}/{newName}/{newDescription}/{newSubcategory}/" })
+    public ResponseEntity<?> updateActivity(@PathVariable("name") String name, @PathVariable("newName") String newName,
+            @PathVariable("newDescription") String newDescription,
+            @PathVariable("newSubcategory") Activity.ClassCategory newSubcategory) {
         try {
             Activity activity = activityService.updateActivity(name, newName, newDescription, newSubcategory);
-            return ResponseEntity.ok(ActivityDto.convertToDto(activity));
+            return ResponseEntity.ok(convertToDto(activity));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -90,19 +96,33 @@ public class ActivityController {
 
     /**
      * Delete an activity by its name
+     * 
      * @param name
      */
-    @DeleteMapping(value = {"/activity/delete/{name}", "/activity/delete/{name}/"})
+    @DeleteMapping(value = { "/activity/delete/{name}", "/activity/delete/{name}/" })
     public ActivityDto deleteActivity(@PathVariable("name") String name) {
         Activity activity = activityService.deleteActivity(name);
-        return ActivityDto.convertToDto(activity);
+        return convertToDto(activity);
     }
+
     /**
      * Delete all activities
      */
-    @DeleteMapping(value = {"/activities/delete", "/activities/delete/"})
+    @DeleteMapping(value = { "/activities/delete", "/activities/delete/" })
     public void deleteAllActivities() {
         activityService.deleteAllActivities();
     }
-    
+
+    public static ActivityDto convertToDto(Activity activity) {
+        return new ActivityDto(activity.getName(), activity.getDescription(), activity.getSubCategory());
+    }
+
+    public static List<ActivityDto> convertToDto(List<Activity> activities) {
+        List<ActivityDto> activityDto = new ArrayList<>(activities.size());
+        for (Activity activity : activities) {
+            activityDto.add(convertToDto(activity));
+        }
+        return activityDto;
+    }
+
 }
