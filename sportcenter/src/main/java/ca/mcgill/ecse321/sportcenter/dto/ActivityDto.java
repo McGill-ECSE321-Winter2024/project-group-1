@@ -1,34 +1,49 @@
 package ca.mcgill.ecse321.sportcenter.dto;
-import java.util.*;
-import java.util.ArrayList;
 
-import ca.mcgill.ecse321.sportcenter.model.Activity;
+import org.checkerframework.checker.units.qual.t;
+
 import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
 
 public class ActivityDto {
 
-    private String name;
-    private String description;
     private ClassCategory subcategory;
+    private String name;
+    private boolean isApproved;
+    private String description;
 
-    public ActivityDto(String name, String description, ClassCategory subcategory) {
-        this.name = name;
-        this.description = description;
-        this.subcategory = subcategory;
-        }
-
-    public String getName() {
-        return name;
+    public ActivityDto() {
     }
 
-    public String getDescription() {
-        return description;
+    public ActivityDto(ClassCategory aSubcategory, String aName, boolean aIsApproved, String aDescription) {
+        this.subcategory = aSubcategory;
+        this.name = aName;
+        this.isApproved = aIsApproved;
+        this.description = aDescription;
     }
 
     public ClassCategory getSubcategory() {
         return subcategory;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public boolean getIsApproved() {
+        return isApproved;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setSubcategory(ClassCategory subcategory) {
+        this.subcategory = subcategory;
+    }
+
+    public void setIsApproved(boolean isApproved) {
+        this.isApproved = isApproved;
+    }
 
     public void setName(String name) {
         this.name = name;
@@ -37,10 +52,5 @@ public class ActivityDto {
     public void setDescription(String description) {
         this.description = description;
     }
-
-    public void setSubcategory(ClassCategory subcategory) {
-        this.subcategory = subcategory;
-    }
-
 
 }
