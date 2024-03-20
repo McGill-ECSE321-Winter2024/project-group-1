@@ -146,11 +146,9 @@ public class CustomerService {
     public Customer updateCustomer(int accountRoleId, String username) {
         Customer customer = customerRepository.findAccountRoleByAccountRoleId(accountRoleId);
         Account account = accountRepository.findAccountByUsername(username);
-
-        if (account == null) { // if (account != null) { - CORRECTED
+        if (account != null) {
             throw new IllegalArgumentException("Account does not exist!");
         }
-
         account.setUsername(username);
         accountRepository.save(account);
         customer.setAccount(account);

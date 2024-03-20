@@ -1,13 +1,19 @@
 package ca.mcgill.ecse321.sportcenter.service;
 
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.sql.Date;
+import java.time.LocalDate;
+
 import org.aspectj.lang.annotation.SuppressAjWarnings;
+import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -15,17 +21,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.sportcenter.model.Account;
 import ca.mcgill.ecse321.sportcenter.dao.AccountRepository;
+import ca.mcgill.ecse321.sportcenter.service.AccountService;
 
 @SpringBootTest
 public class TestAccountService {
-
+    
     @Mock
     private AccountRepository accountRepository;
     @InjectMocks
     private AccountService accountService;
 
     @SuppressAjWarnings("null")
-
+    
     @Test
     public void testCreateAccount() {
         String username = "username";
@@ -94,7 +101,7 @@ public class TestAccountService {
         verify(accountRepository, times(0)).save(account1);
     }
 
-    @Test ////////////////////////////
+    @Test////////////////////////////
     public void testCreateAccountUsernameExists() {
         String username1 = "username";
         String username2 = "username";
@@ -134,7 +141,7 @@ public class TestAccountService {
     }
 
     @Test
-    public void testUpdateAccount(String oldUsername, String username, String password) {
+    public void testUpdateAccount(String oldUsername,String username, String password) {
         Account account1 = accountRepository.findAccountByUsername(oldUsername);
         when(accountRepository.findAccountByUsername(oldUsername)).thenReturn(account1);
         when(accountRepository.save(any(Account.class))).thenReturn(account1);
@@ -145,7 +152,7 @@ public class TestAccountService {
         assertEquals(username, updatedAccount.getUsername());
         assertEquals(password, updatedAccount.getPassword());
         verify(accountRepository, times(1)).save(account1);
-
+        
     }
 
     @Test

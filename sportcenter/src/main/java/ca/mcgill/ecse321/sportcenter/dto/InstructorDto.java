@@ -1,5 +1,9 @@
 package ca.mcgill.ecse321.sportcenter.dto;
 
+import ca.mcgill.ecse321.sportcenter.model.*;
+import java.util.*;
+import java.util.stream.Collectors;
+
 public class InstructorDto {
     public enum InstructorStatus {
         Active, Inactive, Fired, Suspended

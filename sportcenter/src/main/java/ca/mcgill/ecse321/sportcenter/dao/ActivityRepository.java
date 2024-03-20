@@ -16,4 +16,5 @@ public interface ActivityRepository extends CrudRepository<Activity, String> {
     public List<Activity> findActivityBySubcategory(ClassCategory subcategory);
 
     public List<Activity> findActivityByIsApproved(boolean isApproved);
+
 }
