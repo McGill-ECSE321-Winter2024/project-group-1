@@ -34,11 +34,14 @@ public class CustomerService {
      */
     @Transactional
     public Customer createCustomer(String username) {
-        Customer customer = new Customer();
+        if (username == null || username.trim().length() == 0) {
+            throw new IllegalArgumentException("Username cannot be empty!");
+        }
         Account account = accountRepository.findAccountByUsername(username);
         if (account == null) {
             throw new IllegalArgumentException("Account does not exist!");
         }
+        Customer customer = new Customer();
         customer.setAccount(account);
         customerRepository.save(customer);
         return customer;
@@ -49,15 +52,32 @@ public class CustomerService {
      * 
      * @param accountRoleId
      * @return Customer
-     * @Author Andrew Nemr
      */
 
     @Transactional
-    public Customer getCustomer(int accountRoleId) {
+    public Customer getCustomerByAccountRoleId(int accountRoleId) {
         if (accountRoleId < 0) {
             throw new IllegalArgumentException("AccountRoleId cannot be negative!");
         }
         return customerRepository.findAccountRoleByAccountRoleId(accountRoleId);
+    }
+
+    /**
+     * Get a customer by its account username
+     * 
+     * @param username
+     * @return Customer
+     */
+    @Transactional
+    public Customer getCustomerByUsername(String username) {
+        if (username == null || username.trim().length() == 0) {
+            throw new IllegalArgumentException("Username cannot be empty!");
+        }
+        Account account = accountRepository.findAccountByUsername(username);
+        if (account == null) {
+            throw new IllegalArgumentException("Account does not exist!");
+        }
+        return customerRepository.findAccountRoleByAccountRoleId(account.getAccountId());
     }
 
     /**
@@ -81,7 +101,7 @@ public class CustomerService {
     }
 
     /**
-     * delete customer by username
+     * Delete customer by username
      * 
      * @param username
      * @return
@@ -109,25 +129,10 @@ public class CustomerService {
         if (customer == null) {
             throw new IllegalArgumentException("Customer does not exist!");
         }
-        if (accountRoleId < 0 || accountRoleId == 0) {// to check if accountRolle is null?????
+        if (accountRoleId < 0) {// to check if accountRolle is null?????
             throw new IllegalArgumentException("AccountRoleId is not valid!");
         }
         return customerRepository.findAccountRoleByAccountRoleId(accountRoleId);
-    }
-
-    /**
-     * Get a customer by its account username
-     * 
-     * @param username
-     * @return Customer
-     */
-    @Transactional
-    public Customer getCustomerByUsername(String username) {
-        Account account = accountRepository.findAccountByUsername(username);
-        if (account == null) {
-            throw new IllegalArgumentException("Account does not exist!");
-        }
-        return customerRepository.findAccountRoleByAccountRoleId(account.getAccountId());
     }
 
     /**
