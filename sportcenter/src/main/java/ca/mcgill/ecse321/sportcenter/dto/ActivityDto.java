@@ -1,7 +1,5 @@
 package ca.mcgill.ecse321.sportcenter.dto;
 
-import org.checkerframework.checker.units.qual.t;
-
 import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
 
 public class ActivityDto {
