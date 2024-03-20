@@ -1,10 +1,9 @@
 package ca.mcgill.ecse321.sportcenter.controller;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,131 +17,139 @@ import ca.mcgill.ecse321.sportcenter.dto.AccountDto;
 import ca.mcgill.ecse321.sportcenter.model.Account;
 import ca.mcgill.ecse321.sportcenter.service.AccountService;
 
-
+/**
+ * Controller class for the Account entity
+ * 
+ * @Author Andrew Nemr
+ */
+@CrossOrigin(origins = "*")
+@RestController
 public class AccountController {
     @Autowired
     private AccountService accountService;
-    
+
     /**
      * Create an account
+     * 
      * @param username
      * @param password
-     * @return
-     * @Author Andrew Nemr
+     * @return AccountDto
      */
-    @PostMapping(value = {"/createAccount", "/createAccount/"})
-    public ResponseEntity<?> createAccount(@RequestParam("username") String username, @RequestParam("password") String password) {
-        try {
-            Account account = accountService.createAccount(username, password);
-            return ResponseEntity.ok(AccountDto.convertAccountDto(account));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    @PostMapping(value = { "/createAccount", "/createAccount/" })
+    public AccountDto createAccount(@PathVariable("username") String username,
+            @PathVariable("password") String password) throws IllegalArgumentException {
+        Account account = accountService.createAccount(username, password);
+        return convertAccountDto(account);
     }
 
     /**
      * Update an account
+     * 
      * @param username
      * @param password
-     * @return
+     * @return AccountDto
      */
-
-    @PutMapping(value = {"/account/update/{oldUsername}/{newUsername}/{newPassword}", "/account/update/{oldUsername}/{newUsername}/{newPassword}/"})
-    public ResponseEntity<?> updateAccount(@PathVariable("oldUsername") String oldUsername, @PathVariable("newUsername") String newUsername, @PathVariable("newPassword") String newPassword) {
-        try {
-            Account account = accountService.updateAccount(oldUsername, newUsername, newPassword);
-            return ResponseEntity.ok(AccountDto.convertAccountDto(account));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    @PutMapping(value = { "/account/update/{oldUsername}/{newUsername}/{newPassword}",
+            "/account/update/{oldUsername}/{newUsername}/{newPassword}/" })
+    public AccountDto updateAccount(@PathVariable("oldUsername") String oldUsername,
+            @PathVariable("newUsername") String newUsername, @PathVariable("newPassword") String newPassword)
+            throws IllegalArgumentException {
+        Account account = accountService.updateAccount(oldUsername, newUsername, newPassword);
+        return convertAccountDto(account);
     }
 
     /**
      * Get an account by its account ID
+     * 
      * @param accountId
-     * @return
+     * @return AccountDto
      */
-    @GetMapping(value = {"/account/{accountId}", "/account/{accountId}/"})
-    public ResponseEntity<?> getAccountById(@PathVariable("accountId") int accountId) {
-        try {
-            Account account = accountService.getAccountById(accountId);
-            return ResponseEntity.ok(AccountDto.convertAccountDto(account));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    @GetMapping(value = { "/account/{accountId}", "/account/{accountId}/" })
+    public AccountDto getAccountById(@PathVariable("accountId") int accountId) throws IllegalArgumentException {
+        Account account = accountService.getAccountById(accountId);
+        return convertAccountDto(account);
     }
 
     /**
      * Get an account by its username
+     * 
      * @param username
-     * @return
+     * @return AccountDto
      */
-    @GetMapping(value = {"/account/{username}", "/account/{username}/"})
-    public ResponseEntity<?> findAccountByUsername(@PathVariable("username") String username) {
-        try {
-            Account account = accountService.getAccountByUsername(username);
-            return ResponseEntity.ok(AccountDto.convertAccountDto(account));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    @GetMapping(value = { "/account/{username}", "/account/{username}/" })
+    public AccountDto findAccountByUsername(@PathVariable("username") String username) throws IllegalArgumentException {
+        Account account = accountService.getAccountByUsername(username);
+        return convertAccountDto(account);
     }
 
     /**
      * Get all accounts
-     * @return
+     * 
+     * @return List<AccountDto>
      */
-    @GetMapping(value = {"/accounts/login/getAll", "/accounts/login/getAll/"})
-    public ResponseEntity<?> getAllAccounts() {
-        try {
-            List<Account> accounts = accountService.getAllAccounts();
-            return ResponseEntity.ok(AccountDto.convertAccountDto(accounts));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    @GetMapping(value = { "/accounts/login/getAll", "/accounts/login/getAll/" })
+    public List<AccountDto> getAllAccounts() throws IllegalArgumentException {
+        List<Account> accounts = accountService.getAllAccounts();
+        return convertAccountsToDto(accounts);
     }
 
     /**
      * Delete an account by its account ID
+     * 
      * @param accountId
-     * @return
      */
-    @DeleteMapping(value = {"/account/delete/{accountId}", "/account/delete/{accountId}/"})
-    public ResponseEntity<?> deleteAccount(@PathVariable("accountId") int accountId) {
-        try {
-            accountService.deleteAccount(accountId);
-            return ResponseEntity.ok("Account deleted successfully");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    @DeleteMapping(value = { "/account/delete/{accountId}", "/account/delete/{accountId}/" })
+    public void deleteAccount(@PathVariable("accountId") int accountId) throws IllegalArgumentException {
+        accountService.deleteAccount(accountId);
     }
 
     /**
      * Delete all accounts
-     * @return
      */
-    @DeleteMapping(value = {"/accounts/login/deleteAll", "/accounts/login/deleteAll/"})
-    public ResponseEntity<?> deleteAllAccounts() {
-        try {
-            accountService.deleteAllAccounts();
-            return ResponseEntity.ok("All accounts deleted successfully");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    @DeleteMapping(value = { "/accounts/login/deleteAll", "/accounts/login/deleteAll/" })
+    public void deleteAllAccounts() throws IllegalArgumentException {
+        accountService.deleteAllAccounts();
     }
 
     /**
      * Login
+     * 
      * @param username
      * @param password
+     * 
+     * @return boolean
+     */
+    @PostMapping(value = { "/login", "/login/" })
+    public boolean login(@RequestParam("username") String username,
+            @RequestParam("password") String password) throws IllegalArgumentException {
+        return accountService.login(username, password);
+    }
+
+    /**
+     * Convert an account to an account DTO
+     * 
+     * @param account
      * @return
      */
-    @PostMapping(value = {"/login", "/login/"})
-    public ResponseEntity<?> login(@RequestParam("username") String username, @RequestParam("password") String password) {
-        try {
-            boolean login = accountService.login(username, password);
-            return ResponseEntity.ok(login);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+    private AccountDto convertAccountDto(Account account) {
+        if (account == null) {
+            throw new IllegalArgumentException("There is no account to convert");
         }
+        return new AccountDto(account.getUsername(), account.getPassword());
+    }
+
+    /**
+     * Convert a list of accounts to a list of account DTOs
+     * 
+     * @param accounts
+     * @return
+     */
+    private List<AccountDto> convertAccountsToDto(List<Account> accounts) {
+        List<AccountDto> accountDtos = new ArrayList<AccountDto>(accounts.size());
+
+        for (Account account : accounts) {
+            accountDtos.add(new AccountDto(account.getUsername(), account.getPassword()));
+        }
+        return accountDtos;
     }
 }
