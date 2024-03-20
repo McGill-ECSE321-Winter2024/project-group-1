@@ -11,10 +11,8 @@ public class AccountDto {
     private String username;
     private String password;
 
-    public AccountDto() {
-    }
-
-    public AccountDto(String username, String password) {
+    public AccountDto(int accountId, String username, String password) {
+        this.accountId = accountId;
         this.username = username;
         this.password = password;
     }
@@ -31,8 +29,8 @@ public class AccountDto {
         return password;
     }
 
-    public void setAccountId(int accountRoleId) {
-        this.accountId = accountRoleId;
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
     }
 
     public void setUsername(String username) {

@@ -135,7 +135,7 @@ public class AccountController {
         if (account == null) {
             throw new IllegalArgumentException("There is no account to convert");
         }
-        return new AccountDto(account.getUsername(), account.getPassword());
+        return new AccountDto(account.getAccountId(), account.getUsername(), account.getPassword());
     }
 
     /**
@@ -148,7 +148,7 @@ public class AccountController {
         List<AccountDto> accountDtos = new ArrayList<AccountDto>(accounts.size());
 
         for (Account account : accounts) {
-            accountDtos.add(new AccountDto(account.getUsername(), account.getPassword()));
+            accountDtos.add(new AccountDto(account.getAccountId(), account.getUsername(), account.getPassword()));
         }
         return accountDtos;
     }
