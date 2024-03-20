@@ -19,6 +19,11 @@ import ca.mcgill.ecse321.sportcenter.service.CustomerService;
 import ca.mcgill.ecse321.sportcenter.dto.CustomerDto;
 //import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity;
 
+/**
+ * Rest controller for the Customer entity
+ * 
+ * @Author Andrew Nemr
+ */
 public class CustomerController {
     @Autowired
     private CustomerService customerService;
@@ -45,7 +50,7 @@ public class CustomerController {
      */
     @GetMapping(value = { "/getCustomer/{accountRoleId}", "/getCustomer/{accountRoleId}/" })
     public CustomerDto getCustomer(@PathVariable("accountRoleId") int accountRoleId) throws IllegalArgumentException {
-        Customer customer = customerService.getCustomer(accountRoleId);
+        Customer customer = customerService.getCustomerByAccountRoleId(accountRoleId);
         return convertToDto(customer);
     }
 
