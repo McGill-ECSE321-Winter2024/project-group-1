@@ -3,13 +3,11 @@ package ca.mcgill.ecse321.sportcenter.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import ca.mcgill.ecse321.sportcenter.dao.CustomerRepository;
 import ca.mcgill.ecse321.sportcenter.model.Customer;
-import ca.mcgill.ecse321.sportcenter.model.Instructor;
 import ca.mcgill.ecse321.sportcenter.model.Account;
 import ca.mcgill.ecse321.sportcenter.model.AccountRole;
 import ca.mcgill.ecse321.sportcenter.dao.AccountRepository;
@@ -29,15 +27,35 @@ public class CustomerService {
     }
 
     /**
+     * Create a customer from account username
+     * 
+     * @param username
+     * @return Customer
+     */
+    @Transactional
+    public Customer createCustomer(String username) {
+        if (username == null || username.trim().length() == 0) {
+            throw new IllegalArgumentException("Username cannot be empty!");
+        }
+        Account account = accountRepository.findAccountByUsername(username);
+        if (account == null) {
+            throw new IllegalArgumentException("Account does not exist!");
+        }
+        Customer customer = new Customer();
+        customer.setAccount(account);
+        customerRepository.save(customer);
+        return customer;
+    }
+
+    /**
      * Get a customer by its accountRole Id (primary key)
      * 
      * @param accountRoleId
      * @return Customer
-     * @Author Andrew Nemr
      */
 
     @Transactional
-    public Customer getCustomer(int accountRoleId) {
+    public Customer getCustomerByAccountRoleId(int accountRoleId) {
         if (accountRoleId < 0) {
             throw new IllegalArgumentException("AccountRoleId cannot be negative!");
         }
@@ -45,22 +63,21 @@ public class CustomerService {
     }
 
     /**
-     * Create a customer from account username
+     * Get a customer by its account username
      * 
      * @param username
      * @return Customer
      */
-
     @Transactional
-    public Customer createCustomer(String username) {
-        Customer customer = new Customer();
+    public Customer getCustomerByUsername(String username) {
+        if (username == null || username.trim().length() == 0) {
+            throw new IllegalArgumentException("Username cannot be empty!");
+        }
         Account account = accountRepository.findAccountByUsername(username);
         if (account == null) {
             throw new IllegalArgumentException("Account does not exist!");
         }
-        customer.setAccount(account);
-        customerRepository.save(customer);
-        return customer;
+        return customerRepository.findAccountRoleByAccountRoleId(account.getAccountId());
     }
 
     /**
@@ -84,7 +101,7 @@ public class CustomerService {
     }
 
     /**
-     * delete customer by username
+     * Delete customer by username
      * 
      * @param username
      * @return
@@ -112,25 +129,10 @@ public class CustomerService {
         if (customer == null) {
             throw new IllegalArgumentException("Customer does not exist!");
         }
-        if (accountRoleId < 0 || accountRoleId == 0) {// to check if accountRolle is null?????
+        if (accountRoleId < 0) {// to check if accountRolle is null?????
             throw new IllegalArgumentException("AccountRoleId is not valid!");
         }
         return customerRepository.findAccountRoleByAccountRoleId(accountRoleId);
-    }
-
-    /**
-     * Get a customer by its account username
-     * 
-     * @param username
-     * @return Customer
-     */
-    @Transactional
-    public Customer getCustomerByUsername(String username) {
-        Account account = accountRepository.findAccountByUsername(username);
-        if (account == null) {
-            throw new IllegalArgumentException("Account does not exist!");
-        }
-        return customerRepository.findAccountRoleByAccountRoleId(account.getAccountId());
     }
 
     /**

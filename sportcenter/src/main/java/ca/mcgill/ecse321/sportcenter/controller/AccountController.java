@@ -43,22 +43,6 @@ public class AccountController {
     }
 
     /**
-     * Update an account
-     * 
-     * @param username
-     * @param password
-     * @return AccountDto
-     */
-    @PutMapping(value = { "/account/update/{oldUsername}/{newUsername}/{newPassword}",
-            "/account/update/{oldUsername}/{newUsername}/{newPassword}/" })
-    public AccountDto updateAccount(@PathVariable("oldUsername") String oldUsername,
-            @PathVariable("newUsername") String newUsername, @PathVariable("newPassword") String newPassword)
-            throws IllegalArgumentException {
-        Account account = accountService.updateAccount(oldUsername, newUsername, newPassword);
-        return convertAccountDto(account);
-    }
-
-    /**
      * Get an account by its account ID
      * 
      * @param accountId
@@ -91,6 +75,22 @@ public class AccountController {
     public List<AccountDto> getAllAccounts() throws IllegalArgumentException {
         List<Account> accounts = accountService.getAllAccounts();
         return convertAccountsToDto(accounts);
+    }
+
+    /**
+     * Update an account
+     * 
+     * @param username
+     * @param password
+     * @return AccountDto
+     */
+    @PutMapping(value = { "/account/update/{oldUsername}/{newUsername}/{newPassword}",
+            "/account/update/{oldUsername}/{newUsername}/{newPassword}/" })
+    public AccountDto updateAccount(@PathVariable("oldUsername") String oldUsername,
+            @PathVariable("newUsername") String newUsername, @PathVariable("newPassword") String newPassword)
+            throws IllegalArgumentException {
+        Account account = accountService.updateAccount(oldUsername, newUsername, newPassword);
+        return convertAccountDto(account);
     }
 
     /**

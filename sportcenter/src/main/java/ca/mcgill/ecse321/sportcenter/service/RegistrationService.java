@@ -157,7 +157,6 @@ public class RegistrationService {
             if (r.getScheduledActivity().getScheduledActivityId() == scheduledActivityId) {
                 customersAttendingScheduledActivity.add(r);
             }
-
         }
         return customersAttendingScheduledActivity;
     }

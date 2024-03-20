@@ -12,9 +12,9 @@ import ca.mcgill.ecse321.sportcenter.model.Owner;
 import ca.mcgill.ecse321.sportcenter.model.Account;
 
 /**
- * @author Andrew Nemr and Patrick Zakaria
+ * @author Andrew Nemr, Patrick Zakaria and Mathias Pacheco Lemina
+ *         WASN'T UPDATED IN A WHILE - YOU SHOULD CHECK IT
  */
-
 @SpringBootTest
 public class TestOwnerPersistence {
     @Autowired
@@ -36,7 +36,7 @@ public class TestOwnerPersistence {
      */
     @Test
     public void testPersistAndLoadOwner() {
-        
+
         /**
          * Create an Account, set the attributes of the Account, and save the Account
          */

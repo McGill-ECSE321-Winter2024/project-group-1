@@ -25,10 +25,12 @@ public class ScheduledActivityService {
     @Autowired
     ScheduledActivityRepository scheduledActivityRepository;
 
-    /*
-     * @Autowired
-     * ActivityRepository activityRepository;
-     */
+    /**
+     * Convert an iterable to a list
+     * 
+     * @param iterable
+     * @return List<T>
+     **/
     private <T> List<T> toList(Iterable<T> iterable) {
         List<T> resultList = new ArrayList<T>();
         for (T t : iterable) {

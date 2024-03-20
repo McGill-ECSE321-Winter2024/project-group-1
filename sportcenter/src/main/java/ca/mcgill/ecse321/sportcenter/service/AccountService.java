@@ -21,6 +21,20 @@ public class AccountService {
     AccountRepository accountRepository;
 
     /**
+     * Helper function to turn an iterable into a list
+     * 
+     * @param Iterable<T>
+     * @return List<T>
+     */
+    private <T> List<T> toList(Iterable<T> iterable) {
+        List<T> resultList = new ArrayList<T>();
+        for (T t : iterable) {
+            resultList.add(t);
+        }
+        return resultList;
+    }
+
+    /**
      * Create an account
      * 
      * @param username
@@ -80,20 +94,6 @@ public class AccountService {
             throw new IllegalArgumentException("Account does not exist");
         }
         return account;
-    }
-
-    /**
-     * Helper function to turn an iterable into a list
-     * 
-     * @param Iterable<T>
-     * @return List<T>
-     */
-    private <T> List<T> toList(Iterable<T> iterable) {
-        List<T> resultList = new ArrayList<T>();
-        for (T t : iterable) {
-            resultList.add(t);
-        }
-        return resultList;
     }
 
     /**
