@@ -67,7 +67,7 @@ public class TestRegistrationPersistence {
         String description = "Practice yoga with a professional instructor.";
         boolean isApproved = true;
         
-        activity.setSubcategory(subcategory);
+        activity.setSubCategory(subcategory);
         activity.setName(name);
         activity.setIsApproved(isApproved);
         activity.setDescription(description);

@@ -5,12 +5,13 @@ import ca.mcgill.ecse321.sportcenter.model.Customer;
 
 /**
  * @author Anslean Albert Jeyaras (GumballGB on GitHub) and Patrick Zakaria
- * dao and CRUD for Customer
+ *         dao and CRUD for Customer
  */
-public interface CustomerRepository extends CrudRepository<Customer, Integer>{
-    
-    public Customer findAccountRoleByAccountRoleId(int accountRoleId); //Account role is parent class. Primary Key accountRoleId
+public interface CustomerRepository extends CrudRepository<Customer, Integer> {
 
-    public Customer findCustomerByUserName(String username); //Username is unique
+    public Customer findAccountRoleByAccountRoleId(int accountRoleId); // Account role is parent class. Primary Key
+                                                                       // accountRoleId
+
+    public Customer findAccountRoleByUsername(String username); // Username is unique
 
 }

@@ -51,15 +51,16 @@ public class TestScheduledActivitytPersistence {
     public void testPersistAndLoadScheduledActivity() {
 
         /**
-         * Create an Activity, set the attributes of the Activity, //and save the Activity
+         * Create an Activity, set the attributes of the Activity, //and save the
+         * Activity
          */
         Activity activity = new Activity();
         ClassCategory subcategory = ClassCategory.Strength;
         String name = "Yoga";
         String description = "Practice yoga with a professional instructor.";
         boolean isApproved = true;
-        
-        activity.setSubcategory(subcategory);
+
+        activity.setSubCategory(subcategory);
         activity.setName(name);
         activity.setIsApproved(isApproved);
         activity.setDescription(description);
@@ -68,9 +69,9 @@ public class TestScheduledActivitytPersistence {
         activity = activityRepository.findActivityByName(name);
 
         /**
-        * Create an Account, set the attributes of the Account, //and save the Account
-        */
-        Account account = new Account( );
+         * Create an Account, set the attributes of the Account, //and save the Account
+         */
+        Account account = new Account();
         String username = "Juan";
         String password = "password";
         account.setUsername(username);
@@ -81,7 +82,8 @@ public class TestScheduledActivitytPersistence {
         account = accountRepository.findAccountByAccountId(accountId);
 
         /**
-         * Create an Instructor, set the attribute of the Instructor, //and save the Instructor
+         * Create an Instructor, set the attribute of the Instructor, //and save the
+         * Instructor
          */
         Instructor instructor = new Instructor();
         InstructorStatus status = InstructorStatus.Active;
@@ -97,18 +99,21 @@ public class TestScheduledActivitytPersistence {
         instructor = instructorRepository.findAccountRoleByAccountRoleId(accountRoleId);
 
         /**
-         * Create a ScheduledActivity, set the attributes of the ScheduledActivity, and save the ScheduledActivity
+         * Create a ScheduledActivity, set the attributes of the ScheduledActivity, and
+         * save the ScheduledActivity
          */
         ScheduledActivity scheduledActivity = new ScheduledActivity();
         LocalDate date = LocalDate.of(2021, 11, 11);
         LocalTime startTime = LocalTime.of(10, 30, 00);
         LocalTime endTime = LocalTime.of(11, 30, 00);
+        int capacity = 10;
 
         scheduledActivity.setDate(date);
         scheduledActivity.setStartTime(startTime);
         scheduledActivity.setEndTime(endTime);
         scheduledActivity.setSupervisor(instructor);
         scheduledActivity.setActivity(activity);
+        scheduledActivity.setCapacity(capacity);
 
         scheduledActivityRepository.save(scheduledActivity);
         int scheduledActivityId = scheduledActivity.getScheduledActivityId();
@@ -124,13 +129,13 @@ public class TestScheduledActivitytPersistence {
         assertNotNull(scheduledActivity);
         assertEquals(scheduledActivityId, scheduledActivity.getScheduledActivityId());
         assertEquals(date, scheduledActivity.getDate());
-        assertEquals(startTime, scheduledActivity.getStartTime()); 
+        assertEquals(startTime, scheduledActivity.getStartTime());
         assertEquals(endTime, scheduledActivity.getEndTime());
-        
+        assertEquals(capacity, scheduledActivity.getCapacity());
+
         assertEquals(name, scheduledActivity.getActivity().getName());
         assertEquals(description, scheduledActivity.getActivity().getDescription());
-        assertEquals(subcategory, scheduledActivity.getActivity().getSubcategory());
+        assertEquals(subcategory, scheduledActivity.getActivity().getSubCategory());
         assertEquals(isApproved, scheduledActivity.getActivity().getIsApproved());
     }
 }
-

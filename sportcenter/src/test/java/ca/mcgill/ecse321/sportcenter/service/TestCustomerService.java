@@ -1,4 +1,5 @@
 package ca.mcgill.ecse321.sportcenter.service;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -41,8 +42,10 @@ public class TestCustomerService {
     @Test
     public void testCreateCustomer() {
         String username = "testUsername";
-        when(accountRepository.findAccountByUsername(username)).thenReturn(new Account());//if account exists, then it will be returned, if not, null will be returned
-        when(customerRepository.save(any(Customer.class))).thenAnswer( (invocation) -> invocation.getArgument(0));
+        when(accountRepository.findAccountByUsername(username)).thenReturn(new Account());// if account exists, then it
+                                                                                          // will be returned, if not,
+                                                                                          // null will be returned
+        when(customerRepository.save(any(Customer.class))).thenAnswer((invocation) -> invocation.getArgument(0));
         Customer customer = null;
         try {
             customer = customerService.createCustomer(username);
@@ -105,8 +108,8 @@ public class TestCustomerService {
     @Test
     public void testDeleteCustomer() {
         String username = "testUsername";
-        when(customerRepository.findCustomerByUserName(username)).thenReturn(new Customer());
-        when(customerRepository.save(any(Customer.class))).thenAnswer( (invocation) -> invocation.getArgument(0));
+        when(customerRepository.findAccountRoleByUsername(username)).thenReturn(new Customer());
+        when(customerRepository.save(any(Customer.class))).thenAnswer((invocation) -> invocation.getArgument(0));
         try {
             customerService.deleteCustomerByUsername(username);
         } catch (IllegalArgumentException e) {
@@ -158,7 +161,7 @@ public class TestCustomerService {
     @Test
     public void testGetCustomer() {
         String username = "testUsername";
-        when(customerRepository.findCustomerByUserName(username)).thenReturn(new Customer());
+        when(customerRepository.findAccountRoleByUsername(username)).thenReturn(new Customer());
         try {
             customerService.getCustomerByUsername(username);
         } catch (IllegalArgumentException e) {
@@ -209,7 +212,7 @@ public class TestCustomerService {
     @Test
     public void testGetCustomerDoesNotExist() {
         String username = "testUsername";
-        when(customerRepository.findCustomerByUserName(username)).thenReturn(null);
+        when(customerRepository.findAccountRoleByUsername(username)).thenReturn(null);
         String error = null;
         try {
             customerService.getCustomerByUsername(username);
@@ -258,7 +261,7 @@ public class TestCustomerService {
         assertEquals("Customer does not exist!", error);
     }
 
-    @Test///////////////
+    @Test ///////////////
     public void getCustomerByRoleIdNull() {
         int roleId = -1;
         String error = null;
@@ -281,5 +284,5 @@ public class TestCustomerService {
     public void deleteAllCustomers() {
         customerService.deleteAllCustomers();
         verify(customerRepository, times(1)).deleteAll();
-    }    
+    }
 }

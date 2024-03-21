@@ -5,34 +5,30 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 
-@MappedSuperclass //abstract class
-public abstract class AccountRole
-{
+@MappedSuperclass // abstract class
+public abstract class AccountRole {
 
-  @Id //accountId is the PM
-  @GeneratedValue(strategy = GenerationType.AUTO) 
+  @Id // accountId is the PM
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private int accountRoleId;
 
-  //CONSTRUCTOR
+  // CONSTRUCTOR
 
   public AccountRole() {
-    
+
   }
 
-  //SETTERS
+  // SETTERS
 
-  public boolean setAccountRoleId(int aAccountRoleId)
-  {
-    boolean wasSet = false;
+  public boolean setAccountRoleId(int aAccountRoleId) {
     accountRoleId = aAccountRoleId;
-    wasSet = true;
+    boolean wasSet = true;
     return wasSet;
   }
 
-  //GETTERS
+  // GETTERS
 
-  public int getAccountRoleId()
-  {
+  public int getAccountRoleId() {
     return accountRoleId;
   }
 

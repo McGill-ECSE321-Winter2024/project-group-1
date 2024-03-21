@@ -41,7 +41,6 @@ public class TestInstructorPersistence {
         * Create an Account, set the attributes of the Account, and save the Account
         */
         Account account = new Account();
-        //int accountId = 4;
         String username = "Jose";
         String password = "password";
 

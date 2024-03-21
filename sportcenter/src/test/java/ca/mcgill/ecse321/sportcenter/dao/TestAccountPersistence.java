@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.sportcenter.model.Account;
+
 /**
  * @author Andrew Nemr and Patrick Zakaria
  */
@@ -31,7 +32,7 @@ public class TestAccountPersistence {
      */
     @Test
     public void testPersistAndLoadAccount() {
-        
+
         // Create an Account, Save in the database and Load from the database
         String username = "Pablo";
         String password = "password";
