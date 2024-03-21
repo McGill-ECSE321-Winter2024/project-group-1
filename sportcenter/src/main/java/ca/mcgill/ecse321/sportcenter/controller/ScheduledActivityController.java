@@ -135,27 +135,86 @@ public class ScheduledActivityController {
     }
 
     /**
-     * Update a scheduled activity
+     * Update a scheduled activity date, start time, end time
      * 
      * @param scheduledActivityId
-     * @param date
-     * @param startTime
-     * @param endTime
-     * @param accountRoleId
-     * @param activityName
-     * @param capacity
+     * @param oldDate
+     * @param newDate
+     * @param oldStartTime
+     * @param newStartTime
+     * @param oldEndTime
+     * @param newEndTime
      * @return ScheduledActivity
      */
     @PutMapping(value = {
-            "/updateScheduledActivity/{scheduledActivityId}/{date}/{startTime}/{endTime}/{instructorId}/{activityName}/{capacity}" })
+            "/updateScheduledActivity/{scheduledActivityId}/{oldDate}/{newDate}/{oldStartTime}/{newStartTime}/{oldEndTime}/{newEndTime}" })
     public ScheduledActivityDto updateScheduledActivity(@PathVariable("scheduledActivityId") int scheduledActivityId,
-            @PathVariable("date") LocalDate date, @PathVariable("startTime") LocalTime startTime,
-            @PathVariable("endTime") LocalTime endTime, @PathVariable("instructorId") int accountRoleId,
-            @PathVariable("activityName") String activityName, @PathVariable("capacity") int capacity)
+            @PathVariable("oldDate") LocalDate oldDate, @PathVariable("newDate") LocalDate newDate,
+            @PathVariable("oldStartTime") LocalTime oldStartTime, @PathVariable("newStartTime") LocalTime newStartTime,
+            @PathVariable("oldEndTime") LocalTime oldEndTime, @PathVariable("newEndTime") LocalTime newEndTime)
             throws IllegalArgumentException {
-        ScheduledActivity scheduledActivity = scheduledActivityService.updateScheduledActivity(scheduledActivityId,
-                date,
-                startTime, endTime, accountRoleId, activityName, capacity);
+        ScheduledActivity scheduledActivity = scheduledActivityService.updateScheduledActivityByDateAndTime(
+                scheduledActivityId,
+                oldDate, newDate, oldStartTime, newStartTime, oldEndTime, newEndTime);
+        return convertToDto(scheduledActivity);
+    }
+
+    /**
+     * Update a scheduled activity instructor
+     * 
+     * @param scheduledActivityId
+     * @param oldAccountId
+     * @param newAccountId
+     * @return ScheduledActivity
+     */
+    @PutMapping(value = { "/updateScheduledActivity/instructor/{scheduledActivityId}/{oldAccountId}/{newAccountId}" })
+    public ScheduledActivityDto updateScheduledActivityInstructor(
+            @PathVariable("scheduledActivityId") int scheduledActivityId,
+            @PathVariable("oldAccountId") int oldAccountId, @PathVariable("newAccountId") int newAccountId)
+            throws IllegalArgumentException {
+        ScheduledActivity scheduledActivity = scheduledActivityService.updateScheduledActivityInstructor(
+                scheduledActivityId,
+                oldAccountId, newAccountId);
+        return convertToDto(scheduledActivity);
+    }
+
+    /**
+     * Update a scheduled activity activity
+     * 
+     * @param scheduledActivityId
+     * @param oldActivityName
+     * @param newActivityName
+     * @return ScheduledActivity
+     */
+    @PutMapping(value = {
+            "/updateScheduledActivity/activity/{scheduledActivityId}/{oldActivityName}/{newActivityName}" })
+    public ScheduledActivityDto updateScheduledActivityActivity(
+            @PathVariable("scheduledActivityId") int scheduledActivityId,
+            @PathVariable("oldActivityName") String oldActivityName,
+            @PathVariable("newActivityName") String newActivityName)
+            throws IllegalArgumentException {
+        ScheduledActivity scheduledActivity = scheduledActivityService.updateScheduledActivityActivity(
+                scheduledActivityId,
+                oldActivityName, newActivityName);
+        return convertToDto(scheduledActivity);
+    }
+
+    /**
+     * Update a scheduled activity capacity
+     * 
+     * @param scheduledActivityId
+     * @param oldCapacity
+     * @param newCapacity
+     * @return ScheduledActivity
+     */
+    @PutMapping(value = { "/updateScheduledActivity/capacity/{scheduledActivityId}/{oldCapacity}/{newCapacity}" })
+    public ScheduledActivityDto updateScheduledActivityCapacity(
+            @PathVariable("scheduledActivityId") int scheduledActivityId,
+            @PathVariable("oldCapacity") int oldCapacity, @PathVariable("newCapacity") int newCapacity)
+            throws IllegalArgumentException {
+        ScheduledActivity scheduledActivity = scheduledActivityService.updateScheduledActivityCapacity(
+                scheduledActivityId,
+                oldCapacity, newCapacity);
         return convertToDto(scheduledActivity);
     }
 
