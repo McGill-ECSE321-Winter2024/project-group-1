@@ -1,22 +1,32 @@
+package ca.mcgill.ecse321.sportcenter.controller;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import ca.mcgill.ecse321.sportcenter.dto.ActivityDto;
+import ca.mcgill.ecse321.sportcenter.model.Activity;
 import ca.mcgill.ecse321.sportcenter.service.ActivityManagementService;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 @RestController
 public class ActivityManagementController {
     @Autowired
     private ActivityManagementService activityManagementService;
 
-    /*
+    /**
      * Create an activity
      * 
      * @param name
-     * 
      * @param description
-     * 
      * @param subcategory
-     * 
      * @return ActivityDto
      */
     @PostMapping(value = { "/createActivity/{name}/{description}/{subcategory}",
@@ -83,7 +93,7 @@ public class ActivityManagementController {
      */
     @GetMapping(value = { "/activities/{isApproved}", "/activities/{isApproved}/" })
     public List<ActivityDto> getActivitiesByIsApproved(@PathVariable("isApproved") boolean isApproved) {
-        List<Activity> activities = activityService.getActivitiesByIsApproved(isApproved);
+        List<Activity> activities = activityManagementService.getActivitiesByIsApproved(isApproved);
         List<ActivityDto> activityDtos = new ArrayList<ActivityDto>();
         for (Activity activity : activities) {
             activityDtos.add(convertToDto(activity));
@@ -91,15 +101,12 @@ public class ActivityManagementController {
         return activityDtos;
     }
 
-    /*
+    /**
      * Update an activity
      * 
      * @param name
-     * 
      * @param description
-     * 
      * @param subcategory
-     * 
      * @return ActivityDto
      */
     @PutMapping(value = { "/activity/update/{name}/{newName}/{newDescription}/{newSubcategory}",
@@ -107,58 +114,71 @@ public class ActivityManagementController {
     public ActivityDto updateActivity(@PathVariable("name") String name, @PathVariable("newName") String newName,
             @PathVariable("newDescription") String newDescription,
             @PathVariable("newSubcategory") Activity.ClassCategory newSubcategory) throws IllegalArgumentException {
-        Activity activity = activityService.updateActivity(name, newName, newDescription, newSubcategory);
+        Activity activity = activityManagementService.updateActivity(name, newName, newDescription, newSubcategory);
         return convertToDto(activity);
     }
 
-    /*
-     * Delete an activity
+    /**
+     * Delete an activity using its name
      * 
      * @param name
      */
     @DeleteMapping(value = { "/activity/delete/{name}", "/activity/delete/{name}/" })
     public void deleteActivity(@PathVariable("name") String name) throws IllegalArgumentException {
-        activityService.deleteActivity(name);
+        activityManagementService.deleteActivity(name);
     }
 
-    /*
+    /**
      * Delete all activities
      */
     @DeleteMapping(value = { "/activities/delete", "/activities/delete/" })
     public void deleteAllActivities() throws IllegalArgumentException {
-        activityService.deleteAllActivities();
+        activityManagementService.deleteAllActivities();
     }
 
-    /*
-     * Activity approval
+    /**
+     * Approve an activity
+     * 
+     * @param name
      */
     @PutMapping(value = { "/activity/approve/{name}", "/activity/approve/{name}/" })
-    public ActivityDto approveActivity(@PathVariable("name") String name) throws IllegalArgumentException {
-        Activity activity = activityService.approveActivity(name);
-        return convertToDto(activity);
+    public void approveActivity(@PathVariable("name") String name) throws IllegalArgumentException {
+        activityManagementService.approveActivity(name);
     }
 
-    /*
-     * Activity disapproval
+    /**
+     * Disapprove an activity
+     * 
+     * @param name
      */
     @PutMapping(value = { "/activity/disapprove/{name}", "/activity/disapprove/{name}/" })
-    public ActivityDto disapproveActivity(@PathVariable("name") String name) throws IllegalArgumentException {
-        Activity activity = activityService.disapproveActivity(name);
-        return convertToDto(activity);
+    public void disapproveActivity(@PathVariable("name") String name) throws IllegalArgumentException {
+        activityManagementService.disapproveActivity(name);
     }
 
-    /*
-     * Convert an activity to a DTO
+    /**
+     * Convert activity to activity dto
+     * 
+     * @param activity
+     * @return ActivityDto
      */
-    public static ActivityManagementDto convertToDto(Activity activity) {
-        return new ActivityManagementDto(activity.getName(), activity.getDescription(), activity.getSubcategory());
+    public static ActivityDto convertToDto(Activity activity) {
+        if (activity == null) {
+            throw new IllegalArgumentException("There is no such activity!");
+        }
+        ActivityDto activityDto = new ActivityDto(activity.getSubCategory(), activity.getName(),
+                activity.getIsApproved(), activity.getDescription());
+        return activityDto;
     }
 
-    /*
-     * Convert a list of activities to a list of DTOs
+    /**
+     * Convert a list of activities to a list of activities dtos
+     * 
+     * @param activities
+     * @return List<ActivityDto>
      */
-    public static List<ActivityManagementDto> convertToDto(List<Activity> activities) {
-        List<ActivityManagementDto> activityDtos = new ArrayList<ActivityManagementDto>();
+    public static List<ActivityDto> convertToDto(List<Activity> activities) {
+        List<ActivityDto> activityDtos = new ArrayList<ActivityDto>();
         for (Activity activity : activities) {
             activityDtos.add(convertToDto(activity));
         }

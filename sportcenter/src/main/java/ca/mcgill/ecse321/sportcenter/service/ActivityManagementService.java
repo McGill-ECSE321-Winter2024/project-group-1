@@ -1,7 +1,5 @@
 package ca.mcgill.ecse321.sportcenter.service;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,8 +10,6 @@ import ca.mcgill.ecse321.sportcenter.dao.InstructorRepository;
 import ca.mcgill.ecse321.sportcenter.dao.OwnerRepository;
 import ca.mcgill.ecse321.sportcenter.model.Activity;
 import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
-import ca.mcgill.ecse321.sportcenter.model.Instructor;
-import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity;
 import jakarta.transaction.Transactional;
 
 /*
@@ -63,7 +59,6 @@ public class ActivityManagementService {
         if (subcategory == null) {
             throw new IllegalArgumentException("Subcategory cannot be empty!");
         }
-
         Activity activity = new Activity();
         activity.setName(name);
         activity.setDescription(description);
@@ -209,8 +204,8 @@ public class ActivityManagementService {
      * @author Anslean AJ
      */
     @Transactional
-    public void proposeActivity(String name, String description, ClassCategory subcategory) {
-        ActivityService activityService = new ActivityService();
+    public Activity proposeActivity(String name, String description, ClassCategory subcategory) {
+        ActivityManagementService activityManagementService = new ActivityManagementService();
 
         try {
             if (name == null || name.trim().isEmpty()) {
@@ -220,7 +215,7 @@ public class ActivityManagementService {
             } else if (subcategory == null) {
                 throw new IllegalArgumentException("Subcategory cannot be empty!");
             }
-            return activityService.createActivity(name, description, subcategory);
+            return activityManagementService.createActivity(name, description, subcategory);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Invalid inputs!");
         }
