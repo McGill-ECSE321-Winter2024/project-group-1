@@ -9,8 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
-<<<<<<< HEAD
+import static org.mockito.Mockito.verify;<<<<<<<HEAD
 import static org.mockito.Mockito.never;
 
 import java.sql.Date;
@@ -20,8 +19,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 
-=======
->>>>>>> 360b3259cedbe841bb5302a89c98f813b7f5a642
+=======>>>>>>>360 b3259cedbe841bb5302a89c98f813b7f5a642
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -44,26 +42,11 @@ import ca.mcgill.ecse321.sportcenter.model.Activity;
 import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
 import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity;
 
-
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
 public class TestInstructorService {
 
-<<<<<<< HEAD
-    //mocking a database thanks to Mockito
-    @Mock private ActivityRepository activityRepository;
-    @Mock private AccountRepository accountRepository;
-    @Mock private OwnerRepository ownerRepository;
-    @Mock private InstructorRepository instructorRepository;
-    @Mock private CustomerRepository customerRepository;
-    @Mock private RegistrationRepository registrationRepository;
-    @Mock private ScheduledActivityRepository scheduledActivityRepository;
-
-    @InjectMocks private InstructorService service;
-    @InjectMocks private ActivityService activityService;
-
-    //CREATE TESTS
-=======
+    <<<<<<<HEAD
     // mocking a database thanks to Mockito
     @Mock
     private ActivityRepository activityRepository;
@@ -82,10 +65,33 @@ public class TestInstructorService {
 
     @InjectMocks
     private InstructorService service;
+    @InjectMocks
+    private ActivityService activityService;
+
+    // CREATE TESTS
+    =======
+    // mocking a database thanks to Mockito
+    @Mock
+    private ActivityRepository activityRepository;
+    @Mock
+    private AccountRepository accountRepository;
+    @Mock
+    private OwnerRepository ownerRepository;
+    @Mock
+    private InstructorRepository instructorRepository;
+    @Mock
+    private CustomerRepository customerRepository;
+    @Mock
+    private RegistrationRepository registrationRepository;
+    @Mock
+    private ScheduledActivityRepository scheduledActivityRepository;
+
+    @InjectMocks
+    private AccountManagementService service;
 
     // First you need to check if your getters are working before creation and
     // deletion.
->>>>>>> 360b3259cedbe841bb5302a89c98f813b7f5a642
+    >>>>>>>360 b3259cedbe841bb5302a89c98f813b7f5a642
 
     @Test
     public void testCreateInstructor() {
@@ -250,9 +256,9 @@ public class TestInstructorService {
 
     }
 
-<<<<<<< HEAD
-    //RETRIEVE TESTING
-    //These tests assume that creation works.
+    <<<<<<<HEAD
+    // RETRIEVE TESTING
+    // These tests assume that creation works.
 
     @Test
     public void testGetInstructorById() {
@@ -299,64 +305,64 @@ public class TestInstructorService {
 
     }
 
-    //REMOVE TESTING
+    // REMOVE TESTING
 
     @Test
     public void testCreateAndDeleteInstructor() {
-    
-    //again we now assume that creating will work now
-    final String username = "Beatrix Kiddo";
-    final String password = "Kill Bill";
-    final String description = "Okinawa Katana Expert";
-    final String image = "image67";
 
-    Instructor instructor = service.createInstructor(username, password, InstructorStatus.Active, description, image);
-    Account account = instructor.getAccount();
-    int instructorID = account.getAccountId();
-    
-    when(instructorRepository.findAccountRoleByAccountRoleId(instructorID))
-        .thenAnswer((InvocationOnMock invocation) -> instructor);
+        // again we now assume that creating will work now
+        final String username = "Beatrix Kiddo";
+        final String password = "Kill Bill";
+        final String description = "Okinawa Katana Expert";
+        final String image = "image67";
 
+        Instructor instructor = service.createInstructor(username, password, InstructorStatus.Active, description,
+                image);
+        Account account = instructor.getAccount();
+        int instructorID = account.getAccountId();
 
-    try {
+        when(instructorRepository.findAccountRoleByAccountRoleId(instructorID))
+                .thenAnswer((InvocationOnMock invocation) -> instructor);
 
-        service.deleteInstructor(instructorID);
+        try {
 
-    } catch (IllegalArgumentException e) {
+            service.deleteInstructor(instructorID);
 
-        fail("IllegalArgumentException not expected here");
+        } catch (IllegalArgumentException e) {
+
+            fail("IllegalArgumentException not expected here");
+
+        }
+
+        verify(instructorRepository, times(0)).save(instructor);
 
     }
- 
-    verify(instructorRepository, times(0)).save(instructor);
-    
-    }
 
-
-    //Test unique methods!
-
+    // Test unique methods!
 
     @Test
     public void testCreateInstructorAndProposeActivity() {
 
-        /* 
-        //again we now assume that creating will work now
-        final String username = "Rocky Balboa";
-        final String password = "iLikeRunning";
-        final String description = "Boxing champion";
-        final String image = "image342";
-
-        Instructor instructor = service.createInstructor(username, password, InstructorStatus.Active, description, image);
-
-        */
+        /*
+         * //again we now assume that creating will work now
+         * final String username = "Rocky Balboa";
+         * final String password = "iLikeRunning";
+         * final String description = "Boxing champion";
+         * final String image = "image342";
+         * 
+         * Instructor instructor = service.createInstructor(username, password,
+         * InstructorStatus.Active, description, image);
+         * 
+         */
 
         final String activityName = "Boxing";
         final String activityDescription = "Insane cardio and martial arts";
         final ClassCategory category = ClassCategory.Cardio;
 
-        Activity activity = new Activity(); //declare a new Activity
+        Activity activity = new Activity(); // declare a new Activity
 
-        when(activityRepository.save(any(Activity.class))).thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
+        when(activityRepository.save(any(Activity.class)))
+                .thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
 
         try {
 
@@ -376,7 +382,6 @@ public class TestInstructorService {
         verify(activityRepository, times(1)).save(activity);
 
     }
-
 
     @Test
     public void testCreateInstructorAndMakeScheduledActivity() {
@@ -432,12 +437,8 @@ public class TestInstructorService {
         verify(scheduledActivityRepository, times(1)).save(scheduledActivity);
     }
 
-
-
-
-    
-=======
+    =======
     // Test unique methods!
 
->>>>>>> 360b3259cedbe841bb5302a89c98f813b7f5a642
+    >>>>>>>360 b3259cedbe841bb5302a89c98f813b7f5a642
 }

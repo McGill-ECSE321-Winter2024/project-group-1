@@ -15,6 +15,7 @@ import java.time.LocalDate;
 
 import org.aspectj.lang.annotation.SuppressAjWarnings;
 import org.checkerframework.checker.units.qual.A;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -52,6 +53,26 @@ public class TestAccountManagementService {
 
     @InjectMocks
     private AccountManagementService accountService;
+
+    @BeforeEach
+    public void setAccount() {
+        Account account = new Account();
+        account.setUsername("Person1");
+        account.setPassword("Password1");
+        accountRepository.save(account);
+
+        Instructor instructor = new Instructor();
+        instructor.setAccount(account);
+        instructorRepository.save(instructor);
+
+        Owner owner = new Owner();
+        owner.setAccount(account);
+        ownerRepository.save(owner);
+
+        Customer customer = new Customer();
+        customer.setAccount(account);
+        customerRepository.save(customer);
+    }
 
     @Test
     public void testCreateAccount() {
@@ -142,71 +163,164 @@ public class TestAccountManagementService {
     }
 
     @Test
-    public void testCreateAccountUsernameExists2() {
-        String username = "username";
-        String password = "password";
-        String error = null;
-        Account account1 = new Account();
-        when(accountRepository.save(any(Account.class))).thenReturn(account1);
-        when(accountRepository.findAccountByUsername(username)).thenReturn(account1);
+    public void testCreateCustomer() {
+        String username = "testUsername";
 
+        // will be returned, if not,
+        // null will be returned
+        when(customerRepository.save(any(Customer.class))).thenAnswer((invocation) -> invocation.getArgument(0));
+        Customer customer = null;
         try {
-            Account createdAccount = accountService.createAccount(username, password);
+            customer = accountService.createCustomer(username);
         } catch (IllegalArgumentException e) {
-            error = e.getMessage();
+            // Check that no error occurred
+            assertEquals("Username cannot be empty!", e.getMessage());
         }
-
-        assertEquals("Username already exists!", error);
-        verify(accountRepository, times(0)).save(account1);
+        // check model in memory
+        assertNotNull(customer);
     }
 
     @Test
-    public void testUpdateAccount(String oldUsername, String username, String password) {
+    public void testCreateCustomerNull() {
+        String username = null;
+        String error = null;
+        Customer customer = null;
+        try {
+            customer = accountService.createCustomer(username);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        // check error
+        assertEquals("Username cannot be empty!", error);
+        // check model in memory
+        assertEquals(null, customer);
+    }
+
+    @Test
+    public void testCreateCustomerEmpty() {
+        String username = "";
+        String error = null;
+        Customer customer = null;
+        try {
+            customer = accountService.createCustomer(username);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        // check error
+        assertEquals("Username cannot be empty!", error);
+        // check model in memory
+        assertEquals(null, customer);
+    }
+
+    @Test
+    public void testCreateCustomerSpaces() {
+        String username = " ";
+        String error = null;
+        Customer customer = null;
+        try {
+            customer = accountService.createCustomer(username);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        // check error
+        assertEquals("Username cannot be empty!", error);
+        // check model in memory
+        assertEquals(null, customer);
+    }
+
+    @Test
+    public void testUpdateAccountUsername(String oldUsername, String username) {
         Account account1 = accountRepository.findAccountByUsername(oldUsername);
-        when(accountRepository.findAccountByUsername(oldUsername)).thenReturn(account1);
+
         when(accountRepository.save(any(Account.class))).thenReturn(account1);
 
-        Account updatedAccount = accountService.updateAccount(oldUsername, username, password);
+        Account updatedAccount = accountService.updateAccountUsername(oldUsername, username);
 
         assertNotNull(updatedAccount);
         assertEquals(username, updatedAccount.getUsername());
-        assertEquals(password, updatedAccount.getPassword());
         verify(accountRepository, times(1)).save(account1);
 
     }
 
     @Test
-    public void testUpdateAccountNull() {
-        String oldUsername = "oldUsername";
+    public void testUpdateAccountPassword(String username, String oldPassword, String newPassword) {
+        Account account1 = accountRepository.findAccountByUsername(username);
+        when(accountRepository.findAccountByUsername(username)).thenReturn(account1);
+        when(accountRepository.save(any(Account.class))).thenReturn(account1);
+
+        Account updatedAccount = accountService.updateAccountPassword(username, oldPassword, newPassword);
+
+        assertNotNull(updatedAccount);
+        assertEquals(newPassword, updatedAccount.getPassword());
+        verify(accountRepository, times(1)).save(account1);
+    }
+
+    @Test
+    public void testUpdateAccountUsernameNull() {
+        String oldUsername = "Person1";
         String username = null;
-        String password = null;
         String error = null;
         Account account1 = accountRepository.findAccountByUsername(oldUsername);
         when(accountRepository.findAccountByUsername(oldUsername)).thenReturn(account1);
         when(accountRepository.save(any(Account.class))).thenReturn(account1);
 
         try {
-            Account updatedAccount = accountService.updateAccount(oldUsername, username, password);
+            Account updatedAccount = accountService.updateAccountUsername(oldUsername, username);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
+
+        assertEquals("Username cannot be empty!", error);
+        verify(accountRepository, times(0)).save(account1);
+    }
+
+    @Test
+    public void testUpdateAccountPasswordNull() {
+        String oldUsername = "Person1";
+        String oldPassword = null;
+
+        String newPassword = null;
+        String error = null;
+        Account account1 = accountRepository.findAccountByUsername(oldUsername);
+        when(accountRepository.findAccountByUsername(oldUsername)).thenReturn(account1);
+        when(accountRepository.save(any(Account.class))).thenReturn(account1);
 
         assertEquals("Username cannot be empty! Password cannot be empty! ", error);
         verify(accountRepository, times(0)).save(account1);
     }
 
     @Test
-    public void testUpdateAccountEmpty() {
-        String oldUsername = "oldUsername";
+    public void testUpdateAccountUsernameEmpty() {
+        String oldUsername = "Person1";
         String username = "";
+        String error = null;
+
+        Account account1 = accountRepository.findAccountByUsername(oldUsername);
+        when(accountRepository.findAccountByUsername(oldUsername)).thenReturn(account1);
+        when(accountRepository.save(any(Account.class))).thenReturn(account1);
+
+        try {
+            Account updatedAccount = accountService.updateAccountUsername(oldUsername, username);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+
+        assertEquals("Username cannot be empty!", error);
+        verify(accountRepository, times(0)).save(account1);
+    }
+
+    @Test
+    public void testUpdateAccountPasswordEmpty() {
+        String oldUsername = "Person1";
         String password = "";
+        String newPassword = "";
         String error = null;
         Account account1 = accountRepository.findAccountByUsername(oldUsername);
         when(accountRepository.findAccountByUsername(oldUsername)).thenReturn(account1);
         when(accountRepository.save(any(Account.class))).thenReturn(account1);
 
         try {
-            Account updatedAccount = accountService.updateAccount(oldUsername, username, password);
+            Account updatedAccount = accountService.updateAccountPassword(oldUsername, password, newPassword);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -216,9 +330,27 @@ public class TestAccountManagementService {
     }
 
     @Test
-    public void testUpdateAccountSpaces() {
-        String oldUsername = "oldUsername";
+    public void testUpdateAccountUsernameSpaces() {
+        String oldUsername = "Person1";
         String username = " ";
+        String error = null;
+        Account account1 = accountRepository.findAccountByUsername(oldUsername);
+        when(accountRepository.findAccountByUsername(oldUsername)).thenReturn(account1);
+        when(accountRepository.save(any(Account.class))).thenReturn(account1);
+
+        try {
+            Account updatedAccount = accountService.updateAccountUsername(oldUsername, username);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+
+        assertEquals("Username cannot be empty! Password cannot be empty! ", error);
+        verify(accountRepository, times(0)).save(account1);
+    }
+
+    @Test
+    public void testUpdateAccountPasswordSpaces() {
+        String oldUsername = "Person1";
         String password = " ";
         String error = null;
         Account account1 = accountRepository.findAccountByUsername(oldUsername);
@@ -226,7 +358,7 @@ public class TestAccountManagementService {
         when(accountRepository.save(any(Account.class))).thenReturn(account1);
 
         try {
-            Account updatedAccount = accountService.updateAccount(oldUsername, username, password);
+            Account updatedAccount = accountService.updateAccountPassword(oldUsername, password, password);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -238,8 +370,7 @@ public class TestAccountManagementService {
     @Test
     public void testUpdateAccountUsernameExists() {
         String oldUsername = "oldUsername";
-        String username = "username";
-        String password = "password";
+        String username = "Person1";
         String error = null;
         Account account1 = accountRepository.findAccountByUsername(oldUsername);
         when(accountRepository.findAccountByUsername(oldUsername)).thenReturn(account1);
@@ -247,7 +378,7 @@ public class TestAccountManagementService {
         when(accountRepository.findAccountByUsername(username)).thenReturn(account1);
 
         try {
-            Account updatedAccount = accountService.updateAccount(oldUsername, username, password);
+            Account updatedAccount = accountService.updateAccountUsername(oldUsername, username);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -322,72 +453,6 @@ public class TestAccountManagementService {
 
         assertNotNull(accounts);
         assertEquals(2, accounts.size());
-    }
-
-    @Test
-    public void testCreateCustomer() {
-        String username = "testUsername";
-        when(accountRepository.findAccountByUsername(username)).thenReturn(new Account());// if account exists, then it
-                                                                                          // will be returned, if not,
-                                                                                          // null will be returned
-        when(customerRepository.save(any(Customer.class))).thenAnswer((invocation) -> invocation.getArgument(0));
-        Customer customer = null;
-        try {
-            customer = accountService.createCustomer(username);
-        } catch (IllegalArgumentException e) {
-            // Check that no error occurred
-            assertEquals("Username cannot be empty!", e.getMessage());
-        }
-        // check model in memory
-        assertNotNull(customer);
-    }
-
-    @Test
-    public void testCreateCustomerNull() {
-        String username = null;
-        String error = null;
-        Customer customer = null;
-        try {
-            customer = accountService.createCustomer(username);
-        } catch (IllegalArgumentException e) {
-            error = e.getMessage();
-        }
-        // check error
-        assertEquals("Username cannot be empty!", error);
-        // check model in memory
-        assertEquals(null, customer);
-    }
-
-    @Test
-    public void testCreateCustomerEmpty() {
-        String username = "";
-        String error = null;
-        Customer customer = null;
-        try {
-            customer = accountService.createCustomer(username);
-        } catch (IllegalArgumentException e) {
-            error = e.getMessage();
-        }
-        // check error
-        assertEquals("Username cannot be empty!", error);
-        // check model in memory
-        assertEquals(null, customer);
-    }
-
-    @Test
-    public void testCreateCustomerSpaces() {
-        String username = " ";
-        String error = null;
-        Customer customer = null;
-        try {
-            customer = accountService.createCustomer(username);
-        } catch (IllegalArgumentException e) {
-            error = e.getMessage();
-        }
-        // check error
-        assertEquals("Username cannot be empty!", error);
-        // check model in memory
-        assertEquals(null, customer);
     }
 
     @Test
@@ -617,37 +682,59 @@ public class TestAccountManagementService {
             error = e.getMessage();
         }
         // check error
-        assertEquals("AccountRoleId cannot be negative!", error);
+        assertEquals("AccountRoleId cannot be negative!", error); // TODO: Modify the message
         assertEquals(null, owner);
     }
 
-    // TODO 2 - checkAccountOwner
     @Test
-    public void testCheckAccountOwner() {
-        int id = 1;
-        // ownerRepository.Owner o = new Owner();
-        when(ownerRepository.findAccountRoleByAccountRoleId(id)).thenReturn(new Owner());
-        assertTrue(accountService.checkAccountOwner(id));
-    }
+    public void testGetOwnerByAccountRoleIdDoesNotExist() {
+        int accountRoleId = 1;
+        when(ownerRepository.findAccountRoleByAccountRoleId(accountRoleId)).thenReturn(null);
+        String error = null;
+        Owner owner = null;
 
-    @Test
-    public void testCheckAccountOwnerNegative() {
-        int id = -1;
-        when(ownerRepository.findAccountRoleByAccountRoleId(id)).thenReturn(new Owner());
-        assertTrue(accountService.checkAccountOwner(id));
-    }
-
-    @Test
-    public void testCheckAccountOwnerZero() {
-        int id = 0;
-        when(ownerRepository.findAccountRoleByAccountRoleId(id)).thenReturn(new Owner());
-        assertTrue(accountService.checkAccountOwner(id));
-    }
-
-    @Test
-    public void testCheckAccountOwnerDoesNotExist() {
-        int id = 1;
-        when(ownerRepository.findAccountRoleByAccountRoleId(id)).thenReturn(null);
-        assertFalse(accountService.checkAccountOwner(id));
+        try {
+            owner = accountService.getOwnerByAccountRoleId(accountRoleId);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        // check error
+        assertEquals("Owner does not exist!", error); // TODO: Modify the message
+        assertEquals(null, owner);
+    
     }
 }
+//
+
+// TODO 2 - checkAccountOwner
+// @Test
+// public void testCheckAccountOwner() {
+// int id = 1;
+// // ownerRepository.Owner o = new Owner();
+// when(ownerRepository.findAccountRoleByAccountRoleId(id)).thenReturn(new
+// Owner());
+// assertTrue(accountService.checkAccountOwner(id));
+// }
+
+// @Test
+// public void testCheckAccountOwnerNegative() {
+// int id = -1;
+// when(ownerRepository.findAccountRoleByAccountRoleId(id)).thenReturn(new
+// Owner());
+// assertTrue(accountService.checkAccountOwner(id));
+// }
+
+// @Test
+// public void testCheckAccountOwnerZero() {
+// int id = 0;
+// when(ownerRepository.findAccountRoleByAccountRoleId(id)).thenReturn(new
+// Owner());
+// assertTrue(accountService.checkAccountOwner(id));
+// }
+
+// @Test
+// public void testCheckAccountOwnerDoesNotExist() {
+// int id = 1;
+// when(ownerRepository.findAccountRoleByAccountRoleId(id)).thenReturn(null);
+// assertFalse(accountService.checkAccountOwner(id));
+// }
