@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ca.mcgill.ecse321.sportcenter.model.Instructor;
 import ca.mcgill.ecse321.sportcenter.model.Activity;
+import ca.mcgill.ecse321.sportcenter.model.Customer;
 
 import ca.mcgill.ecse321.sportcenter.dao.ScheduledActivityRepository;
 import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity;
@@ -105,7 +106,7 @@ public class ScheduledActivityService {
     }
 
     /**
-     * Get an activity by its Id (primary key)
+     * Get a scheduled activity by its Id (primary key)
      * 
      * @param scheduledActivityId
      * 
@@ -144,6 +145,51 @@ public class ScheduledActivityService {
     public List<ScheduledActivity> getAllScheduledActivities() {
         return toList(scheduledActivityRepository.findAll());
     }
+
+    /**
+     * 
+     * @param scheduledActivity
+     * @return
+     */
+    @Transactional
+    public Instructor getScheduledActivityInstructor(ScheduledActivity scheduledActivity) {
+        if (scheduledActivity == null) {
+            throw new IllegalArgumentException("Scheduled activity cannot be empty!");
+        }
+        return scheduledActivity.getSupervisor();
+    }
+
+    /**
+     * 
+     * @param instructor
+     * @return
+     */
+    @Transactional
+    public List<ScheduledActivity> getAllScheduledActivitiesOfInstructor(Instructor instructor) {
+        if (instructor == null) {
+            throw new IllegalArgumentException("Instructor cannot be empty!");
+        }
+        List<ScheduledActivity> instructorList = new ArrayList<ScheduledActivity>();
+        for (ScheduledActivity scheduledActivity : getAllScheduledActivities()) {
+
+            if (instructor == scheduledActivity.getSupervisor()) {
+                instructorList.add(scheduledActivity);
+            }
+        }
+        return instructorList;
+    }
+
+    /**
+     * 
+     * @param scheduledActivity
+     * @return
+     */
+    @Transactional
+    public Activity getScheduledActivityActivity(ScheduledActivity scheduledActivity) {
+        return scheduledActivity.getActivity();
+    }
+
+    //////////////////////////////////////////////////////////////////////////// List<Customer>
 
     /**
      * Update a scheduled activity
