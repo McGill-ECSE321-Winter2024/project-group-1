@@ -11,6 +11,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -38,77 +40,110 @@ public class TestScheduledActivityService {
 
     @InjectMocks
     private ScheduledActivityService scheduledActivityService;
-    // private AccountService accountService;
-    // private InstructorService instructorService;
-    // private ActivityService activityService;
 
-    private int instructorId;
-    private Instructor instructor;
-    private Instructor newInstructor;
+    private int oldAccountRoleId = 1;
+    private int newAccountRoleId = 2;
 
-    private String activityName;
-    private Activity activity;
-    private Activity newActivity;
+    private String oldActivityName;
+    private String newActivityName;
 
     @BeforeEach
     public void setInstructorAndActivity() {
-        Account account = new Account();
-        account.setUsername("Person1");
-        account.setPassword("Password1");
-        accountRepository.save(account);
+        Account oldAccount = new Account();
+        oldAccount.setUsername("Person1");
+        oldAccount.setPassword("Password1");
+        accountRepository.save(oldAccount);
 
-        instructor = new Instructor();
-        instructor.setAccount(account);
-        instructorRepository.save(instructor);
+        Account newAccount = new Account();
+        newAccount.setUsername("Person2");
+        newAccount.setPassword("Password2");
+        accountRepository.save(newAccount);
 
-        instructorId = instructor.getAccountRoleId();
-        instructor = instructorRepository.findAccountRoleByAccountRoleId(instructorId);
+        Instructor oldInstructor = instructorRepository.findAccountRoleByAccountRoleId(oldAccountRoleId);
+        oldInstructor.setAccount(oldAccount);
+        instructorRepository.save(oldInstructor);
 
-        activity = new Activity();
-        activity.setName("Cardio1");
-        activity.setDescription("Cardio2");
-        ClassCategory subcategory = ClassCategory.Cardio;
-        activity.setSubCategory(subcategory);
-        activityRepository.save(activity);
-        activityName = activity.getName();
-        activity = activityRepository.findActivityByName(activityName);
+        Instructor newInstructor = instructorRepository.findAccountRoleByAccountRoleId(newAccountRoleId);
+        newInstructor.setAccount(newAccount);
+        instructorRepository.save(newInstructor);
+
+        Activity oldActivity = new Activity();
+        oldActivity.setName("Cardio1");
+        oldActivity.setDescription("Cardio2");
+        ClassCategory oldSubcategory = ClassCategory.Cardio;
+        oldActivity.setSubCategory(oldSubcategory);
+        activityRepository.save(oldActivity);
+
+        Activity newActivity = new Activity();
+        newActivity.setName("Cardio2");
+        newActivity.setDescription("Cardio3");
+        ClassCategory newSubcategory = ClassCategory.Strength;
+        newActivity.setSubCategory(newSubcategory);
+        activityRepository.save(newActivity);
     }
 
+    /**
+     * Deletes all the data after each test
+     */
+    @AfterEach
+    public void clearDatabase() {
+        scheduledActivityRepository.deleteAll();
+        accountRepository.deleteAll();
+        instructorRepository.deleteAll();
+        activityRepository.deleteAll();
+    }
+
+    /**
+     * Test for creating a scheduled activity
+     * 
+     * @result A new scheduled activity is created
+     */
     @Test
     public void testCreateScheduledActivity() {
-        // int scheduledActivityId = 1;
+
         LocalDate date = LocalDate.of(2024, 3, 19);
         LocalTime startTime = LocalTime.of(10, 0, 0);
         LocalTime endTime = LocalTime.of(12, 0, 0);
         int capacity = 10;
 
+        int scheduledActivityId = 1;
+
+        int oldAccountRoleId = scheduledActivityRepository
+                .findScheduledActivityByScheduledActivityId(scheduledActivityId)
+                .getSupervisor().getAccountRoleId();
+        String oldActivityName = scheduledActivityRepository
+                .findScheduledActivityByScheduledActivityId(scheduledActivityId)
+                .getActivity().getName();
+
         when(scheduledActivityRepository.save(any(ScheduledActivity.class))).thenAnswer((invocation) -> {
             ScheduledActivity scheduledActivity = new ScheduledActivity();
-            // scheduledActivity.setScheduledActivityId(scheduledActivityId);
             scheduledActivity.setDate(date);
             scheduledActivity.setStartTime(startTime);
             scheduledActivity.setEndTime(endTime);
-            scheduledActivity.setSupervisor(instructor);
-            scheduledActivity.setActivity(activity);
+            scheduledActivity.setSupervisor(instructorRepository.findAccountRoleByAccountRoleId(oldAccountRoleId));
+            scheduledActivity.setActivity(activityRepository.findActivityByName(oldActivityName));
             scheduledActivity.setCapacity(capacity);
             return scheduledActivity;
         });
 
         ScheduledActivity createdScheduledActivity = scheduledActivityService.createScheduledActivity(date, startTime,
-                endTime, instructor, activity, capacity);
+                endTime, oldAccountRoleId, oldActivityName, capacity);
         verify(scheduledActivityRepository, times(1)).save(any(ScheduledActivity.class));
 
         assertNotNull(createdScheduledActivity);
-        // assertEquals(scheduledActivityId,
-        // createdScheduledActivity.getScheduledActivityId());
         assertEquals(date, createdScheduledActivity.getDate());
         assertEquals(startTime, createdScheduledActivity.getStartTime());
         assertEquals(endTime, createdScheduledActivity.getEndTime());
-        assertEquals(instructor, createdScheduledActivity.getSupervisor());
-        assertEquals(activity, createdScheduledActivity.getActivity());
+        assertEquals(oldAccountRoleId, createdScheduledActivity.getSupervisor().getAccountRoleId());
+        assertEquals(oldActivityName, createdScheduledActivity.getActivity().getName());
         assertEquals(capacity, createdScheduledActivity.getCapacity());
     }
 
+    /**
+     * Test for creating a scheduled activity with a null date
+     * 
+     * @result An exception is thrown
+     */
     @Test
     public void testCreateScheduledActivityNullDate() {
         LocalDate date = null;
@@ -116,12 +151,19 @@ public class TestScheduledActivityService {
         LocalTime endTime = LocalTime.of(12, 0, 0);
         int capacity = 10;
 
+        int scheduledActivityId = 1;
+
+        int oldAccountRoleId = scheduledActivityRepository
+                .findScheduledActivityByScheduledActivityId(scheduledActivityId)
+                .getSupervisor().getAccountRoleId();
+        String oldActivityName = scheduledActivityRepository
+                .findScheduledActivityByScheduledActivityId(scheduledActivityId)
+                .getActivity().getName();
+
         String error = null;
-        // when(activityService.(instructorId)).thenReturn(true);//this checks if the
-        // instructor exists, if not, it will return false which will throw an exception
         try {
             ScheduledActivity createdScheduledActivity = scheduledActivityService.createScheduledActivity(date,
-                    startTime, endTime, instructor, activity, capacity);
+                    startTime, endTime, oldAccountRoleId, oldActivityName, capacity);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -135,15 +177,20 @@ public class TestScheduledActivityService {
         LocalTime startTime = null;
         LocalTime endTime = LocalTime.of(12, 0, 0);
         int capacity = 10;
-        // Instructor instructor = ; //How to initialize the variable.
-        // Activity activity = ; //How to initialize the variable
+
+        int scheduledActivityId = 1;
+
+        int oldAccountRoleId = scheduledActivityRepository
+                .findScheduledActivityByScheduledActivityId(scheduledActivityId)
+                .getSupervisor().getAccountRoleId();
+        String oldActivityName = scheduledActivityRepository
+                .findScheduledActivityByScheduledActivityId(scheduledActivityId)
+                .getActivity().getName();
 
         String error = null;
-        // when(activityService.(instructorId)).thenReturn(true);//this checks if the
-        // instructor exists, if not, it will return false which will throw an exception
         try {
             ScheduledActivity createdScheduledActivity = scheduledActivityService.createScheduledActivity(date,
-                    startTime, endTime, instructor, activity, capacity);
+                    startTime, endTime, oldAccountRoleId, oldActivityName, capacity);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -157,15 +204,22 @@ public class TestScheduledActivityService {
         LocalTime startTime = LocalTime.of(10, 0, 0);
         LocalTime endTime = null;
         int capacity = 10;
-        // Instructor instructor = ; //How to initialize the variable.
-        // Activity activity = ; //How to initialize the variable
+
+        int scheduledActivityId = 1;
+
+        int oldAccountRoleId = scheduledActivityRepository
+                .findScheduledActivityByScheduledActivityId(scheduledActivityId)
+                .getSupervisor().getAccountRoleId();
+        String oldActivityName = scheduledActivityRepository
+                .findScheduledActivityByScheduledActivityId(scheduledActivityId)
+                .getActivity().getName();
 
         String error = null;
         // when(activityService.(instructorId)).thenReturn(true);//this checks if the
         // instructor exists, if not, it will return false which will throw an exception
         try {
             ScheduledActivity createdScheduledActivity = scheduledActivityService.createScheduledActivity(date,
-                    startTime, endTime, instructor, activity, capacity);
+                    startTime, endTime, oldAccountRoleId, oldActivityName, capacity);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -175,20 +229,17 @@ public class TestScheduledActivityService {
 
     @Test
     public void testCreateScheduledActivityNullInstructor() {
-        int scheduledActivityId = 1;
         LocalDate date = LocalDate.of(2024, 3, 19);
         LocalTime startTime = LocalTime.of(10, 0, 0);
         LocalTime endTime = LocalTime.of(12, 0, 0);
-        Instructor instructor = null; // How to initialize the variable.
         int capacity = 10;
-        // Activity activity = ; //How to initialize the variable
+
+        int oldAccountRoleId = -1;
 
         String error = null;
-        // when(activityService.(instructorId)).thenReturn(true);//this checks if the
-        // instructor exists, if not, it will return false which will throw an exception
         try {
             ScheduledActivity createdScheduledActivity = scheduledActivityService.createScheduledActivity(date,
-                    startTime, endTime, instructor, activity, capacity);
+                    startTime, endTime, oldAccountRoleId, oldActivityName, capacity);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -196,6 +247,11 @@ public class TestScheduledActivityService {
         assertEquals("Instructor cannot be empty!", error);
     }
 
+    /**
+     * Test for creating a scheduled activity with a null activity
+     * 
+     * @result An exception is thrown
+     */
     @Test
     public void testCreateScheduledActivityNullActivity() {
         int scheduledActivityId = 1;
@@ -203,15 +259,17 @@ public class TestScheduledActivityService {
         LocalTime startTime = LocalTime.of(10, 0, 0);
         LocalTime endTime = LocalTime.of(12, 0, 0);
         int capacity = 10;
-        // Instructor instructor = null; //How to initialize the variable.
-        Activity activity = null; // How to initialize the variable
+
+        int oldAccountRoleId = scheduledActivityRepository
+                .findScheduledActivityByScheduledActivityId(scheduledActivityId)
+                .getSupervisor().getAccountRoleId();
+
+        String oldActivityName = null;
 
         String error = null;
-        // when(activityService.(instructorId)).thenReturn(true);//this checks if the
-        // instructor exists, if not, it will return false which will throw an exception
         try {
             ScheduledActivity createdScheduledActivity = scheduledActivityService.createScheduledActivity(date,
-                    startTime, endTime, instructor, activity, capacity);
+                    startTime, endTime, oldAccountRoleId, oldActivityName, capacity);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -226,15 +284,18 @@ public class TestScheduledActivityService {
         LocalTime startTime = LocalTime.of(12, 0, 0);
         LocalTime endTime = LocalTime.of(10, 0, 0);
         int capacity = 10;
-        // Instructor instructor = null; //How to initialize the variable.
-        // Activity activity = null; //How to initialize the variable
+
+        int oldAccountRoleId = scheduledActivityRepository
+                .findScheduledActivityByScheduledActivityId(scheduledActivityId)
+                .getSupervisor().getAccountRoleId();
+        String oldActivityName = scheduledActivityRepository
+                .findScheduledActivityByScheduledActivityId(scheduledActivityId)
+                .getActivity().getName();
 
         String error = null;
-        // when(activityService.(instructorId)).thenReturn(true);//this checks if the
-        // instructor exists, if not, it will return false which will throw an exception
         try {
             ScheduledActivity createdScheduledActivity = scheduledActivityService.createScheduledActivity(date,
-                    startTime, endTime, instructor, activity, capacity);
+                    startTime, endTime, oldAccountRoleId, oldActivityName, capacity);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -243,112 +304,78 @@ public class TestScheduledActivityService {
     }
 
     @Test
-    public void testUpdateScheduledActivity() {
-        int scheduledActivityId = 1;
+    public void testUpdateScheduledActivityDateAndTime() {
         LocalDate newDate = LocalDate.of(2025, 3, 19);
         LocalTime newStartTime = LocalTime.of(10, 0, 0);
         LocalTime newEndTime = LocalTime.of(12, 0, 0);
-        int newCapacity = 20;
+        // int newCapacity = 20;
 
-        // #region Creating new instructor and activity
+        int oldScheduledActivityId = 1;
 
-        Account newAccount = new Account();
-        newAccount.setUsername("Person2");
-        newAccount.setPassword("Password3");
-        accountRepository.save(newAccount);
+        LocalDate oldDate = scheduledActivityRepository
+                .findScheduledActivityByScheduledActivityId(oldScheduledActivityId)
+                .getDate();
+        LocalTime oldStartTime = scheduledActivityRepository
+                .findScheduledActivityByScheduledActivityId(oldScheduledActivityId)
+                .getStartTime();
+        LocalTime oldEndTime = scheduledActivityRepository
+                .findScheduledActivityByScheduledActivityId(oldScheduledActivityId)
+                .getEndTime();
 
-        newInstructor = new Instructor();
-        newInstructor.setAccount(newAccount);
-
-        int newInstructorId;
-        newInstructorId = newInstructor.getAccountRoleId();
-        instructorRepository.save(newInstructor);
-        newInstructor = instructorRepository.findAccountRoleByAccountRoleId(newInstructorId);
-
-        newActivity = new Activity(); // How to initialize the variable
-        newActivity.setName("Cardio2");
-        newActivity.setDescription("Cardio3");
-        ClassCategory subcategory = ClassCategory.Strength;
-        newActivity.setSubCategory(subcategory);
-        activityRepository.save(newActivity);
-        String newActivityName;
-        newActivityName = newActivity.getName();
-        newActivity = activityRepository.findActivityByName(newActivityName);
-
-        // #endregion
-
-        when(scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId))
+        when(scheduledActivityRepository.findScheduledActivityByScheduledActivityId(oldScheduledActivityId))
                 .thenReturn(null);// this checks if the activity already exists, and if it does, it will return
                                   // null
-        // when(scheduledActivityRepository(instructorId)).thenReturn(true);//this
-        // checks if the instructor exists, if not, it will return false which will
-        // throw an exception
+
         when(scheduledActivityRepository.save(any(ScheduledActivity.class))).thenAnswer((invocation) -> {
             ScheduledActivity scheduledActivity = new ScheduledActivity();
-            scheduledActivity.setScheduledActivityId(scheduledActivityId);
             scheduledActivity.setDate(newDate);
             scheduledActivity.setStartTime(newStartTime);
             scheduledActivity.setEndTime(newEndTime);
-            scheduledActivity.setSupervisor(newInstructor);
-            scheduledActivity.setActivity(newActivity);
+            scheduledActivity.setSupervisor(instructorRepository.findAccountRoleByAccountRoleId(newAccountRoleId));
+            scheduledActivity.setActivity(activityRepository.findActivityByName(newActivityName));
             return scheduledActivity;
         });
 
-        ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivity(
-                scheduledActivityId, newDate, newStartTime, newEndTime, newInstructor, newActivity, newCapacity);
+        ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivityByDateAndTime(
+                oldScheduledActivityId, newDate, oldDate, newStartTime, oldStartTime, newEndTime, oldEndTime);
         verify(scheduledActivityRepository, times(1)).save(any(ScheduledActivity.class));
 
         assertNotNull(updatedScheduledActivity);
-        assertEquals(scheduledActivityId, updatedScheduledActivity.getScheduledActivityId());
         assertEquals(newDate, updatedScheduledActivity.getDate());
         assertEquals(newStartTime, updatedScheduledActivity.getStartTime());
         assertEquals(newEndTime, updatedScheduledActivity.getEndTime());
-        assertEquals(newInstructor, updatedScheduledActivity.getSupervisor());
-        assertEquals(newActivity, updatedScheduledActivity.getActivity());
     }
 
     @Test
-    public void testUpdateScheduledActivityNullDate() {
-        int scheduledActivityId = 1;
-        LocalDate newDate = null;
-        LocalTime newStartTime = LocalTime.of(10, 0, 0);
-        LocalTime newEndTime = LocalTime.of(12, 0, 0);
-        int newCapacity = 20;
+    public void testUpdateScheduledActivityInstructor() {
+        int oldScheduledActivityId = 1;
+        int newScheduledActivityId = 2;
 
-        // #region Creating new instructor and activity
+        int oldAccountRoleId = scheduledActivityRepository
+                .findScheduledActivityByScheduledActivityId(oldScheduledActivityId)
+                .getSupervisor().getAccountRoleId();
 
-        Account newAccount = new Account();
-        newAccount.setUsername("Person2");
-        newAccount.setPassword("Password3");
-        accountRepository.save(newAccount);
+        int newAccountRoleId = scheduledActivityRepository
+                .findScheduledActivityByScheduledActivityId(newScheduledActivityId)
+                .getSupervisor().getAccountRoleId();
 
-        newInstructor = new Instructor();
-        newInstructor.setAccount(newAccount);
+        when(scheduledActivityRepository.findScheduledActivityByScheduledActivityId(oldScheduledActivityId))
+                .thenReturn(null);// this checks if the activity already exists, and if it does, it will return
+                                  // null
 
-        int newInstructorId;
-        newInstructorId = newInstructor.getAccountRoleId();
-        instructorRepository.save(newInstructor);
-        newInstructor = instructorRepository.findAccountRoleByAccountRoleId(newInstructorId);
+        when(scheduledActivityRepository.save(any(ScheduledActivity.class))).thenAnswer((invocation) -> {
+            ScheduledActivity scheduledActivity = new ScheduledActivity();
+            scheduledActivity.setSupervisor(instructorRepository.findAccountRoleByAccountRoleId(newAccountRoleId));
+            return scheduledActivity;
+        });
 
-        newActivity = new Activity(); // How to initialize the variable
-        newActivity.setName("Cardio2");
-        newActivity.setDescription("Cardio3");
-        ClassCategory subcategory = ClassCategory.Strength;
-        newActivity.setSubCategory(subcategory);
-        activityRepository.save(newActivity);
-        String newActivityName;
-        newActivityName = newActivity.getName();
-        newActivity = activityRepository.findActivityByName(newActivityName);
-
-        // #endregion
+        when(scheduledActivityRepository.findScheduledActivityByScheduledActivityId(oldScheduledActivityId))
+                .thenReturn(new ScheduledActivity());
 
         String error = null;
-        // when(scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId)).thenReturn(null);
-        // when(activityService.(instructorId)).thenReturn(true);//this checks if the
-        // instructor exists, if not, it will return false which will throw an exception
         try {
-            ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivity(
-                    scheduledActivityId, newDate, newStartTime, newEndTime, newInstructor, newActivity, newCapacity);
+            ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivityInstructor(
+                    oldScheduledActivityId, newAccountRoleId, oldAccountRoleId);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -364,39 +391,19 @@ public class TestScheduledActivityService {
         LocalTime newEndTime = LocalTime.of(12, 0, 0);
         int newCapacity = 20;
 
-        // #region Creating new instructor and activity
-
-        Account newAccount = new Account();
-        newAccount.setUsername("Person2");
-        newAccount.setPassword("Password3");
-        accountRepository.save(newAccount);
-
-        newInstructor = new Instructor();
-        newInstructor.setAccount(newAccount);
-
-        int newInstructorId;
-        newInstructorId = newInstructor.getAccountRoleId();
-        instructorRepository.save(newInstructor);
-        newInstructor = instructorRepository.findAccountRoleByAccountRoleId(newInstructorId);
-
-        newActivity = new Activity(); // How to initialize the variable
-        newActivity.setName("Cardio2");
-        newActivity.setDescription("Cardio3");
-        ClassCategory subcategory = ClassCategory.Strength;
-        newActivity.setSubCategory(subcategory);
-        activityRepository.save(newActivity);
-        String newActivityName;
-        newActivityName = newActivity.getName();
-        newActivity = activityRepository.findActivityByName(newActivityName);
-
-        // #endregion
+        LocalDate oldDate = scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId)
+                .getDate();
+        LocalTime oldStartTime = scheduledActivityRepository
+                .findScheduledActivityByScheduledActivityId(scheduledActivityId)
+                .getStartTime();
+        LocalTime oldEndTime = scheduledActivityRepository
+                .findScheduledActivityByScheduledActivityId(scheduledActivityId)
+                .getEndTime();
 
         String error = null;
-        // when(activityService.(instructorId)).thenReturn(true);//this checks if the
-        // instructor exists, if not, it will return false which will throw an exception
         try {
-            ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivity(
-                    scheduledActivityId, newDate, newStartTime, newEndTime, newInstructor, newActivity, newCapacity);
+            ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivityByDateAndTime(
+                    scheduledActivityId, newDate, oldDate, newStartTime, oldStartTime, newEndTime, oldEndTime);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -411,39 +418,20 @@ public class TestScheduledActivityService {
         LocalTime newStartTime = null;
         LocalTime newEndTime = LocalTime.of(12, 0, 0);
         int newCapacity = 20;
-        // #region Creating new instructor and activity
 
-        Account newAccount = new Account();
-        newAccount.setUsername("Person2");
-        newAccount.setPassword("Password3");
-        accountRepository.save(newAccount);
-
-        newInstructor = new Instructor();
-        newInstructor.setAccount(newAccount);
-
-        int newInstructorId;
-        newInstructorId = newInstructor.getAccountRoleId();
-        instructorRepository.save(newInstructor);
-        newInstructor = instructorRepository.findAccountRoleByAccountRoleId(newInstructorId);
-
-        newActivity = new Activity(); // How to initialize the variable
-        newActivity.setName("Cardio2");
-        newActivity.setDescription("Cardio3");
-        ClassCategory subcategory = ClassCategory.Strength;
-        newActivity.setSubCategory(subcategory);
-        activityRepository.save(newActivity);
-        String newActivityName;
-        newActivityName = newActivity.getName();
-        newActivity = activityRepository.findActivityByName(newActivityName);
-
-        // #endregion
+        LocalDate oldDate = scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId)
+                .getDate();
+        LocalTime oldStartTime = scheduledActivityRepository
+                .findScheduledActivityByScheduledActivityId(scheduledActivityId)
+                .getStartTime();
+        LocalTime oldEndTime = scheduledActivityRepository
+                .findScheduledActivityByScheduledActivityId(scheduledActivityId)
+                .getEndTime();
 
         String error = null;
-        // when(activityService.(instructorId)).thenReturn(true);//this checks if the
-        // instructor exists, if not, it will return false which will throw an exception
         try {
-            ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivity(
-                    scheduledActivityId, newDate, newStartTime, newEndTime, newInstructor, newActivity, newCapacity);
+            ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivityByDateAndTime(
+                    scheduledActivityId, newDate, oldDate, newStartTime, oldStartTime, newEndTime, oldEndTime);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -457,40 +445,20 @@ public class TestScheduledActivityService {
         LocalDate newDate = LocalDate.of(2025, 3, 19);
         LocalTime newStartTime = LocalTime.of(10, 0, 0);
         LocalTime newEndTime = null;
-        int newCapacity = 20;
-        // #region Creating new instructor and activity
 
-        Account newAccount = new Account();
-        newAccount.setUsername("Person2");
-        newAccount.setPassword("Password3");
-        accountRepository.save(newAccount);
-
-        newInstructor = new Instructor();
-        newInstructor.setAccount(newAccount);
-
-        int newInstructorId;
-        newInstructorId = newInstructor.getAccountRoleId();
-        instructorRepository.save(newInstructor);
-        newInstructor = instructorRepository.findAccountRoleByAccountRoleId(newInstructorId);
-
-        newActivity = new Activity(); // How to initialize the variable
-        newActivity.setName("Cardio2");
-        newActivity.setDescription("Cardio3");
-        ClassCategory subcategory = ClassCategory.Strength;
-        newActivity.setSubCategory(subcategory);
-        activityRepository.save(newActivity);
-        String newActivityName;
-        newActivityName = newActivity.getName();
-        newActivity = activityRepository.findActivityByName(newActivityName);
-
-        // #endregion
+        LocalDate oldDate = scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId)
+                .getDate();
+        LocalTime oldStartTime = scheduledActivityRepository
+                .findScheduledActivityByScheduledActivityId(scheduledActivityId)
+                .getStartTime();
+        LocalTime oldEndTime = scheduledActivityRepository
+                .findScheduledActivityByScheduledActivityId(scheduledActivityId)
+                .getEndTime();
 
         String error = null;
-        // when(activityService.(instructorId)).thenReturn(true);//this checks if the
-        // instructor exists, if not, it will return false which will throw an exception
         try {
-            ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivity(
-                    scheduledActivityId, newDate, newStartTime, newEndTime, newInstructor, newActivity, newCapacity);
+            ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivityByDateAndTime(
+                    scheduledActivityId, newDate, oldDate, newStartTime, oldStartTime, newEndTime, oldEndTime);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -500,48 +468,22 @@ public class TestScheduledActivityService {
 
     @Test
     public void testUpdateScheduledActivityNullInstructor() {
-        int scheduledActivityId = 1;
-        LocalDate newDate = LocalDate.of(2025, 3, 19);
-        LocalTime newStartTime = LocalTime.of(10, 0, 0);
-        LocalTime newEndTime = LocalTime.of(12, 0, 0);
-        Instructor newInstructor = null; // How to initialize the variable.
-        int newCapacity = 20;
-        // #region Creating new instructor and activity
+        int oldScheduledActivityId = 1;
+        int newScheduledActivityId = 2;
 
-        /*
-         * Account newAccount = new Account();
-         * newAccount.setUsername("Person2");
-         * newAccount.setPassword("Password3");
-         * accountRepository.save(newAccount);
-         * 
-         * newInstructor = new Instructor();
-         * newInstructor.setAccount(newAccount);
-         * 
-         * int newInstructorId;
-         * newInstructorId = newInstructor.getAccountRoleId();
-         * instructorRepository.save(newInstructor);
-         * newInstructor =
-         * instructorRepository.findAccountRoleByAccountRoleId(newInstructorId);
-         * 
-         */
-        newActivity = new Activity(); // How to initialize the variable
-        newActivity.setName("Cardio2");
-        newActivity.setDescription("Cardio3");
-        ClassCategory subcategory = ClassCategory.Strength;
-        newActivity.setSubCategory(subcategory);
-        activityRepository.save(newActivity);
-        String newActivityName;
-        newActivityName = newActivity.getName();
-        newActivity = activityRepository.findActivityByName(newActivityName);
-
-        // #endregion
+        int oldAccountRoleId = scheduledActivityRepository
+                .findScheduledActivityByScheduledActivityId(oldScheduledActivityId)
+                .getSupervisor().getAccountRoleId();
+        int newAccountRoleId = scheduledActivityRepository
+                .findScheduledActivityByScheduledActivityId(newScheduledActivityId)
+                .getSupervisor().getAccountRoleId();
 
         String error = null;
         // when(activityService.(instructorId)).thenReturn(true);//this checks if the
         // instructor exists, if not, it will return false which will throw an exception
         try {
-            ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivity(
-                    scheduledActivityId, newDate, newStartTime, newEndTime, newInstructor, newActivity, newCapacity);
+            ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivityInstructor(
+                    oldScheduledActivityId, newAccountRoleId, oldAccountRoleId);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -551,47 +493,18 @@ public class TestScheduledActivityService {
 
     @Test
     public void testUpdateScheduledActivityNullActivity() {
-        int scheduledActivityId = 1;
-        LocalDate newDate = LocalDate.of(2025, 3, 19);
-        LocalTime newStartTime = LocalTime.of(10, 0, 0);
-        LocalTime newEndTime = LocalTime.of(12, 0, 0);
-        Activity newActivity = null;
-        int newCapacity = 20;
-        // #region Creating new instructor and activity
+        int oldScheduledActivityId = 1;
+        int newScheduledActivityId = 2;
 
-        Account newAccount = new Account();
-        newAccount.setUsername("Person2");
-        newAccount.setPassword("Password3");
-        accountRepository.save(newAccount);
-
-        newInstructor = new Instructor();
-        newInstructor.setAccount(newAccount);
-
-        int newInstructorId;
-        newInstructorId = newInstructor.getAccountRoleId();
-        instructorRepository.save(newInstructor);
-        newInstructor = instructorRepository.findAccountRoleByAccountRoleId(newInstructorId);
-
-        /*
-         * newActivity = new Activity(); //How to initialize the variable
-         * newActivity.setName("Cardio2");
-         * newActivity.setDescription("Cardio3");
-         * ClassCategory subcategory = ClassCategory.Strength;
-         * newActivity.setSubCategory(subcategory);
-         * activityRepository.save(newActivity);
-         * String newActivityName;
-         * newActivityName = newActivity.getName();
-         * newActivity = activityRepository.findActivityByName(newActivityName);
-         */
-
-        // #endregion
+        String oldActivityName = scheduledActivityRepository
+                .findScheduledActivityByScheduledActivityId(oldScheduledActivityId)
+                .getActivity().getName();
+        String newActivityName = null;
 
         String error = null;
-        // when(activityService.(instructorId)).thenReturn(true);//this checks if the
-        // instructor exists, if not, it will return false which will throw an exception
         try {
-            ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivity(
-                    scheduledActivityId, newDate, newStartTime, newEndTime, newInstructor, newActivity, newCapacity);
+            ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivityActivity(
+                    oldScheduledActivityId, newActivityName, oldActivityName);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -605,45 +518,70 @@ public class TestScheduledActivityService {
         LocalDate newDate = LocalDate.of(2025, 3, 19);
         LocalTime newStartTime = LocalTime.of(20, 0, 0);
         LocalTime newEndTime = LocalTime.of(18, 0, 0);
-        int newCapacity = 20;
-        // #region Creating new instructor and activity
 
-        Account newAccount = new Account();
-        newAccount.setUsername("Person2");
-        newAccount.setPassword("Password3");
-        accountRepository.save(newAccount);
-
-        newInstructor = new Instructor();
-        newInstructor.setAccount(newAccount);
-
-        int newInstructorId;
-        newInstructorId = newInstructor.getAccountRoleId();
-        instructorRepository.save(newInstructor);
-        newInstructor = instructorRepository.findAccountRoleByAccountRoleId(newInstructorId);
-
-        newActivity = new Activity(); // How to initialize the variable
-        newActivity.setName("Cardio2");
-        newActivity.setDescription("Cardio3");
-        ClassCategory subcategory = ClassCategory.Strength;
-        newActivity.setSubCategory(subcategory);
-        activityRepository.save(newActivity);
-        String newActivityName;
-        newActivityName = newActivity.getName();
-        newActivity = activityRepository.findActivityByName(newActivityName);
-
-        // #endregion
+        LocalTime oldStartTime = scheduledActivityRepository
+                .findScheduledActivityByScheduledActivityId(scheduledActivityId)
+                .getStartTime();
+        LocalTime oldEndTime = scheduledActivityRepository
+                .findScheduledActivityByScheduledActivityId(scheduledActivityId)
+                .getEndTime();
+        LocalDate oldDate = scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId)
+                .getDate();
 
         String error = null;
-        // when(activityService.(instructorId)).thenReturn(true);//this checks if the
-        // instructor exists, if not, it will return false which will throw an exception
         try {
-            ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivity(
-                    scheduledActivityId, newDate, newStartTime, newEndTime, newInstructor, newActivity, newCapacity);
+            ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivityByDateAndTime(
+                    scheduledActivityId, newDate, oldDate, newStartTime, oldStartTime, newEndTime, oldEndTime);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
 
         assertEquals("Start time cannot be after end time!", error);
+    }
+
+    @Test
+    public void testUpdateScheduledActivityCapacity() {
+        int scheduledActivityId = 1;
+        int newCapacity = 20;
+
+        int oldCapacity = scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId)
+                .getCapacity();
+
+        when(scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId))
+                .thenReturn(null);// this checks if the activity already exists, and if it does, it will return
+                                  // null
+
+        when(scheduledActivityRepository.save(any(ScheduledActivity.class))).thenAnswer((invocation) -> {
+            ScheduledActivity scheduledActivity = new ScheduledActivity();
+            scheduledActivity.setCapacity(newCapacity);
+            return scheduledActivity;
+        });
+
+        ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivityCapacity(
+                scheduledActivityId, newCapacity, oldCapacity);
+        verify(scheduledActivityRepository, times(1)).save(any(ScheduledActivity.class));
+
+        assertNotNull(updatedScheduledActivity);
+        assertEquals(newCapacity, updatedScheduledActivity.getCapacity());
+    }
+
+    @Test
+    public void testUpdateScheduledActivityInvalidCapacity() {
+        int scheduledActivityId = 1;
+        int newCapacity = -20;
+
+        int oldCapacity = scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId)
+                .getCapacity();
+
+        String error = null;
+        try {
+            ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivityCapacity(
+                    scheduledActivityId, newCapacity, oldCapacity);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+
+        assertEquals("Capacity cannot be negative!", error);
     }
 
     @Test
@@ -656,12 +594,12 @@ public class TestScheduledActivityService {
         // checks if the instructor exists, if not, it will return false which will
         // throw an exception
 
-        ScheduledActivity deletedScheduledActivity = scheduledActivityService
-                .deleteScheduledActivity(scheduledActivityId);
+        scheduledActivityService.deleteScheduledActivity(scheduledActivityId);
         verify(scheduledActivityRepository, times(1)).delete(any(ScheduledActivity.class));
 
-        assertNotNull(deletedScheduledActivity);
-        assertEquals(scheduledActivityId, deletedScheduledActivity.getScheduledActivityId());
+        // assertNotNull(deletedScheduledActivity());
+        // assertEquals(scheduledActivityId,
+        // deletedScheduledActivity.getScheduledActivityId());
     }
 
     @Test
@@ -671,12 +609,8 @@ public class TestScheduledActivityService {
         String error = null;
         when(scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId))
                 .thenReturn(null);
-        // when(activityService.checkAccountInstructor(instructorId)).thenReturn(true);//this
-        // checks if the instructor exists, if not, it will return false which will
-        // throw an exception
         try {
-            ScheduledActivity deletedScheduledActivity = scheduledActivityService
-                    .deleteScheduledActivity(scheduledActivityId);
+            scheduledActivityService.deleteScheduledActivity(scheduledActivityId);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
