@@ -53,7 +53,7 @@ public class RegistrationService {
      * @return Regitration
      */
     @Transactional
-    public Registration register(int accountRoleId, int scheduledActivityId) {
+    public Registration createRegistration(int accountRoleId, int scheduledActivityId) {
         Registration registration = new Registration();
         ScheduledActivity scheduledActivity = scheduledActivityRepository
                 .findScheduledActivityByScheduledActivityId(scheduledActivityId);
@@ -104,7 +104,7 @@ public class RegistrationService {
      * @return Registration
      */
     @Transactional
-    public Registration getRegistrationByRegistrationId(Integer registrationId) {
+    public Registration getRegistrationByRegId(Integer registrationId) {
         Registration registration = registrationRepository.findRegistrationByRegId(registrationId);
         if (registration == null) {
             throw new IllegalArgumentException("Registartion does not exist");

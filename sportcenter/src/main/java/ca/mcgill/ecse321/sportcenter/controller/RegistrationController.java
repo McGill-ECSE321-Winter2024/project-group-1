@@ -35,7 +35,7 @@ public class RegistrationController {
     @PostMapping(value = { "/register/{customerId}/{scheduledActivityId}" })
     public RegistrationDto register(@PathVariable("customerId") int customerId,
             @PathVariable("scheduledActivityId") int scheduledActivityId) throws IllegalArgumentException {
-        Registration registration = registrationService.register(customerId, scheduledActivityId);
+        Registration registration = registrationService.createRegistration(customerId, scheduledActivityId);
         return convertToDto(registration);
     }
 
@@ -46,9 +46,9 @@ public class RegistrationController {
      * @return RegistrationDto
      */
     @GetMapping(value = { "/registration/{registrationId}" })
-    public RegistrationDto getRegistration(@PathVariable("registrationId") int registrationId)
+    public RegistrationDto getRegistrationByRegId(@PathVariable("registrationId") int registrationId)
             throws IllegalArgumentException {
-        Registration registration = registrationService.getRegistrationByRegistrationId(registrationId);
+        Registration registration = registrationService.getRegistrationByRegId(registrationId);
         return convertToDto(registration);
     }
 
@@ -132,8 +132,8 @@ public class RegistrationController {
         if (registration == null) {
             throw new IllegalArgumentException("There is no registration");
         }
-        return new RegistrationDto(CustomerController.convertCustomerDto(registration.getCustomer()),
-                ScheduledActivityController.convertToDto(registration.getScheduledActivity()),
+        return new RegistrationDto(AccountManagementController.convertCustomerToDto(registration.getCustomer()),
+                ScheduledActivityController.convertOwnerToDto(registration.getScheduledActivity()),
                 registration.getRegistrationId());
     }
 
