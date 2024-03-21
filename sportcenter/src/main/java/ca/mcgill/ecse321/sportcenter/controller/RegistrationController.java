@@ -156,9 +156,12 @@ public class RegistrationController {
         if (registration == null) {
             throw new IllegalArgumentException("There is no registration");
         }
-        return new RegistrationDto(AccountManagementController.convertCustomerToDto(registration.getCustomer()),
-                ScheduledActivityController.convertCustomerToDto(registration.getScheduledActivity()),
-                registration.getRegistrationId());
+
+        CustomerDto customerDto = AccountManagementController.convertCustomerToDto(registration.getCustomer());
+        ScheduledActivityDto scheduledActivityDto = ScheduledActivityController
+                .convertToDto(registration.getScheduledActivity());
+
+        return new RegistrationDto(customerDto, scheduledActivityDto, registration.getRegistrationId());
     }
 
     /**
