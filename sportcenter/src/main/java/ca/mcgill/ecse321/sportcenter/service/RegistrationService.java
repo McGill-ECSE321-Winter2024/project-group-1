@@ -11,14 +11,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ca.mcgill.ecse321.sportcenter.dao.CustomerRepository;
 import ca.mcgill.ecse321.sportcenter.dao.ScheduledActivityRepository;
-import ca.mcgill.ecse321.sportcenter.dto.CustomerDto;
-import ca.mcgill.ecse321.sportcenter.dto.RegistrationDto;
-import ca.mcgill.ecse321.sportcenter.dto.ScheduledActivityDto;
 import ca.mcgill.ecse321.sportcenter.dao.RegistrationRepository;
 import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity;
 import ca.mcgill.ecse321.sportcenter.model.Customer;
 import ca.mcgill.ecse321.sportcenter.model.Registration;
 
+/**
+ * Service class for the Registration entity
+ * 
+ * @Author Emilie Ruel
+ */
 @Service
 public class RegistrationService {
 
@@ -29,6 +31,12 @@ public class RegistrationService {
     @Autowired
     RegistrationRepository registrationRepository;
 
+    /**
+     * Convert a list of iterable to a list
+     * 
+     * @param Iterable<T>
+     * @return List<T>
+     */
     private <T> List<T> toList(Iterable<T> iterable) {
         List<T> resultList = new ArrayList<T>();
         for (T t : iterable) {
@@ -43,10 +51,9 @@ public class RegistrationService {
      * @param accountRoleId
      * @param scheduledActivityId
      * @return Regitration
-     * @author Emilie Ruel
      */
     @Transactional
-    public Registration register(int accountRoleId, int scheduledActivityId) {
+    public Registration createRegistration(int accountRoleId, int scheduledActivityId) {
         Registration registration = new Registration();
         ScheduledActivity scheduledActivity = scheduledActivityRepository
                 .findScheduledActivityByScheduledActivityId(scheduledActivityId);
@@ -58,7 +65,7 @@ public class RegistrationService {
             throw new IllegalArgumentException("Customer does not exist");
         }
 
-        Registration existingRegistration = getRegistrationByCustomerAndScheduledActivity(accountRoleId,
+        Registration existingRegistration = getRegistrationByAccountRoleIdAndScheduledActivityId(accountRoleId,
                 scheduledActivityId);
         if (existingRegistration != null) {
             throw new IllegalArgumentException("Registration already exists");
@@ -87,7 +94,6 @@ public class RegistrationService {
         registration.setScheduledActivity(scheduledActivity);
 
         registrationRepository.save(registration);
-
         return registration;
     }
 
@@ -96,10 +102,9 @@ public class RegistrationService {
      * 
      * @param registrationId
      * @return Registration
-     * @author Emilie Ruel
      */
     @Transactional
-    public Registration getRegistrationById(Integer registrationId) {
+    public Registration getRegistrationByRegId(Integer registrationId) {
         Registration registration = registrationRepository.findRegistrationByRegId(registrationId);
         if (registration == null) {
             throw new IllegalArgumentException("Registartion does not exist");
@@ -108,14 +113,12 @@ public class RegistrationService {
             throw new IllegalArgumentException("Id not valid!");
         }
         return registration;
-
     }
 
     /**
      * Get a list of all registrations
      * 
      * @return List<Registration>
-     * @author Emilie Ruel
      */
     @Transactional
     public List<Registration> getAllRegistrations() {
@@ -123,18 +126,17 @@ public class RegistrationService {
     }
 
     /**
-     * Get all registrations of a costumer bu its accountRoleId
+     * Get all registrations of a costumer by its accountRoleId
      * 
      * @param accountRoleId
      * @return List<Registration>
-     * @author Emilie Ruel
      */
     @Transactional
-    public List<Registration> getRegistrationByCostumerId(int accountRoleId) {
+    public List<Registration> getRegistrationByAccountRoleId(int accountRoleId) {
         List<Registration> scheduledActivitiesAttendedByCustomer = new ArrayList<>();
-        for (Registration r : registrationRepository.findAll()) {
-            if (r.getCustomer().getAccountRoleId() == accountRoleId) {
-                scheduledActivitiesAttendedByCustomer.add(r);
+        for (Registration registration : registrationRepository.findAll()) {
+            if (registration.getCustomer().getAccountRoleId() == accountRoleId) {
+                scheduledActivitiesAttendedByCustomer.add(registration);
             }
         }
         return scheduledActivitiesAttendedByCustomer;
@@ -145,7 +147,6 @@ public class RegistrationService {
      * 
      * @param scheduledActivityId
      * @return List<Registration>
-     * @author Emilie Ruel
      */
     @Transactional
     public List<Registration> getRegistrationByScheduledActivityId(int scheduledActivityId) {
@@ -153,9 +154,9 @@ public class RegistrationService {
         if (scheduledActivityId < 0) {
             throw new IllegalArgumentException("Id not valid!");
         }
-        for (Registration r : registrationRepository.findAll()) {
-            if (r.getScheduledActivity().getScheduledActivityId() == scheduledActivityId) {
-                customersAttendingScheduledActivity.add(r);
+        for (Registration registration : registrationRepository.findAll()) {
+            if (registration.getScheduledActivity().getScheduledActivityId() == scheduledActivityId) {
+                customersAttendingScheduledActivity.add(registration);
             }
         }
         return customersAttendingScheduledActivity;
@@ -169,32 +170,32 @@ public class RegistrationService {
      * @return Registration
      */
     @Transactional
-    public Registration getRegistrationByCustomerAndScheduledActivity(int accountRoleId, int scheduledActivityId) {
-        Registration registration;
+    public Registration getRegistrationByAccountRoleIdAndScheduledActivityId(int accountRoleId,
+            int scheduledActivityId) {
         if (accountRoleId < 0 || scheduledActivityId < 0) {
             throw new IllegalArgumentException("Id not valid!");
         }
-        for (Registration r : registrationRepository.findAll()) {
-            if (r.getCustomer().getAccountRoleId() == accountRoleId) {
-                if (r.getScheduledActivity().getScheduledActivityId() == scheduledActivityId) {
-                    registration = r;
-                    return registration;
-                }
+        for (Registration registration : registrationRepository.findAll()) {
+            if (registration.getCustomer().getAccountRoleId() == accountRoleId
+                    && registration.getScheduledActivity().getScheduledActivityId() == scheduledActivityId) {
+                return registration;
             }
         }
         return null;
     }
 
     /**
-     * Delete a registration by its registration ID (primary key)
+     * Delete a registration by its registrationId (primary key)
      * 
      * @param registrationId
-     * @autor Emilie Ruel
      */
     @Transactional
     public void deleteRegistration(int registrationId) {
         if (registrationId < 0) {
             throw new IllegalArgumentException("Id not valid!");
+        }
+        if (registrationRepository.findRegistrationByRegId(registrationId) == null) {
+            throw new IllegalArgumentException("Registration does not exist");
         }
         registrationRepository.deleteById(registrationId);
     }
@@ -203,29 +204,9 @@ public class RegistrationService {
      * Delete all registrations
      * 
      * @return void
-     * @Author Emilie Ruel
      */
     @Transactional
     public void deleteAllRegistrations() {
         registrationRepository.deleteAll();
-    }
-
-    // converts an Registration to an RegistrationDto
-    public static RegistrationDto convertToDto(Registration registration) {
-        if (registration == null) {
-            throw new IllegalArgumentException("There is no registration to convert");
-        }
-        return new RegistrationDto(CustomerDto.convertToDto(registration.getCustomer()),
-                ScheduledActivityService.convertCustomersDto(registration.getScheduledActivity()),
-                registration.getRegistrationId());
-    }
-
-    public static List<RegistrationDto> convertToDto(List<Registration> registrations) {
-        List<RegistrationDto> registrationDto = new ArrayList<RegistrationDto>(registrations.size());
-
-        for (Registration registration : registrations) {
-            registrationDto.add(RegistrationService.convertToDto(registration));
-        }
-        return registrationDto;
     }
 }

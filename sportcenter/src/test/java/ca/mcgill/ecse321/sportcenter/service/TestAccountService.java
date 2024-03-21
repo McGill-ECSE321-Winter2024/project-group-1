@@ -1,6 +1,5 @@
 package ca.mcgill.ecse321.sportcenter.service;
 
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -25,14 +24,14 @@ import ca.mcgill.ecse321.sportcenter.service.AccountService;
 
 @SpringBootTest
 public class TestAccountService {
-    
+
     @Mock
     private AccountRepository accountRepository;
     @InjectMocks
     private AccountService accountService;
 
     @SuppressAjWarnings("null")
-    
+
     @Test
     public void testCreateAccount() {
         String username = "username";
@@ -101,7 +100,7 @@ public class TestAccountService {
         verify(accountRepository, times(0)).save(account1);
     }
 
-    @Test////////////////////////////
+    @Test ////////////////////////////
     public void testCreateAccountUsernameExists() {
         String username1 = "username";
         String username2 = "username";
@@ -141,18 +140,18 @@ public class TestAccountService {
     }
 
     @Test
-    public void testUpdateAccount(String oldUsername,String username, String password) {
+    public void testUpdateAccount(String oldUsername, String username, String password) {
         Account account1 = accountRepository.findAccountByUsername(oldUsername);
         when(accountRepository.findAccountByUsername(oldUsername)).thenReturn(account1);
         when(accountRepository.save(any(Account.class))).thenReturn(account1);
 
-        Account updatedAccount = accountService.updateAccount(oldUsername, username, password);
+        Account updatedAccount = accountService.updateAccountUsername(oldUsername, username, password);
 
         assertNotNull(updatedAccount);
         assertEquals(username, updatedAccount.getUsername());
         assertEquals(password, updatedAccount.getPassword());
         verify(accountRepository, times(1)).save(account1);
-        
+
     }
 
     @Test
@@ -166,7 +165,7 @@ public class TestAccountService {
         when(accountRepository.save(any(Account.class))).thenReturn(account1);
 
         try {
-            Account updatedAccount = accountService.updateAccount(oldUsername, username, password);
+            Account updatedAccount = accountService.updateAccountUsername(oldUsername, username, password);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -186,7 +185,7 @@ public class TestAccountService {
         when(accountRepository.save(any(Account.class))).thenReturn(account1);
 
         try {
-            Account updatedAccount = accountService.updateAccount(oldUsername, username, password);
+            Account updatedAccount = accountService.updateAccountUsername(oldUsername, username, password);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -206,7 +205,7 @@ public class TestAccountService {
         when(accountRepository.save(any(Account.class))).thenReturn(account1);
 
         try {
-            Account updatedAccount = accountService.updateAccount(oldUsername, username, password);
+            Account updatedAccount = accountService.updateAccountUsername(oldUsername, username, password);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -227,7 +226,7 @@ public class TestAccountService {
         when(accountRepository.findAccountByUsername(username)).thenReturn(account1);
 
         try {
-            Account updatedAccount = accountService.updateAccount(oldUsername, username, password);
+            Account updatedAccount = accountService.updateAccountUsername(oldUsername, username, password);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -270,7 +269,7 @@ public class TestAccountService {
         Account account1 = new Account();
         when(accountRepository.findAccountByAccountId(accountId)).thenReturn(account1);
 
-        Account account = accountService.getAccountById(accountId);
+        Account account = accountService.getAccountByAccountId(accountId);
 
         assertNotNull(account);
         assertEquals(account1, account);
@@ -284,7 +283,7 @@ public class TestAccountService {
         when(accountRepository.findAccountByAccountId(accountId)).thenReturn(account1);
 
         try {
-            Account account = accountService.getAccountById(accountId);
+            Account account = accountService.getAccountByAccountId(accountId);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
