@@ -36,7 +36,7 @@ import ca.mcgill.ecse321.sportcenter.dao.InstructorRepository;
 import ca.mcgill.ecse321.sportcenter.dao.OwnerRepository;
 import ca.mcgill.ecse321.sportcenter.service.AccountManagementService;
 
-public class TestAccountManagementService {
+public class TestAccountOwnerService {
     @Mock
     private AccountRepository accountRepository;
 
@@ -75,39 +75,71 @@ public class TestAccountManagementService {
         customerRepository.save(customer);
     }
 
-   
+    @Test
+    public void testGetOwnerByAccountRoleId() {
+        String username = "testname";
+        String password = "testpassword";
+
+        ownerRepository.save(new Owner(new Account(username, password)));
+        int id = 1;
+        Owner owner = accountService.getOwnerByAccountRoleId(id);
+
+        try {
+            owner = accountService.getOwnerByAccountRoleId(id);
+        } catch (IllegalArgumentException e) {
+            assertEquals("AccountRoleId cannot be found!", e.getMessage()); // TODO: Find the exact message
+        }
+
+        assertNotNull(owner);
+    }
+
+    @Test
+    public void testGetOwnerByAccountRoleIdZero() {
+        int accountRoleId = 0;
+        String error = null;
+        Owner owner = null;
+
+        try {
+            owner = accountService.getOwnerByAccountRoleId(accountRoleId);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        // check error
+        assertEquals("AccountRoleId cannot be negative!", error); // TODO: Modify the message
+        assertEquals(null, owner);
+    }
+
+    @Test
+    public void testGetOwnerByAccountRoleIdNegative() {
+        int accountRoleId = -1;
+        String error = null;
+        Owner owner = null;
+
+        try {
+            owner = accountService.getOwnerByAccountRoleId(accountRoleId);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        // check error
+        assertEquals("AccountRoleId cannot be negative!", error); // TODO: Modify the message
+        assertEquals(null, owner);
+    }
+
+    @Test
+    public void testGetOwnerByAccountRoleIdDoesNotExist() {
+        int accountRoleId = 1;
+        when(ownerRepository.findAccountRoleByAccountRoleId(accountRoleId)).thenReturn(null);
+        String error = null;
+        Owner owner = null;
+
+        try {
+            owner = accountService.getOwnerByAccountRoleId(accountRoleId);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        // check error
+        assertEquals("Owner does not exist!", error); // TODO: Modify the message
+        assertEquals(null, owner);
+
+    }
 }
-//
-
-// TODO 2 - checkAccountOwner
-// @Test
-// public void testCheckAccountOwner() {
-// int id = 1;
-// // ownerRepository.Owner o = new Owner();
-// when(ownerRepository.findAccountRoleByAccountRoleId(id)).thenReturn(new
-// Owner());
-// assertTrue(accountService.checkAccountOwner(id));
-// }
-
-// @Test
-// public void testCheckAccountOwnerNegative() {
-// int id = -1;
-// when(ownerRepository.findAccountRoleByAccountRoleId(id)).thenReturn(new
-// Owner());
-// assertTrue(accountService.checkAccountOwner(id));
-// }
-
-// @Test
-// public void testCheckAccountOwnerZero() {
-// int id = 0;
-// when(ownerRepository.findAccountRoleByAccountRoleId(id)).thenReturn(new
-// Owner());
-// assertTrue(accountService.checkAccountOwner(id));
-// }
-
-// @Test
-// public void testCheckAccountOwnerDoesNotExist() {
-// int id = 1;
-// when(ownerRepository.findAccountRoleByAccountRoleId(id)).thenReturn(null);
-// assertFalse(accountService.checkAccountOwner(id));
-// }

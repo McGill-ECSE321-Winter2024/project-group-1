@@ -1,8 +1,10 @@
 package ca.mcgill.ecse321.sportcenter.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -10,45 +12,79 @@ import static org.mockito.Mockito.when;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.time.LocalTime;
 
-import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
 import org.aspectj.lang.annotation.SuppressAjWarnings;
 import org.checkerframework.checker.units.qual.A;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cglib.core.Local;
+import org.mockito.invocation.InvocationOnMock;
 
-import ca.mcgill.ecse321.sportcenter.dao.CustomerRepository;
-import ca.mcgill.ecse321.sportcenter.model.Customer;
-import ca.mcgill.ecse321.sportcenter.service.CustomerService;
-
-import ca.mcgill.ecse321.sportcenter.dao.AccountRepository;
 import ca.mcgill.ecse321.sportcenter.model.Account;
-import ca.mcgill.ecse321.sportcenter.service.AccountService;
+import ca.mcgill.ecse321.sportcenter.model.Activity;
+import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
+import ca.mcgill.ecse321.sportcenter.model.Customer;
+import ca.mcgill.ecse321.sportcenter.model.Instructor;
+import ca.mcgill.ecse321.sportcenter.model.Instructor.InstructorStatus;
+import ca.mcgill.ecse321.sportcenter.model.Owner;
+import ca.mcgill.ecse321.sportcenter.dao.AccountRepository;
+import ca.mcgill.ecse321.sportcenter.dao.ActivityRepository;
+import ca.mcgill.ecse321.sportcenter.dao.CustomerRepository;
+import ca.mcgill.ecse321.sportcenter.dao.InstructorRepository;
+import ca.mcgill.ecse321.sportcenter.dao.OwnerRepository;
+import ca.mcgill.ecse321.sportcenter.service.AccountManagementService;
 
-public class TestCustomerService {
+public class TestAccountCustomerService {
+    @Mock
+    private AccountRepository accountRepository;
+
     @Mock
     private CustomerRepository customerRepository;
 
     @Mock
-    private AccountRepository accountRepository;
+    private OwnerRepository ownerRepository;
+
+    @Mock
+    private ActivityRepository activityRepository;
+
+    @Mock
+    private InstructorRepository instructorRepository;
 
     @InjectMocks
-    private CustomerService customerService;
+    private AccountManagementService accountService;
+
+    @BeforeEach
+    public void setAccount() {
+        Account account = new Account();
+        account.setUsername("Person1");
+        account.setPassword("Password1");
+        accountRepository.save(account);
+
+        Instructor instructor = new Instructor();
+        instructor.setAccount(account);
+        instructorRepository.save(instructor);
+
+        Owner owner = new Owner();
+        owner.setAccount(account);
+        ownerRepository.save(owner);
+
+        Customer customer = new Customer();
+        customer.setAccount(account);
+        customerRepository.save(customer);
+    }
 
     @Test
     public void testCreateCustomer() {
         String username = "testUsername";
-        when(accountRepository.findAccountByUsername(username)).thenReturn(new Account());// if account exists, then it
-                                                                                          // will be returned, if not,
-                                                                                          // null will be returned
+
+        // will be returned, if not,
+        // null will be returned
         when(customerRepository.save(any(Customer.class))).thenAnswer((invocation) -> invocation.getArgument(0));
         Customer customer = null;
         try {
-            customer = customerService.createCustomer(username);
+            customer = accountService.createCustomer(username);
         } catch (IllegalArgumentException e) {
             // Check that no error occurred
             assertEquals("Username cannot be empty!", e.getMessage());
@@ -63,7 +99,7 @@ public class TestCustomerService {
         String error = null;
         Customer customer = null;
         try {
-            customer = customerService.createCustomer(username);
+            customer = accountService.createCustomer(username);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -79,7 +115,7 @@ public class TestCustomerService {
         String error = null;
         Customer customer = null;
         try {
-            customer = customerService.createCustomer(username);
+            customer = accountService.createCustomer(username);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -95,7 +131,7 @@ public class TestCustomerService {
         String error = null;
         Customer customer = null;
         try {
-            customer = customerService.createCustomer(username);
+            customer = accountService.createCustomer(username);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -111,7 +147,7 @@ public class TestCustomerService {
         when(customerRepository.findAccountRoleByUsername(username)).thenReturn(new Customer());
         when(customerRepository.save(any(Customer.class))).thenAnswer((invocation) -> invocation.getArgument(0));
         try {
-            customerService.deleteCustomerByUsername(username);
+            accountService.deleteCustomerByUsername(username);
         } catch (IllegalArgumentException e) {
             // Check that no error occurred
             assertEquals("Username cannot be empty!", e.getMessage());
@@ -124,7 +160,7 @@ public class TestCustomerService {
         String username = null;
         String error = null;
         try {
-            customerService.deleteCustomerByUsername(username);
+            accountService.deleteCustomerByUsername(username);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -137,7 +173,7 @@ public class TestCustomerService {
         String username = "";
         String error = null;
         try {
-            customerService.deleteCustomerByUsername(username);
+            accountService.deleteCustomerByUsername(username);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -150,7 +186,7 @@ public class TestCustomerService {
         String username = " ";
         String error = null;
         try {
-            customerService.deleteCustomerByUsername(username);
+            accountService.deleteCustomerByUsername(username);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -163,7 +199,7 @@ public class TestCustomerService {
         String username = "testUsername";
         when(customerRepository.findAccountRoleByUsername(username)).thenReturn(new Customer());
         try {
-            customerService.getCustomerByUsername(username);
+            accountService.getCustomerByUsername(username);
         } catch (IllegalArgumentException e) {
             // Check that no error occurred
             assertEquals("Username cannot be empty!", e.getMessage());
@@ -175,7 +211,7 @@ public class TestCustomerService {
         String username = null;
         String error = null;
         try {
-            customerService.getCustomerByUsername(username);
+            accountService.getCustomerByUsername(username);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -188,7 +224,7 @@ public class TestCustomerService {
         String username = "";
         String error = null;
         try {
-            customerService.getCustomerByUsername(username);
+            accountService.getCustomerByUsername(username);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -201,7 +237,7 @@ public class TestCustomerService {
         String username = " ";
         String error = null;
         try {
-            customerService.getCustomerByUsername(username);
+            accountService.getCustomerByUsername(username);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -215,7 +251,7 @@ public class TestCustomerService {
         when(customerRepository.findAccountRoleByUsername(username)).thenReturn(null);
         String error = null;
         try {
-            customerService.getCustomerByUsername(username);
+            accountService.getCustomerByUsername(username);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -225,13 +261,13 @@ public class TestCustomerService {
 
     @Test
     public void testDeleteAllCustomers() {
-        customerService.deleteAllCustomers();
+        accountService.deleteAllCustomers();
         verify(customerRepository, times(1)).deleteAll();
     }
 
     @Test
     public void testGetAllCustomers() {
-        customerService.getAllCustomers();
+        accountService.getAllCustomers();
         verify(customerRepository, times(1)).findAll();
     }
 
@@ -240,7 +276,7 @@ public class TestCustomerService {
         int roleId = 1;
         when(customerRepository.findAccountRoleByAccountRoleId(roleId)).thenReturn(new Customer());
         try {
-            customerService.getCustomerByRoleId(roleId);
+            accountService.getCustomerByAccountRoleId(roleId);
         } catch (IllegalArgumentException e) {
             // Check that no error occurred
             assertEquals("Role ID cannot be empty!", e.getMessage());
@@ -253,7 +289,7 @@ public class TestCustomerService {
         when(customerRepository.findAccountRoleByAccountRoleId(roleId)).thenReturn(null);
         String error = null;
         try {
-            customerService.getCustomerByRoleId(roleId);
+            accountService.getCustomerByAccountRoleId(roleId);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -266,7 +302,7 @@ public class TestCustomerService {
         int roleId = -1;
         String error = null;
         try {
-            customerService.getCustomerByRoleId(roleId);
+            accountService.getCustomerByAccountRoleId(roleId);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -276,13 +312,14 @@ public class TestCustomerService {
 
     @Test
     public void getAllCustomers() {
-        customerService.getAllCustomers();
+        accountService.getAllCustomers();
         verify(customerRepository, times(1)).findAll();
     }
 
     @Test
     public void deleteAllCustomers() {
-        customerService.deleteAllCustomers();
+        accountService.deleteAllCustomers();
         verify(customerRepository, times(1)).deleteAll();
     }
+
 }

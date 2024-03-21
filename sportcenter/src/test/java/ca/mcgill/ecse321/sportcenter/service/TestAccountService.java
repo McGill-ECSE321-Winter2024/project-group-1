@@ -1,8 +1,10 @@
 package ca.mcgill.ecse321.sportcenter.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -13,24 +15,65 @@ import java.time.LocalDate;
 
 import org.aspectj.lang.annotation.SuppressAjWarnings;
 import org.checkerframework.checker.units.qual.A;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.invocation.InvocationOnMock;
 
 import ca.mcgill.ecse321.sportcenter.model.Account;
+import ca.mcgill.ecse321.sportcenter.model.Activity;
+import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
+import ca.mcgill.ecse321.sportcenter.model.Customer;
+import ca.mcgill.ecse321.sportcenter.model.Instructor;
+import ca.mcgill.ecse321.sportcenter.model.Instructor.InstructorStatus;
+import ca.mcgill.ecse321.sportcenter.model.Owner;
 import ca.mcgill.ecse321.sportcenter.dao.AccountRepository;
-import ca.mcgill.ecse321.sportcenter.service.AccountService;
+import ca.mcgill.ecse321.sportcenter.dao.ActivityRepository;
+import ca.mcgill.ecse321.sportcenter.dao.CustomerRepository;
+import ca.mcgill.ecse321.sportcenter.dao.InstructorRepository;
+import ca.mcgill.ecse321.sportcenter.dao.OwnerRepository;
+import ca.mcgill.ecse321.sportcenter.service.AccountManagementService;
 
-@SpringBootTest
 public class TestAccountService {
-
     @Mock
     private AccountRepository accountRepository;
-    @InjectMocks
-    private AccountService accountService;
 
-    @SuppressAjWarnings("null")
+    @Mock
+    private CustomerRepository customerRepository;
+
+    @Mock
+    private OwnerRepository ownerRepository;
+
+    @Mock
+    private ActivityRepository activityRepository;
+
+    @Mock
+    private InstructorRepository instructorRepository;
+
+    @InjectMocks
+    private AccountManagementService accountService;
+
+    @BeforeEach
+    public void setAccount() {
+        Account account = new Account();
+        account.setUsername("Person1");
+        account.setPassword("Password1");
+        accountRepository.save(account);
+
+        Instructor instructor = new Instructor();
+        instructor.setAccount(account);
+        instructorRepository.save(instructor);
+
+        Owner owner = new Owner();
+        owner.setAccount(account);
+        ownerRepository.save(owner);
+
+        Customer customer = new Customer();
+        customer.setAccount(account);
+        customerRepository.save(customer);
+    }
 
     @Test
     public void testCreateAccount() {
@@ -121,71 +164,98 @@ public class TestAccountService {
     }
 
     @Test
-    public void testCreateAccountUsernameExists2() {
-        String username = "username";
-        String password = "password";
-        String error = null;
-        Account account1 = new Account();
-        when(accountRepository.save(any(Account.class))).thenReturn(account1);
-        when(accountRepository.findAccountByUsername(username)).thenReturn(account1);
-
-        try {
-            Account createdAccount = accountService.createAccount(username, password);
-        } catch (IllegalArgumentException e) {
-            error = e.getMessage();
-        }
-
-        assertEquals("Username already exists!", error);
-        verify(accountRepository, times(0)).save(account1);
-    }
-
-    @Test
-    public void testUpdateAccount(String oldUsername, String username, String password) {
+    public void testUpdateAccountUsername(String oldUsername, String username) {
         Account account1 = accountRepository.findAccountByUsername(oldUsername);
-        when(accountRepository.findAccountByUsername(oldUsername)).thenReturn(account1);
+
         when(accountRepository.save(any(Account.class))).thenReturn(account1);
 
-        Account updatedAccount = accountService.updateAccountUsername(oldUsername, username, password);
+        Account updatedAccount = accountService.updateAccountUsername(oldUsername, username);
 
         assertNotNull(updatedAccount);
         assertEquals(username, updatedAccount.getUsername());
-        assertEquals(password, updatedAccount.getPassword());
         verify(accountRepository, times(1)).save(account1);
 
     }
 
     @Test
-    public void testUpdateAccountNull() {
-        String oldUsername = "oldUsername";
+    public void testUpdateAccountPassword(String username, String oldPassword, String newPassword) {
+        Account account1 = accountRepository.findAccountByUsername(username);
+        when(accountRepository.findAccountByUsername(username)).thenReturn(account1);
+        when(accountRepository.save(any(Account.class))).thenReturn(account1);
+
+        Account updatedAccount = accountService.updateAccountPassword(username, oldPassword, newPassword);
+
+        assertNotNull(updatedAccount);
+        assertEquals(newPassword, updatedAccount.getPassword());
+        verify(accountRepository, times(1)).save(account1);
+    }
+
+    @Test
+    public void testUpdateAccountUsernameNull() {
+        String oldUsername = "Person1";
         String username = null;
-        String password = null;
         String error = null;
         Account account1 = accountRepository.findAccountByUsername(oldUsername);
         when(accountRepository.findAccountByUsername(oldUsername)).thenReturn(account1);
         when(accountRepository.save(any(Account.class))).thenReturn(account1);
 
         try {
-            Account updatedAccount = accountService.updateAccountUsername(oldUsername, username, password);
+            Account updatedAccount = accountService.updateAccountUsername(oldUsername, username);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
+
+        assertEquals("Username cannot be empty!", error);
+        verify(accountRepository, times(0)).save(account1);
+    }
+
+    @Test
+    public void testUpdateAccountPasswordNull() {
+        String oldUsername = "Person1";
+        String oldPassword = null;
+
+        String newPassword = null;
+        String error = null;
+        Account account1 = accountRepository.findAccountByUsername(oldUsername);
+        when(accountRepository.findAccountByUsername(oldUsername)).thenReturn(account1);
+        when(accountRepository.save(any(Account.class))).thenReturn(account1);
 
         assertEquals("Username cannot be empty! Password cannot be empty! ", error);
         verify(accountRepository, times(0)).save(account1);
     }
 
     @Test
-    public void testUpdateAccountEmpty() {
-        String oldUsername = "oldUsername";
+    public void testUpdateAccountUsernameEmpty() {
+        String oldUsername = "Person1";
         String username = "";
+        String error = null;
+
+        Account account1 = accountRepository.findAccountByUsername(oldUsername);
+        when(accountRepository.findAccountByUsername(oldUsername)).thenReturn(account1);
+        when(accountRepository.save(any(Account.class))).thenReturn(account1);
+
+        try {
+            Account updatedAccount = accountService.updateAccountUsername(oldUsername, username);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+
+        assertEquals("Username cannot be empty!", error);
+        verify(accountRepository, times(0)).save(account1);
+    }
+
+    @Test
+    public void testUpdateAccountPasswordEmpty() {
+        String oldUsername = "Person1";
         String password = "";
+        String newPassword = "";
         String error = null;
         Account account1 = accountRepository.findAccountByUsername(oldUsername);
         when(accountRepository.findAccountByUsername(oldUsername)).thenReturn(account1);
         when(accountRepository.save(any(Account.class))).thenReturn(account1);
 
         try {
-            Account updatedAccount = accountService.updateAccountUsername(oldUsername, username, password);
+            Account updatedAccount = accountService.updateAccountPassword(oldUsername, password, newPassword);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -195,9 +265,27 @@ public class TestAccountService {
     }
 
     @Test
-    public void testUpdateAccountSpaces() {
-        String oldUsername = "oldUsername";
+    public void testUpdateAccountUsernameSpaces() {
+        String oldUsername = "Person1";
         String username = " ";
+        String error = null;
+        Account account1 = accountRepository.findAccountByUsername(oldUsername);
+        when(accountRepository.findAccountByUsername(oldUsername)).thenReturn(account1);
+        when(accountRepository.save(any(Account.class))).thenReturn(account1);
+
+        try {
+            Account updatedAccount = accountService.updateAccountUsername(oldUsername, username);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+
+        assertEquals("Username cannot be empty! Password cannot be empty! ", error);
+        verify(accountRepository, times(0)).save(account1);
+    }
+
+    @Test
+    public void testUpdateAccountPasswordSpaces() {
+        String oldUsername = "Person1";
         String password = " ";
         String error = null;
         Account account1 = accountRepository.findAccountByUsername(oldUsername);
@@ -205,7 +293,7 @@ public class TestAccountService {
         when(accountRepository.save(any(Account.class))).thenReturn(account1);
 
         try {
-            Account updatedAccount = accountService.updateAccountUsername(oldUsername, username, password);
+            Account updatedAccount = accountService.updateAccountPassword(oldUsername, password, password);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -217,8 +305,7 @@ public class TestAccountService {
     @Test
     public void testUpdateAccountUsernameExists() {
         String oldUsername = "oldUsername";
-        String username = "username";
-        String password = "password";
+        String username = "Person1";
         String error = null;
         Account account1 = accountRepository.findAccountByUsername(oldUsername);
         when(accountRepository.findAccountByUsername(oldUsername)).thenReturn(account1);
@@ -226,7 +313,7 @@ public class TestAccountService {
         when(accountRepository.findAccountByUsername(username)).thenReturn(account1);
 
         try {
-            Account updatedAccount = accountService.updateAccountUsername(oldUsername, username, password);
+            Account updatedAccount = accountService.updateAccountUsername(oldUsername, username);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -302,4 +389,5 @@ public class TestAccountService {
         assertNotNull(accounts);
         assertEquals(2, accounts.size());
     }
+
 }
