@@ -16,6 +16,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 
+/**
+ * Rest controller for the activity management
+ * 
+ * @Author Mathias Lamina & Patrick Zacharia & Fabian Saldana
+ */
 @RestController
 public class ActivityManagementController {
     @Autowired
@@ -38,11 +43,10 @@ public class ActivityManagementController {
         return convertToDto(activity);
     }
 
-    /*
+    /**
      * Get an activity by its name
      * 
      * @param name
-     * 
      * @return ActivityDto
      */
     @GetMapping(value = { "/activity/{name}", "/activity/{name}/" })
@@ -51,7 +55,7 @@ public class ActivityManagementController {
         return convertToDto(activity);
     }
 
-    /*
+    /**
      * Get all activities
      * 
      * @return List<ActivityDto>
@@ -66,11 +70,10 @@ public class ActivityManagementController {
         return activityDtos;
     }
 
-    /*
-     * Get all activities by subcategory
+    /**
+     * Get all activities by activity subcategory
      * 
      * @param subcategory
-     * 
      * @return List<ActivityDto>
      */
     @GetMapping(value = { "/activities/{subcategory}", "/activities/{subcategory}/" })
@@ -84,11 +87,10 @@ public class ActivityManagementController {
         return activityDtos;
     }
 
-    /*
+    /**
      * Get all activities by approval status
      * 
      * @param isApproved
-     * 
      * @return List<ActivityDto>
      */
     @GetMapping(value = { "/activities/{isApproved}", "/activities/{isApproved}/" })
