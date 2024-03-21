@@ -18,4 +18,6 @@ public interface ScheduledActivityRepository extends CrudRepository<ScheduledAct
     public List<ScheduledActivity> findScheduledActivityByDate(LocalDate date); // date is the date of the scheduled
                                                                                 // activity
 
+    public List<ScheduledActivity> findScheduledActivityBySupervisor(int accountRoleId); // supervisorId is the
+                                                                                         // instructorId
 }

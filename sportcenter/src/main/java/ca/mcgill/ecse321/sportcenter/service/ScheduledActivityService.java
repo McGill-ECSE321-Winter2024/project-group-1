@@ -98,7 +98,7 @@ public class ScheduledActivityService {
             throw new IllegalArgumentException("Activity is not approved!");
         }
 
-        List<ScheduledActivity> scheduledActivities = getScheduledActivityByDate(date);
+        List<ScheduledActivity> scheduledActivities = getAllScheduledActivitiesByDate(date);
         if (scheduledActivities != null) {
             for (ScheduledActivity scheduledActivity : scheduledActivities) {
                 if (scheduledActivity.getStartTime().isBefore(startTime)
@@ -113,7 +113,8 @@ public class ScheduledActivityService {
         }
 
         // Check if instructor is available
-        for (ScheduledActivity scheduledActivity : getAllScheduledActivitiesOfInstructor(instructor)) {
+        for (ScheduledActivity scheduledActivity : getAllScheduledActivitiesByInstructorId(
+                instructor.getAccountRoleId())) {
             if (scheduledActivity.getDate().equals(date)) {
                 if (scheduledActivity.getStartTime().isBefore(startTime)
                         && scheduledActivity.getEndTime().isAfter(startTime)) {
@@ -144,7 +145,7 @@ public class ScheduledActivityService {
      * @return ScheduledActivity
      */
     @Transactional
-    public ScheduledActivity getScheduledActivity(int scheduledActivityId) {
+    public ScheduledActivity getScheduledActivityById(int scheduledActivityId) {
         if (scheduledActivityId <= 0) {
             throw new IllegalArgumentException("Id cannot be negative!");
         }
@@ -152,13 +153,13 @@ public class ScheduledActivityService {
     }
 
     /**
-     * Get an activity by its date
+     * Get all scheduled activities by their same date
      * 
      * @param date
      * @return List<ScheduledActivity>
      */
     @Transactional
-    public List<ScheduledActivity> getScheduledActivityByDate(LocalDate date) {
+    public List<ScheduledActivity> getAllScheduledActivitiesByDate(LocalDate date) {
         if (date == null) {
             throw new IllegalArgumentException("Date cannot be empty!");
         }
@@ -182,9 +183,13 @@ public class ScheduledActivityService {
      * @return Instructor
      */
     @Transactional
-    public Instructor getInstructorOfScheduledActivity(ScheduledActivity scheduledActivity) {
+    public Instructor getInstructorByScheduledActivityId(int scheduledActivityId) {
+        if (scheduledActivityId < 0) {
+            throw new IllegalArgumentException("Id cannot be negative!");
+        }
+        ScheduledActivity scheduledActivity = getScheduledActivityById(scheduledActivityId);
         if (scheduledActivity == null) {
-            throw new IllegalArgumentException("Scheduled activity cannot be empty!");
+            throw new IllegalArgumentException("Scheduled Activity does not exist!");
         }
         return scheduledActivity.getSupervisor();
     }
@@ -192,35 +197,38 @@ public class ScheduledActivityService {
     /**
      * Get all scheduled activities of an instructor
      * 
-     * @param instructor
+     * @param accountRoleId
      * @return List<ScheduledActivity>
      */
     @Transactional
-    public List<ScheduledActivity> getAllScheduledActivitiesOfInstructor(Instructor instructor) {
+    public List<ScheduledActivity> getAllScheduledActivitiesByInstructorId(int accountRoleId) {
+        if (accountRoleId < 0) {
+            throw new IllegalArgumentException("Id cannot be negative!");
+        }
+        Instructor instructor = instructorRepository.findAccountRoleByAccountRoleId(accountRoleId);
         if (instructor == null) {
-            throw new IllegalArgumentException("Instructor cannot be empty!");
+            throw new IllegalArgumentException("Instructor does not exist!");
         }
-        List<ScheduledActivity> instructorList = new ArrayList<ScheduledActivity>();
-        for (ScheduledActivity scheduledActivity : getAllScheduledActivities()) {
-
-            if (instructor == scheduledActivity.getSupervisor()) {
-                instructorList.add(scheduledActivity);
-            }
-        }
-        return instructorList;
+        return toList(scheduledActivityRepository.findScheduledActivityBySupervisor(accountRoleId));
     }
 
     /**
+     * Get activity by scheduled activity id (primary key)
      * 
-     * @param scheduledActivity
+     * @param scheduledActivityId
      * @return
      */
     @Transactional
-    public Activity getScheduledActivityActivity(ScheduledActivity scheduledActivity) {
+    public Activity getActivityByScheduledActivityId(int scheduledActivityId) {
+        if (scheduledActivityId < 0) {
+            throw new IllegalArgumentException("Id cannot be negative!");
+        }
+        ScheduledActivity scheduledActivity = getScheduledActivityById(scheduledActivityId);
+        if (scheduledActivity == null) {
+            throw new IllegalArgumentException("Scheduled Activity does not exist!");
+        }
         return scheduledActivity.getActivity();
     }
-
-    //////////////////////////////////////////////////////////////////////////// List<Customer>
 
     /**
      * Update a scheduled activity
@@ -229,15 +237,15 @@ public class ScheduledActivityService {
      * @param date
      * @param startTime
      * @param endTime
-     * @param instructor
-     * @param activity
+     * @param accountRoleId
+     * @param activityName
      * @param capacity
      * 
      * @return ScheduledActivity
      */
     @Transactional
     public ScheduledActivity updateScheduledActivity(int scheduledActivityId, LocalDate date, LocalTime startTime,
-            LocalTime endTime, Instructor instructor, Activity activity, int capacity) {
+            LocalTime endTime, int accountRoleId, String activityName, int capacity) {
 
         if (date == null) {
             throw new IllegalArgumentException("Date cannot be empty!");
@@ -254,17 +262,29 @@ public class ScheduledActivityService {
         if (startTime.isAfter(endTime)) {
             throw new IllegalArgumentException("Start time cannot be before end time!");
         }
-        if (instructor == null) {
-            throw new IllegalArgumentException("Instructor cannot be empty!");
+        if (accountRoleId < 0) {
+            throw new IllegalArgumentException("Instructor Id cannot be negative!");
         }
-        if (activity == null) {
-            throw new IllegalArgumentException("Activity cannot be empty!");
+        if (activityName == null || activityName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Activity name cannot be empty!");
         }
         if (capacity <= 0) {
             throw new IllegalArgumentException("Capacity must be greater than 0!");
         }
 
-        List<ScheduledActivity> scheduledActivities = getScheduledActivityByDate(date);
+        Instructor instructor = instructorRepository.findAccountRoleByAccountRoleId(accountRoleId);
+        if (instructor == null) {
+            throw new IllegalArgumentException("Instructor does not exist!");
+        }
+        Activity activity = activityRepository.findActivityByName(activityName);
+        if (activity == null) {
+            throw new IllegalArgumentException("Activity does not exist!");
+        }
+        if (!activity.getIsApproved()) {
+            throw new IllegalArgumentException("Activity is not approved!");
+        }
+
+        List<ScheduledActivity> scheduledActivities = getAllScheduledActivitiesByDate(date);
         if (scheduledActivities != null) {
             for (ScheduledActivity scheduledActivity : scheduledActivities) {
                 if (scheduledActivity.getStartTime().isBefore(startTime)
@@ -278,7 +298,22 @@ public class ScheduledActivityService {
             }
         }
 
-        ScheduledActivity scheduledActivity = getScheduledActivity(scheduledActivityId);
+        // Check if instructor is available
+        for (ScheduledActivity scheduledActivity : getAllScheduledActivitiesByInstructorId(
+                instructor.getAccountRoleId())) {
+            if (scheduledActivity.getDate().equals(date)) {
+                if (scheduledActivity.getStartTime().isBefore(startTime)
+                        && scheduledActivity.getEndTime().isAfter(startTime)) {
+                    throw new IllegalArgumentException("Instructor is not available at this time!");
+                }
+                if (scheduledActivity.getStartTime().isBefore(endTime)
+                        && scheduledActivity.getEndTime().isAfter(endTime)) {
+                    throw new IllegalArgumentException("Instructor is not available at this time!");
+                }
+            }
+        }
+
+        ScheduledActivity scheduledActivity = getScheduledActivityById(scheduledActivityId);
         if (scheduledActivity == null) {
             throw new IllegalArgumentException("Scheduled Activity does not exist!");
         }
@@ -303,16 +338,15 @@ public class ScheduledActivityService {
      * @return ScheduledActivity
      */
     @Transactional
-    public ScheduledActivity deleteScheduledActivity(int scheduledActivityId) {
+    public void deleteScheduledActivity(int scheduledActivityId) {
         if (scheduledActivityId <= 0) {
             throw new IllegalArgumentException("Id cannot be negative!");
         }
-        ScheduledActivity scheduledActivity = getScheduledActivity(scheduledActivityId);
+        ScheduledActivity scheduledActivity = getScheduledActivityById(scheduledActivityId);
         if (scheduledActivity == null) {
             throw new IllegalArgumentException("Scheduled Activity does not exist!");
         }
         scheduledActivityRepository.delete(scheduledActivity);
-        return scheduledActivity;
     }
 
     /**

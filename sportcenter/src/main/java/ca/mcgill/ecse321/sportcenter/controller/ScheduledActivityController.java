@@ -1,15 +1,11 @@
 package ca.mcgill.ecse321.sportcenter.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 import ca.mcgill.ecse321.sportcenter.dto.*;
-import ca.mcgill.ecse321.sportcenter.model.*;
-import ca.mcgill.ecse321.sportcenter.service.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.sql.Time;
 import java.util.List;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,8 +14,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import java.util.ArrayList;
 
-import ca.mcgill.ecse321.sportcenter.model.Registration;
-import ca.mcgill.ecse321.sportcenter.service.RegistrationService;
+import ca.mcgill.ecse321.sportcenter.model.Activity;
+import ca.mcgill.ecse321.sportcenter.model.Instructor;
+import ca.mcgill.ecse321.sportcenter.dto.InstructorDto;
+import ca.mcgill.ecse321.sportcenter.dto.InstructorDto.InstructorStatus;
+import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity;
+import ca.mcgill.ecse321.sportcenter.dto.ScheduledActivityDto;
 
 import ca.mcgill.ecse321.sportcenter.service.ScheduledActivityService;
 
@@ -142,7 +142,7 @@ public class ScheduledActivityController {
      * @param date
      * @param startTime
      * @param endTime
-     * @param instructorId
+     * @param accountRoleId
      * @param activityName
      * @param capacity
      * 
@@ -151,13 +151,13 @@ public class ScheduledActivityController {
     @PutMapping(value = {
             "/updateScheduledActivity/{scheduledActivityId}/{date}/{startTime}/{endTime}/{instructorId}/{activityName}/{capacity}" })
     public ScheduledActivityDto updateScheduledActivity(@PathVariable("scheduledActivityId") int scheduledActivityId,
-            @PathVariable("date") Date date, @PathVariable("startTime") Time startTime,
-            @PathVariable("endTime") Time endTime, @PathVariable("instructorId") int instructorId,
+            @PathVariable("date") LocalDate date, @PathVariable("startTime") LocalTime startTime,
+            @PathVariable("endTime") LocalTime endTime, @PathVariable("instructorId") int accountRoleId,
             @PathVariable("activityName") String activityName, @PathVariable("capacity") int capacity)
             throws IllegalArgumentException {
         ScheduledActivity scheduledActivity = scheduledActivityService.updateScheduledActivity(scheduledActivityId,
                 date,
-                startTime, endTime, instructorId, activityName, capacity);
+                startTime, endTime, accountRoleId, activityName, capacity);
         return convertToDto(scheduledActivity);
     }
 
@@ -168,9 +168,9 @@ public class ScheduledActivityController {
      * @return boolean
      */
     @DeleteMapping(value = { "/deleteScheduledActivity/{scheduledActivityId}" })
-    public boolean deleteScheduledActivity(@PathVariable("scheduledActivityId") int scheduledActivityId)
+    public void deleteScheduledActivity(@PathVariable("scheduledActivityId") int scheduledActivityId)
             throws IllegalArgumentException {
-        return scheduledActivityService.deleteScheduledActivity(scheduledActivityId);
+        scheduledActivityService.deleteScheduledActivity(scheduledActivityId);
     }
 
     /**
@@ -193,8 +193,7 @@ public class ScheduledActivityController {
         }
         ScheduledActivityDto scheduledActivityDto = new ScheduledActivityDto(scheduledActivity.getScheduledActivityId(),
                 scheduledActivity.getDate(), scheduledActivity.getStartTime(), scheduledActivity.getEndTime(),
-                scheduledActivity.getInstructor().getInstructorId(), scheduledActivity.getActivity().getActivityName(),
-                scheduledActivity.getCapacity());
+                scheduledActivity.getSupervisor(), scheduledActivity.getActivity(), scheduledActivity.getCapacity());
         return scheduledActivityDto;
     }
 
@@ -208,8 +207,9 @@ public class ScheduledActivityController {
         if (instructor == null) {
             throw new IllegalArgumentException("There is no such instructor!");
         }
-        InstructorDto instructorDto = new InstructorDto(instructor.getInstructorId(), instructor.getFirstName(),
-                instructor.getLastName(), instructor.getEmail(), instructor.getPhoneNumber());
+        InstructorDto instructorDto = new InstructorDto(instructor.getAccountRoleId(), InstructorStatus.Active,
+                instructor.getDescription(), instructor.getProfilePicURL(),
+                AccountManagementController.convertAccountToDto(instructor.getAccount()));
         return instructorDto;
     }
 
@@ -223,7 +223,8 @@ public class ScheduledActivityController {
         if (activity == null) {
             throw new IllegalArgumentException("There is no such activity!");
         }
-        ActivityDto activityDto = new ActivityDto(activity.getActivityName(), activity.getDescription());
+        ActivityDto activityDto = new ActivityDto(activity.getSubCategory(), activity.getName(),
+                activity.getIsApproved(), activity.getDescription());
         return activityDto;
     }
 
