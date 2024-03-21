@@ -290,7 +290,7 @@ public class TestAccountManagementService {
         Account account1 = new Account();
         when(accountRepository.findAccountByAccountId(accountId)).thenReturn(account1);
 
-        Account account = accountService.getAccountById(accountId);
+        Account account = accountService.getAccountByAccountId(accountId);
 
         assertNotNull(account);
         assertEquals(account1, account);
@@ -304,7 +304,7 @@ public class TestAccountManagementService {
         when(accountRepository.findAccountByAccountId(accountId)).thenReturn(account1);
 
         try {
-            Account account = accountService.getAccountById(accountId);
+            Account account = accountService.getAccountByAccountId(accountId);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
