@@ -103,6 +103,30 @@ public class RegistrationController {
     }
 
     /**
+     * Get all costumers attending a scheduled activity by scheduledActivityId
+     * 
+     * @param scheduledActivityId
+     * @return List<RegistrationDto>
+     */
+    @GetMapping(value = { "/registrations/scheduledActivity/{scheduledActivityId}" })
+    public List<RegistrationDto> getCustomersByScheduledActivityId(
+            @PathVariable("scheduledActivityId") int scheduledActivityId) throws IllegalArgumentException {
+        return convertToDto(registrationService.getRegistrationByScheduledActivityId(scheduledActivityId));
+    }
+
+    /**
+     * Get all scheduled activities attended by a customer by its accountRoleId
+     * 
+     * @param accountRoleId
+     * @return List<RegistrationDto>
+     */
+    @GetMapping(value = { "/registrations/customer/{accountRoleId}" })
+    public List<RegistrationDto> getScheduledActivitiesByCustomer(@PathVariable("accountRoleId") int accountRoleId)
+            throws IllegalArgumentException {
+        return convertToDto(registrationService.getRegistrationByAccountRoleId(accountRoleId));
+    }
+
+    /**
      * Delete a registration by its registrationId
      * 
      * @param registrationId

@@ -185,6 +185,44 @@ public class RegistrationService {
     }
 
     /**
+     * Get all costumers attending a scheduled activity by its scheduledActivityId
+     * 
+     * @param scheduledActivityId
+     */
+    @Transactional
+    public List<Customer> getCustomersByScheduledActivityId(int scheduledActivityId) {
+        List<Customer> customers = new ArrayList<>();
+        if (scheduledActivityId < 0) {
+            throw new IllegalArgumentException("Id not valid!");
+        }
+        for (Registration registration : registrationRepository.findAll()) {
+            if (registration.getScheduledActivity().getScheduledActivityId() == scheduledActivityId) {
+                customers.add(registration.getCustomer());
+            }
+        }
+        return customers;
+    }
+
+    /**
+     * Get all scheduled activities attended by a customer by its accountRoleId
+     * 
+     * @param registrationId
+     */
+    @Transactional
+    public List<ScheduledActivity> getScheduledActivitiesByAccountRoleId(int accountRoleId) {
+        List<ScheduledActivity> scheduledActivities = new ArrayList<>();
+        if (accountRoleId < 0) {
+            throw new IllegalArgumentException("Id not valid!");
+        }
+        for (Registration registration : registrationRepository.findAll()) {
+            if (registration.getCustomer().getAccountRoleId() == accountRoleId) {
+                scheduledActivities.add(registration.getScheduledActivity());
+            }
+        }
+        return scheduledActivities;
+    }
+
+    /**
      * Delete a registration by its registrationId (primary key)
      * 
      * @param registrationId
