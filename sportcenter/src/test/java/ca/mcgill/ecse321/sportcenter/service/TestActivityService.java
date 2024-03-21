@@ -46,13 +46,8 @@ public class TestActivityService {
         boolean isApproved = false;
         int instructorId = 1;
 
-        when(activityRepository.findActivityByName(name)).thenReturn(null);// this checks if the activity already
-                                                                           // exists, and if it does, it will return
-                                                                           // null
-        when(activityService.checkAccountInstructor(instructorId)).thenReturn(true);// this checks if the instructor
-                                                                                    // exists, if not, it will return
-                                                                                    // false which will throw an
-                                                                                    // exception
+        when(activityRepository.findActivityByName(name)).thenReturn(null);
+        when(activityService.checkAccountInstructor(instructorId)).thenReturn(true);
         when(activityRepository.save(any(Activity.class))).thenAnswer((invocation) -> {
             Activity activity = new Activity();
             activity.setName(name);
@@ -80,10 +75,7 @@ public class TestActivityService {
         int instructorId = 1;
 
         String error = null;
-        when(activityService.checkAccountInstructor(instructorId)).thenReturn(true);// this checks if the instructor
-                                                                                    // exists, if not, it will return
-                                                                                    // false which will throw an
-                                                                                    // exception
+        when(activityService.checkAccountInstructor(instructorId)).thenReturn(true);
         try {
             Activity createdActivity = activityService.createActivity(name, description, subCategory);
         } catch (IllegalArgumentException e) {
@@ -101,10 +93,7 @@ public class TestActivityService {
         int instructorId = 1;
 
         String error = null;
-        when(activityService.checkAccountInstructor(instructorId)).thenReturn(true);// this checks if the instructor
-                                                                                    // exists, if not, it will return
-                                                                                    // false which will throw an
-                                                                                    // exception
+        when(activityService.checkAccountInstructor(instructorId)).thenReturn(true);
         try {
             Activity createdActivity = activityService.createActivity(name, description, subCategory);
         } catch (IllegalArgumentException e) {
@@ -122,10 +111,7 @@ public class TestActivityService {
         int instructorId = 1;
 
         String error = null;
-        when(activityService.checkAccountInstructor(instructorId)).thenReturn(true);// this checks if the instructor
-                                                                                    // exists, if not, it will return
-                                                                                    // false which will throw an
-                                                                                    // exception
+        when(activityService.checkAccountInstructor(instructorId)).thenReturn(true);
         try {
             Activity createdActivity = activityService.createActivity(name, description, subCategory);
         } catch (IllegalArgumentException e) {
@@ -143,10 +129,7 @@ public class TestActivityService {
         int instructorId = 1;
 
         String error = null;
-        when(activityService.checkAccountInstructor(instructorId)).thenReturn(true);// this checks if the instructor
-                                                                                    // exists, if not, it will return
-                                                                                    // false which will throw an
-                                                                                    // exception
+        when(activityService.checkAccountInstructor(instructorId)).thenReturn(true);
         try {
             Activity createdActivity = activityService.createActivity(name, description, subCategory);
         } catch (IllegalArgumentException e) {
@@ -164,10 +147,7 @@ public class TestActivityService {
         int instructorId = 1;
 
         String error = null;
-        when(activityService.checkAccountInstructor(instructorId)).thenReturn(true);// this checks if the instructor
-                                                                                    // exists, if not, it will return
-                                                                                    // false which will throw an
-                                                                                    // exception
+        when(activityService.checkAccountInstructor(instructorId)).thenReturn(true);
         try {
             Activity createdActivity = activityService.createActivity(name, description, subCategory);
         } catch (IllegalArgumentException e) {
@@ -185,7 +165,7 @@ public class TestActivityService {
         int instructorId = 1;
 
         String error = null;
-        // when(activityService.checkAccountInstructor(instructorId)).thenReturn(false);//this
+        when(activityService.checkAccountInstructor(instructorId)).thenReturn(false);//this
         // checks if the instructor exists, if not, it will return false which will
         // throw an exception
         try {
