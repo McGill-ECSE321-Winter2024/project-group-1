@@ -14,7 +14,6 @@ import ca.mcgill.ecse321.sportcenter.model.Activity;
 import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
 import ca.mcgill.ecse321.sportcenter.model.Instructor;
 import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity;
-import jakarta.transaction.TransactionScoped;
 import jakarta.transaction.Transactional;
 
 /*
@@ -210,7 +209,7 @@ public class ActivityManagementService {
      * @author Anslean AJ
      */
     @Transactional
-    public Activity proposeActivity(String name, String description, ClassCategory subcategory) {
+    public void proposeActivity(String name, String description, ClassCategory subcategory) {
         ActivityService activityService = new ActivityService();
 
         try {
@@ -227,40 +226,43 @@ public class ActivityManagementService {
         }
     }
 
-    /**
-     * Make a new scheduled activity to the system.
-     * 
-     * @return ScheduledActivity
-     * @author Anslean AJ
-     */
-    @Transactional
-    public ScheduledActivity makeScheduledActivity(LocalDate date, LocalTime startTime, LocalTime endTime,
-            Instructor instructor, Activity activity, int capacity) {
+    // /**
+    // * Make a new scheduled activity to the system.
+    // *
+    // * @return ScheduledActivity
+    // * @author Anslean AJ
+    // */
+    // @Transactional
+    // public ScheduledActivity makeScheduledActivity(LocalDate date, LocalTime
+    // startTime, LocalTime endTime,
+    // Instructor instructor, Activity activity, int capacity) {
 
-        ScheduledActivityService scheduledActivityService = new ScheduledActivityService();
+    // ScheduledActivityService scheduledActivityService = new
+    // ScheduledActivityService();
 
-        try {
-            if (date == null) {
-                throw new IllegalArgumentException("Date cannot be empty!");
-            } else if (startTime == null) {
-                throw new IllegalArgumentException("Start time cannot be empty!");
-            } else if (endTime == null) {
-                throw new IllegalArgumentException("End time cannot be empty!");
-            } else if (instructor == null) {
-                throw new IllegalArgumentException("Instructor cannot be empty!");
-            } else if (activity == null) {
-                throw new IllegalArgumentException("Activity cannot be empty!");
-            } else if (capacity <= 0) {
-                throw new IllegalArgumentException("Capacity cannot be empty!");
-            }
+    // try {
+    // if (date == null) {
+    // throw new IllegalArgumentException("Date cannot be empty!");
+    // } else if (startTime == null) {
+    // throw new IllegalArgumentException("Start time cannot be empty!");
+    // } else if (endTime == null) {
+    // throw new IllegalArgumentException("End time cannot be empty!");
+    // } else if (instructor == null) {
+    // throw new IllegalArgumentException("Instructor cannot be empty!");
+    // } else if (activity == null) {
+    // throw new IllegalArgumentException("Activity cannot be empty!");
+    // } else if (capacity <= 0) {
+    // throw new IllegalArgumentException("Capacity cannot be empty!");
+    // }
 
-            return scheduledActivityService.createScheduledActivity(date, endTime, endTime, instructor, activity,
-                    capacity);
+    // return scheduledActivityService.createScheduledActivity(date, endTime,
+    // endTime, instructor, activity,
+    // capacity);
 
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid inputs!");
-        }
-    }
+    // } catch (IllegalArgumentException e) {
+    // throw new IllegalArgumentException("Invalid inputs!");
+    // }
+    // }
 
     /**
      * Set isApproved of activity to true
