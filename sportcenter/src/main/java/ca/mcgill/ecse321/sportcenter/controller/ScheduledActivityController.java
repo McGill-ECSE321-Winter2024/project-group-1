@@ -185,7 +185,7 @@ public class ScheduledActivityController {
      * @param scheduledActivity
      * @return ScheduledActivityDto
      */
-    private ScheduledActivityDto convertToDto(ScheduledActivity scheduledActivity) {
+    public static ScheduledActivityDto convertToDto(ScheduledActivity scheduledActivity) {
         if (scheduledActivity == null) {
             throw new IllegalArgumentException("There is no such scheduled activity!");
         }
@@ -201,7 +201,7 @@ public class ScheduledActivityController {
      * @param scheduledActivities
      * @return List<ScheduledActivityDto>
      */
-    private List<ScheduledActivityDto> convertToDto(List<ScheduledActivity> scheduledActivities) {
+    public static List<ScheduledActivityDto> convertToDto(List<ScheduledActivity> scheduledActivities) {
         List<ScheduledActivityDto> scheduledActivityDtos = new ArrayList<ScheduledActivityDto>();
         for (ScheduledActivity scheduledActivity : scheduledActivities) {
             scheduledActivityDtos.add(convertToDto(scheduledActivity));
