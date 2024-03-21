@@ -12,6 +12,4 @@ public interface InstructorRepository extends CrudRepository<Instructor, Integer
     public Instructor findAccountRoleByAccountRoleId(int accountRoleId); // Account role is parent class. Primary Key
                                                                          // accountRoleId
 
-    public Instructor findInstructorByUsername(String username); // Username is unique (not null
-
 }
