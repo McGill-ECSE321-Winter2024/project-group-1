@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import ca.mcgill.ecse321.sportcenter.model.Activity;
 import ca.mcgill.ecse321.sportcenter.model.Instructor;
 import ca.mcgill.ecse321.sportcenter.dto.InstructorDto;
-import ca.mcgill.ecse321.sportcenter.dto.InstructorDto.InstructorStatus;
 import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity;
 import ca.mcgill.ecse321.sportcenter.dto.ScheduledActivityDto;
 
@@ -36,7 +35,7 @@ public class ScheduledActivityController {
     private ScheduledActivityService scheduledActivityService;
 
     /**
-     * Create a scheduled activity where only the instructor can create it
+     * Create a scheduled activity
      * 
      * @param scheduledActivityId
      * @param date
@@ -105,7 +104,7 @@ public class ScheduledActivityController {
             @PathVariable("scheduledActivityId") int scheduledActivityId)
             throws IllegalArgumentException {
         Instructor instructor = scheduledActivityService.getInstructorByScheduledActivityId(scheduledActivityId);
-        return convertToDto(instructor);
+        return AccountManagementController.convertInstructorToDto(instructor);
     }
 
     /**
@@ -132,7 +131,7 @@ public class ScheduledActivityController {
     public ActivityDto getActivityByScheduledActivityId(@PathVariable("scheduledActivityId") int scheduledActivityId)
             throws IllegalArgumentException {
         Activity activity = scheduledActivityService.getActivityByScheduledActivityId(scheduledActivityId);
-        return convertToDto(activity);
+        return ActivityManagementController.convertToDto(activity);
     }
 
     /**
@@ -145,7 +144,6 @@ public class ScheduledActivityController {
      * @param accountRoleId
      * @param activityName
      * @param capacity
-     * 
      * @return ScheduledActivity
      */
     @PutMapping(value = {
@@ -195,37 +193,6 @@ public class ScheduledActivityController {
                 scheduledActivity.getDate(), scheduledActivity.getStartTime(), scheduledActivity.getEndTime(),
                 scheduledActivity.getSupervisor(), scheduledActivity.getActivity(), scheduledActivity.getCapacity());
         return scheduledActivityDto;
-    }
-
-    /**
-     * Convert instructor to instructor dto
-     * 
-     * @param instructor
-     * @return InstructorDto
-     */
-    private InstructorDto convertToDto(Instructor instructor) {
-        if (instructor == null) {
-            throw new IllegalArgumentException("There is no such instructor!");
-        }
-        InstructorDto instructorDto = new InstructorDto(instructor.getAccountRoleId(), InstructorStatus.Active,
-                instructor.getDescription(), instructor.getProfilePicURL(),
-                AccountManagementController.convertAccountToDto(instructor.getAccount()));
-        return instructorDto;
-    }
-
-    /**
-     * Convert activity to activity dto
-     * 
-     * @param activity
-     * @return ActivityDto
-     */
-    private ActivityDto convertToDto(Activity activity) {
-        if (activity == null) {
-            throw new IllegalArgumentException("There is no such activity!");
-        }
-        ActivityDto activityDto = new ActivityDto(activity.getSubCategory(), activity.getName(),
-                activity.getIsApproved(), activity.getDescription());
-        return activityDto;
     }
 
     /**

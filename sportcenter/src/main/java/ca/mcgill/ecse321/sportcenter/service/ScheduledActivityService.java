@@ -240,7 +240,6 @@ public class ScheduledActivityService {
      * @param accountRoleId
      * @param activityName
      * @param capacity
-     * 
      * @return ScheduledActivity
      */
     @Transactional
@@ -334,7 +333,6 @@ public class ScheduledActivityService {
      * Delete a scheduled activity
      * 
      * @param scheduledActivityId
-     * 
      * @return ScheduledActivity
      */
     @Transactional
