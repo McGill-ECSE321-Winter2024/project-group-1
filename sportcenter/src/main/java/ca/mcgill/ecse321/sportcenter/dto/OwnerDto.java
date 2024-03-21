@@ -2,7 +2,6 @@ package ca.mcgill.ecse321.sportcenter.dto;
 
 import ca.mcgill.ecse321.sportcenter.model.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class OwnerDto {
     private int accountRoleId;
@@ -20,10 +19,14 @@ public class OwnerDto {
     }
 
     public static OwnerDto convertToDto(Owner owner) {
-        if (owner == null) {
-            throw new IllegalArgumentException("There is no owner!");
-        }
         return new OwnerDto(owner.getAccountRoleId());
     }
 
+    public static List<OwnerDto> convertToDto(List<Owner> owners) {
+        List<OwnerDto> ownerDto = new ArrayList<OwnerDto>(owners.size());
+        for (Owner owner : owners) {
+            ownerDto.add(OwnerDto.convertToDto(owner));
+        }
+        return ownerDto;
+    }
 }
