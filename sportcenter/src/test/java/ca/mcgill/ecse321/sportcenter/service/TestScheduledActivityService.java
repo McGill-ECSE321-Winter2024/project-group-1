@@ -2,42 +2,30 @@ package ca.mcgill.ecse321.sportcenter.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.description;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
-import org.aspectj.lang.annotation.SuppressAjWarnings;
-import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cglib.core.Local;
-import org.springframework.scheduling.config.ScheduledTaskHolder;
 
 import ca.mcgill.ecse321.sportcenter.dao.ActivityRepository;
 import ca.mcgill.ecse321.sportcenter.model.Activity;
-import ca.mcgill.ecse321.sportcenter.service.ActivityService;
 import ca.mcgill.ecse321.sportcenter.dao.InstructorRepository;
 
 import ca.mcgill.ecse321.sportcenter.dao.ScheduledActivityRepository;
-import ca.mcgill.ecse321.sportcenter.service.ScheduledActivityService;
 import ca.mcgill.ecse321.sportcenter.model.Instructor;
 import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity;
-import ca.mcgill.ecse321.sportcenter.service.InstructorService;
-import jakarta.persistence.criteria.CriteriaBuilder.In;
 
 import ca.mcgill.ecse321.sportcenter.model.Account;
-import ca.mcgill.ecse321.sportcenter.service.AccountService;
 import ca.mcgill.ecse321.sportcenter.dao.AccountRepository;
 
 @SpringBootTest
@@ -93,16 +81,7 @@ public class TestScheduledActivityService {
         LocalTime startTime = LocalTime.of(10, 0, 0);
         LocalTime endTime = LocalTime.of(12, 0, 0);
         int capacity = 10;
-        /*
-         * when(scheduledActivityRepository.findScheduledActivityByScheduledActivityId(
-         * scheduledActivityId))
-         * .thenReturn(null);// this checks if the activity already exists, and if it
-         * does, it will return
-         * // null
-         * // when(scheduledActivityRepository(instructorId)).thenReturn(true);//this
-         * // checks if the instructor exists, if not, it will return false which will
-         * // throw an exception
-         */
+
         when(scheduledActivityRepository.save(any(ScheduledActivity.class))).thenAnswer((invocation) -> {
             ScheduledActivity scheduledActivity = new ScheduledActivity();
             // scheduledActivity.setScheduledActivityId(scheduledActivityId);
