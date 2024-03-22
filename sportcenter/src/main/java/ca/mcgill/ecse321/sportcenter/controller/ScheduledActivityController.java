@@ -47,7 +47,8 @@ public class ScheduledActivityController {
      * @return ScheduledActivityDto
      */
     @PostMapping(value = {
-            "/createScheduledActivity/{date}/{startTime}/{endTime}/{instructorId}/{activityName}/{capacity}" })
+            "/createScheduledActivity/{date}/{startTime}/{endTime}/{instructorId}/{activityName}/{capacity}",
+            "/createScheduledActivity/{date}/{startTime}/{endTime}/{instructorId}/{activityName}/{capacity}/" })
     public ScheduledActivityDto createScheduledActivity(@PathVariable("date") LocalDate date,
             @PathVariable("startTime") LocalTime startTime, @PathVariable("endTime") LocalTime endTime,
             @PathVariable("instructorId") int instructorId, @PathVariable("activityName") String activityName,
@@ -63,7 +64,7 @@ public class ScheduledActivityController {
      * @param scheduledActivityId
      * @return ScheduledActivityDto
      */
-    @GetMapping(value = { "/scheduledActivity/{scheduledActivityId}" })
+    @GetMapping(value = { "/scheduledActivity/{scheduledActivityId}", "/scheduledActivity/{scheduledActivityId}/" })
     public ScheduledActivityDto getScheduledActivityById(@PathVariable("scheduledActivityId") int scheduledActivityId)
             throws IllegalArgumentException {
         ScheduledActivity scheduledActivity = scheduledActivityService.getScheduledActivityById(scheduledActivityId);
@@ -76,7 +77,7 @@ public class ScheduledActivityController {
      * @param date
      * @return List<ScheduledActivityDto>
      */
-    @GetMapping(value = { "/scheduledActivities/{date}" })
+    @GetMapping(value = { "/scheduledActivities/{date}", "/scheduledActivities/{date}/" })
     public List<ScheduledActivityDto> getAllScheduledActivitiesByDate(@PathVariable("date") LocalDate date) {
         List<ScheduledActivity> scheduledActivities = scheduledActivityService.getAllScheduledActivitiesByDate(date);
         return convertToDto(scheduledActivities);
@@ -87,7 +88,7 @@ public class ScheduledActivityController {
      * 
      * @return List<ScheduledActivityDto>
      */
-    @GetMapping(value = { "/scheduledActivities" })
+    @GetMapping(value = { "/scheduledActivities", "/scheduledActivities/" })
     public List<ScheduledActivityDto> getAllScheduledActivities() {
         List<ScheduledActivity> scheduledActivities = scheduledActivityService.getAllScheduledActivities();
         return convertToDto(scheduledActivities);
@@ -99,7 +100,8 @@ public class ScheduledActivityController {
      * @param scheduledActivity
      * @return InstructorDto
      */
-    @GetMapping(value = { "/scheduledActivity/instructor/{scheduledActivityId}" })
+    @GetMapping(value = { "/scheduledActivity/instructor/{scheduledActivityId}",
+            "/scheduledActivity/instructor/{scheduledActivityId}" })
     public InstructorDto getInstructorByScheduledActivityId(
             @PathVariable("scheduledActivityId") int scheduledActivityId)
             throws IllegalArgumentException {
@@ -113,7 +115,8 @@ public class ScheduledActivityController {
      * @param instructorId
      * @return List<ScheduledActivityDto>
      */
-    @GetMapping(value = { "/scheduledActivities/instructor/{instructorId}" })
+    @GetMapping(value = { "/scheduledActivities/instructor/{instructorId}",
+            "/scheduledActivities/instructor/{instructorId}/" })
     public List<ScheduledActivityDto> getAllScheduledActivitiesByInstructorId(
             @PathVariable("instructorId") int instructorId) {
         List<ScheduledActivity> scheduledActivities = scheduledActivityService
@@ -127,7 +130,8 @@ public class ScheduledActivityController {
      * @param scheduledActivityId
      * @return ActivityDto
      */
-    @GetMapping(value = { "/scheduledActivity/activity/{scheduledActivityId}" })
+    @GetMapping(value = { "/scheduledActivity/activity/{scheduledActivityId}",
+            "/scheduledActivity/activity/{scheduledActivityId}" })
     public ActivityDto getActivityByScheduledActivityId(@PathVariable("scheduledActivityId") int scheduledActivityId)
             throws IllegalArgumentException {
         Activity activity = scheduledActivityService.getActivityByScheduledActivityId(scheduledActivityId);
@@ -147,7 +151,8 @@ public class ScheduledActivityController {
      * @return ScheduledActivity
      */
     @PutMapping(value = {
-            "/updateScheduledActivity/{scheduledActivityId}/{oldDate}/{newDate}/{oldStartTime}/{newStartTime}/{oldEndTime}/{newEndTime}" })
+            "/updateScheduledActivity/{scheduledActivityId}/{oldDate}/{newDate}/{oldStartTime}/{newStartTime}/{oldEndTime}/{newEndTime}",
+            "/updateScheduledActivity/{scheduledActivityId}/{oldDate}/{newDate}/{oldStartTime}/{newStartTime}/{oldEndTime}/{newEndTime}/" })
     public ScheduledActivityDto updateScheduledActivity(@PathVariable("scheduledActivityId") int scheduledActivityId,
             @PathVariable("oldDate") LocalDate oldDate, @PathVariable("newDate") LocalDate newDate,
             @PathVariable("oldStartTime") LocalTime oldStartTime, @PathVariable("newStartTime") LocalTime newStartTime,
@@ -167,7 +172,8 @@ public class ScheduledActivityController {
      * @param newAccountId
      * @return ScheduledActivity
      */
-    @PutMapping(value = { "/updateScheduledActivity/instructor/{scheduledActivityId}/{oldAccountId}/{newAccountId}" })
+    @PutMapping(value = { "/updateScheduledActivity/instructor/{scheduledActivityId}/{oldAccountId}/{newAccountId}",
+            "/updateScheduledActivity/instructor/{scheduledActivityId}/{oldAccountId}/{newAccountId}/" })
     public ScheduledActivityDto updateScheduledActivityInstructor(
             @PathVariable("scheduledActivityId") int scheduledActivityId,
             @PathVariable("oldAccountId") int oldAccountId, @PathVariable("newAccountId") int newAccountId)
@@ -187,7 +193,8 @@ public class ScheduledActivityController {
      * @return ScheduledActivity
      */
     @PutMapping(value = {
-            "/updateScheduledActivity/activity/{scheduledActivityId}/{oldActivityName}/{newActivityName}" })
+            "/updateScheduledActivity/activity/{scheduledActivityId}/{oldActivityName}/{newActivityName}",
+            "/updateScheduledActivity/activity/{scheduledActivityId}/{oldActivityName}/{newActivityName}/" })
     public ScheduledActivityDto updateScheduledActivityActivity(
             @PathVariable("scheduledActivityId") int scheduledActivityId,
             @PathVariable("oldActivityName") String oldActivityName,
@@ -207,7 +214,8 @@ public class ScheduledActivityController {
      * @param newCapacity
      * @return ScheduledActivity
      */
-    @PutMapping(value = { "/updateScheduledActivity/capacity/{scheduledActivityId}/{oldCapacity}/{newCapacity}" })
+    @PutMapping(value = { "/updateScheduledActivity/capacity/{scheduledActivityId}/{oldCapacity}/{newCapacity}",
+            "/updateScheduledActivity/capacity/{scheduledActivityId}/{oldCapacity}/{newCapacity}/" })
     public ScheduledActivityDto updateScheduledActivityCapacity(
             @PathVariable("scheduledActivityId") int scheduledActivityId,
             @PathVariable("oldCapacity") int oldCapacity, @PathVariable("newCapacity") int newCapacity)
@@ -224,7 +232,8 @@ public class ScheduledActivityController {
      * @param scheduledActivityId
      * @return boolean
      */
-    @DeleteMapping(value = { "/deleteScheduledActivity/{scheduledActivityId}" })
+    @DeleteMapping(value = { "/deleteScheduledActivity/{scheduledActivityId}",
+            "/deleteScheduledActivity/{scheduledActivityId}/" })
     public void deleteScheduledActivity(@PathVariable("scheduledActivityId") int scheduledActivityId)
             throws IllegalArgumentException {
         scheduledActivityService.deleteScheduledActivity(scheduledActivityId);
@@ -233,7 +242,7 @@ public class ScheduledActivityController {
     /**
      * Delete all scheduled activities
      */
-    @DeleteMapping(value = { "/deleteScheduledActivities" })
+    @DeleteMapping(value = { "/deleteScheduledActivities", "/deleteScheduledActivities/" })
     public void deleteAllScheduledActivities() {
         scheduledActivityService.deleteAllScheduledActivities();
     }
