@@ -65,9 +65,10 @@ public class TestAccountCustomerService {
 
     @Test
     public void testCreateCustomer() {
-        Account account = new Account();
-        account.setUsername("Person1");
-        account.setPassword("Password1");
+
+        String username = "Person1";
+        String password = "Password1";
+        Account account = new Account(username, password);
         when(accountRepository.save(any(Account.class))).thenReturn(account);
 
         Customer customer = accountService.createCustomer("Person1");
@@ -118,9 +119,9 @@ public class TestAccountCustomerService {
 
     @Test
     public void testDeleteCustomer() {
-        Account account = new Account();
-        account.setUsername("Person1");
-        account.setPassword("Password1");
+        String username = "Person1";
+        String password = "Password1";
+        Account account = new Account(username, password);
         when(accountRepository.save(any(Account.class))).thenReturn(account);
 
         Customer customer = accountService.createCustomer("Person1");
@@ -130,14 +131,14 @@ public class TestAccountCustomerService {
 
     @Test
     public void testDeleteCustomerNull() {
-        Account account = new Account();
-        account.setUsername("Person1");
-        account.setPassword("Password1");
+        String username = "Person1";
+        String password = "Password1";
+        Account account = new Account(username, password);
         when(accountRepository.save(any(Account.class))).thenReturn(account);
         Customer customer = accountService.createCustomer("Person1");
-        String username = null;
+        String username_empty = null;
         try {
-            accountService.deleteCustomerByUsername(username);
+            accountService.deleteCustomerByUsername(username_empty);
         } catch (IllegalArgumentException e) {
             assertEquals("Username cannot be empty!", e.getMessage());
             assertEquals(customer, customerRepository.findAccountRoleByUsername("Person1"));
@@ -146,14 +147,14 @@ public class TestAccountCustomerService {
 
     @Test
     public void testDeleteCustomerEmpty() {
-        Account account = new Account();
-        account.setUsername("Person1");
-        account.setPassword("Password1");
+        String username = "Person1";
+        String password = "Password1";
+        Account account = new Account(username, password);
         when(accountRepository.save(any(Account.class))).thenReturn(account);
         Customer customer = accountService.createCustomer("Person1");
-        String username = "";
+        String username_empty = "";
         try {
-            accountService.deleteCustomerByUsername(username);
+            accountService.deleteCustomerByUsername(username_empty);
         } catch (IllegalArgumentException e) {
             assertEquals("Username cannot be empty!", e.getMessage());
             assertEquals(customer, customerRepository.findAccountRoleByUsername("Person1"));
@@ -164,14 +165,14 @@ public class TestAccountCustomerService {
 
     @Test
     public void testDeleteCustomerSpaces() {
-        Account account = new Account();
-        account.setUsername("Person1");
-        account.setPassword("Password1");
+        String username = "Person1";
+        String password = "Password1";
+        Account account = new Account(username, password);
         when(accountRepository.save(any(Account.class))).thenReturn(account);
         Customer customer = accountService.createCustomer("Person1");
-        String username = " ";
+        String username_empty = " ";
         try {
-            accountService.deleteCustomerByUsername(username);
+            accountService.deleteCustomerByUsername(username_empty);
         } catch (IllegalArgumentException e) {
             assertEquals("Username cannot be empty!", e.getMessage());
             assertEquals(customer, customerRepository.findAccountRoleByUsername("Person1"));
@@ -180,9 +181,9 @@ public class TestAccountCustomerService {
 
     @Test
     public void testGetCustomer() {
-        Account account = new Account();
-        account.setUsername("Person1");
-        account.setPassword("Password1");
+        String username = "Person1";
+        String password = "Password1";
+        Account account = new Account(username, password);
         when(accountRepository.save(any(Account.class))).thenReturn(account);
 
         Customer customer = accountService.createCustomer("Person1");
@@ -250,13 +251,13 @@ public class TestAccountCustomerService {
 
     @Test
     public void testGetAllCustomers() {
-        Account account1 = new Account();
-        account1.setUsername("Person1");
-        account1.setPassword("Password1");
+        String username = "Person1";
+        String password = "Password1";
+        Account account1 = new Account(username, password);
         when(accountRepository.save(any(Account.class))).thenReturn(account1);
-        Account account2 = new Account();
-        account2.setUsername("Person2");
-        account2.setPassword("Password2");
+        String username2 = "Person2";
+        String password2 = "Password2";
+        Account account2 = new Account(username2, password2);
         when(accountRepository.save(any(Account.class))).thenReturn(account2);
         Customer customer1 = accountService.createCustomer("Person1");
         Customer customer2 = accountService.createCustomer("Person2");
@@ -266,9 +267,9 @@ public class TestAccountCustomerService {
 
     @Test
     public void getCustomerByRoleId() {
-        Account account = new Account();
-        account.setUsername("Person1");
-        account.setPassword("Password1");
+        String username = "Person1";
+        String password = "Password1";
+        Account account = new Account(username, password);
         when(accountRepository.save(any(Account.class))).thenReturn(account);
 
         Customer customer = accountService.createCustomer("Person1");
@@ -281,9 +282,9 @@ public class TestAccountCustomerService {
 
     @Test
     public void getCustomerByRoleIdDoesNotExist() {
-        Account account = new Account();
-        account.setUsername("Person1");
-        account.setPassword("Password1");
+        String username = "Person1";
+        String password = "Password1";
+        Account account = new Account(username, password);
         when(accountRepository.save(any(Account.class))).thenReturn(account);
 
         Customer customer = accountService.createCustomer("Person1");
@@ -300,9 +301,9 @@ public class TestAccountCustomerService {
 
     @Test ///////////////
     public void getCustomerByRoleIdNull() {
-        Account account = new Account();
-        account.setUsername("Person1");
-        account.setPassword("Password1");
+        String username = "Person1";
+        String password = "Password1";
+        Account account = new Account(username, password);
         when(accountRepository.save(any(Account.class))).thenReturn(account);
 
         Customer customer = accountService.createCustomer("Person1");
