@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import ca.mcgill.ecse321.sportcenter.dao.ActivityRepository;
 import ca.mcgill.ecse321.sportcenter.dao.InstructorRepository;
@@ -18,6 +19,7 @@ import jakarta.transaction.Transactional;
  * 
  * @author: Mathias Pacheco Lemina
  */
+@Service
 public class ActivityManagementService {
     @Autowired
     ActivityRepository activityRepository;

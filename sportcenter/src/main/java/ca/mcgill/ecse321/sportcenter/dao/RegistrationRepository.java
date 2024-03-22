@@ -12,7 +12,4 @@ public interface RegistrationRepository extends CrudRepository<Registration, Int
 
     public Registration findRegistrationByRegId(int regId); // regId is the Primary Key
 
-    public void findScheduledActivityByScheduledActivityId(int scheduledActivityId); // scheduledActivityId is the
-                                                                                     // Foreign Key
-
 }

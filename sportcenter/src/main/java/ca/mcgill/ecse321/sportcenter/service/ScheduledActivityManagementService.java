@@ -7,6 +7,7 @@ import java.time.LocalTime;
 import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ca.mcgill.ecse321.sportcenter.model.Instructor;
@@ -22,6 +23,7 @@ import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity;
  * 
  * @author Fabian Saldana
  */
+@Service
 public class ScheduledActivityManagementService {
 
     @Autowired
@@ -213,7 +215,7 @@ public class ScheduledActivityManagementService {
         if (instructor == null) {
             throw new IllegalArgumentException("Instructor does not exist!");
         }
-        return toList(scheduledActivityRepository.findScheduledActivityBySupervisor(accountRoleId));
+        return toList(scheduledActivityRepository.findScheduledActivityBySupervisorAccountRoleId(accountRoleId));
     }
 
     /**
