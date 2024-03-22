@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import ca.mcgill.ecse321.sportcenter.model.Instructor;
+import ca.mcgill.ecse321.sportcenter.model.Registration;
 import ca.mcgill.ecse321.sportcenter.model.Activity;
 import ca.mcgill.ecse321.sportcenter.dao.ActivityRepository;
 import ca.mcgill.ecse321.sportcenter.dao.InstructorRepository;
@@ -407,11 +408,6 @@ public class ScheduledActivityManagementService {
     }
 
     /**
-     * 
-     * @param scheduledActivityId
-     */
-
-    /**
      * Delete a scheduled activity
      * 
      * @param scheduledActivityId
@@ -426,6 +422,14 @@ public class ScheduledActivityManagementService {
         if (scheduledActivity == null) {
             throw new IllegalArgumentException("Scheduled Activity does not exist!");
         }
+
+        // Delete all registrations of this scheduled activity
+        RegistrationManagementService registrationManagementService = new RegistrationManagementService();
+        for (Registration registration : registrationManagementService.getRegistrationByScheduledActivityId(
+                scheduledActivity.getScheduledActivityId())) {
+            registrationManagementService.deleteRegistration(registration.getRegistrationId());
+        }
+
         scheduledActivityRepository.delete(scheduledActivity);
     }
 
@@ -434,6 +438,8 @@ public class ScheduledActivityManagementService {
      */
     @Transactional
     public void deleteAllScheduledActivities() {
-        scheduledActivityRepository.deleteAll();
+        for (ScheduledActivity scheduledActivity : getAllScheduledActivities()) {
+            deleteScheduledActivity(scheduledActivity.getScheduledActivityId());
+        }
     }
 }
