@@ -36,6 +36,8 @@ import org.mockito.stubbing.Answer;
 import ca.mcgill.ecse321.sportcenter.dao.*;
 import ca.mcgill.ecse321.sportcenter.model.*;
 import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
+import ca.mcgill.ecse321.sportcenter.model.Instructor.InstructorStatus;
+import ca.mcgill.ecse321.sportcenter.dao.*;
 
 //Registration service unit tests
 @ExtendWith(MockitoExtension.class)
@@ -49,6 +51,9 @@ public class TestRegistrationService {
 
         @Mock
         private CustomerRepository customerDao;
+
+        @Mock
+        private InstructorRepository instructorDao;
 
         @Mock
         private ScheduledActivityRepository scheduledActivityDao;
@@ -78,61 +83,184 @@ public class TestRegistrationService {
         private RegistrationService registrationService;
 
         @InjectMocks
-        private AccountService accountService;
-
-        @InjectMocks
-        private CustomerService customerService;
+        private AccountManagementService accountService;
 
         @InjectMocks
         private ScheduledActivityService scheduledActivityService;
 
         @InjectMocks
-        private ActivityService activityService;
+        private ActivityManagementService activityService;
 
-        @InjectMocks
-        private OwnerService ownerService;
+        @BeforeEach
+        void init() {
 
-        private <T> List<T> toList(Iterable<T> iterable) {
-                List<T> resultList = new ArrayList<T>();
-                for (T t : iterable) {
-                        resultList.add(t);
-                }
-                return resultList;
+                // Create a customer
+                Account customerAccount = new Account();
+                customerAccount.setUsername("customer");
+                customerAccount.setPassword("password");
+                accountDao.save(customerAccount);
+
+                Customer customer = new Customer();
+                customer.setAccount(customerAccount);
+                customerDao.save(customer);
+
+                // Create an approved instructor
+                Account approvedInstructorAccount = new Account();
+                approvedInstructorAccount.setUsername("approvedInstructor");
+                approvedInstructorAccount.setPassword("password");
+                accountDao.save(approvedInstructorAccount);
+
+                Instructor approvedInstructor = new Instructor();
+                approvedInstructor.setAccount(approvedInstructorAccount);
+                approvedInstructor.setStatus(InstructorStatus.Active);
+                approvedInstructor.setDescription("description");
+                approvedInstructor.setProfilePicURL("pictureURL");
+                instructorDao.save(approvedInstructor);
+
+                // Create a disapproved instructor
+                Account disapprovedInstructorAccount = new Account();
+                disapprovedInstructorAccount.setUsername("disapprovedInstructor");
+                disapprovedInstructorAccount.setPassword("password");
+                accountDao.save(disapprovedInstructorAccount);
+
+                Instructor disapprovedInstructor = new Instructor();
+                disapprovedInstructor.setAccount(approvedInstructorAccount);
+                disapprovedInstructor.setStatus(InstructorStatus.Pending);
+                disapprovedInstructor.setDescription("description");
+                disapprovedInstructor.setProfilePicURL("pictureURL");
+                instructorDao.save(disapprovedInstructor);
+
+                // Create an owner
+                Account ownerAccount = new Account();
+                ownerAccount.setUsername("owner");
+                ownerAccount.setPassword("password");
+                accountDao.save(ownerAccount);
+
+                Owner owner = new Owner();
+                owner.setAccount(customerAccount);
+                ownerDao.save(owner);
+
+                // Create an activity
+                Activity activity = new Activity();
+                activity.setName("activity");
+                activity.setDescription("description");
+                activity.setSubCategory(ClassCategory.Cardio);
+                activity.setIsApproved(false);
+                activityDao.save(activity);
+
+                // Create a scheduled activity
+                ScheduledActivity scheduledActivity = new ScheduledActivity();
+                scheduledActivity.setDate(LocalDate.now());
+                scheduledActivity.setStartTime(LocalTime.now());
+                scheduledActivity.setEndTime(LocalTime.of(12, 0));
+                scheduledActivity.setSupervisor(disapprovedInstructor);
+                scheduledActivity.setActivity(activity);
+                scheduledActivity.setCapacity(30);
+                scheduledActivityDao.save(scheduledActivity);
+
         }
 
         @SuppressAjWarnings("null")
-
-        /*
-         * tests the creation of a registration
+        /**
+         * Tests the creation of a registration
          * 
+         * @author Emilie Ruel
          */
         @Test
         public void testCreateRegistration() {
+                /*
+                 * String username = "username";
+                 * String password = "password";
+                 * Account account = new Account(username, password);
+                 * String instructorUsername = "instructor";
+                 * Account instructorAccount = new Account();
+                 * account = accountService.createAccount(username, password);
+                 * instructorAccount = accountService.createAccount(instructorUsername,
+                 * password);
+                 * Customer customer = new Customer();
+                 * customer = accountService.createCustomer(username);
+                 * Instructor instructor = new
+                 * ownerService.approveInstructor(instructorAccount.getAccountId());
+                 * Activity activity = new Activity();
+                 * activity = activityService.createActivity("activityName",
+                 * "activityDescription", ClassCategory.Cardio);
+                 * Owner owner = new Owner();
+                 * accountService.approveActivity(activity.getName());
+                 * ScheduledActivity scheduledActivity = new ScheduledActivity();
+                 * scheduledActivity =
+                 * scheduledActivityService.createScheduledActivity(LocalDate.now(),
+                 * LocalTime.now(),
+                 * LocalTime.of(12, 0), instructor, activity, 30);
+                 * Registration registration = new Registration();
+                 * registration =
+                 * registrationService.createRegistration(customer.getAccount().getAccountId(),
+                 * scheduledActivity.getScheduledActivityId());
+                 */
+
+                Account account = new Account();
                 String username = "username";
                 String password = "password";
-                Account account = new Account();
-                String instructorUsername = "instructor";
-                Account instructorAccount = new Account();
-                account = accountService.createAccount(username, password);
-                instructorAccount = accountService.createAccount(instructorUsername, password);
-                Customer customer = new Customer();
-                customer = customerService.createCustomer(username);
-                Instructor instructor = new ownerService.approveInstructor(instructorAccount.getAccountId());
-                Activity activity = new Activity();
-                activity = activityService.createActivity("activityName", "activityDescription", ClassCategory.Cardio);
-                Owner owner = new Owner();
-                ownerService.approveActivity(activity.getName());
-                ScheduledActivity scheduledActivity = new ScheduledActivity();
-                scheduledActivity = scheduledActivityService.createScheduledActivity(LocalDate.now(), LocalTime.now(),
-                                LocalTime.of(12, 0), instructor, activity, 30);
-                Registration registration = new Registration();
-                registration = registrationService.createRegistration(customer.getAccount().getAccountId(),
-                                scheduledActivity.getScheduledActivityId());
+                account.setUsername(username);
+                account.setPassword(password);
 
-                assertEquals(registration.getCustomer().getAccount().getAccountId(),
-                                customer.getAccount().getAccountId());
-                assertEquals(registration.getScheduledActivity().getScheduledActivityId(),
-                                scheduledActivity.getScheduledActivityId());
+                Customer customer = new Customer();
+                customer.setAccount(account);
+
+                Account instructorAccount = new Account();
+                String instructorUsername = "instructor";
+                String instructorPassword = "password";
+                instructorAccount.setUsername(instructorUsername);
+                instructorAccount.setPassword(instructorPassword);
+
+                Instructor instructor = new Instructor();
+                instructor.setAccount(instructorAccount);
+                instructor.setStatus(InstructorStatus.Active);
+                instructor.setDescription("description");
+                instructor.setProfilePicURL("pictureURL");
+
+                Activity activity = new Activity();
+                activity.setName("activity");
+                activity.setDescription("description");
+                activity.setSubCategory(ClassCategory.Cardio);
+                activity.setIsApproved(true);
+
+                ScheduledActivity scheduledActivity = new ScheduledActivity();
+                scheduledActivity.setDate(LocalDate.now());
+                scheduledActivity.setStartTime(LocalTime.now());
+                scheduledActivity.setEndTime(LocalTime.of(12, 0));
+                scheduledActivity.setSupervisor(instructor);
+                scheduledActivity.setActivity(activity);
+                scheduledActivity.setCapacity(30);
+
+                Registration registration = new Registration();
+                registration.setCustomer(customer);
+                registration.setScheduledActivity(scheduledActivity);
+
+                when(accountDao.findAccountByUsername(username)).thenReturn(account);
+                when(accountDao.findAccountByUsername(instructorUsername)).thenReturn(instructorAccount);
+                when(customerDao.findAccountRoleByAccountRoleId(account.getAccountId())).thenReturn(customer);
+                when(instructorDao.findAccountRoleByAccountRoleId(instructorAccount.getAccountId()))
+                                .thenReturn(instructor);
+                when(scheduledActivityDao
+                                .findScheduledActivityByScheduledActivityId(scheduledActivity.getScheduledActivityId()))
+                                .thenReturn(scheduledActivity);
+                when(registrationDao.save(any(Registration.class))).thenAnswer((InvocationOnMock invocation) -> {
+                        registration.setRegistrationId(1);
+                        return registration;
+                });
+
+                Registration createdRegistration = null;
+                try {
+                        createdRegistration = registrationService.createRegistration(account.getAccountId(),
+                                        scheduledActivity.getScheduledActivityId());
+                } catch (IllegalArgumentException e) {
+                        fail();
+                }
+
+                assertNull(createdRegistration);
+                assertEquals(customer, createdRegistration.getCustomer());
+                assertEquals(scheduledActivity, createdRegistration.getScheduledActivity());
+                assertEquals(1, createdRegistration.getRegistrationId());
         }
 
         /*
@@ -146,7 +274,7 @@ public class TestRegistrationService {
                 Account account = new Account();
                 account = accountService.createAccount(username, password);
                 Customer customer = new Customer();
-                customer = customerService.createCustomer(username);
+                customer = accountService.createCustomer(username);
 
                 String instructorUsername = "instructor";
                 Account instructorAccount = new Account();
@@ -156,7 +284,7 @@ public class TestRegistrationService {
                 Activity activity = new Activity();
                 activity = activityService.createActivity("activityName", "activityDescription", ClassCategory.Cardio);
                 Owner owner = new Owner();
-                ownerService.approveActivity(activity.getName());
+                accountService.approveActivity(activity.getName());
                 ScheduledActivity scheduledActivity = new ScheduledActivity();
                 scheduledActivity = scheduledActivityService.createScheduledActivity(LocalDate.now(), LocalTime.now(),
                                 LocalTime.of(12, 0), instructor, activity, 30);
@@ -183,7 +311,7 @@ public class TestRegistrationService {
                 instructorAccount = accountService.createAccount(instructorUsername, password);
                 Instructor instructor = new ownerService.approveInstructor(instructorAccount.getAccountId());
                 activity = activityService.createActivity("activityName", "activityDescription", ClassCategory.Cardio);
-                ownerService.approveActivity(activity.getName());
+                accountService.approveActivity(activity.getName());
                 ScheduledActivity scheduledActivity = new ScheduledActivity();
                 scheduledActivity = scheduledActivityService.createScheduledActivity(LocalDate.now(), LocalTime.now(),
                                 LocalTime.of(12, 0), instructor, activity, 30);
@@ -203,10 +331,10 @@ public class TestRegistrationService {
                 Account account = new Account();
                 account = accountService.createAccount("username", "password");
                 Owner owner = new Owner();
-                Instructor instructor = ownerService.approveInstructor(account.getAccountId());
+                Instructor instructor = accountService.approveInstructor(account.getAccountId());
                 Activity activity = new Activity();
                 activity = activityService.createActivity("activityName", "activityDescription", ClassCategory.Cardio);
-                ownerService.approveActivity(activity.getName());
+                accountService.approveActivity(activity.getName());
                 ScheduledActivity scheduledActivity = new ScheduledActivity();
                 scheduledActivity = scheduledActivityService.createScheduledActivity(LocalDate.now(), LocalTime.now(),
                                 LocalTime.of(12, 0), instructor, activity, 30);
@@ -228,7 +356,7 @@ public class TestRegistrationService {
                 Account account = new Account();
                 account = accountService.createAccount(username, password);
                 Customer customer = new Customer();
-                customer = customerService.createCustomer(username);
+                customer = accountService.createCustomer(username);
 
                 String instructorUsername = "instructor";
                 Account instructorAccount = new Account();
@@ -237,7 +365,7 @@ public class TestRegistrationService {
 
                 Activity activity = new Activity();
                 activity = activityService.createActivity("activityName", "activityDescription", ClassCategory.Cardio);
-                ownerService.approveActivity(activity.getName());
+                accountService.approveActivity(activity.getName());
                 ScheduledActivity scheduledActivity = new ScheduledActivity();
                 scheduledActivity = scheduledActivityService.createScheduledActivity(LocalDate.of(2020, 1, 1),
                                 LocalTime.now(),
@@ -263,9 +391,9 @@ public class TestRegistrationService {
                 Account account2 = new Account();
                 account2 = accountService.createAccount(username2, password);
                 Customer customer1 = new Customer();
-                customer1 = customerService.createCustomer(username1);
+                customer1 = accountService.createCustomer(username1);
                 Customer customer2 = new Customer();
-                customer2 = customerService.createCustomer(username2);
+                customer2 = accountService.createCustomer(username2);
 
                 String instructorUsername = "instructor";
                 Account instructorAccount = new Account();
@@ -274,7 +402,7 @@ public class TestRegistrationService {
 
                 Activity activity = new Activity();
                 activity = activityService.createActivity("activityName", "activityDescription", ClassCategory.Cardio);
-                ownerService.approveActivity(activity.getName());
+                accountService.approveActivity(activity.getName());
                 ScheduledActivity scheduledActivity = new ScheduledActivity();
                 scheduledActivity = scheduledActivityService.createScheduledActivity(LocalDate.now(), LocalTime.now(),
                                 LocalTime.of(12, 0), instructor, activity, 1);
@@ -302,7 +430,7 @@ public class TestRegistrationService {
 
                 Activity activity = new Activity();
                 activity = activityService.createActivity("activityName", "activityDescription", ClassCategory.Cardio);
-                ownerService.approveActivity(activity.getName());
+                accountService.approveActivity(activity.getName());
                 ScheduledActivity scheduledActivity = new ScheduledActivity();
                 scheduledActivity = scheduledActivityService.createScheduledActivity(LocalDate.now(), LocalTime.now(),
                                 LocalTime.of(12, 0), instructor, activity, 30);
@@ -325,7 +453,7 @@ public class TestRegistrationService {
                 Account account = new Account();
                 account = accountService.createAccount(username, password);
                 Customer customer = new Customer();
-                customer = customerService.createCustomer(username);
+                customer = accountService.createCustomer(username);
                 int scheduledActivity = -1;
                 try {
                         Registration registration = new Registration();
@@ -344,10 +472,10 @@ public class TestRegistrationService {
                 Account account = new Account();
                 account = accountService.createAccount(username, password);
                 Customer customer = new Customer();
-                customer = customerService.createCustomer(username);
+                customer = accountService.createCustomer(username);
                 Activity activity1 = new Activity();
                 activity1 = activityService.createActivity("activityName", "activityDescription", ClassCategory.Cardio);
-                ownerService.approveActivity(activity1.getName());
+                accountService.approveActivity(activity1.getName());
                 ScheduledActivity scheduledActivity1 = new ScheduledActivity();
 
                 String instructorUsername = "instructor";
@@ -391,8 +519,8 @@ public class TestRegistrationService {
                 account2 = accountService.createAccount(username1, password);
                 Customer customer1 = new Customer();
                 Customer customer2 = new Customer();
-                customer1 = customerService.createCustomer(username1);
-                customer2 = customerService.createCustomer(username2);
+                customer1 = accountService.createCustomer(username1);
+                customer2 = accountService.createCustomer(username2);
 
                 String instructorUsername = "instructor";
                 Account instructorAccount = new Account();
@@ -404,8 +532,8 @@ public class TestRegistrationService {
                 activity1 = activityService.createActivity("activityName", "activityDescription", ClassCategory.Cardio);
                 activity2 = activityService.createActivity("activityName2", "activityDescription2",
                                 ClassCategory.Cardio);
-                ownerService.approveActivity(activity1.getName());
-                ownerService.approveActivity(activity2.getName());
+                accountService.approveActivity(activity1.getName());
+                accountService.approveActivity(activity2.getName());
                 ScheduledActivity scheduledActivity1 = new ScheduledActivity();
                 ScheduledActivity scheduledActivity2 = new ScheduledActivity();
                 scheduledActivity1 = scheduledActivityService.createScheduledActivity(LocalDate.of(2024, 12, 12),
@@ -441,7 +569,7 @@ public class TestRegistrationService {
                 Account account = new Account();
                 account = accountService.createAccount(username, password);
                 Customer customer = new Customer();
-                customer = customerService.createCustomer(username);
+                customer = accountService.createCustomer(username);
 
                 String instructorUsername = "instructor";
                 Account instructorAccount = new Account();
@@ -450,7 +578,7 @@ public class TestRegistrationService {
 
                 Activity activity = new Activity();
                 activity = activityService.createActivity("activityName", "activityDescription", ClassCategory.Cardio);
-                ownerService.approveActivity(activity.getName());
+                accountService.approveActivity(activity.getName());
                 ScheduledActivity scheduledActivity = new ScheduledActivity();
                 scheduledActivity = scheduledActivityService.createScheduledActivity(LocalDate.now(), LocalTime.now(),
                                 LocalTime.of(12, 0), instructor, activity, 30);
@@ -484,8 +612,8 @@ public class TestRegistrationService {
                 account2 = accountService.createAccount(username1, password);
                 Customer customer1 = new Customer();
                 Customer customer2 = new Customer();
-                customer1 = customerService.createCustomer(username1);
-                customer2 = customerService.createCustomer(username2);
+                customer1 = accountService.createCustomer(username1);
+                customer2 = accountService.createCustomer(username2);
 
                 String instructorUsername = "instructor";
                 Account instructorAccount = new Account();
@@ -497,8 +625,8 @@ public class TestRegistrationService {
                 activity1 = activityService.createActivity("activityName", "activityDescription", ClassCategory.Cardio);
                 activity2 = activityService.createActivity("activityName2", "activityDescription2",
                                 ClassCategory.Cardio);
-                ownerService.approveActivity(activity1.getName());
-                ownerService.approveActivity(activity2.getName());
+                accountService.approveActivity(activity1.getName());
+                accountService.approveActivity(activity2.getName());
                 ScheduledActivity scheduledActivity1 = new ScheduledActivity();
                 ScheduledActivity scheduledActivity2 = new ScheduledActivity();
                 scheduledActivity1 = scheduledActivityService.createScheduledActivity(LocalDate.of(2024, 12, 12),
@@ -545,8 +673,8 @@ public class TestRegistrationService {
                 account2 = accountService.createAccount(username1, password);
                 Customer customer1 = new Customer();
                 Customer customer2 = new Customer();
-                customer1 = customerService.createCustomer(username1);
-                customer2 = customerService.createCustomer(username2);
+                customer1 = accountService.createCustomer(username1);
+                customer2 = accountService.createCustomer(username2);
 
                 String instructorUsername = "instructor";
                 Account instructorAccount = new Account();
@@ -558,8 +686,8 @@ public class TestRegistrationService {
                 activity1 = activityService.createActivity("activityName", "activityDescription", ClassCategory.Cardio);
                 activity2 = activityService.createActivity("activityName2", "activityDescription2",
                                 ClassCategory.Cardio);
-                ownerService.approveActivity(activity1.getName());
-                ownerService.approveActivity(activity2.getName());
+                accountService.approveActivity(activity1.getName());
+                accountService.approveActivity(activity2.getName());
                 ScheduledActivity scheduledActivity1 = new ScheduledActivity();
                 ScheduledActivity scheduledActivity2 = new ScheduledActivity();
                 scheduledActivity1 = scheduledActivityService.createScheduledActivity(LocalDate.of(2024, 12, 12),
@@ -613,8 +741,8 @@ public class TestRegistrationService {
                 account2 = accountService.createAccount(username1, password);
                 Customer customer1 = new Customer();
                 Customer customer2 = new Customer();
-                customer1 = customerService.createCustomer(username1);
-                customer2 = customerService.createCustomer(username2);
+                customer1 = accountService.createCustomer(username1);
+                customer2 = accountService.createCustomer(username2);
 
                 String instructorUsername = "instructor";
                 Account instructorAccount = new Account();
@@ -626,8 +754,8 @@ public class TestRegistrationService {
                 activity1 = activityService.createActivity("activityName", "activityDescription", ClassCategory.Cardio);
                 activity2 = activityService.createActivity("activityName2", "activityDescription2",
                                 ClassCategory.Cardio);
-                ownerService.approveActivity(activity1.getName());
-                ownerService.approveActivity(activity2.getName());
+                accountService.approveActivity(activity1.getName());
+                accountService.approveActivity(activity2.getName());
                 ScheduledActivity scheduledActivity1 = new ScheduledActivity();
                 ScheduledActivity scheduledActivity2 = new ScheduledActivity();
                 scheduledActivity1 = scheduledActivityService.createScheduledActivity(LocalDate.of(2024, 12, 12),
@@ -681,8 +809,8 @@ public class TestRegistrationService {
                 account2 = accountService.createAccount(username1, password);
                 Customer customer1 = new Customer();
                 Customer customer2 = new Customer();
-                customer1 = customerService.createCustomer(username1);
-                customer2 = customerService.createCustomer(username2);
+                customer1 = accountService.createCustomer(username1);
+                customer2 = accountService.createCustomer(username2);
 
                 String instructorUsername = "instructor";
                 Account instructorAccount = new Account();
@@ -694,8 +822,8 @@ public class TestRegistrationService {
                 activity1 = activityService.createActivity("activityName", "activityDescription", ClassCategory.Cardio);
                 activity2 = activityService.createActivity("activityName2", "activityDescription2",
                                 ClassCategory.Cardio);
-                ownerService.approveActivity(activity1.getName());
-                ownerService.approveActivity(activity2.getName());
+                accountService.approveActivity(activity1.getName());
+                accountService.approveActivity(activity2.getName());
                 ScheduledActivity scheduledActivity1 = new ScheduledActivity();
                 ScheduledActivity scheduledActivity2 = new ScheduledActivity();
                 scheduledActivity1 = scheduledActivityService.createScheduledActivity(LocalDate.of(2024, 12, 12),
