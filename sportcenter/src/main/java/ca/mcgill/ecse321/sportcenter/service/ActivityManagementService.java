@@ -10,6 +10,7 @@ import ca.mcgill.ecse321.sportcenter.dao.InstructorRepository;
 import ca.mcgill.ecse321.sportcenter.dao.OwnerRepository;
 import ca.mcgill.ecse321.sportcenter.model.Activity;
 import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
+import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity;
 import jakarta.transaction.Transactional;
 
 /**
@@ -187,6 +188,13 @@ public class ActivityManagementService {
             throw new IllegalArgumentException("Activity does not exist!");
         }
 
+        // Delete all scheduled activities associated with the activity
+        ScheduledActivityManagementService scheduledActivityManagementService = new ScheduledActivityManagementService();
+        for (ScheduledActivity scheduledActivity : scheduledActivityManagementService
+                .getAllScheduledActivitiesByActivityName(activity.getName())) {
+            scheduledActivityManagementService.deleteScheduledActivity(scheduledActivity.getScheduledActivityId());
+        }
+
         activityRepository.delete(activity);
     }
 
@@ -195,7 +203,9 @@ public class ActivityManagementService {
      **/
     @Transactional
     public void deleteAllActivities() {
-        activityRepository.deleteAll();
+        for (Activity activity : activityRepository.findAll()) {
+            deleteActivity(activity.getName());
+        }
     }
 
     /**

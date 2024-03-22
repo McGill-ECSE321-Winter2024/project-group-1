@@ -300,4 +300,22 @@ public class RegistrationManagementService {
             }
         }
     }
+
+    /**
+     * Delete all registrations of a scheduled activity by its scheduledActivityId
+     */
+    @Transactional
+    public void deleteRegistrationsByScheduledActivityId(int scheduledActivityId) {
+        if (scheduledActivityId < 0) {
+            throw new IllegalArgumentException("Scheduled activity id not valid!");
+        }
+        if (scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId) == null) {
+            throw new IllegalArgumentException("Scheduled activity does not exist");
+        }
+        for (Registration registration : registrationRepository.findAll()) {
+            if (registration.getScheduledActivity().getScheduledActivityId() == scheduledActivityId) {
+                registrationRepository.deleteById(registration.getRegistrationId());
+            }
+        }
+    }
 }

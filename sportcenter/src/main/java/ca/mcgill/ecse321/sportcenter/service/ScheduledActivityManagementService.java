@@ -231,6 +231,31 @@ public class ScheduledActivityManagementService {
         return scheduledActivity.getActivity();
     }
 
+    // XXXXXXXXXXXXXXXXXXXXX Needs to be tested XXXXXXXXXXXXXXXXXXXXX
+    /**
+     * Get all scheduled activities of an activity
+     * 
+     * @param activityName
+     * @return List<ScheduledActivity>
+     */
+    @Transactional
+    public List<ScheduledActivity> getAllScheduledActivitiesByActivityName(String activityName) {
+        if (activityName == null || activityName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Activity name cannot be empty!");
+        }
+        Activity activity = activityRepository.findActivityByName(activityName);
+        if (activity == null) {
+            throw new IllegalArgumentException("Activity does not exist!");
+        }
+        List<ScheduledActivity> scheduledActivities = new ArrayList<ScheduledActivity>();
+        for (ScheduledActivity scheduledActivity : scheduledActivityRepository.findAll()) {
+            if (scheduledActivity.getActivity().getName().equals(activityName)) {
+                scheduledActivities.add(scheduledActivity);
+            }
+        }
+        return scheduledActivities;
+    }
+
     /**
      * Update a scheduled activity start time, end time, date
      *
@@ -425,10 +450,7 @@ public class ScheduledActivityManagementService {
 
         // Delete all registrations of this scheduled activity
         RegistrationManagementService registrationManagementService = new RegistrationManagementService();
-        for (Registration registration : registrationManagementService.getRegistrationByScheduledActivityId(
-                scheduledActivity.getScheduledActivityId())) {
-            registrationManagementService.deleteRegistration(registration.getRegistrationId());
-        }
+        registrationManagementService.deleteRegistrationsByScheduledActivityId(scheduledActivityId);
 
         scheduledActivityRepository.delete(scheduledActivity);
     }
@@ -440,6 +462,25 @@ public class ScheduledActivityManagementService {
     public void deleteAllScheduledActivities() {
         for (ScheduledActivity scheduledActivity : getAllScheduledActivities()) {
             deleteScheduledActivity(scheduledActivity.getScheduledActivityId());
+        }
+    }
+
+    // XXXXXXXXXXXXXXXXXXXXX Needs to be tested XXXXXXXXXXXXXXXXXXXXX
+    /**
+     * Delete all scheduled activities by instructor id
+     * 
+     * @param accountRoleId
+     */
+    @Transactional
+    public void deleteAllScheduledActivitiesByInstructorId(int accountRoleId) {
+        if (accountRoleId < 0) {
+            throw new IllegalArgumentException("Id cannot be negative!");
+        }
+        List<ScheduledActivity> scheduledActivities = getAllScheduledActivitiesByInstructorId(accountRoleId);
+        if (scheduledActivities != null) {
+            for (ScheduledActivity scheduledActivity : scheduledActivities) {
+                deleteScheduledActivity(scheduledActivity.getScheduledActivityId());
+            }
         }
     }
 }

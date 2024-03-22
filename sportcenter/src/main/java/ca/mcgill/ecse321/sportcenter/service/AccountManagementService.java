@@ -595,6 +595,7 @@ public class AccountManagementService {
             throw new IllegalArgumentException("Account does not exist");
         }
 
+        // Delete all associated account roles
         deleteCustomerByAccountId(accountId);
         deleteInstructorByUsername(account.getUsername());
 
@@ -608,7 +609,9 @@ public class AccountManagementService {
      */
     @Transactional
     public void deleteAllAccounts() {
-        accountRepository.deleteAll();
+        for (Account account : accountRepository.findAll()) {
+            deleteAccount(account.getAccountId());
+        }
     }
 
     /**
@@ -626,6 +629,10 @@ public class AccountManagementService {
         if (customer == null) {
             throw new IllegalArgumentException("Customer does not exist!");
         }
+
+        // Delete all associated registrations
+        RegistrationManagementService registrationManagementService = new RegistrationManagementService();
+        registrationManagementService.deleteRegistrationsByAccountRoleId(customer.getAccountRoleId());
 
         customerRepository.delete(customer);
     }
@@ -694,8 +701,7 @@ public class AccountManagementService {
     @Transactional
     public void deleteAllCustomers() {
         for (Customer customer : customerRepository.findAll()) {
-            RegistrationManagementService registrationManagementService = new RegistrationManagementService();
-            registrationManagementService.deleteRegistrationsByAccountRoleId(customer.getAccountRoleId());
+            deleteCustomerByAccountRoleId(customer.getAccountRoleId());
         }
     }
 
@@ -715,6 +721,10 @@ public class AccountManagementService {
         if (instructor == null) {
             throw new IllegalArgumentException("Account does not exist!");
         }
+
+        // Delete all associated scheduled activities
+        ScheduledActivityManagementService scheduledActivityManagementService = new ScheduledActivityManagementService();
+        scheduledActivityManagementService.deleteAllScheduledActivitiesByInstructorId(accountRoleId);
 
         instructorRepository.deleteById(accountRoleId);
     }
@@ -743,11 +753,7 @@ public class AccountManagementService {
 
         // Delete all associated scheduled activities
         ScheduledActivityManagementService scheduledActivityManagementService = new ScheduledActivityManagementService();
-        RegistrationManagementService registrationManagementService = new RegistrationManagementService();
-        for (ScheduledActivity scheduledActivity : registrationManagementService
-                .getScheduledActivitiesByInstructorId(instructor.getAccountRoleId())) {
-            scheduledActivityManagementService.deleteScheduledActivity(scheduledActivity.getScheduledActivityId());
-        }
+        scheduledActivityManagementService.deleteAllScheduledActivitiesByInstructorId(instructor.getAccountRoleId());
 
         instructorRepository.delete(instructor);
     }
@@ -761,14 +767,11 @@ public class AccountManagementService {
     @Transactional
     public void deleteAllInstructors() {
         for (Instructor instructor : instructorRepository.findAll()) {
-            ScheduledActivityManagementService scheduledActivityManagementService = new ScheduledActivityManagementService();
-            RegistrationManagementService registrationManagementService = new RegistrationManagementService();
-            for (ScheduledActivity scheduledActivity : registrationManagementService
-                    .getScheduledActivitiesByInstructorId(instructor.getAccountRoleId())) {
-                scheduledActivityManagementService.deleteScheduledActivity(scheduledActivity.getScheduledActivityId());
-            }
+            deleteInstructorByAccountRoleId(instructor.getAccountRoleId());
         }
     }
+
+    // Extra functions
 
     /**
      * Check if account has customer role
