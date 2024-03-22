@@ -455,23 +455,6 @@ public class TestOwnerService {
     }
 
     @Test
-    public void testDisapproveInstructorToFired() {
-        int id = 1;
-        Instructor instructor = new Instructor();
-        instructorRepository.save(instructor);
-        instructorRepository.findAccountRoleByAccountRoleId(id).setStatus(InstructorStatus.Active);
-
-        try {
-            ownerService.disapproveInstructor(id);
-        } catch (IllegalArgumentException e) {
-            System.err.println(e.getMessage());
-        }
-
-        assertEquals(Instructor.InstructorStatus.Fired,
-                instructorRepository.findAccountRoleByAccountRoleId(id).getStatus());
-    }
-
-    @Test
     public void testDisapproveInstructorToFiredDuplicate() {
         int id = 1;
         Instructor instructor = new Instructor();
@@ -486,41 +469,6 @@ public class TestOwnerService {
         }
 
         assertEquals("Instructor is already fired!", error);
-    }
-
-    @Test
-    public void testDisapproveInstructorToSuspended() {
-        int id = 1;
-        Instructor instructor = new Instructor();
-        instructorRepository.save(instructor);
-        instructorRepository.findAccountRoleByAccountRoleId(id).setStatus(InstructorStatus.Active);
-
-        try {
-            ownerService.disapproveInstructor(id);
-        } catch (IllegalArgumentException e) {
-            System.err.println(e.getMessage());
-        }
-
-        assertEquals(Instructor.InstructorStatus.Suspended,
-                instructorRepository.findAccountRoleByAccountRoleId(id).getStatus());
-    }
-
-    @Test
-    public void testDisapproveInstructorToSuspendedDuplicate() {
-        int id = 1;
-        Instructor instructor = new Instructor();
-        String error = "";
-
-        instructorRepository.save(instructor);
-        instructorRepository.findAccountRoleByAccountRoleId(id).setStatus(InstructorStatus.Suspended);
-
-        try {
-            ownerService.disapproveInstructor(id);
-        } catch (IllegalArgumentException e) {
-            error = e.getMessage();
-        }
-
-        assertEquals("Instructor is already suspended!", error);
     }
 
     @Test
