@@ -34,7 +34,10 @@ public class TestOwnerService {
     private InstructorRepository instructorRepository;
 
     @InjectMocks
-    private OwnerService ownerService;
+    private AccountManagementService ownerService;
+
+    @InjectMocks
+    private ActivityManagementService activityService;
 
     /*
      * getOwnerByAccountRoleId - TODO
@@ -102,28 +105,28 @@ public class TestOwnerService {
         int id = 1;
         // ownerRepository.Owner o = new Owner();
         when(ownerRepository.findAccountRoleByAccountRoleId(id)).thenReturn(new Owner());
-        assertTrue(ownerService.checkAccountOwner(id));
+        assertTrue(ownerService.checkAccountHasOwnerRole(id));
     }
 
     @Test
     public void testCheckAccountOwnerNegative() {
         int id = -1;
         when(ownerRepository.findAccountRoleByAccountRoleId(id)).thenReturn(new Owner());
-        assertTrue(ownerService.checkAccountOwner(id));
+        assertTrue(ownerService.checkAccountHasOwnerRole(id));
     }
 
     @Test
     public void testCheckAccountOwnerZero() {
         int id = 0;
         when(ownerRepository.findAccountRoleByAccountRoleId(id)).thenReturn(new Owner());
-        assertTrue(ownerService.checkAccountOwner(id));
+        assertTrue(ownerService.checkAccountHasOwnerRole(id));
     }
 
     @Test
     public void testCheckAccountOwnerDoesNotExist() {
         int id = 1;
         when(ownerRepository.findAccountRoleByAccountRoleId(id)).thenReturn(null);
-        assertFalse(ownerService.checkAccountOwner(id));
+        assertFalse(ownerService.checkAccountHasOwnerRole(id));
     }
 
     // 3 - approveActivity
@@ -137,7 +140,7 @@ public class TestOwnerService {
         activityRepository.save(new Activity(subcategory, name, isApproved, description));
 
         try {
-            ownerService.approveActivity(name);
+            activityService.approveActivity(name);
         } catch (IllegalArgumentException e) {
             System.err.println(e.getMessage());
         }
@@ -156,7 +159,7 @@ public class TestOwnerService {
         activityRepository.save(new Activity(subcategory, name, isApproved, description));
 
         try {
-            ownerService.approveActivity(name);
+            activityService.approveActivity(name);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -175,7 +178,7 @@ public class TestOwnerService {
         activityRepository.save(new Activity(subcategory, name, isApproved, description));
 
         try {
-            ownerService.approveActivity(name);
+            activityService.approveActivity(name);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -194,7 +197,7 @@ public class TestOwnerService {
         activityRepository.save(new Activity(subcategory, name, isApproved, description));
 
         try {
-            ownerService.approveActivity(name);
+            activityService.approveActivity(name);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -213,7 +216,7 @@ public class TestOwnerService {
         activityRepository.save(new Activity(subcategory, name, isApproved, description));
 
         try {
-            ownerService.approveActivity(name);
+            activityService.approveActivity(name);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -232,7 +235,7 @@ public class TestOwnerService {
         activityRepository.save(new Activity(subcategory, name, isApproved, description));
 
         try {
-            ownerService.approveActivity(name);
+            activityService.approveActivity(name);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -251,7 +254,7 @@ public class TestOwnerService {
         activityRepository.save(new Activity(subcategory, name, isApproved, description));
 
         try {
-            ownerService.disapproveActivity(name);
+            activityService.disapproveActivity(name);
         } catch (IllegalArgumentException e) {
             System.err.println(e.getMessage());
         }
@@ -270,7 +273,7 @@ public class TestOwnerService {
         activityRepository.save(new Activity(subcategory, name, isApproved, description));
 
         try {
-            ownerService.disapproveActivity(name);
+            activityService.disapproveActivity(name);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -289,7 +292,7 @@ public class TestOwnerService {
         activityRepository.save(new Activity(subcategory, name, isApproved, description));
 
         try {
-            ownerService.disapproveActivity(name);
+            activityService.disapproveActivity(name);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -308,7 +311,7 @@ public class TestOwnerService {
         activityRepository.save(new Activity(subcategory, name, isApproved, description));
 
         try {
-            ownerService.disapproveActivity(name);
+            activityService.disapproveActivity(name);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -327,7 +330,7 @@ public class TestOwnerService {
         activityRepository.save(new Activity(subcategory, name, isApproved, description));
 
         try {
-            ownerService.disapproveActivity(name);
+            activityService.disapproveActivity(name);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -341,7 +344,7 @@ public class TestOwnerService {
         String error = "";
 
         try {
-            ownerService.disapproveActivity(name);
+            activityService.disapproveActivity(name);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -424,7 +427,7 @@ public class TestOwnerService {
         instructorRepository.findAccountRoleByAccountRoleId(id).setStatus(InstructorStatus.Active);
 
         try {
-            ownerService.disapproveInstructor(id, Instructor.InstructorStatus.Inactive);
+            ownerService.disapproveInstructor(id);
         } catch (IllegalArgumentException e) {
             System.err.println(e.getMessage());
         }
@@ -443,7 +446,7 @@ public class TestOwnerService {
         instructorRepository.findAccountRoleByAccountRoleId(id).setStatus(InstructorStatus.Inactive);
 
         try {
-            ownerService.disapproveInstructor(id, Instructor.InstructorStatus.Inactive);
+            ownerService.disapproveInstructor(id);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -459,7 +462,7 @@ public class TestOwnerService {
         instructorRepository.findAccountRoleByAccountRoleId(id).setStatus(InstructorStatus.Active);
 
         try {
-            ownerService.disapproveInstructor(id, Instructor.InstructorStatus.Fired);
+            ownerService.disapproveInstructor(id);
         } catch (IllegalArgumentException e) {
             System.err.println(e.getMessage());
         }
@@ -475,10 +478,9 @@ public class TestOwnerService {
         String error = "";
 
         instructorRepository.save(instructor);
-        instructorRepository.findAccountRoleByAccountRoleId(id).setStatus(InstructorStatus.Fired);
-
+        instructorRepository.findAccountRoleByAccountRoleId(id).setStatus(InstructorStatus.Inactive);
         try {
-            ownerService.disapproveInstructor(id, Instructor.InstructorStatus.Fired);
+            ownerService.disapproveInstructor(id);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -494,7 +496,7 @@ public class TestOwnerService {
         instructorRepository.findAccountRoleByAccountRoleId(id).setStatus(InstructorStatus.Active);
 
         try {
-            ownerService.disapproveInstructor(id, Instructor.InstructorStatus.Suspended);
+            ownerService.disapproveInstructor(id);
         } catch (IllegalArgumentException e) {
             System.err.println(e.getMessage());
         }
@@ -513,7 +515,7 @@ public class TestOwnerService {
         instructorRepository.findAccountRoleByAccountRoleId(id).setStatus(InstructorStatus.Suspended);
 
         try {
-            ownerService.disapproveInstructor(id, Instructor.InstructorStatus.Suspended);
+            ownerService.disapproveInstructor(id);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -529,7 +531,7 @@ public class TestOwnerService {
         // instructorRepository.save(instructor);
 
         try {
-            ownerService.disapproveInstructor(id, Instructor.InstructorStatus.Suspended);
+            ownerService.disapproveInstructor(id);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }

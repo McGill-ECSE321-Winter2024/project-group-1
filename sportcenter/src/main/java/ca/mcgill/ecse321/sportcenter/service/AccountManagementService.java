@@ -447,6 +447,53 @@ public class AccountManagementService {
     }
 
     /**
+     * Owner approves an instructor
+     * 
+     * @param id
+     * @return boolean
+     */
+    @Transactional
+    public boolean approveInstructor(int id) {
+        if (id < 0) {
+            throw new IllegalArgumentException("AccountRoleId cannot be negative");
+        }
+        Instructor instructor = instructorRepository.findAccountRoleByAccountRoleId(id);
+        if (instructor == null) {
+            throw new IllegalArgumentException("Instructor does not exist");
+        }
+        if (instructor.getStatus() == InstructorStatus.Active) {
+            throw new IllegalArgumentException("Instructor is already approved");
+        }
+        instructor.setStatus(InstructorStatus.Active);
+        instructorRepository.save(instructor);
+        return true;
+
+    }
+
+    /**
+     * Owner disapproves an instructor
+     * 
+     * @param id
+     * @return boolean
+     */
+    @Transactional
+    public boolean disapproveInstructor(int id) {
+        if (id < 0) {
+            throw new IllegalArgumentException("AccountRoleId cannot be negative");
+        }
+        Instructor instructor = instructorRepository.findAccountRoleByAccountRoleId(id);
+        if (instructor == null) {
+            throw new IllegalArgumentException("Instructor does not exist");
+        }
+        if (instructor.getStatus() == InstructorStatus.Inactive) {
+            throw new IllegalArgumentException("Instructor is already disapproved");
+        }
+        instructor.setStatus(InstructorStatus.Inactive);
+        instructorRepository.save(instructor);
+        return true;
+    }
+
+    /**
      * Update an account's password
      * 
      * @param username
