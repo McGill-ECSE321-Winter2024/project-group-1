@@ -277,7 +277,11 @@ public class TestAccountCustomerService {
         when(customerRepository.findAccountRoleByAccountRoleId(roleId))
                 .thenReturn(customerRepository.findAccountRoleByUsername("Person1"));
 
-        assertEquals(customer, accountService.getCustomerByAccountRoleId(roleId));
+        Customer customer2 = accountService.getCustomerByAccountRoleId(roleId);
+
+        assertEquals(customer, customer2);
+        assertEquals("Person1", customer2.getAccount().getUsername());
+        assertEquals("Password1", customer2.getAccount().getPassword());
     }
 
     @Test
