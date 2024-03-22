@@ -42,7 +42,7 @@ public class AccountManagementController {
      * @param password
      * @return AccountDto
      */
-    @PostMapping(value = { "/createAccount", "/createAccount/" })
+    @PostMapping(value = { "/createAccount/{username}/{password}", "/createAccount/{username}/{password}/" })
     public AccountDto createAccount(@PathVariable("username") String username,
             @PathVariable("password") String password) throws IllegalArgumentException {
         Account account = accountService.createAccount(username, password);
