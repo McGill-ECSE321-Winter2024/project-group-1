@@ -6,164 +6,225 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-
-import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
-
-import org.junit.jupiter.api.AfterEach;
+import org.aspectj.lang.annotation.SuppressAjWarnings;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
+
+import org.junit.jupiter.api.AfterEach;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cglib.core.Local;
 
 import ca.mcgill.ecse321.sportcenter.dao.ActivityRepository;
+import ca.mcgill.ecse321.sportcenter.dao.CustomerRepository;
 import ca.mcgill.ecse321.sportcenter.model.Activity;
 import ca.mcgill.ecse321.sportcenter.dao.InstructorRepository;
-
+import ca.mcgill.ecse321.sportcenter.dao.RegistrationRepository;
 import ca.mcgill.ecse321.sportcenter.dao.ScheduledActivityRepository;
+import ca.mcgill.ecse321.sportcenter.dto.InstructorDto.InstructorStatus;
 import ca.mcgill.ecse321.sportcenter.model.Instructor;
 import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity;
 
 import ca.mcgill.ecse321.sportcenter.model.Account;
 import ca.mcgill.ecse321.sportcenter.dao.AccountRepository;
 
-@SpringBootTest
+/**
+ * Test class for the ScheduledActivity entity
+ * 
+ * @author Fabian Saldana
+ */
+@ExtendWith(MockitoExtension.class)
 public class TestScheduledActivityService {
+
     @Mock
-    private ScheduledActivityRepository scheduledActivityRepository;
-    private AccountRepository accountRepository;
-    private InstructorRepository instructorRepository;
-    private ActivityRepository activityRepository;
+    private AccountRepository accountDao;
+    @Mock
+    private CustomerRepository customerDao;
+    @Mock
+    private InstructorRepository instructorDao;
+    @Mock
+    private ActivityRepository activityDao;
+    @Mock
+    private ScheduledActivityRepository scheduledActivityDao;
+    @Mock
+    private RegistrationRepository registrationDao;
+
+    // Account keys
+    private static final int CUSTOMER_ACCOUNT_KEY = 1;
+    private static final int APPROVED_INSTRUCTOR_ACCOUNT_KEY = 2;
+    private static final int DISAPPROVED_INSTRUCTOR_ACCOUNT_KEY = 3;
+
+    private static final int NEW_CUSTOMER_ACCOUNT_KEY = 4;
+
+    // Account Role keys
+    // Customer keys
+    private static final int CUSTOMER_KEY = 1;
+
+    private static final int NEW_CUSTOMER_KEY = 4;
+
+    // Instructor keys
+    private static final int APPROVED_INSTRUCTOR_KEY = 2;
+    private static final int DISAPPROVED_INSTRUCTOR_KEY = 3;
+
+    // Activity keys
+    private static final String APPROVED_ACTIVITY_KEY = "ApprovedActivity";
+    private static final String DISAPPROVED_ACTIVITY_KEY = "DisapprovedActivity";
+
+    // Scheduled Activity keys
+    private static final int SCHEDULED_ACTIVITY_KEY = 1;
+    private static final int NEW_SCHEDULED_ACTIVITY_KEY = 2;
+    private static final LocalDate DATE = LocalDate.of(2025, 3, 19);
+    private static final LocalTime START_TIME = LocalTime.of(10, 0, 0);
+    private static final LocalTime END_TIME = LocalTime.of(12, 0, 0);
+    private static final int CAPACITY = 20;
+
+    // Registration keys
+    private static final int REGISTRATION_KEY = 1;
 
     @InjectMocks
     private ScheduledActivityManagementService scheduledActivityService;
 
-    private int oldAccountRoleId = 1;
-    private int newAccountRoleId = 2;
-
-    private String oldActivityName;
-    private String newActivityName;
-
+    @SuppressWarnings("null")
     @BeforeEach
-    public void setInstructorAndActivity() {
-        Account oldAccount = new Account();
-        oldAccount.setUsername("Person1");
-        oldAccount.setPassword("Password1");
-        accountRepository.save(oldAccount);
+    void setMockOutput() {
+        when(accountDao.findAccountByAccountId(anyInt())).thenAnswer((InvocationOnMock invocation) -> {
+            if (invocation.getArgument(0).equals(CUSTOMER_ACCOUNT_KEY)) {
+                Account account = new Account();
+                account.setUsername("customer");
+                account.setPassword("password");
+                return account;
+            } else if (invocation.getArgument(0).equals(APPROVED_INSTRUCTOR_ACCOUNT_KEY)) {
+                Account account = new Account();
+                account.setUsername("approvedInstructor");
+                account.setPassword("password");
+                return account;
+            } else if (invocation.getArgument(0).equals(DISAPPROVED_INSTRUCTOR_ACCOUNT_KEY)) {
+                Account account = new Account();
+                account.setUsername("disapprovedInstructor");
+                account.setPassword("password");
+                return account;
+            } else {
+                return null;
+            }
+        });
 
-        Account newAccount = new Account();
-        newAccount.setUsername("Person2");
-        newAccount.setPassword("Password2");
-        accountRepository.save(newAccount);
+        when(instructorDao.findAccountRoleByAccountRoleId(anyInt())).thenAnswer((InvocationOnMock invocation) -> {
+            if (invocation.getArgument(0).equals(APPROVED_INSTRUCTOR_KEY)) {
+                Instructor instructor = new Instructor();
+                instructor.setAccount(accountDao.findAccountByAccountId(APPROVED_INSTRUCTOR_ACCOUNT_KEY));
+                // instructor.setStatus(InstructorStatus.Active);
+                instructor.setDescription("description");
+                instructor.setProfilePicURL("pictureURL");
+                return instructor;
+            } else if (invocation.getArgument(0).equals(DISAPPROVED_INSTRUCTOR_KEY)) {
+                Instructor instructor = new Instructor();
+                instructor.setAccount(accountDao.findAccountByAccountId(DISAPPROVED_INSTRUCTOR_ACCOUNT_KEY));
+                // instructor.setStatus(InstructorStatus.Pending);
+                instructor.setDescription("description");
+                instructor.setProfilePicURL("pictureURL");
+                return instructor;
+            } else {
+                return null;
+            }
+        });
 
-        Instructor oldInstructor = instructorRepository.findAccountRoleByAccountRoleId(oldAccountRoleId);
-        oldInstructor.setAccount(oldAccount);
-        instructorRepository.save(oldInstructor);
+        when(activityDao.findActivityByName(anyString())).thenAnswer((InvocationOnMock invocation) -> {
+            if (invocation.getArgument(0).equals(APPROVED_ACTIVITY_KEY)) {
+                Activity activity = new Activity();
+                activity.setName("activity");
+                activity.setDescription("description");
+                activity.setSubCategory(ClassCategory.Cardio);
+                activity.setIsApproved(true);
+                return activity;
+            } else if (invocation.getArgument(0).equals(DISAPPROVED_ACTIVITY_KEY)) {
+                Activity activity = new Activity();
+                activity.setName("activity");
+                activity.setDescription("description");
+                activity.setSubCategory(ClassCategory.Cardio);
+                activity.setIsApproved(false);
+                return activity;
+            } else {
+                return null;
+            }
+        });
 
-        Instructor newInstructor = instructorRepository.findAccountRoleByAccountRoleId(newAccountRoleId);
-        newInstructor.setAccount(newAccount);
-        instructorRepository.save(newInstructor);
+        when(scheduledActivityDao.findScheduledActivityByScheduledActivityId(anyInt()))
+                .thenAnswer((InvocationOnMock invocation) -> {
+                    if (invocation.getArgument(0).equals(SCHEDULED_ACTIVITY_KEY)) {
+                        ScheduledActivity scheduledActivity = new ScheduledActivity();
+                        scheduledActivity.setDate(LocalDate.now());
+                        scheduledActivity.setStartTime(LocalTime.now());
+                        scheduledActivity.setEndTime(LocalTime.of(12, 0));
+                        scheduledActivity.setSupervisor(
+                                instructorDao.findAccountRoleByAccountRoleId(
+                                        DISAPPROVED_INSTRUCTOR_KEY));
+                        scheduledActivity.setActivity(
+                                activityDao.findActivityByName(
+                                        DISAPPROVED_ACTIVITY_KEY));
+                        scheduledActivity.setCapacity(30);
+                        return scheduledActivity;
+                    } else {
+                        return null;
+                    }
+                });
 
-        Activity oldActivity = new Activity();
-        oldActivity.setName("Cardio1");
-        oldActivity.setDescription("Cardio2");
-        ClassCategory oldSubcategory = ClassCategory.Cardio;
-        oldActivity.setSubCategory(oldSubcategory);
-        activityRepository.save(oldActivity);
+        Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> {
+            return invocation.getArgument(0);
+        };
 
-        Activity newActivity = new Activity();
-        newActivity.setName("Cardio2");
-        newActivity.setDescription("Cardio3");
-        ClassCategory newSubcategory = ClassCategory.Strength;
-        newActivity.setSubCategory(newSubcategory);
-        activityRepository.save(newActivity);
+        when(scheduledActivityDao.save(any(ScheduledActivity.class))).thenAnswer(returnParameterAsAnswer);
+        when(accountDao.save(any(Account.class))).thenAnswer(returnParameterAsAnswer);
+        when(instructorDao.save(any(Instructor.class))).thenAnswer(returnParameterAsAnswer);
+        when(activityDao.save(any(Activity.class))).thenAnswer(returnParameterAsAnswer);
+
     }
 
+    @SuppressAjWarnings("null")
     /**
-     * Deletes all the data after each test
-     */
-    @AfterEach
-    public void clearDatabase() {
-        scheduledActivityRepository.deleteAll();
-        accountRepository.deleteAll();
-        instructorRepository.deleteAll();
-        activityRepository.deleteAll();
-    }
-
-    /**
-     * Test for creating a scheduled activity
-     * 
-     * @result A new scheduled activity is created
+     * Tests the creation of a scheduled activity -> Sucess
      */
     @Test
     public void testCreateScheduledActivity() {
+        ScheduledActivity scheduledActivity = null;
+        try {
+            scheduledActivity = scheduledActivityService.createScheduledActivity(DATE, START_TIME, END_TIME,
+                    APPROVED_INSTRUCTOR_KEY, APPROVED_ACTIVITY_KEY, CAPACITY);
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
 
-        LocalDate date = LocalDate.of(2024, 3, 19);
-        LocalTime startTime = LocalTime.of(10, 0, 0);
-        LocalTime endTime = LocalTime.of(12, 0, 0);
-        int capacity = 10;
-
-        int scheduledActivityId = 1;
-
-        int oldAccountRoleId = scheduledActivityRepository
-                .findScheduledActivityByScheduledActivityId(scheduledActivityId)
-                .getSupervisor().getAccountRoleId();
-        String oldActivityName = scheduledActivityRepository
-                .findScheduledActivityByScheduledActivityId(scheduledActivityId)
-                .getActivity().getName();
-
-        when(scheduledActivityRepository.save(any(ScheduledActivity.class))).thenAnswer((invocation) -> {
-            ScheduledActivity scheduledActivity = new ScheduledActivity();
-            scheduledActivity.setDate(date);
-            scheduledActivity.setStartTime(startTime);
-            scheduledActivity.setEndTime(endTime);
-            scheduledActivity.setSupervisor(instructorRepository.findAccountRoleByAccountRoleId(oldAccountRoleId));
-            scheduledActivity.setActivity(activityRepository.findActivityByName(oldActivityName));
-            scheduledActivity.setCapacity(capacity);
-            return scheduledActivity;
-        });
-
-        ScheduledActivity createdScheduledActivity = scheduledActivityService.createScheduledActivity(date, startTime,
-                endTime, oldAccountRoleId, oldActivityName, capacity);
-        verify(scheduledActivityRepository, times(1)).save(any(ScheduledActivity.class));
-
-        assertNotNull(createdScheduledActivity);
-        assertEquals(date, createdScheduledActivity.getDate());
-        assertEquals(startTime, createdScheduledActivity.getStartTime());
-        assertEquals(endTime, createdScheduledActivity.getEndTime());
-        assertEquals(oldAccountRoleId, createdScheduledActivity.getSupervisor().getAccountRoleId());
-        assertEquals(oldActivityName, createdScheduledActivity.getActivity().getName());
-        assertEquals(capacity, createdScheduledActivity.getCapacity());
+        assertNotNull(scheduledActivity);
+        assertEquals(DATE, scheduledActivity.getDate());
+        assertEquals(START_TIME, scheduledActivity.getStartTime());
+        assertEquals(END_TIME, scheduledActivity.getEndTime());
+        assertEquals(APPROVED_INSTRUCTOR_KEY, scheduledActivity.getSupervisor().getAccountRoleId());
+        assertEquals(APPROVED_ACTIVITY_KEY, scheduledActivity.getActivity().getName());
+        assertEquals(CAPACITY, scheduledActivity.getCapacity());
     }
 
     /**
-     * Test for creating a scheduled activity with a null date
-     * 
-     * @result An exception is thrown
+     * Tests the creation of a scheduled activity with a null date -> Fail
      */
     @Test
     public void testCreateScheduledActivityNullDate() {
-        LocalDate date = null;
-        LocalTime startTime = LocalTime.of(10, 0, 0);
-        LocalTime endTime = LocalTime.of(12, 0, 0);
-        int capacity = 10;
-
-        int scheduledActivityId = 1;
-
-        int oldAccountRoleId = scheduledActivityRepository
-                .findScheduledActivityByScheduledActivityId(scheduledActivityId)
-                .getSupervisor().getAccountRoleId();
-        String oldActivityName = scheduledActivityRepository
-                .findScheduledActivityByScheduledActivityId(scheduledActivityId)
-                .getActivity().getName();
-
         String error = null;
         try {
-            ScheduledActivity createdScheduledActivity = scheduledActivityService.createScheduledActivity(date,
-                    startTime, endTime, oldAccountRoleId, oldActivityName, capacity);
+            ScheduledActivity scheduledActivity = scheduledActivityService.createScheduledActivity(null, START_TIME,
+                    END_TIME, APPROVED_INSTRUCTOR_KEY, APPROVED_ACTIVITY_KEY, CAPACITY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -171,26 +232,15 @@ public class TestScheduledActivityService {
         assertEquals("Date cannot be empty!", error);
     }
 
+    /**
+     * Tests the creation of a scheduled activity with a null start time -> Fail
+     */
     @Test
     public void testCreateScheduledActivityNullStartTime() {
-        LocalDate date = LocalDate.of(2024, 3, 19);
-        LocalTime startTime = null;
-        LocalTime endTime = LocalTime.of(12, 0, 0);
-        int capacity = 10;
-
-        int scheduledActivityId = 1;
-
-        int oldAccountRoleId = scheduledActivityRepository
-                .findScheduledActivityByScheduledActivityId(scheduledActivityId)
-                .getSupervisor().getAccountRoleId();
-        String oldActivityName = scheduledActivityRepository
-                .findScheduledActivityByScheduledActivityId(scheduledActivityId)
-                .getActivity().getName();
-
         String error = null;
         try {
-            ScheduledActivity createdScheduledActivity = scheduledActivityService.createScheduledActivity(date,
-                    startTime, endTime, oldAccountRoleId, oldActivityName, capacity);
+            ScheduledActivity scheduledActivity = scheduledActivityService.createScheduledActivity(DATE, null, END_TIME,
+                    APPROVED_INSTRUCTOR_KEY, APPROVED_ACTIVITY_KEY, CAPACITY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -198,28 +248,16 @@ public class TestScheduledActivityService {
         assertEquals("Start time cannot be empty!", error);
     }
 
+    /**
+     * Tests the creation of a scheduled activity with a null end time -> Fail
+     */
     @Test
     public void testCreateScheduledActivityNullEndTime() {
-        LocalDate date = LocalDate.of(2024, 3, 19);
-        LocalTime startTime = LocalTime.of(10, 0, 0);
-        LocalTime endTime = null;
-        int capacity = 10;
-
-        int scheduledActivityId = 1;
-
-        int oldAccountRoleId = scheduledActivityRepository
-                .findScheduledActivityByScheduledActivityId(scheduledActivityId)
-                .getSupervisor().getAccountRoleId();
-        String oldActivityName = scheduledActivityRepository
-                .findScheduledActivityByScheduledActivityId(scheduledActivityId)
-                .getActivity().getName();
-
         String error = null;
-        // when(activityService.(instructorId)).thenReturn(true);//this checks if the
-        // instructor exists, if not, it will return false which will throw an exception
         try {
-            ScheduledActivity createdScheduledActivity = scheduledActivityService.createScheduledActivity(date,
-                    startTime, endTime, oldAccountRoleId, oldActivityName, capacity);
+            ScheduledActivity scheduledActivity = scheduledActivityService.createScheduledActivity(DATE, START_TIME,
+                    null,
+                    APPROVED_INSTRUCTOR_KEY, APPROVED_ACTIVITY_KEY, CAPACITY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -227,19 +265,15 @@ public class TestScheduledActivityService {
         assertEquals("End time cannot be empty!", error);
     }
 
+    /**
+     * Tests the creation of a scheduled activity with a null instructor -> Fail
+     */
     @Test
     public void testCreateScheduledActivityNullInstructor() {
-        LocalDate date = LocalDate.of(2024, 3, 19);
-        LocalTime startTime = LocalTime.of(10, 0, 0);
-        LocalTime endTime = LocalTime.of(12, 0, 0);
-        int capacity = 10;
-
-        int oldAccountRoleId = -1;
-
         String error = null;
         try {
-            ScheduledActivity createdScheduledActivity = scheduledActivityService.createScheduledActivity(date,
-                    startTime, endTime, oldAccountRoleId, oldActivityName, capacity);
+            ScheduledActivity scheduledActivity = scheduledActivityService.createScheduledActivity(DATE, START_TIME,
+                    END_TIME, -1, APPROVED_ACTIVITY_KEY, CAPACITY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -248,54 +282,31 @@ public class TestScheduledActivityService {
     }
 
     /**
-     * Test for creating a scheduled activity with a null activity
-     * 
-     * @result An exception is thrown
+     * Tests the creation of a scheduled activity with a null activity -> Fail
      */
     @Test
     public void testCreateScheduledActivityNullActivity() {
-        int scheduledActivityId = 1;
-        LocalDate date = LocalDate.of(2024, 3, 19);
-        LocalTime startTime = LocalTime.of(10, 0, 0);
-        LocalTime endTime = LocalTime.of(12, 0, 0);
-        int capacity = 10;
-
-        int oldAccountRoleId = scheduledActivityRepository
-                .findScheduledActivityByScheduledActivityId(scheduledActivityId)
-                .getSupervisor().getAccountRoleId();
-
-        String oldActivityName = null;
-
         String error = null;
         try {
-            ScheduledActivity createdScheduledActivity = scheduledActivityService.createScheduledActivity(date,
-                    startTime, endTime, oldAccountRoleId, oldActivityName, capacity);
+            ScheduledActivity scheduledActivity = scheduledActivityService.createScheduledActivity(DATE, START_TIME,
+                    END_TIME, APPROVED_INSTRUCTOR_KEY, null, CAPACITY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
 
-        assertEquals("Activity cannot be empty!", error);
+        assertEquals("Scheduled Activity cannot be empty!", error);
     }
 
+    /**
+     * Tests the creation of a scheduled activity with a start time after the end
+     * time -> Fail
+     */
     @Test
     public void testCreateScheduledActivityStartTimeAfterEndTime() {
-        int scheduledActivityId = 1;
-        LocalDate date = LocalDate.of(2024, 3, 19);
-        LocalTime startTime = LocalTime.of(12, 0, 0);
-        LocalTime endTime = LocalTime.of(10, 0, 0);
-        int capacity = 10;
-
-        int oldAccountRoleId = scheduledActivityRepository
-                .findScheduledActivityByScheduledActivityId(scheduledActivityId)
-                .getSupervisor().getAccountRoleId();
-        String oldActivityName = scheduledActivityRepository
-                .findScheduledActivityByScheduledActivityId(scheduledActivityId)
-                .getActivity().getName();
-
         String error = null;
         try {
-            ScheduledActivity createdScheduledActivity = scheduledActivityService.createScheduledActivity(date,
-                    startTime, endTime, oldAccountRoleId, oldActivityName, capacity);
+            ScheduledActivity scheduledActivity = scheduledActivityService.createScheduledActivity(DATE, END_TIME,
+                    START_TIME, APPROVED_INSTRUCTOR_KEY, APPROVED_ACTIVITY_KEY, CAPACITY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -303,140 +314,163 @@ public class TestScheduledActivityService {
         assertEquals("Start time cannot be after end time!", error);
     }
 
+    /**
+     * Tests updating the date and time of a scheduled activity -> Success
+     */
     @Test
-    public void testUpdateScheduledActivityDateAndTime() {
-        LocalDate newDate = LocalDate.of(2025, 3, 19);
-        LocalTime newStartTime = LocalTime.of(10, 0, 0);
-        LocalTime newEndTime = LocalTime.of(12, 0, 0);
-        // int newCapacity = 20;
-
-        int oldScheduledActivityId = 1;
-
-        LocalDate oldDate = scheduledActivityRepository
-                .findScheduledActivityByScheduledActivityId(oldScheduledActivityId)
+    public void testUpdateScheduledActivityByDateAndTime() {
+        LocalDate oldDate = scheduledActivityDao.findScheduledActivityByScheduledActivityId(SCHEDULED_ACTIVITY_KEY)
                 .getDate();
-        LocalTime oldStartTime = scheduledActivityRepository
-                .findScheduledActivityByScheduledActivityId(oldScheduledActivityId)
+        LocalTime oldStartTime = scheduledActivityDao.findScheduledActivityByScheduledActivityId(SCHEDULED_ACTIVITY_KEY)
                 .getStartTime();
-        LocalTime oldEndTime = scheduledActivityRepository
-                .findScheduledActivityByScheduledActivityId(oldScheduledActivityId)
+        LocalTime oldEndTime = scheduledActivityDao.findScheduledActivityByScheduledActivityId(SCHEDULED_ACTIVITY_KEY)
                 .getEndTime();
-
-        when(scheduledActivityRepository.findScheduledActivityByScheduledActivityId(oldScheduledActivityId))
-                .thenReturn(null);// this checks if the activity already exists, and if it does, it will return
-                                  // null
-
-        when(scheduledActivityRepository.save(any(ScheduledActivity.class))).thenAnswer((invocation) -> {
-            ScheduledActivity scheduledActivity = new ScheduledActivity();
-            scheduledActivity.setDate(newDate);
-            scheduledActivity.setStartTime(newStartTime);
-            scheduledActivity.setEndTime(newEndTime);
-            scheduledActivity.setSupervisor(instructorRepository.findAccountRoleByAccountRoleId(newAccountRoleId));
-            scheduledActivity.setActivity(activityRepository.findActivityByName(newActivityName));
-            return scheduledActivity;
-        });
 
         ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivityByDateAndTime(
-                oldScheduledActivityId, newDate, oldDate, newStartTime, oldStartTime, newEndTime, oldEndTime);
-        verify(scheduledActivityRepository, times(1)).save(any(ScheduledActivity.class));
-
-        assertNotNull(updatedScheduledActivity);
-        assertEquals(newDate, updatedScheduledActivity.getDate());
-        assertEquals(newStartTime, updatedScheduledActivity.getStartTime());
-        assertEquals(newEndTime, updatedScheduledActivity.getEndTime());
+                SCHEDULED_ACTIVITY_KEY, DATE, oldDate, START_TIME, oldStartTime, END_TIME, oldEndTime);
+        verify(scheduledActivityDao, times(1)).save(any(ScheduledActivity.class));
     }
 
+    /**
+     * Tests updating the date and time of a scheduled activity with a null date ->
+     * Fail
+     */
     @Test
-    public void testUpdateScheduledActivityInstructor() {
-        int oldScheduledActivityId = 1;
-        int newScheduledActivityId = 2;
-
-        int oldAccountRoleId = scheduledActivityRepository
-                .findScheduledActivityByScheduledActivityId(oldScheduledActivityId)
-                .getSupervisor().getAccountRoleId();
-
-        int newAccountRoleId = scheduledActivityRepository
-                .findScheduledActivityByScheduledActivityId(newScheduledActivityId)
-                .getSupervisor().getAccountRoleId();
-
-        when(scheduledActivityRepository.findScheduledActivityByScheduledActivityId(oldScheduledActivityId))
-                .thenReturn(null);// this checks if the activity already exists, and if it does, it will return
-                                  // null
-
-        when(scheduledActivityRepository.save(any(ScheduledActivity.class))).thenAnswer((invocation) -> {
-            ScheduledActivity scheduledActivity = new ScheduledActivity();
-            scheduledActivity.setSupervisor(instructorRepository.findAccountRoleByAccountRoleId(newAccountRoleId));
-            return scheduledActivity;
-        });
-
-        when(scheduledActivityRepository.findScheduledActivityByScheduledActivityId(oldScheduledActivityId))
-                .thenReturn(new ScheduledActivity());
-
-        String error = null;
-        try {
-            ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivityInstructor(
-                    oldScheduledActivityId, newAccountRoleId, oldAccountRoleId);
-        } catch (IllegalArgumentException e) {
-            error = e.getMessage();
-        }
-
-        assertEquals("Name cannot be empty!", error);
-    }
-
-    @Test
-    public void testUpdateScheduledActivityInvalidDate() {
-        int scheduledActivityId = 1;
-        LocalDate newDate = LocalDate.of(2010, 3, 19);
-        LocalTime newStartTime = LocalTime.of(10, 0, 0);
-        LocalTime newEndTime = LocalTime.of(12, 0, 0);
-        int newCapacity = 20;
-
-        LocalDate oldDate = scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId)
+    public void testUpdateScheduledActivityByDateAndTimeNullDate() {
+        LocalDate oldDate = scheduledActivityDao.findScheduledActivityByScheduledActivityId(SCHEDULED_ACTIVITY_KEY)
                 .getDate();
-        LocalTime oldStartTime = scheduledActivityRepository
-                .findScheduledActivityByScheduledActivityId(scheduledActivityId)
+        LocalTime oldStartTime = scheduledActivityDao.findScheduledActivityByScheduledActivityId(SCHEDULED_ACTIVITY_KEY)
                 .getStartTime();
-        LocalTime oldEndTime = scheduledActivityRepository
-                .findScheduledActivityByScheduledActivityId(scheduledActivityId)
+        LocalTime oldEndTime = scheduledActivityDao.findScheduledActivityByScheduledActivityId(SCHEDULED_ACTIVITY_KEY)
                 .getEndTime();
 
         String error = null;
         try {
             ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivityByDateAndTime(
-                    scheduledActivityId, newDate, oldDate, newStartTime, oldStartTime, newEndTime, oldEndTime);
+                    SCHEDULED_ACTIVITY_KEY, null, oldDate, START_TIME, oldStartTime, END_TIME, oldEndTime);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
 
-        assertEquals("Date cannot be before the current date!", error);
+        assertEquals("Date cannot be empty!", error);
     }
 
+    /**
+     * Tests updating the date and time of a scheduled activity with a null start
+     * time -> Fail
+     */
     @Test
-    public void testUpdateScheduledActivityNullStartTime() {
-        int scheduledActivityId = 1;
-        LocalDate newDate = LocalDate.of(2025, 3, 19);
-        LocalTime newStartTime = null;
-        LocalTime newEndTime = LocalTime.of(12, 0, 0);
-        int newCapacity = 20;
-
-        LocalDate oldDate = scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId)
+    public void testUpdateScheduledActivityByDateAndTimeNullStartTime() {
+        LocalDate oldDate = scheduledActivityDao.findScheduledActivityByScheduledActivityId(SCHEDULED_ACTIVITY_KEY)
                 .getDate();
-        LocalTime oldStartTime = scheduledActivityRepository
-                .findScheduledActivityByScheduledActivityId(scheduledActivityId)
+        LocalTime oldStartTime = scheduledActivityDao.findScheduledActivityByScheduledActivityId(SCHEDULED_ACTIVITY_KEY)
                 .getStartTime();
-        LocalTime oldEndTime = scheduledActivityRepository
-                .findScheduledActivityByScheduledActivityId(scheduledActivityId)
+        LocalTime oldEndTime = scheduledActivityDao.findScheduledActivityByScheduledActivityId(SCHEDULED_ACTIVITY_KEY)
                 .getEndTime();
 
         String error = null;
         try {
             ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivityByDateAndTime(
-                    scheduledActivityId, newDate, oldDate, newStartTime, oldStartTime, newEndTime, oldEndTime);
+                    SCHEDULED_ACTIVITY_KEY, DATE, oldDate, null, oldStartTime, END_TIME, oldEndTime);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
 
         assertEquals("Start time cannot be empty!", error);
+    }
+
+    /**
+     * Tests updating the date and time of a scheduled activity with a null end time
+     * -> Fail
+     */
+    @Test
+    public void testUpdateScheduledActivityByDateAndTimeNullEndTime() {
+        LocalDate oldDate = scheduledActivityDao.findScheduledActivityByScheduledActivityId(SCHEDULED_ACTIVITY_KEY)
+                .getDate();
+        LocalTime oldStartTime = scheduledActivityDao.findScheduledActivityByScheduledActivityId(SCHEDULED_ACTIVITY_KEY)
+                .getStartTime();
+        LocalTime oldEndTime = scheduledActivityDao.findScheduledActivityByScheduledActivityId(SCHEDULED_ACTIVITY_KEY)
+                .getEndTime();
+
+        String error = null;
+        try {
+            ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivityByDateAndTime(
+                    SCHEDULED_ACTIVITY_KEY, DATE, oldDate, START_TIME, oldStartTime, null, oldEndTime);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+
+        assertEquals("End time cannot be empty!", error);
+    }
+
+    /**
+     * Tests updating the instructor of a scheduled activity -> Success
+     */
+    @Test
+    public void testUpdateScheduledActivityInstructor() {
+        int oldAccountRoleId = scheduledActivityDao.findScheduledActivityByScheduledActivityId(SCHEDULED_ACTIVITY_KEY)
+                .getSupervisor().getAccountRoleId();
+        int newAccountRoleId = APPROVED_INSTRUCTOR_KEY;
+
+        ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivityInstructor(
+                SCHEDULED_ACTIVITY_KEY, newAccountRoleId, oldAccountRoleId);
+        verify(scheduledActivityDao, times(1)).save(any(ScheduledActivity.class));
+    }
+
+    /**
+     * Tests updating the instructor of a scheduled activity with a null instructor
+     * -> Fail
+     */
+    @Test
+    public void testUpdateScheduledActivityInstructorNullInstructor() {
+        int oldAccountRoleId = scheduledActivityDao.findScheduledActivityByScheduledActivityId(SCHEDULED_ACTIVITY_KEY)
+                .getSupervisor().getAccountRoleId();
+        int newAccountRoleId = -1;
+
+        String error = null;
+        try {
+            ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivityInstructor(
+                    SCHEDULED_ACTIVITY_KEY, newAccountRoleId, oldAccountRoleId);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+
+        assertEquals("Instructor cannot be empty!", error);
+    }
+
+    /**
+     * Tests updating the activity of a scheduled activity -> Success
+     */
+    @Test
+    public void testUpdateScheduledActivityActivity() {
+        String oldActivityName = scheduledActivityDao.findScheduledActivityByScheduledActivityId(SCHEDULED_ACTIVITY_KEY)
+                .getActivity().getName();
+        String newActivityName = APPROVED_ACTIVITY_KEY;
+
+        ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivityActivity(
+                SCHEDULED_ACTIVITY_KEY, newActivityName, oldActivityName);
+        verify(scheduledActivityDao, times(1)).save(any(ScheduledActivity.class));
+    }
+
+    /**
+     * Tests updating the activity of a scheduled activity with a null activity ->
+     * Fail
+     */
+    @Test
+    public void testUpdateScheduledActivityActivityNullActivity() {
+        String oldActivityName = scheduledActivityDao.findScheduledActivityByScheduledActivityId(SCHEDULED_ACTIVITY_KEY)
+                .getActivity().getName();
+        String newActivityName = null;
+
+        String error = null;
+        try {
+            ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivityActivity(
+                    SCHEDULED_ACTIVITY_KEY, newActivityName, oldActivityName);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+
+        assertEquals("Scheduled Activity cannot be empty!", error);
     }
 
     @Test
