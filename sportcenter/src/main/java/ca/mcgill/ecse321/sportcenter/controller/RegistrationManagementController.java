@@ -20,7 +20,7 @@ import ca.mcgill.ecse321.sportcenter.service.RegistrationManagementService;
  */
 @CrossOrigin(origins = "*")
 @RestController
-public class RegistrationController {
+public class RegistrationManagementController {
 
     @Autowired
     private RegistrationManagementService registrationService;
@@ -166,7 +166,7 @@ public class RegistrationController {
         }
 
         CustomerDto customerDto = AccountManagementController.convertCustomerToDto(registration.getCustomer());
-        ScheduledActivityDto scheduledActivityDto = ScheduledActivityController
+        ScheduledActivityDto scheduledActivityDto = ScheduledActivityManagementController
                 .convertToDto(registration.getScheduledActivity());
 
         return new RegistrationDto(customerDto, scheduledActivityDto, registration.getRegistrationId());
