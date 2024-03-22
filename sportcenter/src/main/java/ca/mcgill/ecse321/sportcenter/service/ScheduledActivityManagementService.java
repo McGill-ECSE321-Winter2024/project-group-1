@@ -479,6 +479,8 @@ public class ScheduledActivityManagementService {
         if (accountRoleId < 0) {
             throw new IllegalArgumentException("Id cannot be negative!");
         }
+
+        // Minimize queries
         List<ScheduledActivity> scheduledActivities = getAllScheduledActivitiesByInstructorId(accountRoleId);
         if (scheduledActivities != null) {
             for (ScheduledActivity scheduledActivity : scheduledActivities) {

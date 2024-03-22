@@ -1,8 +1,5 @@
 package ca.mcgill.ecse321.sportcenter.service;
 
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -20,15 +17,27 @@ import java.util.List;
 import org.aspectj.lang.annotation.SuppressAjWarnings;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 
-import ca.mcgill.ecse321.sportcenter.dao.*;
-import ca.mcgill.ecse321.sportcenter.model.*;
+import ca.mcgill.ecse321.sportcenter.dao.AccountRepository;
+import ca.mcgill.ecse321.sportcenter.dao.ActivityRepository;
+import ca.mcgill.ecse321.sportcenter.dao.CustomerRepository;
+import ca.mcgill.ecse321.sportcenter.dao.InstructorRepository;
+import ca.mcgill.ecse321.sportcenter.dao.RegistrationRepository;
+import ca.mcgill.ecse321.sportcenter.dao.ScheduledActivityRepository;
+import ca.mcgill.ecse321.sportcenter.model.Account;
+import ca.mcgill.ecse321.sportcenter.model.Activity;
 import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
+import ca.mcgill.ecse321.sportcenter.model.Customer;
+import ca.mcgill.ecse321.sportcenter.model.Instructor;
 import ca.mcgill.ecse321.sportcenter.model.Instructor.InstructorStatus;
+import ca.mcgill.ecse321.sportcenter.model.Registration;
+import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity;
 
 /**
  * Test class for the Registration entity
@@ -105,7 +114,7 @@ public class TestRegistrationService {
                         }
                 });
 
-                when(customerDao.findAccountRoleByAccountRoleId(anyInt())).thenAnswer((InvocationOnMock invocation) -> {
+                when(customerDao.findCustomerByAccountRoleId(anyInt())).thenAnswer((InvocationOnMock invocation) -> {
                         if (invocation.getArgument(0).equals(CUSTOMER_KEY)) {
                                 Customer customer = new Customer();
                                 customer.setAccount(accountDao.findAccountByAccountId(CUSTOMER_ACCOUNT_KEY));
@@ -185,7 +194,7 @@ public class TestRegistrationService {
                 when(registrationDao.findRegistrationByRegId(anyInt())).thenAnswer((InvocationOnMock invocation) -> {
                         if (invocation.getArgument(0).equals(REGISTRATION_KEY)) {
                                 Registration registration = new Registration();
-                                registration.setCustomer(customerDao.findAccountRoleByAccountRoleId(CUSTOMER_KEY));
+                                registration.setCustomer(customerDao.findCustomerByAccountRoleId(CUSTOMER_KEY));
                                 registration.setScheduledActivity(
                                                 scheduledActivityDao.findScheduledActivityByScheduledActivityId(
                                                                 SCHEDULED_ACTIVITY_KEY));

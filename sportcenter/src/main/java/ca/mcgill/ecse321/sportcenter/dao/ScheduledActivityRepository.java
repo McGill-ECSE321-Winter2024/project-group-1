@@ -20,4 +20,7 @@ public interface ScheduledActivityRepository extends CrudRepository<ScheduledAct
 
     public List<ScheduledActivity> findScheduledActivityBySupervisor(int accountRoleId); // supervisorId is the
                                                                                          // instructorId
+
+    public List<ScheduledActivity> findScheduledActivityByCustomerAccountRoleId(int accountRoleId); // accountRoleId is
+                                                                                                    // the instructor Id
 }

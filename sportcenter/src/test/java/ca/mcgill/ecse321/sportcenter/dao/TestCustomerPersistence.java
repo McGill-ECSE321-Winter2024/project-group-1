@@ -64,11 +64,11 @@ public class TestCustomerPersistence {
         /**
          * Load the Customer
          */
-        customer = customerRepository.findAccountRoleByAccountRoleId(accountRoleId);
+        customer = customerRepository.findCustomerByAccountRoleId(accountRoleId);
 
         /**
          * Check the attributes of the Customer
-         */    
+         */
         assertNotNull(customer);
         assertEquals(accountRoleId, customer.getAccountRoleId());
         assertEquals(username, customer.getAccount().getUsername());
@@ -76,4 +76,3 @@ public class TestCustomerPersistence {
         assertEquals(accountId, customer.getAccount().getAccountId());
     }
 }
-

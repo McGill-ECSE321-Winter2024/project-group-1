@@ -3,8 +3,6 @@ package ca.mcgill.ecse321.sportcenter.dao;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -59,14 +57,15 @@ public class TestRegistrationPersistence {
     @Test
     public void testPersistAndLoadRegistration() {
         /**
-         * Create an Activity, set the attributes of the Activity, //and save the Activity
+         * Create an Activity, set the attributes of the Activity, //and save the
+         * Activity
          */
         Activity activity = new Activity();
         ClassCategory subcategory = ClassCategory.Strength;
         String name = "Yoga";
         String description = "Practice yoga with a professional instructor.";
         boolean isApproved = true;
-        
+
         activity.setSubCategory(subcategory);
         activity.setName(name);
         activity.setIsApproved(isApproved);
@@ -76,8 +75,8 @@ public class TestRegistrationPersistence {
         activity = activityRepository.findActivityByName(name);
 
         /**
-        * Create an Account, set the attributes of the Account, //and save the Account
-        */
+         * Create an Account, set the attributes of the Account, //and save the Account
+         */
         Account account = new Account();
         String username = "Juan";
         String password = "password";
@@ -89,7 +88,8 @@ public class TestRegistrationPersistence {
         account = accountRepository.findAccountByAccountId(accountId);
 
         /**
-         * Create an Instructor, set the attribute of the Instructor, //and save the Instructor
+         * Create an Instructor, set the attribute of the Instructor, //and save the
+         * Instructor
          */
         Instructor instructor = new Instructor();
         InstructorStatus status = InstructorStatus.Active;
@@ -105,7 +105,8 @@ public class TestRegistrationPersistence {
         instructor = instructorRepository.findAccountRoleByAccountRoleId(accountRoleId);
 
         /**
-         * Create a ScheduledActivity, set the attributes of the ScheduledActivity, and save the ScheduledActivity
+         * Create a ScheduledActivity, set the attributes of the ScheduledActivity, and
+         * save the ScheduledActivity
          */
         ScheduledActivity scheduledActivity = new ScheduledActivity();
         LocalDate date = LocalDate.of(2021, 11, 11);
@@ -124,7 +125,7 @@ public class TestRegistrationPersistence {
         /**
          * Load the ScheduledActivity
          */
-        scheduledActivity = scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId);        
+        scheduledActivity = scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId);
 
         /**
          * Create an Account
@@ -163,10 +164,11 @@ public class TestRegistrationPersistence {
         /**
          * Load the Customer
          */
-        customer = customerRepository.findAccountRoleByAccountRoleId(accountRoleId1);        
+        customer = customerRepository.findCustomerByAccountRoleId(accountRoleId1);
 
         /**
-         * Create a Registration, set the attributes of the Registration, and save the Registration
+         * Create a Registration, set the attributes of the Registration, and save the
+         * Registration
          */
         Registration registration = new Registration();
         registration.setCustomer(customer);
@@ -177,7 +179,7 @@ public class TestRegistrationPersistence {
         /**
          * Load the Registration and check the attributes of the Registration
          */
-        registration = registrationRepository.findRegistrationByRegId(regId);//could be by id
+        registration = registrationRepository.findRegistrationByRegId(regId);// could be by id
 
         /**
          * Check the attributes of the Registration

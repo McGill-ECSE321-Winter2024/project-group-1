@@ -60,7 +60,7 @@ public class RegistrationManagementService {
             throw new IllegalArgumentException("Scheduled activity id not valid!");
         }
 
-        Customer customer = customerRepository.findAccountRoleByAccountRoleId(accountRoleId);
+        Customer customer = customerRepository.findCustomerByAccountRoleId(accountRoleId);
         if (customer == null) {
             throw new IllegalArgumentException("Customer does not exist");
         }
@@ -135,7 +135,7 @@ public class RegistrationManagementService {
         if (accountRoleId < 0) {
             throw new IllegalArgumentException("Account role id not valid!");
         }
-        if (customerRepository.findAccountRoleByAccountRoleId(accountRoleId) == null) {
+        if (customerRepository.findCustomerByAccountRoleId(accountRoleId) == null) {
             throw new IllegalArgumentException("Customer does not exist");
         }
         List<Registration> scheduledActivitiesAttendedByCustomer = new ArrayList<>();
@@ -228,7 +228,7 @@ public class RegistrationManagementService {
         if (accountRoleId < 0) {
             throw new IllegalArgumentException("Account role id not valid!");
         }
-        if (customerRepository.findAccountRoleByAccountRoleId(accountRoleId) == null) {
+        if (customerRepository.findCustomerByAccountRoleId(accountRoleId) == null) {
             throw new IllegalArgumentException("Customer does not exist");
         }
         for (Registration registration : registrationRepository.findAll()) {
@@ -248,7 +248,7 @@ public class RegistrationManagementService {
         if (accountRoleId < 0) {
             throw new IllegalArgumentException("Account role id not valid!");
         }
-        if (customerRepository.findAccountRoleByAccountRoleId(accountRoleId) == null) {
+        if (customerRepository.findCustomerByAccountRoleId(accountRoleId) == null) {
             throw new IllegalArgumentException("Instructor does not exist");
         }
         for (Registration registration : registrationRepository.findAll()) {
@@ -291,7 +291,7 @@ public class RegistrationManagementService {
         if (accountRoleId < 0) {
             throw new IllegalArgumentException("Account role id not valid!");
         }
-        if (customerRepository.findAccountRoleByAccountRoleId(accountRoleId) == null) {
+        if (customerRepository.findCustomerByAccountRoleId(accountRoleId) == null) {
             throw new IllegalArgumentException("Customer does not exist");
         }
         for (Registration registration : registrationRepository.findAll()) {

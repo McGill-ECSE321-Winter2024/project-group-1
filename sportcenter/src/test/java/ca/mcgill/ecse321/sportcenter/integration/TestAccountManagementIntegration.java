@@ -4,9 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.time.LocalDate;
-import java.util.List;
-import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -20,16 +17,15 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import ca.mcgill.ecse321.sportcenter.dao.AccountRepository;
+import ca.mcgill.ecse321.sportcenter.dao.CustomerRepository;
+import ca.mcgill.ecse321.sportcenter.dao.InstructorRepository;
+import ca.mcgill.ecse321.sportcenter.dao.OwnerRepository;
 import ca.mcgill.ecse321.sportcenter.dto.AccountDto;
 import ca.mcgill.ecse321.sportcenter.model.Account;
 import ca.mcgill.ecse321.sportcenter.model.Customer;
 import ca.mcgill.ecse321.sportcenter.model.Instructor;
 import ca.mcgill.ecse321.sportcenter.model.Owner;
-import jakarta.persistence.criteria.CriteriaBuilder.In;
-import ca.mcgill.ecse321.sportcenter.dao.AccountRepository;
-import ca.mcgill.ecse321.sportcenter.dao.CustomerRepository;
-import ca.mcgill.ecse321.sportcenter.dao.InstructorRepository;
-import ca.mcgill.ecse321.sportcenter.dao.OwnerRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -120,7 +116,7 @@ public class TestAccountManagementIntegration {
     @Test
     @Order(7)
     public void testGetAccountAfterDelete() {
-        ResponseEntity<AccountDto> response = account.getForEntity("/account/getAccount" ,
+        ResponseEntity<AccountDto> response = account.getForEntity("/account/getAccount",
                 AccountDto.class);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }

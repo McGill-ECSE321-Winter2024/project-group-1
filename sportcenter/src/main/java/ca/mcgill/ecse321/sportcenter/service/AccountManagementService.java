@@ -231,7 +231,7 @@ public class AccountManagementService {
             throw new IllegalArgumentException("AccountRoleId cannot be negative!");
         }
 
-        Customer customer = customerRepository.findAccountRoleByAccountRoleId(accountRoleId);
+        Customer customer = customerRepository.findCustomerByAccountRoleId(accountRoleId);
         if (customer == null) {
             throw new IllegalArgumentException("Customer does not exist!");
         }
@@ -261,7 +261,7 @@ public class AccountManagementService {
             throw new IllegalArgumentException("AccountRoleId cannot be negative!");
         }
 
-        Customer customer = customerRepository.findAccountRoleByAccountRoleId(accountRoleId);
+        Customer customer = customerRepository.findCustomerByAccountRoleId(accountRoleId);
         if (customer == null) {
             throw new IllegalArgumentException("Customer does not exist!");
         }
@@ -285,7 +285,7 @@ public class AccountManagementService {
             throw new IllegalArgumentException("Account does not exist!");
         }
 
-        Customer customer = customerRepository.findAccountRoleByAccountRoleId(accountId);
+        Customer customer = customerRepository.findCustomerByAccountRoleId(accountId);
         if (customer == null) {
             throw new IllegalArgumentException("Customer does not exist!");
         }
@@ -309,7 +309,7 @@ public class AccountManagementService {
             throw new IllegalArgumentException("Account does not exist!");
         }
 
-        Customer customer = customerRepository.findAccountRoleByAccountRoleId(account.getAccountId());
+        Customer customer = customerRepository.findCustomerByAccountRoleId(account.getAccountId());
         if (customer == null) {
             throw new IllegalArgumentException("Customer does not exist!");
         }
@@ -624,7 +624,7 @@ public class AccountManagementService {
             throw new IllegalArgumentException("AccountRoleId cannot be negative!");
         }
 
-        Customer customer = customerRepository.findAccountRoleByAccountRoleId(accountRoleId);
+        Customer customer = customerRepository.findCustomerByAccountRoleId(accountRoleId);
         if (customer == null) {
             throw new IllegalArgumentException("Customer does not exist!");
         }
@@ -652,7 +652,7 @@ public class AccountManagementService {
             throw new IllegalArgumentException("Account does not exist!");
         }
 
-        Customer customer = customerRepository.findAccountRoleByAccountRoleId(accountId);
+        Customer customer = customerRepository.findCustomerByAccountRoleId(accountId);
         if (customer == null) {
             throw new IllegalArgumentException("Customer does not exist!");
         }
@@ -680,7 +680,7 @@ public class AccountManagementService {
             throw new IllegalArgumentException("Account does not exist!");
         }
 
-        Customer customer = customerRepository.findAccountRoleByAccountRoleId(account.getAccountId());
+        Customer customer = customerRepository.findCustomerByAccountRoleId(account.getAccountId());
         if (customer == null) {
             throw new IllegalArgumentException("Customer does not exist!");
         }
@@ -690,18 +690,6 @@ public class AccountManagementService {
         registrationManagementService.deleteRegistrationsByAccountRoleId(customer.getAccountRoleId());
 
         customerRepository.delete(customer);
-    }
-
-    /**
-     * Delete all customers
-     * 
-     * @return void
-     */
-    @Transactional
-    public void deleteAllCustomers() {
-        for (Customer customer : customerRepository.findAll()) {
-            deleteCustomerByAccountRoleId(customer.getAccountRoleId());
-        }
     }
 
     /**
@@ -757,19 +745,6 @@ public class AccountManagementService {
         instructorRepository.delete(instructor);
     }
 
-    /**
-     * Delete all instructors
-     * 
-     * @return void
-     * @author Anslean AJ
-     */
-    @Transactional
-    public void deleteAllInstructors() {
-        for (Instructor instructor : instructorRepository.findAll()) {
-            deleteInstructorByAccountRoleId(instructor.getAccountRoleId());
-        }
-    }
-
     // Extra functions
 
     /**
@@ -789,7 +764,7 @@ public class AccountManagementService {
             throw new IllegalArgumentException("Account does not exist!");
         }
 
-        Customer customer = customerRepository.findAccountRoleByAccountRoleId(accountId);
+        Customer customer = customerRepository.findCustomerByAccountRoleId(accountId);
         return customer == null;
     }
 
