@@ -256,6 +256,7 @@ public class ActivityManagementService {
         if (activityRepository.findActivityByName(activityName) == null) {
             throw new IllegalArgumentException("Activity does not exist!");
         }
+        // XXXXXXXXXXXXXXXXX Need to rethink this XXXXXXXXXXXXXXXXX
         if (!activity.getIsApproved()) {
             throw new IllegalArgumentException("Activity is already not approved!");
         }
