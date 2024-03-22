@@ -3,6 +3,7 @@ package ca.mcgill.ecse321.sportcenter.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ca.mcgill.ecse321.sportcenter.dao.ActivityRepository;
@@ -82,7 +83,12 @@ public class ActivityManagementService {
             throw new IllegalArgumentException("Name cannot be empty!");
         }
 
-        return activityRepository.findActivityByName(name);
+        Activity activity = activityRepository.findActivityByName(name); // XXXXXXXX needs to be tested XXXXXXXX
+        if (activity == null) {
+            throw new IllegalArgumentException("Activity does not exist!");
+        }
+
+        return activity;
     }
 
     /**
@@ -148,11 +154,14 @@ public class ActivityManagementService {
 
         if (name == null || name.trim().length() == 0) {
             throw new IllegalArgumentException("Name cannot be empty!");
-        } else if (newName == null || newName.trim().length() == 0) {
+        }
+        if (newName == null || newName.trim().length() == 0) {
             throw new IllegalArgumentException("New name cannot be empty!");
-        } else if (newDescription == null || newDescription.trim().length() == 0) {
+        }
+        if (newDescription == null || newDescription.trim().length() == 0) {
             throw new IllegalArgumentException("New description cannot be empty!");
-        } else if (newSubcategory == null) {
+        }
+        if (newSubcategory == null) {
             throw new IllegalArgumentException("New subcategory cannot be empty!");
         }
 
@@ -160,7 +169,8 @@ public class ActivityManagementService {
 
         if (activity == null) {
             throw new IllegalArgumentException("Activity does not exist!");
-        } else if (activity.getIsApproved()) {
+        }
+        if (activity.getIsApproved()) {
             throw new IllegalArgumentException("Activity is already approved!");
         }
 
@@ -209,30 +219,6 @@ public class ActivityManagementService {
     }
 
     /**
-     * Propose an acitvity to the owner.
-     * 
-     * @return Activity
-     * @author Anslean AJ
-     */
-    @Transactional
-    public Activity proposeActivity(String name, String description, ClassCategory subcategory) {
-        ActivityManagementService activityManagementService = new ActivityManagementService();
-
-        try {
-            if (name == null || name.trim().isEmpty()) {
-                throw new IllegalArgumentException("Name cannot be empty!");
-            } else if (description == null || description.trim().isEmpty()) {
-                throw new IllegalArgumentException("Description cannot be empty!");
-            } else if (subcategory == null) {
-                throw new IllegalArgumentException("Subcategory cannot be empty!");
-            }
-            return activityManagementService.createActivity(name, description, subcategory);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid inputs!");
-        }
-    }
-
-    /**
      * Set isApproved of activity to true
      * 
      * @param activityName
@@ -242,16 +228,17 @@ public class ActivityManagementService {
     public void approveActivity(String activityName) {
         Activity activity = activityRepository.findActivityByName(activityName);
 
-        if (activityName == "" || activityName == null) {
+        if (activityName.trim() == "" || activityName == null) {
             throw new IllegalArgumentException("Activity name cannot be empty!");
-        } else if (activity == null) {
-            System.out.println("Activity does not exist!");
-        } else if (activity.getIsApproved()) {
-            throw new IllegalArgumentException("Activity is already approved!");
-        } else {
-            activity.setIsApproved(true);
-            activityRepository.save(activity);
         }
+        if (activity == null) {
+            throw new IllegalArgumentException("Activity does not exist!");
+        }
+        if (activity.getIsApproved()) {
+            throw new IllegalArgumentException("Activity is already approved!");
+        }
+        activity.setIsApproved(true);
+        activityRepository.save(activity);
     }
 
     /**
@@ -266,13 +253,14 @@ public class ActivityManagementService {
 
         if (activityName.trim() == "" || activityName == null) {
             throw new IllegalArgumentException("Activity name cannot be empty!");
-        } else if (activityRepository.findActivityByName(activityName) == null) {
-            System.out.println("Activity does not exist!");
-        } else if (!activity.getIsApproved()) {
-            throw new IllegalArgumentException("Activity is already not approved!");
-        } else {
-            activity.setIsApproved(false);
-            activityRepository.save(activity);
         }
+        if (activityRepository.findActivityByName(activityName) == null) {
+            throw new IllegalArgumentException("Activity does not exist!");
+        }
+        if (!activity.getIsApproved()) {
+            throw new IllegalArgumentException("Activity is already not approved!");
+        }
+        activity.setIsApproved(false);
+        activityRepository.save(activity);
     }
 }

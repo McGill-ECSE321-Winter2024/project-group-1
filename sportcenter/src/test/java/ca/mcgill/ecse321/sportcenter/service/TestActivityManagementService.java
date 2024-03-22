@@ -202,52 +202,6 @@ public class TestActivityManagementService {
         // TODO - COMPLETE BAREBONE
     }
 
-    // TEST #3 - PROPOSE ACTIVITY
-    @Test
-    public void testProposeActivity() {
-        String name = "activity";
-        ClassCategory subcategory = ClassCategory.Strength;
-        String description = "description";
-        boolean isApproved = false;
-
-        when(activityRepository.findActivityByName(name)).thenReturn(null);// this checks if the activity already
-                                                                           // exists, and if it does, it will return
-                                                                           // null
-        when(activityRepository.save(any(Activity.class))).thenAnswer((invocation) -> {
-            Activity activity = new Activity();
-            activity.setName(name);
-            activity.setDescription(description);
-            activity.setSubCategory(subcategory);
-            activity.setIsApproved(isApproved);
-            return (Activity) activity; // Add type cast here
-        });
-
-        Activity createdActivity = activityManagementService.proposeActivity(name, description, subcategory);
-        verify(activityRepository, times(1)).save(any(Activity.class));
-
-        assertNotNull(createdActivity);
-        assertEquals(name, createdActivity.getName());
-        assertEquals(description, createdActivity.getDescription());
-        assertEquals(subcategory, createdActivity.getSubCategory());
-        assertEquals(isApproved, createdActivity.getIsApproved());
-    }
-
-    @Test
-    public void testProposeActivityNameNull() {
-
-        // TODO
-        String name = null;
-        ClassCategory subcategory = ClassCategory.Strength;
-        String description = "description";
-        String error = "";
-
-        try {
-            activityManagementService.proposeActivity(name, description, subcategory);
-        } catch (IllegalArgumentException e) {
-            error = e.getMessage();
-        }
-    }
-
     @Test
     public void testProposeActivityNameEmpty() {
         // TODO
