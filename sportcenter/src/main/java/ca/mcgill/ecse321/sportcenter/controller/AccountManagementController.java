@@ -241,7 +241,7 @@ public class AccountManagementController {
      * @param username
      * @return InstructorDto
      */
-    @GetMapping(value = { "/getInstructor{username}", "/getInstructor/{username}/" })
+    @GetMapping(value = { "/getInstructor/{username}", "/getInstructor/{username}/" })
     public InstructorDto getInstructorByUsername(@PathVariable("username") String username)
             throws IllegalArgumentException {
         Instructor instructor = accountService.getInstructorByUsername(username);
