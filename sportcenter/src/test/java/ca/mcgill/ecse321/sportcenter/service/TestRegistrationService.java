@@ -625,7 +625,7 @@ public class TestRegistrationService {
         @Test
         public void testGetScheduledActivitiesByCustomer() {
                 List<ScheduledActivity> scheduledActivities = registrationService
-                                .getScheduledActivitiesByAccountRoleId(CUSTOMER_KEY);
+                                .getScheduledActivitiesByCustomerId(CUSTOMER_KEY);
                 assertNotNull(scheduledActivities);
                 assertEquals(1, scheduledActivities.size());
         }
@@ -639,7 +639,7 @@ public class TestRegistrationService {
                 String error = null;
                 List<ScheduledActivity> scheduledActivities = null;
                 try {
-                        scheduledActivities = registrationService.getScheduledActivitiesByAccountRoleId(0);
+                        scheduledActivities = registrationService.getScheduledActivitiesByCustomerId(0);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
@@ -656,12 +656,57 @@ public class TestRegistrationService {
                 String error = null;
                 List<ScheduledActivity> scheduledActivities = null;
                 try {
-                        scheduledActivities = registrationService.getScheduledActivitiesByAccountRoleId(2);
+                        scheduledActivities = registrationService.getScheduledActivitiesByCustomerId(2);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
                 assertNull(scheduledActivities);
                 assertEquals("Customer does not exist", error);
+        }
+
+        /**
+         * Tests the getting of all scheduled activities of an instructor -> Success
+         */
+        @Test
+        public void testGetScheduledActivitiesByInstructor() {
+                List<ScheduledActivity> scheduledActivities = registrationService
+                                .getScheduledActivitiesByInstructorId(APPROVED_INSTRUCTOR_KEY);
+                assertNotNull(scheduledActivities);
+                assertEquals(1, scheduledActivities.size());
+        }
+
+        /**
+         * Tests the getting of all scheduled activities of an instructor with an
+         * invalid id -> Fail
+         */
+        @Test
+        public void testGetScheduledActivitiesByInvalidInstructor() {
+                String error = null;
+                List<ScheduledActivity> scheduledActivities = null;
+                try {
+                        scheduledActivities = registrationService.getScheduledActivitiesByInstructorId(0);
+                } catch (IllegalArgumentException e) {
+                        error = e.getMessage();
+                }
+                assertNull(scheduledActivities);
+                assertEquals("Account role id not valid!", error);
+        }
+
+        /**
+         * Tests the getting of all scheduled activities of a non existing instructor ->
+         * Fail
+         */
+        @Test
+        public void testGetScheduledActivitiesByNonExistingInstructor() {
+                String error = null;
+                List<ScheduledActivity> scheduledActivities = null;
+                try {
+                        scheduledActivities = registrationService.getScheduledActivitiesByInstructorId(2);
+                } catch (IllegalArgumentException e) {
+                        error = e.getMessage();
+                }
+                assertNull(scheduledActivities);
+                assertEquals("Instructor does not exist", error);
         }
 
         /**
@@ -717,6 +762,50 @@ public class TestRegistrationService {
                 registrationService.deleteAllRegistrations();
                 registrations = toList(registrationDao.findAll());
                 assertEquals(0, registrations.size());
+        }
+
+        /**
+         * Tests the deletion of all registrations of a customer -> Success
+         */
+        @Test
+        public void testDeleteRegistrationsByCustomer() {
+                List<Registration> registrations = toList(registrationDao.findAll());
+                int size = registrations.size();
+                List<Registration> registrationsByCustomer = registrationService
+                                .getRegistrationByAccountRoleId(CUSTOMER_KEY);
+                int sizeByCustomer = registrationsByCustomer.size();
+                registrationService.deleteRegistrationsByAccountRoleId(CUSTOMER_KEY);
+                registrations = toList(registrationDao.findAll());
+                assertEquals(size - sizeByCustomer, registrations.size());
+        }
+
+        /**
+         * Tests the deletion of all registrations of a customer with an invalid id ->
+         * Fail
+         */
+        @Test
+        public void testDeleteRegistrationsByInvalidCustomer() {
+                String error = null;
+                try {
+                        registrationService.deleteRegistrationsByAccountRoleId(0);
+                } catch (IllegalArgumentException e) {
+                        error = e.getMessage();
+                }
+                assertEquals("Account role id not valid!", error);
+        }
+
+        /**
+         * Tests the deletion of all registrations of a non existing customer -> Fail
+         */
+        @Test
+        public void testDeleteRegistrationsByNonExistingCustomer() {
+                String error = null;
+                try {
+                        registrationService.deleteRegistrationsByAccountRoleId(2);
+                } catch (IllegalArgumentException e) {
+                        error = e.getMessage();
+                }
+                assertEquals("Customer does not exist", error);
         }
 
         /**

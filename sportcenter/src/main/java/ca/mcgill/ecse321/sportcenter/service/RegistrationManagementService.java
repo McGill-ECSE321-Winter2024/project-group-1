@@ -2,7 +2,6 @@ package ca.mcgill.ecse321.sportcenter.service;
 
 import org.springframework.stereotype.Service;
 import java.sql.Date;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -224,7 +223,7 @@ public class RegistrationManagementService {
      * @param registrationId
      */
     @Transactional
-    public List<ScheduledActivity> getScheduledActivitiesByAccountRoleId(int accountRoleId) {
+    public List<ScheduledActivity> getScheduledActivitiesByCustomerId(int accountRoleId) {
         List<ScheduledActivity> scheduledActivities = new ArrayList<>();
         if (accountRoleId < 0) {
             throw new IllegalArgumentException("Account role id not valid!");
@@ -234,6 +233,26 @@ public class RegistrationManagementService {
         }
         for (Registration registration : registrationRepository.findAll()) {
             if (registration.getCustomer().getAccountRoleId() == accountRoleId) {
+                scheduledActivities.add(registration.getScheduledActivity());
+            }
+        }
+        return scheduledActivities;
+    }
+
+    /**
+     * Get all scheduled activities attended by an instructor by its accountRoleId
+     */
+    @Transactional
+    public List<ScheduledActivity> getScheduledActivitiesByInstructorId(int accountRoleId) {
+        List<ScheduledActivity> scheduledActivities = new ArrayList<>();
+        if (accountRoleId < 0) {
+            throw new IllegalArgumentException("Account role id not valid!");
+        }
+        if (customerRepository.findAccountRoleByAccountRoleId(accountRoleId) == null) {
+            throw new IllegalArgumentException("Instructor does not exist");
+        }
+        for (Registration registration : registrationRepository.findAll()) {
+            if (registration.getScheduledActivity().getSupervisor().getAccountRoleId() == accountRoleId) {
                 scheduledActivities.add(registration.getScheduledActivity());
             }
         }
@@ -258,11 +277,27 @@ public class RegistrationManagementService {
 
     /**
      * Delete all registrations
-     * 
-     * @return void
      */
     @Transactional
     public void deleteAllRegistrations() {
         registrationRepository.deleteAll();
+    }
+
+    /**
+     * Delete all registrations of a customer by its accountRoleId
+     */
+    @Transactional
+    public void deleteRegistrationsByAccountRoleId(int accountRoleId) {
+        if (accountRoleId < 0) {
+            throw new IllegalArgumentException("Account role id not valid!");
+        }
+        if (customerRepository.findAccountRoleByAccountRoleId(accountRoleId) == null) {
+            throw new IllegalArgumentException("Customer does not exist");
+        }
+        for (Registration registration : registrationRepository.findAll()) {
+            if (registration.getCustomer().getAccountRoleId() == accountRoleId) {
+                registrationRepository.deleteById(registration.getRegistrationId());
+            }
+        }
     }
 }
