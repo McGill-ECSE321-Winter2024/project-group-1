@@ -809,6 +809,51 @@ public class TestRegistrationService {
         }
 
         /**
+         * Tests the deletion of all registrations of a scheduled activity -> Success
+         */
+        @Test
+        public void testDeleteRegistrationsByScheduledActivity() {
+                List<Registration> registrations = toList(registrationDao.findAll());
+                int size = registrations.size();
+                List<Registration> registrationsByScheduledActivity = registrationService
+                                .getRegistrationByScheduledActivityId(SCHEDULED_ACTIVITY_KEY);
+                int sizeByScheduledActivity = registrationsByScheduledActivity.size();
+                registrationService.deleteRegistrationsByScheduledActivityId(SCHEDULED_ACTIVITY_KEY);
+                registrations = toList(registrationDao.findAll());
+                assertEquals(size - sizeByScheduledActivity, registrations.size());
+        }
+
+        /**
+         * Tests the deletion of all registrations of a scheduled activity with an
+         * invalid id -> Fail
+         */
+        @Test
+        public void testDeleteRegistrationsByInvalidScheduledActivity() {
+                String error = null;
+                try {
+                        registrationService.deleteRegistrationsByScheduledActivityId(0);
+                } catch (IllegalArgumentException e) {
+                        error = e.getMessage();
+                }
+                assertEquals("Scheduled activity Id not valid!", error);
+        }
+
+        /**
+         * Tests the deletion of all registrations of a non existing scheduled activity
+         * -> Fail
+         */
+        @Test
+        public void testDeleteRegistrationsByNonExistingScheduledActivity() {
+                String error = null;
+                try {
+                        registrationService.deleteRegistrationsByScheduledActivityId(2);
+                } catch (IllegalArgumentException e) {
+                        error = e.getMessage();
+                }
+                assertEquals("Scheduled activity does not exist", error);
+        }
+
+        /**
          * Convert Iterable to List
          * 
          * @param Iterable<T>
