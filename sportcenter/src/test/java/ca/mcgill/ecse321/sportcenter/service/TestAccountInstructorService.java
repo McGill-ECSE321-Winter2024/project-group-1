@@ -197,6 +197,125 @@ public class TestAccountInstructorService {
     }
 
     /// missing like empty and space testing for all attributes of instructor
+    @Test
+    public void testCreateInstructorDescriptionEmpty() { // make an empty username
+        String username = "Goku";
+        String password = "fiddlesticks";
+        String description = "";
+        String image = "image";
+        String error = null;
+
+        Account account = new Account(username, password);
+        when(accountRepository.save(any(Account.class)))
+                .thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
+        Instructor instructor = null;
+
+        try {
+            instructor = accountService.createInstructor(username, InstructorStatus.Active, description,
+                    image);
+        } catch (IllegalArgumentException e) {
+            assertEquals("Description cannot be empty!", e.getMessage());
+            assertNull(instructor);
+
+        }
+    }
+
+    @Test
+    public void testCreateInstructorDescriptionSpaces() { // make an empty username
+        String username = "Goku";
+        String password = "fiddlesticks";
+        String description = " ";
+        String image = "image";
+        String error = null;
+
+        Account account = new Account(username, password);
+        when(accountRepository.save(any(Account.class)))
+                .thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
+        Instructor instructor = null;
+
+        try {
+            instructor = accountService.createInstructor(username, InstructorStatus.Active, description,
+                    image);
+        } catch (IllegalArgumentException e) {
+            assertEquals("Description cannot be empty!", e.getMessage());
+            assertNull(instructor);
+
+        }
+    }
+
+    @Test
+    public void testCreateInstructorImageEmpty() { // make an empty username
+        String username = "Goku";
+        String password = "fiddlesticks";
+        String description = "He can beat Superman";
+        String image = "";
+        String error = null;
+
+        Account account = new Account(username, password);
+        when(accountRepository.save(any(Account.class)))
+                .thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
+        Instructor instructor = null;
+
+        try {
+            instructor = accountService.createInstructor(username, InstructorStatus.Active, description,
+                    image);
+        } catch (IllegalArgumentException e) {
+            assertEquals("Image cannot be empty!", e.getMessage());
+            assertNull(instructor);
+
+        }
+    }
+
+    @Test
+    public void testCreateInstructorImageSpaces() { // make an empty username
+        String username = "Goku";
+        String password = "fiddlesticks";
+        String description = "He can beat Superman";
+        String image = " ";
+        String error = null;
+
+        Account account = new Account(username, password);
+        when(accountRepository.save(any(Account.class)))
+                .thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
+        Instructor instructor = null;
+
+        try {
+            instructor = accountService.createInstructor(username, InstructorStatus.Active, description,
+                    image);
+        } catch (IllegalArgumentException e) {
+            assertEquals("Image cannot be empty!", e.getMessage());
+            assertNull(instructor);
+
+        }
+    }
+
+    @Test
+    public void testCreateInstructorAlreadyExists() {
+        String username = "Shakira";
+        String password = "anastasia";
+        String description = "Made hips don't lie";
+        String image = "image1";
+
+        Account account = new Account(username, password);
+        when(accountRepository.save(any(Account.class)))
+                .thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
+
+        Instructor instructor = accountService.createInstructor(username, InstructorStatus.Pending, description, image);
+
+        assertNotNull(instructor);
+        assertEquals(username, instructor.getAccount().getUsername());
+        assertEquals(password, instructor.getAccount().getPassword());
+        assertEquals(description, instructor.getDescription());
+        assertEquals(image, instructor.getProfilePicURL());
+
+        Instructor instructor2 = null;
+        try {
+            instructor2 = accountService.createInstructor(username, InstructorStatus.Pending, description, image);
+        } catch (IllegalArgumentException e) {
+            assertEquals("Instructor already exists", e.getMessage());
+            assertNull(instructor2);
+        }
+    }
 
     // RETRIEVE TESTING
     // These tests assume that creation works.
