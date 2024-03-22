@@ -144,7 +144,15 @@ public class RegistrationController {
         registrationService.deleteAllRegistrations();
     }
 
-    //
+    /*
+     * Delete all registrations by scheduled activity id
+     * 
+     */
+    @DeleteMapping(value = { "/registrations/scheduledActivity/{scheduledActivityId}" })
+    public void deleteRegistrationsByScheduledActivityId(@PathVariable("scheduledActivityId") int scheduledActivityId)
+            throws IllegalArgumentException {
+        registrationService.deleteRegistrationsByScheduledActivityId(scheduledActivityId);
+    }
 
     /**
      * Convert Registration to RegistrationDto
