@@ -34,7 +34,7 @@ class Owner
 
 class Instructor
 {
-  enum InstructorStatus {active, inactive, fired, suspended}
+  enum InstructorStatus {active, inactive, pending}
   InstructorStatus status;
   description;
   profilePicURL;
