@@ -33,7 +33,7 @@ import ca.mcgill.ecse321.sportcenter.model.Instructor.InstructorStatus;
 /**
  * Test class for the Registration entity
  * 
- * @author Emilie Ruel
+ * @author Patrick Zakaria
  */
 @ExtendWith(MockitoExtension.class)
 public class TestRegistrationService {
