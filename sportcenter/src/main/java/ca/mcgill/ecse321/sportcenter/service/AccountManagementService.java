@@ -623,7 +623,7 @@ public class AccountManagementService {
         }
 
         Customer customer = customerRepository.findAccountRoleByAccountRoleId(accountRoleId);
-        if (customerRepository.findAccountRoleByAccountRoleId(accountRoleId) == null) {
+        if (customer == null) {
             throw new IllegalArgumentException("Customer does not exist!");
         }
 
