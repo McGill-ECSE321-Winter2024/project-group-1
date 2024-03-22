@@ -21,7 +21,7 @@ import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity;
  * 
  * @author Fabian Saldana
  */
-public class ScheduledActivityService {
+public class ScheduledActivityManagementService {
 
     @Autowired
     ScheduledActivityRepository scheduledActivityRepository;

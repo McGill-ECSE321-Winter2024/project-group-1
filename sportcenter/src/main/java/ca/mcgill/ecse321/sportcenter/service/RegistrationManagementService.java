@@ -22,7 +22,7 @@ import ca.mcgill.ecse321.sportcenter.model.Registration;
  * @Author Emilie Ruel
  */
 @Service
-public class RegistrationService {
+public class RegistrationManagementService {
 
     @Autowired
     ScheduledActivityRepository scheduledActivityRepository;
