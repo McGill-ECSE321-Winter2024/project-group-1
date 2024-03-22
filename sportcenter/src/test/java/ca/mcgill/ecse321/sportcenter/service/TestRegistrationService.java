@@ -128,7 +128,7 @@ public class TestRegistrationService {
                         }
                 });
 
-                when(instructorDao.findAccountRoleByAccountRoleId(anyInt()))
+                when(instructorDao.findInstructorByAccountRoleId(anyInt()))
                                 .thenAnswer((InvocationOnMock invocation) -> {
                                         if (invocation.getArgument(0).equals(APPROVED_INSTRUCTOR_KEY)) {
                                                 Instructor instructor = new Instructor();
@@ -179,7 +179,7 @@ public class TestRegistrationService {
                                                 scheduledActivity.setStartTime(LocalTime.now());
                                                 scheduledActivity.setEndTime(LocalTime.of(12, 0));
                                                 scheduledActivity.setSupervisor(
-                                                                instructorDao.findAccountRoleByAccountRoleId(
+                                                                instructorDao.findInstructorByAccountRoleId(
                                                                                 DISAPPROVED_INSTRUCTOR_KEY));
                                                 scheduledActivity.setActivity(
                                                                 activityDao.findActivityByName(

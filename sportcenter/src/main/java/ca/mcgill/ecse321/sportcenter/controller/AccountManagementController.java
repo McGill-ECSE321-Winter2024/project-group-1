@@ -390,16 +390,6 @@ public class AccountManagementController {
     }
 
     /**
-     * Delete all customers
-     * 
-     * @return
-     */
-    @DeleteMapping(value = { "/deleteAllCustomers", "/deleteAllCustomers/" })
-    public void deleteAllCustomers() {
-        accountService.deleteAllCustomers();
-    }
-
-    /**
      * Delete a instructor by its accountRoleId
      * 
      * @param accountRoleId
@@ -421,14 +411,6 @@ public class AccountManagementController {
     @DeleteMapping(value = { "/deleteInstructorByUsername/{username}", "/deleteInstructorByUsername/{username}/" })
     public void deleteInstructorByUsername(@PathVariable("username") String username) throws IllegalArgumentException {
         accountService.deleteInstructorByUsername(username);
-    }
-
-    /**
-     * Delete all instructors
-     */
-    @DeleteMapping(value = { "/deleteAllInstructors", "/deleteAllInstructors/" })
-    public void deleteAllInstructors() {
-        accountService.deleteAllInstructors();
     }
 
     // Account Role Checkers

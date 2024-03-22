@@ -102,7 +102,7 @@ public class TestRegistrationPersistence {
 
         instructorRepository.save(instructor);
         int accountRoleId = instructor.getAccountRoleId();
-        instructor = instructorRepository.findAccountRoleByAccountRoleId(accountRoleId);
+        instructor = instructorRepository.findInstructorByAccountRoleId(accountRoleId);
 
         /**
          * Create a ScheduledActivity, set the attributes of the ScheduledActivity, and

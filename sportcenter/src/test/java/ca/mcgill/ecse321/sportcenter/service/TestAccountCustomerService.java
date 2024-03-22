@@ -216,22 +216,6 @@ public class TestAccountCustomerService {
     }
 
     @Test
-    public void testDeleteAllCustomers() {
-        Account account1 = new Account();
-        account1.setUsername("Person1");
-        account1.setPassword("Password1");
-        when(accountRepository.save(any(Account.class))).thenReturn(account1);
-        Account account2 = new Account();
-        account2.setUsername("Person2");
-        account2.setPassword("Password2");
-        when(accountRepository.save(any(Account.class))).thenReturn(account2);
-        Customer customer1 = accountService.createCustomer("Person1");
-        Customer customer2 = accountService.createCustomer("Person2");
-        accountService.deleteAllCustomers();
-        verify(customerRepository, times(1)).deleteAll();
-    }
-
-    @Test
     public void testGetAllCustomers() {
         String username = "Person1";
         String password = "Password1";

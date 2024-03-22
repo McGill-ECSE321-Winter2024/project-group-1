@@ -131,14 +131,6 @@ public class ActivityManagementController {
     }
 
     /**
-     * Delete all activities
-     */
-    @DeleteMapping(value = { "/activities/delete", "/activities/delete/" })
-    public void deleteAllActivities() throws IllegalArgumentException {
-        activityManagementService.deleteAllActivities();
-    }
-
-    /**
      * Approve an activity
      * 
      * @param name

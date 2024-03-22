@@ -339,7 +339,7 @@ public class AccountManagementService {
             throw new IllegalArgumentException("AccountRoleId cannot be negative!");
         }
 
-        Instructor instructor = instructorRepository.findAccountRoleByAccountRoleId(accountRoleId);
+        Instructor instructor = instructorRepository.findInstructorByAccountRoleId(accountRoleId);
         if (instructor == null) {
             throw new IllegalArgumentException("Instructor does not exist!");
         }
@@ -364,7 +364,7 @@ public class AccountManagementService {
             throw new IllegalArgumentException("Account does not exist!");
         }
 
-        Instructor instructor = instructorRepository.findAccountRoleByAccountRoleId(account.getAccountId());
+        Instructor instructor = instructorRepository.findInstructorByAccountRoleId(account.getAccountId());
         if (instructor == null) {
             throw new IllegalArgumentException("Instructor does not exist!");
         }
@@ -394,7 +394,7 @@ public class AccountManagementService {
             throw new IllegalArgumentException("AccountRoleId cannot be negative!");
         }
 
-        Owner owner = ownerRepository.findAccountRoleByAccountRoleId(accountRoleId);
+        Owner owner = ownerRepository.findOwnerByAccountRoleId(accountRoleId);
         if (owner == null) {
             throw new IllegalArgumentException("Owner does not exist!");
         }
@@ -418,7 +418,7 @@ public class AccountManagementService {
             throw new IllegalArgumentException("Account does not exist!");
         }
 
-        Owner owner = ownerRepository.findAccountRoleByAccountRoleId(account.getAccountId());
+        Owner owner = ownerRepository.findOwnerByAccountRoleId(account.getAccountId());
         if (owner == null) {
             throw new IllegalArgumentException("Owner does not exist!");
         }
@@ -467,7 +467,7 @@ public class AccountManagementService {
             throw new IllegalArgumentException("AccountRoleId cannot be negative");
         }
 
-        Instructor instructor = instructorRepository.findAccountRoleByAccountRoleId(id);
+        Instructor instructor = instructorRepository.findInstructorByAccountRoleId(id);
         if (instructor == null) {
             throw new IllegalArgumentException("Instructor does not exist");
         }
@@ -493,7 +493,7 @@ public class AccountManagementService {
             throw new IllegalArgumentException("AccountRoleId cannot be negative");
         }
 
-        Instructor instructor = instructorRepository.findAccountRoleByAccountRoleId(id);
+        Instructor instructor = instructorRepository.findInstructorByAccountRoleId(id);
         if (instructor == null) {
             throw new IllegalArgumentException("Instructor does not exist");
         }
@@ -567,7 +567,7 @@ public class AccountManagementService {
         if (account == null) {
             throw new IllegalArgumentException("Account does not exist!");
         }
-        Instructor instructor = instructorRepository.findAccountRoleByAccountRoleId(account.getAccountId());
+        Instructor instructor = instructorRepository.findInstructorByAccountRoleId(account.getAccountId());
         if (instructor == null) {
             throw new IllegalArgumentException("Instructor does not exist!");
         }
@@ -704,7 +704,7 @@ public class AccountManagementService {
             throw new IllegalArgumentException("AccountRoleId cannot be negative!");
         }
 
-        Instructor instructor = instructorRepository.findAccountRoleByAccountRoleId(accountRoleId);
+        Instructor instructor = instructorRepository.findInstructorByAccountRoleId(accountRoleId);
         if (instructor == null) {
             throw new IllegalArgumentException("Account does not exist!");
         }
@@ -733,7 +733,7 @@ public class AccountManagementService {
             throw new IllegalArgumentException("Account does not exist!");
         }
 
-        Instructor instructor = instructorRepository.findAccountRoleByAccountRoleId(account.getAccountId());
+        Instructor instructor = instructorRepository.findInstructorByAccountRoleId(account.getAccountId());
         if (instructor == null) {
             throw new IllegalArgumentException("Instructor does not exist!");
         }
@@ -785,7 +785,7 @@ public class AccountManagementService {
             throw new IllegalArgumentException("Account does not exist!");
         }
 
-        Instructor instructor = instructorRepository.findAccountRoleByAccountRoleId(accountId);
+        Instructor instructor = instructorRepository.findInstructorByAccountRoleId(accountId);
         return instructor == null;
     }
 
@@ -806,7 +806,7 @@ public class AccountManagementService {
             throw new IllegalArgumentException("Account does not exist!");
         }
 
-        Owner owner = ownerRepository.findAccountRoleByAccountRoleId(accountId);
+        Owner owner = ownerRepository.findOwnerByAccountRoleId(accountId);
         return owner == null;
     }
 }

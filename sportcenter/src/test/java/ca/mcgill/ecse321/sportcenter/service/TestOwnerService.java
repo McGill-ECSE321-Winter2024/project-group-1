@@ -108,28 +108,28 @@ public class TestOwnerService {
     public void testCheckAccountOwner() {
         int id = 1;
         // ownerRepository.Owner o = new Owner();
-        when(ownerRepository.findAccountRoleByAccountRoleId(id)).thenReturn(new Owner());
+        when(ownerRepository.findOwnerByAccountRoleId(id)).thenReturn(new Owner());
         assertTrue(ownerService.checkAccountHasOwnerRole(id));
     }
 
     @Test
     public void testCheckAccountOwnerNegative() {
         int id = -1;
-        when(ownerRepository.findAccountRoleByAccountRoleId(id)).thenReturn(new Owner());
+        when(ownerRepository.findOwnerByAccountRoleId(id)).thenReturn(new Owner());
         assertTrue(ownerService.checkAccountHasOwnerRole(id));
     }
 
     @Test
     public void testCheckAccountOwnerZero() {
         int id = 0;
-        when(ownerRepository.findAccountRoleByAccountRoleId(id)).thenReturn(new Owner());
+        when(ownerRepository.findOwnerByAccountRoleId(id)).thenReturn(new Owner());
         assertTrue(ownerService.checkAccountHasOwnerRole(id));
     }
 
     @Test
     public void testCheckAccountOwnerDoesNotExist() {
         int id = 1;
-        when(ownerRepository.findAccountRoleByAccountRoleId(id)).thenReturn(null);
+        when(ownerRepository.findOwnerByAccountRoleId(id)).thenReturn(null);
         assertFalse(ownerService.checkAccountHasOwnerRole(id));
     }
 
@@ -370,7 +370,7 @@ public class TestOwnerService {
         }
 
         assertEquals(Instructor.InstructorStatus.Active,
-                instructorRepository.findAccountRoleByAccountRoleId(id).getStatus());
+                instructorRepository.findInstructorByAccountRoleId(id).getStatus());
     }
 
     @Test
@@ -428,7 +428,7 @@ public class TestOwnerService {
         int id = 1;
         Instructor instructor = new Instructor();
         instructorRepository.save(instructor);
-        instructorRepository.findAccountRoleByAccountRoleId(id).setStatus(InstructorStatus.Active);
+        instructorRepository.findInstructorByAccountRoleId(id).setStatus(InstructorStatus.Active);
 
         try {
             ownerService.disapproveInstructor(id);
@@ -437,7 +437,7 @@ public class TestOwnerService {
         }
 
         assertEquals(Instructor.InstructorStatus.Inactive,
-                instructorRepository.findAccountRoleByAccountRoleId(id).getStatus());
+                instructorRepository.findInstructorByAccountRoleId(id).getStatus());
     }
 
     @Test
@@ -447,7 +447,7 @@ public class TestOwnerService {
         String error = "";
 
         instructorRepository.save(instructor);
-        instructorRepository.findAccountRoleByAccountRoleId(id).setStatus(InstructorStatus.Inactive);
+        instructorRepository.findInstructorByAccountRoleId(id).setStatus(InstructorStatus.Inactive);
 
         try {
             ownerService.disapproveInstructor(id);
@@ -465,7 +465,7 @@ public class TestOwnerService {
         String error = "";
 
         instructorRepository.save(instructor);
-        instructorRepository.findAccountRoleByAccountRoleId(id).setStatus(InstructorStatus.Inactive);
+        instructorRepository.findInstructorByAccountRoleId(id).setStatus(InstructorStatus.Inactive);
         try {
             ownerService.disapproveInstructor(id);
         } catch (IllegalArgumentException e) {

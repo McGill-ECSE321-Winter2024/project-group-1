@@ -87,7 +87,7 @@ public class ScheduledActivityManagementService {
             throw new IllegalArgumentException("Capacity must be greater than 0!");
         }
 
-        Instructor instructor = instructorRepository.findAccountRoleByAccountRoleId(accountRoleId);
+        Instructor instructor = instructorRepository.findInstructorByAccountRoleId(accountRoleId);
         if (instructor == null) {
             throw new IllegalArgumentException("Instructor does not exist!");
         }
@@ -209,7 +209,7 @@ public class ScheduledActivityManagementService {
         if (accountRoleId < 0) {
             throw new IllegalArgumentException("Id cannot be negative!");
         }
-        Instructor instructor = instructorRepository.findAccountRoleByAccountRoleId(accountRoleId);
+        Instructor instructor = instructorRepository.findInstructorByAccountRoleId(accountRoleId);
         if (instructor == null) {
             throw new IllegalArgumentException("Instructor does not exist!");
         }
@@ -352,11 +352,11 @@ public class ScheduledActivityManagementService {
         if (newAccountRoleId < 0) {
             throw new IllegalArgumentException("Instructor Id cannot be negative!");
         }
-        Instructor oldInstructor = instructorRepository.findAccountRoleByAccountRoleId(oldAccountRoleId);
+        Instructor oldInstructor = instructorRepository.findInstructorByAccountRoleId(oldAccountRoleId);
         if (oldInstructor == null) {
             throw new IllegalArgumentException("Instructor does not exist!");
         }
-        Instructor newInstructor = instructorRepository.findAccountRoleByAccountRoleId(newAccountRoleId);
+        Instructor newInstructor = instructorRepository.findInstructorByAccountRoleId(newAccountRoleId);
         if (newInstructor == null) {
             throw new IllegalArgumentException("Instructor does not exist!");
         }

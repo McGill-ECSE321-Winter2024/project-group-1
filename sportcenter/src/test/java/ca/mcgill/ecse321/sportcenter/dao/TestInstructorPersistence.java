@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import ca.mcgill.ecse321.sportcenter.model.Instructor;
 import ca.mcgill.ecse321.sportcenter.model.Instructor.InstructorStatus;
 import ca.mcgill.ecse321.sportcenter.model.Account;
+
 /**
  * @author Andrew Nemr and Patrick Zakaria
  */
@@ -36,10 +37,10 @@ public class TestInstructorPersistence {
      */
     @Test
     public void testPersistAndLoadInstructor() {
-        
+
         /**
-        * Create an Account, set the attributes of the Account, and save the Account
-        */
+         * Create an Account, set the attributes of the Account, and save the Account
+         */
         Account account = new Account();
         String username = "Jose";
         String password = "password";
@@ -50,7 +51,8 @@ public class TestInstructorPersistence {
         accountRepository.save(account);
 
         /**
-         * Create an Instructor, set the attributes of the Instructor, and save the Instructor
+         * Create an Instructor, set the attributes of the Instructor, and save the
+         * Instructor
          */
         Instructor instructor = new Instructor();
         InstructorStatus status = InstructorStatus.Active;
@@ -68,7 +70,7 @@ public class TestInstructorPersistence {
         /**
          * Load the Instructor and check the attributes of the Instructor
          */
-        instructor = instructorRepository.findAccountRoleByAccountRoleId(accountRoleId);
+        instructor = instructorRepository.findInstructorByAccountRoleId(accountRoleId);
 
         /**
          * Check the attributes of the Instructor

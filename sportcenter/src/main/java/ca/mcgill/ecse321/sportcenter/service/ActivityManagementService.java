@@ -208,16 +208,6 @@ public class ActivityManagementService {
     }
 
     /**
-     * Delete all activities
-     **/
-    @Transactional
-    public void deleteAllActivities() {
-        for (Activity activity : activityRepository.findAll()) {
-            deleteActivity(activity.getName());
-        }
-    }
-
-    /**
      * Set isApproved of activity to true
      * 
      * @param activityName

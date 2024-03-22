@@ -457,12 +457,6 @@ public class TestActivityService {
     }
 
     @Test
-    public void testDeleteAllActivities() {
-        activityService.deleteAllActivities();
-        verify(activityRepository, times(1)).deleteAll();
-    }
-
-    @Test
     public void testGetActivitiesBySubcategory() {
         ClassCategory subcategory = ClassCategory.Cardio;
         when(activityRepository.findAll()).thenReturn(null);

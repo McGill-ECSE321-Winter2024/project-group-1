@@ -315,7 +315,7 @@ public class TestAccountInstructorService {
                 .thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
         Instructor instructor = accountService.createInstructor(username, InstructorStatus.Pending, description, image);
         int roleId = 1;
-        when(instructorRepository.findAccountRoleByAccountRoleId(roleId))
+        when(instructorRepository.findInstructorByAccountRoleId(roleId))
                 .thenReturn(instructor);
 
         Instructor retrievedInstructor = accountService.getInstructorByAccountRoleId(roleId);
@@ -340,7 +340,7 @@ public class TestAccountInstructorService {
                 .thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
         Instructor instructor = accountService.createInstructor(username, InstructorStatus.Pending, description, image);
         int roleId = 1;
-        when(instructorRepository.findAccountRoleByAccountRoleId(roleId))
+        when(instructorRepository.findInstructorByAccountRoleId(roleId))
                 .thenReturn(instructor);
 
         Instructor retrievedInstructor = null;
@@ -364,7 +364,7 @@ public class TestAccountInstructorService {
         when(accountRepository.save(any(Account.class)))
                 .thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
         Instructor instructor = accountService.createInstructor(username, InstructorStatus.Pending, description, image);
-        when(instructorRepository.findInstructorByUsername(username))
+        when(instructorRepository.findInstructorByAccountUsername(username))
                 .thenReturn(instructor);
 
         Instructor retrievedInstructor = accountService.getInstructorByUsername(username);
@@ -387,7 +387,7 @@ public class TestAccountInstructorService {
         when(accountRepository.save(any(Account.class)))
                 .thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
         Instructor instructor = accountService.createInstructor(username, InstructorStatus.Pending, description, image);
-        when(instructorRepository.findInstructorByUsername(username))
+        when(instructorRepository.findInstructorByAccountUsername(username))
                 .thenReturn(instructor);
 
         Instructor retrievedInstructor = null;
@@ -411,7 +411,7 @@ public class TestAccountInstructorService {
         when(accountRepository.save(any(Account.class)))
                 .thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
         Instructor instructor = accountService.createInstructor(username, InstructorStatus.Pending, description, image);
-        when(instructorRepository.findInstructorByUsername(username))
+        when(instructorRepository.findInstructorByAccountUsername(username))
                 .thenReturn(instructor);
 
         Instructor retrievedInstructor = null;
@@ -435,7 +435,7 @@ public class TestAccountInstructorService {
         when(accountRepository.save(any(Account.class)))
                 .thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
         Instructor instructor = accountService.createInstructor(username, InstructorStatus.Pending, description, image);
-        when(instructorRepository.findInstructorByUsername(username))
+        when(instructorRepository.findInstructorByAccountUsername(username))
                 .thenReturn(instructor);
 
         Instructor retrievedInstructor = null;
@@ -459,7 +459,7 @@ public class TestAccountInstructorService {
         when(accountRepository.save(any(Account.class)))
                 .thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
         Instructor instructor = accountService.createInstructor(username, InstructorStatus.Pending, description, image);
-        when(instructorRepository.findInstructorByUsername(username))
+        when(instructorRepository.findInstructorByAccountUsername(username))
                 .thenReturn(instructor);
 
         Instructor retrievedInstructor = null;
@@ -486,7 +486,7 @@ public class TestAccountInstructorService {
                 .thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
         Instructor instructor = accountService.createInstructor(username, InstructorStatus.Pending, description, image);
         int roleId = 1;
-        when(instructorRepository.findAccountRoleByAccountRoleId(roleId))
+        when(instructorRepository.findInstructorByAccountRoleId(roleId))
                 .thenReturn(instructor);
 
         accountService.deleteInstructorByAccountRoleId(roleId);
@@ -506,7 +506,7 @@ public class TestAccountInstructorService {
                 .thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
         Instructor instructor = accountService.createInstructor(username, InstructorStatus.Pending, description, image);
         int roleId = 1;
-        when(instructorRepository.findAccountRoleByAccountRoleId(roleId))
+        when(instructorRepository.findInstructorByAccountRoleId(roleId))
                 .thenReturn(instructor);
 
         try {
@@ -528,7 +528,7 @@ public class TestAccountInstructorService {
         when(accountRepository.save(any(Account.class)))
                 .thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
         Instructor instructor = accountService.createInstructor(username, InstructorStatus.Pending, description, image);
-        when(instructorRepository.findInstructorByUsername(username))
+        when(instructorRepository.findInstructorByAccountUsername(username))
                 .thenReturn(instructor);
 
         accountService.deleteInstructorByUsername(username);
@@ -547,7 +547,7 @@ public class TestAccountInstructorService {
         when(accountRepository.save(any(Account.class)))
                 .thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
         Instructor instructor = accountService.createInstructor(username, InstructorStatus.Pending, description, image);
-        when(instructorRepository.findInstructorByUsername(username))
+        when(instructorRepository.findInstructorByAccountUsername(username))
                 .thenReturn(instructor);
 
         try {
@@ -569,7 +569,7 @@ public class TestAccountInstructorService {
         when(accountRepository.save(any(Account.class)))
                 .thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
         Instructor instructor = accountService.createInstructor(username, InstructorStatus.Pending, description, image);
-        when(instructorRepository.findInstructorByUsername(username))
+        when(instructorRepository.findInstructorByAccountUsername(username))
                 .thenReturn(instructor);
 
         try {
@@ -591,7 +591,7 @@ public class TestAccountInstructorService {
         when(accountRepository.save(any(Account.class)))
                 .thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
         Instructor instructor = accountService.createInstructor(username, InstructorStatus.Pending, description, image);
-        when(instructorRepository.findInstructorByUsername(username))
+        when(instructorRepository.findInstructorByAccountUsername(username))
                 .thenReturn(instructor);
 
         try {
@@ -613,7 +613,7 @@ public class TestAccountInstructorService {
         when(accountRepository.save(any(Account.class)))
                 .thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
         Instructor instructor = accountService.createInstructor(username, InstructorStatus.Pending, description, image);
-        when(instructorRepository.findInstructorByUsername(username))
+        when(instructorRepository.findInstructorByAccountUsername(username))
                 .thenReturn(instructor);
 
         try {
