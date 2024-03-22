@@ -3,7 +3,6 @@ package ca.mcgill.ecse321.sportcenter.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ca.mcgill.ecse321.sportcenter.dao.ActivityRepository;
