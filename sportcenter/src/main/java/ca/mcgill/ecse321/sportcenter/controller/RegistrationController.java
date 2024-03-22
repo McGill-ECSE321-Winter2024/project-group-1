@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ca.mcgill.ecse321.sportcenter.dto.*;
 import ca.mcgill.ecse321.sportcenter.model.Registration;
-import ca.mcgill.ecse321.sportcenter.service.RegistrationService;
+import ca.mcgill.ecse321.sportcenter.service.RegistrationManagementService;
 
 /**
  * Rest controller for the Registration entity
@@ -23,7 +23,7 @@ import ca.mcgill.ecse321.sportcenter.service.RegistrationService;
 public class RegistrationController {
 
     @Autowired
-    private RegistrationService registrationService;
+    private RegistrationManagementService registrationService;
 
     /**
      * Create a registration

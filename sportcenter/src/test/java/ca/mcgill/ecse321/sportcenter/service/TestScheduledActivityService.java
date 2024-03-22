@@ -39,7 +39,7 @@ public class TestScheduledActivityService {
     private ActivityRepository activityRepository;
 
     @InjectMocks
-    private ScheduledActivityService scheduledActivityService;
+    private ScheduledActivityManagementService scheduledActivityService;
 
     private int oldAccountRoleId = 1;
     private int newAccountRoleId = 2;

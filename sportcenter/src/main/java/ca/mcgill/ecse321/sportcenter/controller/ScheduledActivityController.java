@@ -20,7 +20,7 @@ import ca.mcgill.ecse321.sportcenter.dto.InstructorDto;
 import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity;
 import ca.mcgill.ecse321.sportcenter.dto.ScheduledActivityDto;
 
-import ca.mcgill.ecse321.sportcenter.service.ScheduledActivityService;
+import ca.mcgill.ecse321.sportcenter.service.ScheduledActivityManagementService;
 
 /**
  * Rest controller for the ScheduledActivity entity
@@ -32,7 +32,7 @@ import ca.mcgill.ecse321.sportcenter.service.ScheduledActivityService;
 public class ScheduledActivityController {
 
     @Autowired
-    private ScheduledActivityService scheduledActivityService;
+    private ScheduledActivityManagementService scheduledActivityService;
 
     /**
      * Create a scheduled activity

@@ -8,88 +8,68 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-public class Registration
-{
+public class Registration {
 
-  @Id //regId will be PM
-  @GeneratedValue(strategy = GenerationType.AUTO) 
+  @Id // regId will be PM
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private int regId;
 
-  @ManyToOne(optional = false) //there are many registration for a schedule activity
-  @JoinColumn(name = "scheduledActivityId") //schedule_activity_id is a FK
+  @ManyToOne(optional = false) // there are many registration for a schedule activity
+  @JoinColumn(name = "scheduledActivityId") // schedule_activity_id is a FK
   private ScheduledActivity scheduledActivity;
 
-  @ManyToOne(optional = false) //there are many customer performing a registration
-  @JoinColumn(name = "accountRoleId") //customer_id is a FK
+  @ManyToOne(optional = false) // there are many customer performing a registration
+  @JoinColumn(name = "accountRoleId") // customer_id is a FK
   private Customer customer;
- 
-  //CONSTRUCTORS
+
+  // CONSTRUCTORS
 
   public Registration() {
-    
+
   }
 
-  public Registration(ScheduledActivity aScheduledActivity, Customer aCustomer)
-  {
-    if (!setScheduledActivity(aScheduledActivity))
-    {
+  public Registration(ScheduledActivity aScheduledActivity, Customer aCustomer) {
+    if (!setScheduledActivity(aScheduledActivity)) {
       throw new RuntimeException("Unable to create Registration due to aScheduledActivity.");
     }
-    if (!setCustomer(aCustomer))
-    {
+    if (!setCustomer(aCustomer)) {
       throw new RuntimeException("Unable to create Registration due to aCustomer.");
     }
 
   }
 
-  //GETTERS
+  // GETTERS
 
-  public boolean setRegistrationId(int aRegId)
-  {
-    boolean wasSet = false;
-    regId = aRegId;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public int getRegistrationId()
-  {
+  public int getRegistrationId() {
     return regId;
   }
 
-  public ScheduledActivity getScheduledActivity()
-  {
+  public ScheduledActivity getScheduledActivity() {
     return scheduledActivity;
   }
- 
-  public Customer getCustomer()
-  {
+
+  public Customer getCustomer() {
     return customer;
   }
 
-  //SETTERS
+  // SETTERS
 
-  public boolean setScheduledActivity(ScheduledActivity aNewScheduledActivity)
-  {
+  public boolean setScheduledActivity(ScheduledActivity aNewScheduledActivity) {
     boolean wasSet = false;
-    if (aNewScheduledActivity != null)
-    {
+    if (aNewScheduledActivity != null) {
       scheduledActivity = aNewScheduledActivity;
       wasSet = true;
     }
     return wasSet;
   }
 
-  public boolean setCustomer(Customer aNewCustomer)
-  {
+  public boolean setCustomer(Customer aNewCustomer) {
     boolean wasSet = false;
-    if (aNewCustomer != null)
-    {
+    if (aNewCustomer != null) {
       customer = aNewCustomer;
       wasSet = true;
     }
     return wasSet;
   }
-
 
 }

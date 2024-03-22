@@ -50,46 +50,46 @@ public class RegistrationManagementService {
      * 
      * @param accountRoleId
      * @param scheduledActivityId
-     * @return Regitration
+     * @return Registration
      */
     @Transactional
     public Registration createRegistration(int accountRoleId, int scheduledActivityId) {
-        Registration registration = new Registration();
+        if (accountRoleId < 0) {
+            throw new IllegalArgumentException("Account role id not valid!");
+        }
+        if (scheduledActivityId < 0) {
+            throw new IllegalArgumentException("Scheduled activity id not valid!");
+        }
+
+        Customer customer = customerRepository.findAccountRoleByAccountRoleId(accountRoleId);
+        if (customer == null) {
+            throw new IllegalArgumentException("Customer does not exist");
+        }
         ScheduledActivity scheduledActivity = scheduledActivityRepository
                 .findScheduledActivityByScheduledActivityId(scheduledActivityId);
         if (scheduledActivity == null) {
             throw new IllegalArgumentException("Scheduled activity does not exist");
         }
-        Customer customer = customerRepository.findAccountRoleByAccountRoleId(accountRoleId);
-        if (customer == null) {
-            throw new IllegalArgumentException("Customer does not exist");
-        }
-
         Registration existingRegistration = getRegistrationByAccountRoleIdAndScheduledActivityId(accountRoleId,
                 scheduledActivityId);
         if (existingRegistration != null) {
-            throw new IllegalArgumentException("Registration already exists");
-
+            throw new IllegalArgumentException("Registration already exists for this customer and scheduled activity");
         }
+
+        // Check if scheduled activity is in the past
         Date date = new Date(System.currentTimeMillis());
-        // check if date is in the future
-        if (scheduledActivity.getDate().isBefore(date.toLocalDate())) {
+        if (scheduledActivity.getDate().isBefore(date.toLocalDate())
+                || scheduledActivity.getDate().equals(date.toLocalDate())) {
             throw new IllegalArgumentException("Scheduled activity is in the past");
         }
-        if (scheduledActivity.getDate().equals(date.toLocalDate())) {
-            Time time = new Time(System.currentTimeMillis());
-            // check if time is in the future
-            if (scheduledActivity.getStartTime().isBefore(time.toLocalTime())) {
-                throw new IllegalArgumentException("Scheduled activity is in the past");
-            }
-        }
+
+        // Check if scheduled activity is full
         int size = getRegistrationByScheduledActivityId(scheduledActivityId).size();
-        // check if capacity allows it
         if (size >= scheduledActivity.getCapacity()) {
             throw new IllegalArgumentException("Scheduled activity is full");
         }
 
-        registration.setRegistrationId(accountRoleId * scheduledActivityId);
+        Registration registration = new Registration();
         registration.setCustomer(customer);
         registration.setScheduledActivity(scheduledActivity);
 
@@ -105,12 +105,12 @@ public class RegistrationManagementService {
      */
     @Transactional
     public Registration getRegistrationByRegId(Integer registrationId) {
+        if (registrationId < 0) {
+            throw new IllegalArgumentException("Registration Id not valid!");
+        }
         Registration registration = registrationRepository.findRegistrationByRegId(registrationId);
         if (registration == null) {
-            throw new IllegalArgumentException("Registartion does not exist");
-        }
-        if (registrationId < 0) {
-            throw new IllegalArgumentException("Id not valid!");
+            throw new IllegalArgumentException("Registration does not exist");
         }
         return registration;
     }
@@ -150,10 +150,10 @@ public class RegistrationManagementService {
      */
     @Transactional
     public List<Registration> getRegistrationByScheduledActivityId(int scheduledActivityId) {
-        List<Registration> customersAttendingScheduledActivity = new ArrayList<>();
         if (scheduledActivityId < 0) {
             throw new IllegalArgumentException("Id not valid!");
         }
+        List<Registration> customersAttendingScheduledActivity = new ArrayList<>();
         for (Registration registration : registrationRepository.findAll()) {
             if (registration.getScheduledActivity().getScheduledActivityId() == scheduledActivityId) {
                 customersAttendingScheduledActivity.add(registration);
@@ -172,8 +172,11 @@ public class RegistrationManagementService {
     @Transactional
     public Registration getRegistrationByAccountRoleIdAndScheduledActivityId(int accountRoleId,
             int scheduledActivityId) {
-        if (accountRoleId < 0 || scheduledActivityId < 0) {
-            throw new IllegalArgumentException("Id not valid!");
+        if (accountRoleId < 0) {
+            throw new IllegalArgumentException("Account role id not valid!");
+        }
+        if (scheduledActivityId < 0) {
+            throw new IllegalArgumentException("Scheduled activity id not valid!");
         }
         for (Registration registration : registrationRepository.findAll()) {
             if (registration.getCustomer().getAccountRoleId() == accountRoleId
@@ -212,7 +215,7 @@ public class RegistrationManagementService {
     public List<ScheduledActivity> getScheduledActivitiesByAccountRoleId(int accountRoleId) {
         List<ScheduledActivity> scheduledActivities = new ArrayList<>();
         if (accountRoleId < 0) {
-            throw new IllegalArgumentException("Id not valid!");
+            throw new IllegalArgumentException("Account role id not valid!");
         }
         for (Registration registration : registrationRepository.findAll()) {
             if (registration.getCustomer().getAccountRoleId() == accountRoleId) {
@@ -230,7 +233,7 @@ public class RegistrationManagementService {
     @Transactional
     public void deleteRegistration(int registrationId) {
         if (registrationId < 0) {
-            throw new IllegalArgumentException("Id not valid!");
+            throw new IllegalArgumentException("Registration id not valid!");
         }
         if (registrationRepository.findRegistrationByRegId(registrationId) == null) {
             throw new IllegalArgumentException("Registration does not exist");
