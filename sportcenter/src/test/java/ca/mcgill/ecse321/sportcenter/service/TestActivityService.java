@@ -1,6 +1,8 @@
 package ca.mcgill.ecse321.sportcenter.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
@@ -54,6 +56,23 @@ public class TestActivityService {
         lenient().when(activityRepository.findActivityByName(any(String.class))).thenReturn(null);
         lenient().when(accountService.checkAccountHasInstructorRole(any(Integer.class))).thenReturn(true);
         lenient().when(activityRepository.findActivityByName(EXISTING_NAME)).thenReturn(new Activity());
+    }
+
+    @Test
+    public void testCreateActivity() {
+        Activity createdActivity = null;
+
+        try {
+            createdActivity = activityService.createActivity(NEW_NAME, DESCRIPTION, SUBCATEGORY);
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+
+        assertNotNull(createdActivity);
+        assertEquals(NEW_NAME, createdActivity.getName());
+        assertEquals(DESCRIPTION, createdActivity.getDescription());
+        assertEquals(SUBCATEGORY, createdActivity.getSubCategory());
+        assertEquals(ISAPPROVED, createdActivity.getIsApproved());
     }
 
     @Test

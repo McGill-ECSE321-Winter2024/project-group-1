@@ -153,6 +153,18 @@ public class TestAccountCustomerService {
         assertEquals(CUSTOMER_USERNAME, customer.getAccount().getUsername());
     }
 
+    // Test the creation of a customer account with a null username -> FAIL
+    @Test
+    public void testCreateCustomerNull() {
+        String error = null;
+        try {
+            accountManagementService.createCustomer(null);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertEquals("Username cannot be null!", error);
+    }
+
     // Test the creation of a customer account with an empty username -> FAIL
     @Test
     public void testCreateCustomerEmpty() {

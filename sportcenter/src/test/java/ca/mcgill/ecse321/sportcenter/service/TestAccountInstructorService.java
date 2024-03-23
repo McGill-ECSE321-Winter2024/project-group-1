@@ -112,6 +112,22 @@ public class TestAccountInstructorService {
     }
 
     @SuppressAjWarnings("null")
+    @Test
+    public void testCreateInstructor() {
+        Instructor instructor = null;
+
+        try {
+            instructor = accountService.createInstructor(USERNAME_NONDUPLICATE, InstructorStatus.Pending, "description",
+                    "image");
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            fail();
+        }
+        assertNotNull(instructor);
+        assertEquals(USERNAME_NONDUPLICATE, instructor.getAccount().getUsername());
+        assertEquals("description", instructor.getDescription());
+        assertEquals("image", instructor.getProfilePicURL());
+    }
 
     @Test
     public void testCreateInstructorUsernameNull() { // make an empty username
