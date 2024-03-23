@@ -4,8 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.time.LocalDate;
-
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -20,9 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import ca.mcgill.ecse321.sportcenter.dto.AccountDto;
-import ca.mcgill.ecse321.sportcenter.model.Account;
-import jakarta.persistence.criteria.CriteriaBuilder.In;
-import ca.mcgill.ecse321.sportcenter.dao.AccountRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -31,17 +26,12 @@ public class TestAccountIntegration {
     @Autowired
     private TestRestTemplate account;
 
-    @Autowired
-    private AccountRepository accountRepository;
-
     private static final String USERNAME = "testUsername";
     private static final String PASSWORD = "testPassword";
     private static final int ACCOUNTROLEID = 1;
-    private static final int ACCOUNTID = 2;
     private static final String INVALID_USERNAME = "testUsername";
     private static final String INVALID_PASSWORD = "testPassword";
     private static final int INVALID_ACCOUNTROLEID = 5;
-    private static final int INVALID_ACCOUNTID = 6;
 
     @Test
     @Order(1)

@@ -10,8 +10,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import org.aspectj.lang.annotation.SuppressAjWarnings;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -368,6 +366,7 @@ public class TestAccountInstructorService {
 
     // REMOVE TESTING
 
+    @SuppressWarnings("null")
     @Test
     public void testDeleteInstructorByAccountRoleId() {
         try {
@@ -387,6 +386,7 @@ public class TestAccountInstructorService {
         }
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testDeleteInstructorByUsername() {
         try {
@@ -434,5 +434,5 @@ public class TestAccountInstructorService {
         }
     }
 
-    // UPDATE TESTING
+    // TODO: UPDATE TESTING
 }

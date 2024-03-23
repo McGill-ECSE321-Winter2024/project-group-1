@@ -5,8 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -39,6 +37,7 @@ public class TestActivityService {
     private static final String NEW_DESCRIPTION = "Soccer for beginners";
     private static final ClassCategory NEW_SUBCATEGORY = ClassCategory.Cardio;
 
+    @SuppressWarnings("null")
     @BeforeEach
     public void setMockOutput() {
         lenient().when(activityRepository.save(any(Activity.class))).thenAnswer((invocation) -> {
@@ -174,6 +173,7 @@ public class TestActivityService {
         assertEquals(null, activityRepository.findAll());
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testUpdateActivity() {
 
@@ -211,7 +211,7 @@ public class TestActivityService {
         // false which will throw an
         // exception
         try {
-            Activity updatedActivity = activityService.updateActivity(name, newName, newDescription, newSubcategory);
+            activityService.updateActivity(name, newName, newDescription, newSubcategory);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -235,7 +235,7 @@ public class TestActivityService {
         // false which will throw an
         // exception
         try {
-            Activity updatedActivity = activityService.updateActivity(name, newName, newDescription, newSubcategory);
+            activityService.updateActivity(name, newName, newDescription, newSubcategory);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -259,7 +259,7 @@ public class TestActivityService {
         // false which will throw an
         // exception
         try {
-            Activity updatedActivity = activityService.updateActivity(name, newName, newDescription, newSubcategory);
+            activityService.updateActivity(name, newName, newDescription, newSubcategory);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -283,7 +283,7 @@ public class TestActivityService {
         // false which will throw an
         // exception
         try {
-            Activity updatedActivity = activityService.updateActivity(name, newName, newDescription, newSubcategory);
+            activityService.updateActivity(name, newName, newDescription, newSubcategory);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -307,7 +307,7 @@ public class TestActivityService {
         // false which will throw an
         // exception
         try {
-            Activity updatedActivity = activityService.updateActivity(name, newName, newDescription, newSubcategory);
+            activityService.updateActivity(name, newName, newDescription, newSubcategory);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -331,7 +331,7 @@ public class TestActivityService {
         // false which will throw an
         // exception
         try {
-            Activity updatedActivity = activityService.updateActivity(name, newName, newDescription, newSubcategory);
+            activityService.updateActivity(name, newName, newDescription, newSubcategory);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -355,7 +355,7 @@ public class TestActivityService {
         // false which will throw an
         // exception
         try {
-            Activity updatedActivity = activityService.updateActivity(name, newName, newDescription, newSubcategory);
+            activityService.updateActivity(name, newName, newDescription, newSubcategory);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }

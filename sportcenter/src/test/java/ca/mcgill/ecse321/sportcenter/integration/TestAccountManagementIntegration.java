@@ -50,11 +50,9 @@ public class TestAccountManagementIntegration {
     private static final String USERNAME = "testUsername";
     private static final String PASSWORD = "testPassword";
     private static final int ACCOUNTROLEID = 1;
-    private static final int ACCOUNTID = 2;
     private static final String INVALID_USERNAME = "testUsernameNotValid";
     private static final String INVALID_PASSWORD = "testPasswordNotValid";
     private static final int INVALID_ACCOUNTROLEID = 5;
-    private static final int INVALID_ACCOUNTID = 6;
 
     @Test
     @Order(1)
