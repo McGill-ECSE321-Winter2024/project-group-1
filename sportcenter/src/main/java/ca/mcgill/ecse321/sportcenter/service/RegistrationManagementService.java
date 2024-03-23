@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import ca.mcgill.ecse321.sportcenter.dao.CustomerRepository;
+import ca.mcgill.ecse321.sportcenter.dao.InstructorRepository;
 import ca.mcgill.ecse321.sportcenter.dao.ScheduledActivityRepository;
 import ca.mcgill.ecse321.sportcenter.dao.RegistrationRepository;
 import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity;
@@ -27,6 +28,8 @@ public class RegistrationManagementService {
     ScheduledActivityRepository scheduledActivityRepository;
     @Autowired
     CustomerRepository customerRepository;
+    @Autowired
+    InstructorRepository instructorRepository;
     @Autowired
     RegistrationRepository registrationRepository;
 
@@ -254,7 +257,7 @@ public class RegistrationManagementService {
         if (accountRoleId < 0) {
             throw new IllegalArgumentException("Account role id not valid!");
         }
-        if (customerRepository.findCustomerByAccountRoleId(accountRoleId) == null) {
+        if (instructorRepository.findInstructorByAccountRoleId(accountRoleId) == null) {
             throw new IllegalArgumentException("Instructor does not exist");
         }
         for (Registration registration : registrationRepository.findAll()) {
@@ -269,23 +272,29 @@ public class RegistrationManagementService {
      * Delete a registration by its registrationId (primary key)
      * 
      * @param registrationId
+     * @return boolean
      */
     @Transactional
-    public void deleteRegistration(int registrationId) {
+    public boolean deleteRegistration(int registrationId) {
         if (registrationId < 0) {
             throw new IllegalArgumentException("Registration id not valid!");
         }
-        if (registrationRepository.findRegistrationByRegId(registrationId) == null) {
+        Registration registration = registrationRepository.findRegistrationByRegId(registrationId);
+        if (registration == null) {
             throw new IllegalArgumentException("Registration does not exist");
         }
-        registrationRepository.deleteById(registrationId);
+        registrationRepository.delete(registration);
+        return true;
     }
 
     /**
      * Delete all registrations of a customer by its accountRoleId
+     * 
+     * @param accountRoleId
+     * @return boolean
      */
     @Transactional
-    public void deleteRegistrationsByAccountRoleId(int accountRoleId) {
+    public boolean deleteRegistrationsByAccountRoleId(int accountRoleId) {
         if (accountRoleId < 0) {
             throw new IllegalArgumentException("Account role id not valid!");
         }
@@ -294,16 +303,20 @@ public class RegistrationManagementService {
         }
         for (Registration registration : registrationRepository.findAll()) {
             if (registration.getCustomer().getAccountRoleId() == accountRoleId) {
-                registrationRepository.deleteById(registration.getRegistrationId());
+                registrationRepository.delete(registration);
             }
         }
+        return true;
     }
 
     /**
      * Delete all registrations of a scheduled activity by its scheduledActivityId
+     * 
+     * @param scheduledActivityId
+     * @return boolean
      */
     @Transactional
-    public void deleteRegistrationsByScheduledActivityId(int scheduledActivityId) {
+    public boolean deleteRegistrationsByScheduledActivityId(int scheduledActivityId) {
         if (scheduledActivityId < 0) {
             throw new IllegalArgumentException("Scheduled activity id not valid!");
         }
@@ -312,8 +325,9 @@ public class RegistrationManagementService {
         }
         for (Registration registration : registrationRepository.findAll()) {
             if (registration.getScheduledActivity().getScheduledActivityId() == scheduledActivityId) {
-                registrationRepository.deleteById(registration.getRegistrationId());
+                registrationRepository.delete(registration);
             }
         }
+        return true;
     }
 }

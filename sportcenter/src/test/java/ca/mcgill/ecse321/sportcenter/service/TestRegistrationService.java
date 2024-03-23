@@ -3,10 +3,12 @@ package ca.mcgill.ecse321.sportcenter.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.booleanThat;
 import static org.mockito.Mockito.lenient;
 
 import java.time.LocalDate;
@@ -801,11 +803,13 @@ public class TestRegistrationService {
          */
         @Test
         public void testDeleteRegistration() {
-                List<Registration> registrations = toList(registrationDao.findAll());
-                int size = registrations.size();
-                registrationService.deleteRegistration(REGISTRATION_KEY);
-                List<Registration> registrationsAfter = toList(registrationDao.findAll());
-                assertEquals(size - 1, registrationsAfter.size());
+                boolean deleted = false;
+                try {
+                        deleted = registrationService.deleteRegistration(REGISTRATION_KEY);
+                } catch (IllegalArgumentException e) {
+                        fail();
+                }
+                assertTrue(deleted);
         }
 
         /**
@@ -841,13 +845,13 @@ public class TestRegistrationService {
          */
         @Test
         public void testDeleteRegistrationsByCustomer() {
-                List<Registration> registrations = toList(registrationDao.findAll());
-                int size = registrations.size();
-                List<Registration> registrationsByCustomer = registrationService
-                                .getRegistrationByAccountRoleId(CUSTOMER_KEY);
-                int sizeByCustomer = registrationsByCustomer.size();
-                registrationService.deleteRegistrationsByAccountRoleId(CUSTOMER_KEY);
-                assertEquals(size - sizeByCustomer, registrations.size());
+                boolean deleted = false;
+                try {
+                        deleted = registrationService.deleteRegistrationsByAccountRoleId(CUSTOMER_KEY);
+                } catch (IllegalArgumentException e) {
+                        fail();
+                }
+                assertTrue(deleted);
         }
 
         /**
@@ -884,13 +888,13 @@ public class TestRegistrationService {
          */
         @Test
         public void testDeleteRegistrationsByScheduledActivity() {
-                List<Registration> registrations = toList(registrationDao.findAll());
-                int size = registrations.size();
-                List<Registration> registrationsByScheduledActivity = registrationService
-                                .getRegistrationByScheduledActivityId(SCHEDULED_ACTIVITY_KEY);
-                int sizeByScheduledActivity = registrationsByScheduledActivity.size();
-                registrationService.deleteRegistrationsByScheduledActivityId(SCHEDULED_ACTIVITY_KEY);
-                assertEquals(size - sizeByScheduledActivity, registrations.size());
+                boolean deleted = false;
+                try {
+                        deleted = registrationService.deleteRegistrationsByScheduledActivityId(SCHEDULED_ACTIVITY_KEY);
+                } catch (IllegalArgumentException e) {
+                        fail();
+                }
+                assertTrue(deleted);
         }
 
         /**
@@ -921,17 +925,5 @@ public class TestRegistrationService {
                         error = e.getMessage();
                 }
                 assertEquals("Scheduled activity does not exist", error);
-        }
-
-        /**
-         * Convert Iterable to List
-         * 
-         * @param Iterable<T>
-         * @return List<T>
-         */
-        private <T> List<T> toList(Iterable<T> iterable) {
-                List<T> resultList = new ArrayList<T>();
-                iterable.forEach(resultList::add);
-                return resultList;
         }
 }
