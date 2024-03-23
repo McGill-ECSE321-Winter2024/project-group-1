@@ -481,17 +481,36 @@ public class AccountManagementService {
      */
     @Transactional
     public Account updateAccountUsername(String oldUsername, String newUsername) {
-        if (oldUsername == null || oldUsername.trim().isEmpty() || oldUsername.contains(" ")) {
-            throw new IllegalArgumentException("Username cannot be empty");
+        if (oldUsername == null) {
+            throw new IllegalArgumentException("Old Username cannot be null");
         }
-        if (newUsername == null || newUsername.trim().isEmpty() || newUsername.contains(" ")) {
-            throw new IllegalArgumentException("Username cannot be empty");
+
+        if (newUsername == null) {
+            throw new IllegalArgumentException("New Username cannot be null");
+        }
+
+        if (oldUsername.trim().isEmpty()) {
+            throw new IllegalArgumentException("Old Username cannot be empty");
+        }
+
+        if (newUsername.trim().isEmpty()) {
+            throw new IllegalArgumentException("New Username cannot be empty");
+        }
+
+        if (oldUsername.contains(" ")) {
+            throw new IllegalArgumentException("Old Username cannot contain spaces");
+        }
+
+        if (newUsername.contains(" ")) {
+            throw new IllegalArgumentException("New Username cannot contain spaces");
         }
 
         Account account = accountRepository.findAccountByUsername(oldUsername);
+
         if (account == null) {
             throw new IllegalArgumentException("Account with the old Username does not exist");
         }
+
         if (accountRepository.findAccountByUsername(newUsername) != null) {
             throw new IllegalArgumentException("Account with the new Username already exists");
         }
