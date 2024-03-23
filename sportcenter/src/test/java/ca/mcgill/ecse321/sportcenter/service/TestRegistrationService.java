@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -93,42 +94,58 @@ public class TestRegistrationService {
         @SuppressWarnings("null")
         @BeforeEach
         void setMockOutput() {
-                when(accountDao.findAccountByAccountId(anyInt())).thenAnswer((InvocationOnMock invocation) -> {
-                        if (invocation.getArgument(0).equals(CUSTOMER_ACCOUNT_KEY)) {
-                                Account account = new Account();
-                                account.setUsername("customer");
-                                account.setPassword("password");
-                                return account;
-                        } else if (invocation.getArgument(0).equals(APPROVED_INSTRUCTOR_ACCOUNT_KEY)) {
-                                Account account = new Account();
-                                account.setUsername("approvedInstructor");
-                                account.setPassword("password");
-                                return account;
-                        } else if (invocation.getArgument(0).equals(DISAPPROVED_INSTRUCTOR_ACCOUNT_KEY)) {
-                                Account account = new Account();
-                                account.setUsername("disapprovedInstructor");
-                                account.setPassword("password");
-                                return account;
-                        } else {
-                                return null;
-                        }
-                });
+                lenient().when(accountDao.findAccountByAccountId(anyInt()))
+                                .thenAnswer((InvocationOnMock invocation) -> {
+                                        if (invocation.getArgument(0).equals(CUSTOMER_ACCOUNT_KEY)) {
+                                                Account account = new Account();
+                                                account.setUsername("customer");
+                                                account.setPassword("password");
+                                                account.setAccountId(CUSTOMER_ACCOUNT_KEY);
+                                                return account;
+                                        } else if (invocation.getArgument(0).equals(APPROVED_INSTRUCTOR_ACCOUNT_KEY)) {
+                                                Account account = new Account();
+                                                account.setUsername("approvedInstructor");
+                                                account.setPassword("password");
+                                                account.setAccountId(APPROVED_INSTRUCTOR_ACCOUNT_KEY);
+                                                return account;
+                                        } else if (invocation.getArgument(0)
+                                                        .equals(DISAPPROVED_INSTRUCTOR_ACCOUNT_KEY)) {
+                                                Account account = new Account();
+                                                account.setUsername("disapprovedInstructor");
+                                                account.setPassword("password");
+                                                account.setAccountId(DISAPPROVED_INSTRUCTOR_ACCOUNT_KEY);
+                                                return account;
+                                        } else if (invocation.getArgument(0).equals(NEW_CUSTOMER_ACCOUNT_KEY)) {
+                                                Account account = new Account();
+                                                account.setUsername("newCustomer");
+                                                account.setPassword("password");
+                                                account.setAccountId(NEW_CUSTOMER_ACCOUNT_KEY);
+                                                return account;
+                                        } else {
+                                                return null;
+                                        }
+                                });
 
-                when(customerDao.findCustomerByAccountRoleId(anyInt())).thenAnswer((InvocationOnMock invocation) -> {
-                        if (invocation.getArgument(0).equals(CUSTOMER_KEY)) {
-                                Customer customer = new Customer();
-                                customer.setAccount(accountDao.findAccountByAccountId(CUSTOMER_ACCOUNT_KEY));
-                                return customer;
-                        } else if (invocation.getArgument(0).equals(NEW_CUSTOMER_KEY)) {
-                                Customer customer = new Customer();
-                                customer.setAccount(accountDao.findAccountByAccountId(NEW_CUSTOMER_ACCOUNT_KEY));
-                                return customer;
-                        } else {
-                                return null;
-                        }
-                });
+                lenient().when(customerDao.findCustomerByAccountRoleId(anyInt()))
+                                .thenAnswer((InvocationOnMock invocation) -> {
+                                        if (invocation.getArgument(0).equals(CUSTOMER_KEY)) {
+                                                Customer customer = new Customer();
+                                                customer.setAccount(accountDao
+                                                                .findAccountByAccountId(CUSTOMER_ACCOUNT_KEY));
+                                                customer.setAccountRoleId(CUSTOMER_KEY);
+                                                return customer;
+                                        } else if (invocation.getArgument(0).equals(NEW_CUSTOMER_KEY)) {
+                                                Customer customer = new Customer();
+                                                customer.setAccount(accountDao
+                                                                .findAccountByAccountId(NEW_CUSTOMER_ACCOUNT_KEY));
+                                                customer.setAccountRoleId(NEW_CUSTOMER_KEY);
+                                                return customer;
+                                        } else {
+                                                return null;
+                                        }
+                                });
 
-                when(instructorDao.findInstructorByAccountRoleId(anyInt()))
+                lenient().when(instructorDao.findInstructorByAccountRoleId(anyInt()))
                                 .thenAnswer((InvocationOnMock invocation) -> {
                                         if (invocation.getArgument(0).equals(APPROVED_INSTRUCTOR_KEY)) {
                                                 Instructor instructor = new Instructor();
@@ -137,6 +154,7 @@ public class TestRegistrationService {
                                                 instructor.setStatus(InstructorStatus.Active);
                                                 instructor.setDescription("description");
                                                 instructor.setProfilePicURL("pictureURL");
+                                                instructor.setAccountRoleId(APPROVED_INSTRUCTOR_KEY);
                                                 return instructor;
                                         } else if (invocation.getArgument(0).equals(DISAPPROVED_INSTRUCTOR_KEY)) {
                                                 Instructor instructor = new Instructor();
@@ -145,33 +163,37 @@ public class TestRegistrationService {
                                                 instructor.setStatus(InstructorStatus.Pending);
                                                 instructor.setDescription("description");
                                                 instructor.setProfilePicURL("pictureURL");
+                                                instructor.setAccountRoleId(DISAPPROVED_INSTRUCTOR_KEY);
                                                 return instructor;
                                         } else {
                                                 return null;
                                         }
                                 });
 
-                when(activityDao.findActivityByName(anyString())).thenAnswer((InvocationOnMock invocation) -> {
-                        if (invocation.getArgument(0).equals(APPROVED_ACTIVITY_KEY)) {
-                                Activity activity = new Activity();
-                                activity.setName("activity");
-                                activity.setDescription("description");
-                                activity.setSubCategory(ClassCategory.Cardio);
-                                activity.setIsApproved(true);
-                                return activity;
-                        } else if (invocation.getArgument(0).equals(DISAPPROVED_ACTIVITY_KEY)) {
-                                Activity activity = new Activity();
-                                activity.setName("activity");
-                                activity.setDescription("description");
-                                activity.setSubCategory(ClassCategory.Cardio);
-                                activity.setIsApproved(false);
-                                return activity;
-                        } else {
-                                return null;
-                        }
-                });
+                lenient().when(activityDao.findActivityByName(anyString()))
+                                .thenAnswer((InvocationOnMock invocation) -> {
+                                        if (invocation.getArgument(0).equals(APPROVED_ACTIVITY_KEY)) {
+                                                Activity activity = new Activity();
+                                                activity.setName("activity");
+                                                activity.setDescription("description");
+                                                activity.setSubCategory(ClassCategory.Cardio);
+                                                activity.setIsApproved(true);
+                                                activity.setName(APPROVED_ACTIVITY_KEY);
+                                                return activity;
+                                        } else if (invocation.getArgument(0).equals(DISAPPROVED_ACTIVITY_KEY)) {
+                                                Activity activity = new Activity();
+                                                activity.setName("activity");
+                                                activity.setDescription("description");
+                                                activity.setSubCategory(ClassCategory.Cardio);
+                                                activity.setIsApproved(false);
+                                                activity.setName(DISAPPROVED_ACTIVITY_KEY);
+                                                return activity;
+                                        } else {
+                                                return null;
+                                        }
+                                });
 
-                when(scheduledActivityDao.findScheduledActivityByScheduledActivityId(anyInt()))
+                lenient().when(scheduledActivityDao.findScheduledActivityByScheduledActivityId(anyInt()))
                                 .thenAnswer((InvocationOnMock invocation) -> {
                                         if (invocation.getArgument(0).equals(SCHEDULED_ACTIVITY_KEY)) {
                                                 ScheduledActivity scheduledActivity = new ScheduledActivity();
@@ -185,34 +207,40 @@ public class TestRegistrationService {
                                                                 activityDao.findActivityByName(
                                                                                 DISAPPROVED_ACTIVITY_KEY));
                                                 scheduledActivity.setCapacity(30);
+                                                scheduledActivity.setScheduledActivityId(SCHEDULED_ACTIVITY_KEY);
                                                 return scheduledActivity;
                                         } else {
                                                 return null;
                                         }
                                 });
 
-                when(registrationDao.findRegistrationByRegId(anyInt())).thenAnswer((InvocationOnMock invocation) -> {
-                        if (invocation.getArgument(0).equals(REGISTRATION_KEY)) {
-                                Registration registration = new Registration();
-                                registration.setCustomer(customerDao.findCustomerByAccountRoleId(CUSTOMER_KEY));
-                                registration.setScheduledActivity(
-                                                scheduledActivityDao.findScheduledActivityByScheduledActivityId(
-                                                                SCHEDULED_ACTIVITY_KEY));
-                                return registration;
-                        } else {
-                                return null;
-                        }
-                });
+                lenient().when(registrationDao.findRegistrationByRegId(anyInt()))
+                                .thenAnswer((InvocationOnMock invocation) -> {
+                                        if (invocation.getArgument(0).equals(REGISTRATION_KEY)) {
+                                                Registration registration = new Registration();
+                                                registration.setCustomer(
+                                                                customerDao.findCustomerByAccountRoleId(CUSTOMER_KEY));
+                                                registration.setScheduledActivity(
+                                                                scheduledActivityDao
+                                                                                .findScheduledActivityByScheduledActivityId(
+                                                                                                SCHEDULED_ACTIVITY_KEY));
+                                                registration.setRegistrationId(REGISTRATION_KEY);
+                                                return registration;
+                                        } else {
+                                                return null;
+                                        }
+                                });
 
                 Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> {
                         return invocation.getArgument(0);
                 };
-                when(accountDao.save(any(Account.class))).thenAnswer(returnParameterAsAnswer);
-                when(customerDao.save(any(Customer.class))).thenAnswer(returnParameterAsAnswer);
-                when(instructorDao.save(any(Instructor.class))).thenAnswer(returnParameterAsAnswer);
-                when(activityDao.save(any(Activity.class))).thenAnswer(returnParameterAsAnswer);
-                when(scheduledActivityDao.save(any(ScheduledActivity.class))).thenAnswer(returnParameterAsAnswer);
-                when(registrationDao.save(any(Registration.class))).thenAnswer(returnParameterAsAnswer);
+                lenient().when(accountDao.save(any(Account.class))).thenAnswer(returnParameterAsAnswer);
+                lenient().when(customerDao.save(any(Customer.class))).thenAnswer(returnParameterAsAnswer);
+                lenient().when(instructorDao.save(any(Instructor.class))).thenAnswer(returnParameterAsAnswer);
+                lenient().when(activityDao.save(any(Activity.class))).thenAnswer(returnParameterAsAnswer);
+                lenient().when(scheduledActivityDao.save(any(ScheduledActivity.class)))
+                                .thenAnswer(returnParameterAsAnswer);
+                lenient().when(registrationDao.save(any(Registration.class))).thenAnswer(returnParameterAsAnswer);
         }
 
         @SuppressAjWarnings("null")
@@ -223,13 +251,13 @@ public class TestRegistrationService {
         public void testCreateRegistration() {
                 Registration registration = null;
                 try {
-                        registration = registrationService.createRegistration(NEW_CUSTOMER_ACCOUNT_KEY,
+                        registration = registrationService.createRegistration(CUSTOMER_ACCOUNT_KEY,
                                         SCHEDULED_ACTIVITY_KEY);
                 } catch (IllegalArgumentException e) {
                         fail();
                 }
                 assertNotNull(registration);
-                assertEquals(NEW_CUSTOMER_ACCOUNT_KEY, registration.getCustomer().getAccountRoleId());
+                assertEquals(CUSTOMER_ACCOUNT_KEY, registration.getCustomer().getAccountRoleId());
                 assertEquals(SCHEDULED_ACTIVITY_KEY, registration.getScheduledActivity().getScheduledActivityId());
         }
 
@@ -299,12 +327,15 @@ public class TestRegistrationService {
         @Test
         public void testCreateRegistrationDuplicate() {
                 String error = null;
+                Registration registration = null;
                 try {
                         registrationService.createRegistration(CUSTOMER_KEY, SCHEDULED_ACTIVITY_KEY);
+                        registration = registrationService.createRegistration(CUSTOMER_KEY, SCHEDULED_ACTIVITY_KEY);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
-                assertEquals("Registration already exists", error);
+                assertNull(registration);
+                assertEquals("Registration already exists for this customer and scheduled activity", error);
         }
 
         /**
@@ -331,14 +362,17 @@ public class TestRegistrationService {
         @Test
         public void testCreateRegistrationScheduledActivityFull() {
                 String error = null;
+                Registration registration = null;
                 try {
                         ScheduledActivity scheduledActivity = scheduledActivityDao
                                         .findScheduledActivityByScheduledActivityId(SCHEDULED_ACTIVITY_KEY);
-                        scheduledActivity.setCapacity(0);
+                        scheduledActivity.setCapacity(1);
                         registrationService.createRegistration(CUSTOMER_KEY, SCHEDULED_ACTIVITY_KEY);
+                        registration = registrationService.createRegistration(NEW_CUSTOMER_KEY, SCHEDULED_ACTIVITY_KEY);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
+                assertNull(registration);
                 assertEquals("Scheduled activity is full", error);
         }
 
@@ -498,7 +532,7 @@ public class TestRegistrationService {
         public void testGetRegistrationByCustomerAndScheduledActivity() {
                 Registration registration = null;
                 try {
-                        registration = registrationService.getRegistrationByAccountRoleIdAndScheduledActivityId(
+                        registration = registrationService.getRegistrationByCustomerIdAndScheduledActivityId(
                                         CUSTOMER_KEY,
                                         SCHEDULED_ACTIVITY_KEY);
                 } catch (IllegalArgumentException e) {
@@ -517,7 +551,7 @@ public class TestRegistrationService {
                 String error = null;
                 Registration registration = null;
                 try {
-                        registration = registrationService.getRegistrationByAccountRoleIdAndScheduledActivityId(0,
+                        registration = registrationService.getRegistrationByCustomerIdAndScheduledActivityId(0,
                                         SCHEDULED_ACTIVITY_KEY);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
@@ -535,7 +569,7 @@ public class TestRegistrationService {
                 String error = null;
                 Registration registration = null;
                 try {
-                        registration = registrationService.getRegistrationByAccountRoleIdAndScheduledActivityId(
+                        registration = registrationService.getRegistrationByCustomerIdAndScheduledActivityId(
                                         CUSTOMER_KEY,
                                         0);
                 } catch (IllegalArgumentException e) {
@@ -553,7 +587,7 @@ public class TestRegistrationService {
                 String error = null;
                 Registration registration = null;
                 try {
-                        registration = registrationService.getRegistrationByAccountRoleIdAndScheduledActivityId(2,
+                        registration = registrationService.getRegistrationByCustomerIdAndScheduledActivityId(2,
                                         SCHEDULED_ACTIVITY_KEY);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
@@ -571,7 +605,7 @@ public class TestRegistrationService {
                 String error = null;
                 Registration registration = null;
                 try {
-                        registration = registrationService.getRegistrationByAccountRoleIdAndScheduledActivityId(
+                        registration = registrationService.getRegistrationByCustomerIdAndScheduledActivityId(
                                         CUSTOMER_KEY,
                                         2);
                 } catch (IllegalArgumentException e) {

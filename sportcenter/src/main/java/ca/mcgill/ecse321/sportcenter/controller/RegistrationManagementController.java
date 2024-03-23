@@ -66,7 +66,7 @@ public class RegistrationManagementController {
             @PathVariable("scheduledActivityId") int scheduledActivityId,
             @PathVariable("accountRoleId") int accountRoleId) throws IllegalArgumentException {
         Registration registration = registrationService
-                .getRegistrationByAccountRoleIdAndScheduledActivityId(scheduledActivityId, accountRoleId);
+                .getRegistrationByCustomerIdAndScheduledActivityId(scheduledActivityId, accountRoleId);
         return convertToDto(registration);
     }
 

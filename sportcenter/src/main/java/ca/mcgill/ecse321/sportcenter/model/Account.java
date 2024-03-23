@@ -36,6 +36,13 @@ public class Account {
 
   // SETTERS
 
+  public boolean setAccountId(int aAccountId) {
+    boolean wasSet = false;
+    accountId = aAccountId;
+    wasSet = true;
+    return wasSet;
+  }
+
   public boolean setUsername(String aUsername) {
     boolean wasSet = false;
     String anOldUsername = getUsername();

@@ -54,6 +54,13 @@ public class Registration {
 
   // SETTERS
 
+  public boolean setRegistrationId(int aRegId) {
+    boolean wasSet = false;
+    regId = aRegId;
+    wasSet = true;
+    return wasSet;
+  }
+
   public boolean setScheduledActivity(ScheduledActivity aNewScheduledActivity) {
     boolean wasSet = false;
     if (aNewScheduledActivity != null) {

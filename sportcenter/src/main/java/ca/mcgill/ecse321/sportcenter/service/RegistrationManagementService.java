@@ -69,7 +69,7 @@ public class RegistrationManagementService {
         if (scheduledActivity == null) {
             throw new IllegalArgumentException("Scheduled activity does not exist");
         }
-        Registration existingRegistration = getRegistrationByAccountRoleIdAndScheduledActivityId(accountRoleId,
+        Registration existingRegistration = getRegistrationByCustomerIdAndScheduledActivityId(accountRoleId,
                 scheduledActivityId);
         if (existingRegistration != null) {
             throw new IllegalArgumentException("Registration already exists for this customer and scheduled activity");
@@ -77,8 +77,7 @@ public class RegistrationManagementService {
 
         // Check if scheduled activity is in the past
         Date date = new Date(System.currentTimeMillis());
-        if (scheduledActivity.getDate().isBefore(date.toLocalDate())
-                || scheduledActivity.getDate().equals(date.toLocalDate())) {
+        if (scheduledActivity.getDate().isBefore(date.toLocalDate())) {
             throw new IllegalArgumentException("Scheduled activity is in the past");
         }
 
@@ -178,13 +177,19 @@ public class RegistrationManagementService {
      * @return Registration
      */
     @Transactional
-    public Registration getRegistrationByAccountRoleIdAndScheduledActivityId(int accountRoleId,
+    public Registration getRegistrationByCustomerIdAndScheduledActivityId(int accountRoleId,
             int scheduledActivityId) {
         if (accountRoleId < 0) {
             throw new IllegalArgumentException("Account role id not valid!");
         }
         if (scheduledActivityId < 0) {
             throw new IllegalArgumentException("Scheduled activity id not valid!");
+        }
+        if (customerRepository.findCustomerByAccountRoleId(accountRoleId) == null) {
+            throw new IllegalArgumentException("Customer does not exist");
+        }
+        if (scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId) == null) {
+            throw new IllegalArgumentException("Scheduled activity does not exist");
         }
         for (Registration registration : registrationRepository.findAll()) {
             if (registration.getCustomer().getAccountRoleId() == accountRoleId
