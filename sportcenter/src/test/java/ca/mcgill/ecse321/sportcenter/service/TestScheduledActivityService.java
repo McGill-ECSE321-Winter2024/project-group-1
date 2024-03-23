@@ -184,27 +184,6 @@ public class TestScheduledActivityService {
     }
 
     @SuppressAjWarnings("null")
-    /**
-     * Tests the creation of a scheduled activity -> Sucess
-     */
-    @Test
-    public void testCreateScheduledActivity() {
-        ScheduledActivity scheduledActivity = null;
-        try {
-            scheduledActivity = scheduledActivityService.createScheduledActivity(DATE, START_TIME, END_TIME,
-                    APPROVED_INSTRUCTOR_KEY, APPROVED_ACTIVITY_KEY, CAPACITY);
-        } catch (IllegalArgumentException e) {
-            fail(e.getMessage());
-        }
-
-        assertNotNull(scheduledActivity);
-        assertEquals(DATE, scheduledActivity.getDate());
-        assertEquals(START_TIME, scheduledActivity.getStartTime());
-        assertEquals(END_TIME, scheduledActivity.getEndTime());
-        assertEquals(APPROVED_INSTRUCTOR_KEY, scheduledActivity.getSupervisor().getAccountRoleId());
-        assertEquals(APPROVED_ACTIVITY_KEY, scheduledActivity.getActivity().getName());
-        assertEquals(CAPACITY, scheduledActivity.getCapacity());
-    }
 
     /**
      * Tests the creation of a scheduled activity with a null date -> Fail

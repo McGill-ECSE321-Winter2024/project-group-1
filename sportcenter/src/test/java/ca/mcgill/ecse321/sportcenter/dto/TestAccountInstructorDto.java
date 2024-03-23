@@ -23,6 +23,13 @@ public class TestAccountInstructorDto {
     @Autowired
     private AccountRepository accountRepo;
 
+    @BeforeEach
+    @AfterEach
+    public void clearDatabase() {
+        repo.deleteAll();
+        accountRepo.deleteAll();
+    }
+
     @Test
     public void createAndReadInstructorAccount() {
         // Create an Account
