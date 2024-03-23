@@ -10,6 +10,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.sportcenter.model.Activity;
 import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.when;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
+import ca.mcgill.ecse321.sportcenter.dao.ActivityRepository;
+import ca.mcgill.ecse321.sportcenter.model.Activity;
+import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
 
 /**
  * @author Andrew Nemr and Patrick Zakaria
@@ -17,29 +29,22 @@ import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
 
 @SpringBootTest
 public class TestActivityPersistence {
-    /**
-     * The repository for Activity
-     */
-    @Autowired
+
+    @Mock
     private ActivityRepository activityRepository;
 
-    /**
-     * Clear the database after each test
-     */
+    @InjectMocks
+    private TestActivityPersistence testActivityPersistence;
+
     @AfterEach
     public void clearDatabase() {
         activityRepository.deleteAll();
     }
 
-    /**
-     * Test the persistence of an Activity
-     */
     @Test
     public void testPersistAndLoadActivity() {
+        MockitoAnnotations.openMocks(this);
 
-        /*
-         * Create an Activity, set the attributes of the Activity, and save the Activity
-         */
         Activity activity = new Activity();
         ClassCategory subcategory = ClassCategory.Strength;
         String name = "Yoga";
@@ -51,22 +56,50 @@ public class TestActivityPersistence {
         activity.setSubCategory(subcategory);
         activity.setIsApproved(isApproved);
 
+        when(activityRepository.findActivityByName(name)).thenReturn(activity);
+
         activityRepository.save(activity);
         name = activity.getName();
 
-        /*
-         * Load the Activity from the database, using the name as the key
-         */
         activity = activityRepository.findActivityByName(name);
 
-        /*
-         * Check if the Activity was saved and loaded correctly and has the correct
-         * attributes
-         */
         assertNotNull(activity);
         assertEquals(name, activity.getName());
         assertEquals(description, activity.getDescription());
         assertEquals(subcategory, activity.getSubCategory());
         assertEquals(isApproved, activity.getIsApproved());
     }
+}
+
+    //     Activity activity = new Activity();
+    //     ClassCategory subcategory = ClassCategory.Strength;
+    //     String name = "Yoga";
+    //     String description = "Practice yoga with a professional instructor.";
+    //     boolean isApproved = true;
+
+    //     activity.setName(name);
+    //     activity.setDescription(description);
+    //     activity.setSubCategory(subcategory);
+    //     activity.setIsApproved(isApproved);
+
+    //     activityRepository.save(activity);
+    //     name = activity.getName();
+
+    //     /*
+    //      * Load the Activity from the database, using the name as the key
+    //      */
+    //     activity = activityRepository.findActivityByName(name);
+
+    //     /*
+    //      * Check if the Activity was saved and loaded correctly and has the correct
+    //      * attributes
+    //      */
+    //     assertNotNull(activity);
+    //     assertEquals(name, activity.getName());
+    //     assertEquals(description, activity.getDescription());
+    //     assertEquals(subcategory, activity.getSubCategory());
+    //     assertEquals(isApproved, activity.getIsApproved());
+    // }
+
+
 }

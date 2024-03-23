@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ca.mcgill.ecse321.sportcenter.dao.ActivityRepository;
-import ca.mcgill.ecse321.sportcenter.dao.InstructorRepository;
-import ca.mcgill.ecse321.sportcenter.dao.OwnerRepository;
 import ca.mcgill.ecse321.sportcenter.model.Activity;
 import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
 import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity;
@@ -23,9 +21,6 @@ import jakarta.transaction.Transactional;
 public class ActivityManagementService {
     @Autowired
     ActivityRepository activityRepository;
-
-    @Autowired
-    OwnerRepository ownerRepository;
 
     /**
      * Convert an iterable to a list
@@ -59,6 +54,9 @@ public class ActivityManagementService {
         }
         if (subcategory == null) {
             throw new IllegalArgumentException("Subcategory cannot be empty!");
+        }
+        if (activityRepository.findActivityByName(name) != null) {
+            throw new IllegalArgumentException("Activity already exists!");
         }
         Activity activity = new Activity();
         activity.setName(name);
@@ -213,20 +211,24 @@ public class ActivityManagementService {
      * @author Mathias Pacheco Lemina
      */
     @Transactional
-    public void approveActivity(String activityName) {
-        Activity activity = activityRepository.findActivityByName(activityName);
-
-        if (activityName.trim() == "" || activityName == null) {
+    public Activity approveActivity(String activityName) {
+        if (activityName == null || activityName.trim().isEmpty()) {
             throw new IllegalArgumentException("Activity name cannot be empty!");
         }
+
+        Activity activity = activityRepository.findActivityByName(activityName);
+
         if (activity == null) {
             throw new IllegalArgumentException("Activity does not exist!");
         }
+
         if (activity.getIsApproved()) {
             throw new IllegalArgumentException("Activity is already approved!");
         }
+
         activity.setIsApproved(true);
         activityRepository.save(activity);
+        return activity;
     }
 
     /**
@@ -236,10 +238,10 @@ public class ActivityManagementService {
      * @author Mathias Pacheco Lemina
      */
     @Transactional
-    public void disapproveActivity(String activityName) {
+    public Activity disapproveActivity(String activityName) {
         Activity activity = activityRepository.findActivityByName(activityName);
 
-        if (activityName.trim() == "" || activityName == null) {
+        if (activityName == null || activityName.trim() == "") {
             throw new IllegalArgumentException("Activity name cannot be empty!");
         }
         if (activityRepository.findActivityByName(activityName) == null) {
@@ -248,5 +250,6 @@ public class ActivityManagementService {
 
         activity.setIsApproved(false);
         activityRepository.save(activity);
+        return activity;
     }
 }

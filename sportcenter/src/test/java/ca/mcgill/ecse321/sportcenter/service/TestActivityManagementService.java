@@ -4,22 +4,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.lenient;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
-
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import ca.mcgill.ecse321.sportcenter.dao.ActivityRepository;
-import ca.mcgill.ecse321.sportcenter.dao.InstructorRepository;
 import ca.mcgill.ecse321.sportcenter.model.Activity;
 import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
-import ca.mcgill.ecse321.sportcenter.model.Instructor;
-import ca.mcgill.ecse321.sportcenter.model.Instructor.InstructorStatus;
 
 /**
  * This class tests the ActivityManagementService class
@@ -31,15 +28,12 @@ public class TestActivityManagementService {
     @Mock
     private ActivityRepository activityDao;
 
-    @Mock
-    private InstructorRepository instructorDao;
-
     // Activity keys
     private static final String APPROVED_ACTIVITY_KEY = "ApprovedActivity";
     private static final String DISAPPROVED_ACTIVITY_KEY = "DisapprovedActivity";
     private static final String INEXISTENT_ACTIVITY_KEY = "InexistentActivity";
 
-    private static final String CREATED_ACTIVITY = "CreatedActivity";
+    private static final String CREATED_ACTIVITY_KEY = "CreatedActivity";
     private static final String DESCRIPTION = "description";
     private static final ClassCategory SUBCATEGORY = ClassCategory.Cardio;
 
@@ -50,26 +44,31 @@ public class TestActivityManagementService {
     @InjectMocks
     private ActivityManagementService activityManagementService;
 
-    @SuppressWarnings("null")
+    // @SuppressWarnings("null")
     @BeforeEach
     void setMockOutput() {
         lenient().when(activityDao.findActivityByName(anyString()))
                 .thenAnswer((InvocationOnMock invocation) -> {
                     if (invocation.getArgument(0).equals(APPROVED_ACTIVITY_KEY)) {
                         Activity activity = new Activity();
-                        activity.setName("activity");
+                        activity.setName(APPROVED_ACTIVITY_KEY);
                         activity.setDescription("description");
                         activity.setSubCategory(ClassCategory.Cardio);
                         activity.setIsApproved(true);
-                        activity.setName(APPROVED_ACTIVITY_KEY);
                         return activity;
                     } else if (invocation.getArgument(0).equals(DISAPPROVED_ACTIVITY_KEY)) {
                         Activity activity = new Activity();
-                        activity.setName("activity");
+                        activity.setName(DISAPPROVED_ACTIVITY_KEY);
                         activity.setDescription("description");
                         activity.setSubCategory(ClassCategory.Cardio);
                         activity.setIsApproved(false);
-                        activity.setName(DISAPPROVED_ACTIVITY_KEY);
+                        return activity;
+                    } else if (invocation.getArgument(0).equals(CREATED_ACTIVITY_KEY)) {
+                        Activity activity = new Activity();
+                        activity.setDescription("description");
+                        activity.setSubCategory(ClassCategory.Cardio);
+                        activity.setIsApproved(false);
+                        activity.setName(CREATED_ACTIVITY_KEY);
                         return activity;
                     } else if (invocation.getArgument(0).equals(INEXISTENT_ACTIVITY_KEY)) {
                         return null;
@@ -85,13 +84,13 @@ public class TestActivityManagementService {
         Activity activity = null;
 
         try {
-            activity = activityManagementService.createActivity(CREATED_ACTIVITY, DESCRIPTION, SUBCATEGORY);
+            activity = activityManagementService.createActivity(INEXISTENT_ACTIVITY_KEY, DESCRIPTION, SUBCATEGORY);
         } catch (IllegalArgumentException e) {
-            fail();
+            fail(e.getMessage());
         }
 
         assertNotNull(activity);
-        assertEquals(CREATED_ACTIVITY, activity.getName());
+        assertEquals(INEXISTENT_ACTIVITY_KEY, activity.getName());
         assertEquals(DESCRIPTION, activity.getDescription());
         assertEquals(SUBCATEGORY, activity.getSubCategory());
     }
@@ -101,7 +100,7 @@ public class TestActivityManagementService {
         String error = null;
 
         try {
-            activity = activityManagementService.createActivity(null, DESCRIPTION, SUBCATEGORY);
+            activityManagementService.createActivity(null, DESCRIPTION, SUBCATEGORY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -114,7 +113,7 @@ public class TestActivityManagementService {
         String error = null;
 
         try {
-            activity = activityManagementService.createActivity("", DESCRIPTION, SUBCATEGORY);
+            activityManagementService.createActivity("", DESCRIPTION, SUBCATEGORY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -127,7 +126,7 @@ public class TestActivityManagementService {
         String error = null;
 
         try {
-            activity = activityManagementService.createActivity("       ", DESCRIPTION, SUBCATEGORY);
+            activityManagementService.createActivity("       ", DESCRIPTION, SUBCATEGORY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -140,7 +139,7 @@ public class TestActivityManagementService {
         String error = null;
 
         try {
-            activity = activityManagementService.createActivity(CREATED_ACTIVITY, null, SUBCATEGORY);
+            activityManagementService.createActivity(CREATED_ACTIVITY_KEY, null, SUBCATEGORY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -153,7 +152,7 @@ public class TestActivityManagementService {
         String error = null;
 
         try {
-            activity = activityManagementService.createActivity(CREATED_ACTIVITY, "", SUBCATEGORY);
+            activityManagementService.createActivity(CREATED_ACTIVITY_KEY, "", SUBCATEGORY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -166,7 +165,7 @@ public class TestActivityManagementService {
         String error = null;
 
         try {
-            activity = activityManagementService.createActivity(CREATED_ACTIVITY, "             ", SUBCATEGORY);
+            activityManagementService.createActivity(CREATED_ACTIVITY_KEY, "             ", SUBCATEGORY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -179,7 +178,7 @@ public class TestActivityManagementService {
         String error = null;
 
         try {
-            activity = activityManagementService.createActivity(CREATED_ACTIVITY, DESCRIPTION, null);
+            activityManagementService.createActivity(CREATED_ACTIVITY_KEY, DESCRIPTION, null);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -190,10 +189,9 @@ public class TestActivityManagementService {
     @Test // NOT SURE
     public void testCreateActivityAlreadyExists() {
         String error = null;
-        Activity activity = null;
 
         try {
-            activity = activityManagementService.createActivity(name, description, subcategory);
+            activityManagementService.createActivity(CREATED_ACTIVITY_KEY, DESCRIPTION, SUBCATEGORY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -208,7 +206,7 @@ public class TestActivityManagementService {
         Activity activity = null;
 
         try {
-            activity = activityManagementService.updateActivity(CREATED_ACTIVITY, NEW_NAME, NEW_DESCRIPTION,
+            activity = activityManagementService.updateActivity(CREATED_ACTIVITY_KEY, NEW_NAME, NEW_DESCRIPTION,
                     NEW_SUBCATEGORY);
         } catch (IllegalArgumentException e) {
             fail();
@@ -225,7 +223,7 @@ public class TestActivityManagementService {
         String error = null;
 
         try {
-            activity = activityManagementService.updateActivity(null, NEW_NAME, NEW_DESCRIPTION, NEW_SUBCATEGORY);
+            activityManagementService.updateActivity(null, NEW_NAME, NEW_DESCRIPTION, NEW_SUBCATEGORY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -238,7 +236,7 @@ public class TestActivityManagementService {
         String error = null;
 
         try {
-            activity = activityManagementService.updateActivity("", NEW_NAME, NEW_DESCRIPTION, NEW_SUBCATEGORY);
+            activityManagementService.updateActivity("", NEW_NAME, NEW_DESCRIPTION, NEW_SUBCATEGORY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -251,7 +249,7 @@ public class TestActivityManagementService {
         String error = null;
 
         try {
-            activity = activityManagementService.updateActivity("       ", NEW_NAME, NEW_DESCRIPTION, NEW_SUBCATEGORY);
+            activityManagementService.updateActivity("       ", NEW_NAME, NEW_DESCRIPTION, NEW_SUBCATEGORY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -264,7 +262,7 @@ public class TestActivityManagementService {
         String error = null;
 
         try {
-            activity = activityManagementService.updateActivity(CREATED_ACTIVITY, null, NEW_DESCRIPTION,
+            activityManagementService.updateActivity(CREATED_ACTIVITY_KEY, null, NEW_DESCRIPTION,
                     NEW_SUBCATEGORY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
@@ -278,7 +276,7 @@ public class TestActivityManagementService {
         String error = null;
 
         try {
-            activity = activityManagementService.updateActivity(CREATED_ACTIVITY, "", NEW_DESCRIPTION, NEW_SUBCATEGORY);
+            activityManagementService.updateActivity(CREATED_ACTIVITY_KEY, "", NEW_DESCRIPTION, NEW_SUBCATEGORY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -291,7 +289,7 @@ public class TestActivityManagementService {
         String error = null;
 
         try {
-            activity = activityManagementService.updateActivity(CREATED_ACTIVITY, "       ", NEW_DESCRIPTION,
+            activityManagementService.updateActivity(CREATED_ACTIVITY_KEY, "       ", NEW_DESCRIPTION,
                     NEW_SUBCATEGORY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
@@ -305,7 +303,7 @@ public class TestActivityManagementService {
         String error = null;
 
         try {
-            activity = activityManagementService.updateActivity(CREATED_ACTIVITY, NEW_NAME, null, NEW_SUBCATEGORY);
+            activityManagementService.updateActivity(CREATED_ACTIVITY_KEY, NEW_NAME, null, NEW_SUBCATEGORY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -318,7 +316,7 @@ public class TestActivityManagementService {
         String error = null;
 
         try {
-            activity = activityManagementService.updateActivity(CREATED_ACTIVITY, NEW_NAME, "", NEW_SUBCATEGORY);
+            activityManagementService.updateActivity(CREATED_ACTIVITY_KEY, NEW_NAME, "", NEW_SUBCATEGORY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -331,7 +329,7 @@ public class TestActivityManagementService {
         String error = null;
 
         try {
-            activity = activityManagementService.updateActivity(CREATED_ACTIVITY, NEW_NAME, "       ", NEW_SUBCATEGORY);
+            activityManagementService.updateActivity(CREATED_ACTIVITY_KEY, NEW_NAME, "       ", NEW_SUBCATEGORY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -344,7 +342,7 @@ public class TestActivityManagementService {
         String error = null;
 
         try {
-            activity = activityManagementService.updateActivity(CREATED_ACTIVITY, NEW_NAME, NEW_DESCRIPTION, null);
+            activityManagementService.updateActivity(CREATED_ACTIVITY_KEY, NEW_NAME, NEW_DESCRIPTION, null);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -357,7 +355,7 @@ public class TestActivityManagementService {
         String error = null;
 
         try {
-            activity = activityManagementService.updateActivity("does not exist", NEW_NAME, NEW_DESCRIPTION,
+            activityManagementService.updateActivity("does not exist", NEW_NAME, NEW_DESCRIPTION,
                     NEW_SUBCATEGORY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
@@ -371,7 +369,7 @@ public class TestActivityManagementService {
         String error = null;
 
         try {
-            activity = activityManagementService.updateActivity(APPROVED_ACTIVITY_KEY, NEW_NAME, NEW_DESCRIPTION,
+            activityManagementService.updateActivity(APPROVED_ACTIVITY_KEY, NEW_NAME, NEW_DESCRIPTION,
                     NEW_SUBCATEGORY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
@@ -383,13 +381,16 @@ public class TestActivityManagementService {
     // TEST #3 - APPROVE ACTIVITY
     @Test
     public void testApproveActivity() {
+        Activity activity = null;
+
         try {
-            activityManagementService.approveActivity(APPROVED_ACTIVITY_KEY);
+            activity = activityManagementService.approveActivity(DISAPPROVED_ACTIVITY_KEY);
         } catch (IllegalArgumentException e) {
             fail();
         }
 
-        assertTrue(activityRepository.findActivityByName(APPROVED_ACTIVITY_KEY).getIsApproved());
+        assertNotNull(activity);
+        assertTrue(activity.getIsApproved());
     }
 
     @Test
@@ -456,13 +457,16 @@ public class TestActivityManagementService {
     // TEST #4 - DISAPPROVE ACTIVITY
     @Test
     public void testDisapproveActivity() {
+        Activity activity = null;
+
         try {
-            activityManagementService.disapproveActivity(DISAPPROVED_ACTIVITY_KEY);
+            activity = activityManagementService.disapproveActivity(APPROVED_ACTIVITY_KEY);
         } catch (IllegalArgumentException e) {
-            fail();
+            fail(e.getMessage());
         }
 
-        assertFalse(activityRepository.findActivityByName(DISAPPROVED_ACTIVITY_KEY).getIsApproved());
+        assertNotNull(activity);
+        assertFalse(activity.getIsApproved());
     }
 
     @Test
