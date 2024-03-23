@@ -22,6 +22,15 @@ public class ActivityManagementService {
     @Autowired
     ActivityRepository activityRepository;
 
+<<<<<<< Updated upstream
+=======
+    @Autowired
+    InstructorRepository instructorRepository;
+
+    @Autowired
+    OwnerRepository ownerRepository;
+
+>>>>>>> Stashed changes
     /**
      * Convert an iterable to a list
      * 
@@ -247,7 +256,10 @@ public class ActivityManagementService {
         if (activityRepository.findActivityByName(activityName) == null) {
             throw new IllegalArgumentException("Activity does not exist!");
         }
-
+        // XXXXXXXXXXXXXXXXX Need to rethink this XXXXXXXXXXXXXXXXX
+        if (!activity.getIsApproved()) {
+            throw new IllegalArgumentException("Activity is already not approved!");
+        }
         activity.setIsApproved(false);
         activityRepository.save(activity);
         return activity;

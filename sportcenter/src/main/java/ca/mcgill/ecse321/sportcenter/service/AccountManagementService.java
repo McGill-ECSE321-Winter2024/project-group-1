@@ -775,7 +775,7 @@ public class AccountManagementService {
 
         Instructor instructor = instructorRepository.findInstructorByAccountRoleId(accountRoleId);
         if (instructor == null) {
-            throw new IllegalArgumentException("Account does not exist!");
+            throw new IllegalArgumentException("Instructor does not exist!");
         }
 
         // Delete all associated scheduled activities
