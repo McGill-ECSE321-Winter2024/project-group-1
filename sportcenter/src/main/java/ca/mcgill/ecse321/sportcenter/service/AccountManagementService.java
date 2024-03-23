@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 
 import ca.mcgill.ecse321.sportcenter.dao.AccountRepository;
-import ca.mcgill.ecse321.sportcenter.dao.ActivityRepository;
 import ca.mcgill.ecse321.sportcenter.model.Account;
 import ca.mcgill.ecse321.sportcenter.dao.CustomerRepository;
 import ca.mcgill.ecse321.sportcenter.dao.InstructorRepository;
@@ -33,9 +32,6 @@ public class AccountManagementService {
     InstructorRepository instructorRepository;
     @Autowired
     OwnerRepository ownerRepository;
-
-    @Autowired
-    private ActivityRepository activityManagementRepository;
 
     /**
      * Helper function to turn an iterable into a list
@@ -352,6 +348,10 @@ public class AccountManagementService {
     public Customer getCustomerByUsername(String username) {
         if (username == null || username.trim().length() == 0) {
             throw new IllegalArgumentException("Username cannot be empty!");
+        }
+
+        if (username.contains(" ")) {
+            throw new IllegalArgumentException("Username cannot contain spaces!");
         }
 
         Account account = accountRepository.findAccountByUsername(username);
@@ -711,7 +711,7 @@ public class AccountManagementService {
      * @param accountId
      */
     @Transactional
-    public void deleteCustomerByAccountId(int accountId) {
+    public boolean deleteCustomerByAccountId(int accountId) {
         if (accountId < 0) {
             throw new IllegalArgumentException("AccountId cannot be negative!");
         }
@@ -729,8 +729,8 @@ public class AccountManagementService {
         // Delete all associated registrations
         RegistrationManagementService registrationManagementService = new RegistrationManagementService();
         registrationManagementService.deleteRegistrationsByAccountRoleId(customer.getAccountRoleId());
-
         customerRepository.delete(customer);
+        return true;
     }
 
     /**

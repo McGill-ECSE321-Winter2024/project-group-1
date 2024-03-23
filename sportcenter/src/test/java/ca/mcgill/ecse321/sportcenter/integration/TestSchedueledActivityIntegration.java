@@ -5,13 +5,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+// import org.springframework.boot.test.web.client.TestRestTemplate;
 
 import ca.mcgill.ecse321.sportcenter.dao.ScheduledActivityRepository;
 
 public class TestSchedueledActivityIntegration {
-    @Autowired
-    private TestRestTemplate client; // Always stays the same
+    // @Autowired
+    // private TestRestTemplate client; // Always stays the same
 
     @Autowired
     private ScheduledActivityRepository scheduledActivityRepository; // TODO: Make sure it's the good type

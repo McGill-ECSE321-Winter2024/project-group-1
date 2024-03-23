@@ -8,7 +8,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+// import org.springframework.boot.test.web.client.TestRestTemplate;
 
 import ca.mcgill.ecse321.sportcenter.dao.InstructorRepository;
 
@@ -16,8 +16,8 @@ import ca.mcgill.ecse321.sportcenter.dao.InstructorRepository;
 @TestMethodOrder(org.junit.jupiter.api.MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class TestRegistrationIntegration {
-    @Autowired
-    private TestRestTemplate client; // Always stays the same
+    // @Autowired
+    // private TestRestTemplate client; // Always stays the same
 
     @Autowired
     private InstructorRepository instructorRepository; // TODO: Make sure it's the good type

@@ -10,7 +10,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+// import org.springframework.boot.test.web.client.TestRestTemplate;
 
 import ca.mcgill.ecse321.sportcenter.dao.OwnerRepository;
 
@@ -18,8 +18,8 @@ import ca.mcgill.ecse321.sportcenter.dao.OwnerRepository;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class TestOwnerIntegration {
-    @Autowired
-    private TestRestTemplate client; // Always stays the same
+    // @Autowired
+    // private TestRestTemplate client; // Always stays the same
 
     @Autowired
     private OwnerRepository ownerRepository; // TODO: Make sure it's the good type

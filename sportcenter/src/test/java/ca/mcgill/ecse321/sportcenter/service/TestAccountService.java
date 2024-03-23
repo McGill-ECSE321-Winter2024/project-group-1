@@ -2,7 +2,6 @@ package ca.mcgill.ecse321.sportcenter.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
@@ -22,13 +21,11 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 
-import ca.mcgill.ecse321.sportcenter.service.AccountManagementService;
 import ca.mcgill.ecse321.sportcenter.dao.AccountRepository;
 import ca.mcgill.ecse321.sportcenter.dao.CustomerRepository;
 import ca.mcgill.ecse321.sportcenter.dao.InstructorRepository;
 import ca.mcgill.ecse321.sportcenter.dao.OwnerRepository;
 import ca.mcgill.ecse321.sportcenter.model.Account;
-import ca.mcgill.ecse321.sportcenter.model.Customer;
 
 /*
  * Tests class for AccountManagerService
@@ -55,9 +52,6 @@ public class TestAccountService {
     private static final int CUSTOMER_ACCOUNT_KEY = 1;
     private static final int APPROVED_INSTRUCTOR_ACCOUNT_KEY = 2;
     private static final int DISAPPROVED_INSTRUCTOR_ACCOUNT_KEY = 3;
-    private static final int NEW_ACCOUNT_ACCOUNT_KEY = 4;
-    private static final int NEW_CUSTOMER_ACCOUNT_KEY = 5;
-
     // USERNAMES
     private static final String CUSTOMER_USERNAME = "customer";
     private static final String APPROVED_INSTRUCTOR_USERNAME = "approvedInstructor";
