@@ -23,6 +23,7 @@ public class TestActivityManagementService {
     @Mock
     private ActivityRepository activityRepository;
 
+<<<<<<< Updated upstream
     // Activity keys
     private static final String APPROVED_ACTIVITY_KEY = "ApprovedActivity";
     private static final String DISAPPROVED_ACTIVITY_KEY = "DisapprovedActivity";
@@ -35,10 +36,15 @@ public class TestActivityManagementService {
     private static final String NEW_NAME = "newName";
     private static final String NEW_DESCRIPTION = "newDescription";
     private static final ClassCategory NEW_SUBCATEGORY = ClassCategory.Strength;
+=======
+    @Mock
+    private InstructorRepository instructorRepository;
+>>>>>>> Stashed changes
 
     @InjectMocks
     private ActivityManagementService activityManagementService;
 
+<<<<<<< Updated upstream
     // @SuppressWarnings("null")
     @BeforeEach
     void setMockOutput() {
@@ -73,6 +79,8 @@ public class TestActivityManagementService {
                 });
     }
 
+=======
+>>>>>>> Stashed changes
     // TEST #1 - CREATE ACTIVITY
     @Test
     public void testCreateActivity() {
@@ -81,6 +89,7 @@ public class TestActivityManagementService {
         String description = "description";
         boolean isApproved = false;
 
+<<<<<<< Updated upstream
         try {
             activity = activityManagementService.createActivity(INEXISTENT_ACTIVITY_KEY, DESCRIPTION, SUBCATEGORY);
         } catch (IllegalArgumentException e) {
@@ -91,6 +100,28 @@ public class TestActivityManagementService {
         assertEquals(INEXISTENT_ACTIVITY_KEY, activity.getName());
         assertEquals(DESCRIPTION, activity.getDescription());
         assertEquals(SUBCATEGORY, activity.getSubCategory());
+=======
+        when(activityRepository.findActivityByName(name)).thenReturn(null);// this checks if the activity already
+                                                                           // exists, and if it does, it will return
+                                                                           // null
+        when(activityRepository.save(any(Activity.class))).thenAnswer((invocation) -> {
+            Activity activity = new Activity();
+            activity.setName(name);
+            activity.setDescription(description);
+            activity.setSubCategory(subcategory);
+            activity.setIsApproved(isApproved);
+            return (Activity) activity; // Add type cast here
+        });
+
+        Activity createdActivity = activityManagementService.createActivity(name, description, subcategory);
+        verify(activityRepository, times(1)).save(any(Activity.class));
+
+        assertNotNull(createdActivity);
+        assertEquals(name, createdActivity.getName());
+        assertEquals(description, createdActivity.getDescription());
+        assertEquals(subcategory, createdActivity.getSubCategory());
+        assertEquals(isApproved, createdActivity.getIsApproved());
+>>>>>>> Stashed changes
     }
 
     @Test
@@ -101,7 +132,11 @@ public class TestActivityManagementService {
         String error = "";
 
         try {
+<<<<<<< Updated upstream
             activityManagementService.createActivity(null, DESCRIPTION, SUBCATEGORY);
+=======
+            activityManagementService.createActivity(name, description, subcategory);
+>>>>>>> Stashed changes
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -117,7 +152,11 @@ public class TestActivityManagementService {
         String error = "";
 
         try {
+<<<<<<< Updated upstream
             activityManagementService.createActivity("", DESCRIPTION, SUBCATEGORY);
+=======
+            activityManagementService.createActivity(name, description, subcategory);
+>>>>>>> Stashed changes
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -133,7 +172,11 @@ public class TestActivityManagementService {
         String error = "";
 
         try {
+<<<<<<< Updated upstream
             activityManagementService.createActivity("       ", DESCRIPTION, SUBCATEGORY);
+=======
+            activityManagementService.createActivity(name, description, subcategory);
+>>>>>>> Stashed changes
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -149,7 +192,11 @@ public class TestActivityManagementService {
         String error = "";
 
         try {
+<<<<<<< Updated upstream
             activityManagementService.createActivity(CREATED_ACTIVITY_KEY, null, SUBCATEGORY);
+=======
+            activityManagementService.createActivity(name, description, subcategory);
+>>>>>>> Stashed changes
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -165,7 +212,11 @@ public class TestActivityManagementService {
         String error = "";
 
         try {
+<<<<<<< Updated upstream
             activityManagementService.createActivity(CREATED_ACTIVITY_KEY, "", SUBCATEGORY);
+=======
+            activityManagementService.createActivity(name, description, subcategory);
+>>>>>>> Stashed changes
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -181,7 +232,11 @@ public class TestActivityManagementService {
         String error = "";
 
         try {
+<<<<<<< Updated upstream
             activityManagementService.createActivity(CREATED_ACTIVITY_KEY, "             ", SUBCATEGORY);
+=======
+            activityManagementService.createActivity(name, description, subcategory);
+>>>>>>> Stashed changes
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -197,7 +252,11 @@ public class TestActivityManagementService {
         String error = "";
 
         try {
+<<<<<<< Updated upstream
             activityManagementService.createActivity(CREATED_ACTIVITY_KEY, DESCRIPTION, null);
+=======
+            activityManagementService.createActivity(name, description, subcategory);
+>>>>>>> Stashed changes
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -207,10 +266,25 @@ public class TestActivityManagementService {
 
     @Test
     public void testCreateActivityAlreadyExists() {
+<<<<<<< Updated upstream
         String error = null;
 
         try {
             activityManagementService.createActivity(CREATED_ACTIVITY_KEY, DESCRIPTION, SUBCATEGORY);
+=======
+        String name = "activity";
+        ClassCategory subcategory = ClassCategory.Strength;
+        String description = "description";
+        String error = "";
+
+        when(activityRepository.findActivityByName(name))
+                .thenReturn(new Activity(subcategory, name, false, description));
+
+        activityManagementService.createActivity(name, description, subcategory);
+
+        try {
+            activityManagementService.createActivity(name, description, subcategory);
+>>>>>>> Stashed changes
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -221,6 +295,7 @@ public class TestActivityManagementService {
     // TEST #2 - UPDATE ACTIVITY
     @Test
     public void testUpdateActivity() {
+<<<<<<< Updated upstream
         Activity activity = null;
 
         try {
@@ -403,12 +478,63 @@ public class TestActivityManagementService {
 
         try {
             activity = activityManagementService.approveActivity(DISAPPROVED_ACTIVITY_KEY);
+=======
+        // TODO - COMPLETE BAREBONE
+    }
+
+    @Test
+    public void testProposeActivityNameEmpty() {
+        // TODO
+    }
+
+    @Test
+    public void testProposeActivityNameWhitespace() {
+        // TODO
+    }
+
+    @Test
+    public void testProposeActivityDescriptionNull() {
+        // TODO
+    }
+
+    @Test
+    public void testProposeActivityDescriptionEmpty() {
+        // TODO
+    }
+
+    @Test
+    public void testProposeActivityDescriptionWhitespace() {
+        // TODO
+    }
+
+    @Test
+    public void testProposeActivitySubcategoryNull() {
+        // TODO - TBD
+    }
+
+    // TEST #4 - APPROVE ACTIVITY
+    @Test
+    public void testApproveActivity() {
+        String name = "activity";
+        ClassCategory subcategory = ClassCategory.Strength;
+        boolean isApproved = false;
+        String description = "description";
+
+        activityRepository.save(new Activity(subcategory, name, isApproved, description));
+
+        try {
+            activityManagementService.approveActivity(name);
+>>>>>>> Stashed changes
         } catch (IllegalArgumentException e) {
             System.err.println(e.getMessage());
         }
 
+<<<<<<< Updated upstream
         assertNotNull(activity);
         assertTrue(activity.getIsApproved());
+=======
+        assertTrue(activityRepository.findActivityByName(name).getIsApproved());
+>>>>>>> Stashed changes
     }
 
     @Test
@@ -509,6 +635,7 @@ public class TestActivityManagementService {
     // TEST #5 - DISAPPROVE ACTIVITY
     @Test
     public void testDisapproveActivity() {
+<<<<<<< Updated upstream
         Activity activity = null;
 
         try {
@@ -519,6 +646,22 @@ public class TestActivityManagementService {
 
         assertNotNull(activity);
         assertFalse(activity.getIsApproved());
+=======
+        String name = "activity";
+        ClassCategory subcategory = ClassCategory.Strength;
+        boolean isApproved = true;
+        String description = "description";
+
+        activityRepository.save(new Activity(subcategory, name, isApproved, description));
+
+        try {
+            activityManagementService.disapproveActivity(name);
+        } catch (IllegalArgumentException e) {
+            System.err.println(e.getMessage());
+        }
+
+        assertFalse(activityRepository.findActivityByName(name).getIsApproved());
+>>>>>>> Stashed changes
     }
 
     @Test

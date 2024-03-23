@@ -22,6 +22,15 @@ public class ActivityManagementService {
     @Autowired
     ActivityRepository activityRepository;
 
+<<<<<<< Updated upstream
+=======
+    @Autowired
+    InstructorRepository instructorRepository;
+
+    @Autowired
+    OwnerRepository ownerRepository;
+
+>>>>>>> Stashed changes
     /**
      * Convert an iterable to a list
      * 
