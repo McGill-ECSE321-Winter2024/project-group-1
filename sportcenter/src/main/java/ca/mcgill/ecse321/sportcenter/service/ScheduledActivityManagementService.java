@@ -70,17 +70,17 @@ public class ScheduledActivityManagementService {
         if (date.isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("Date cannot be before the current date!");
         }
-        if (startTime == null || startTime.isAfter(endTime)) {
+        if (startTime == null) {
             throw new IllegalArgumentException("Start time cannot be empty!");
         }
         if (endTime == null) {
             throw new IllegalArgumentException("End time cannot be empty!");
         }
         if (startTime.isAfter(endTime)) {
-            throw new IllegalArgumentException("Start time cannot be before end time!");
+            throw new IllegalArgumentException("Start time cannot be after end time!");
         }
-        if (accountRoleId < 0) {
-            throw new IllegalArgumentException("Instructor Id cannot be negative!");
+        if (accountRoleId <= 0) {
+            throw new IllegalArgumentException("Instructor Id must be greater than 0");
         }
         if (activityName == null || activityName.trim().isEmpty()) {
             throw new IllegalArgumentException("Activity name cannot be empty!");
@@ -90,10 +90,11 @@ public class ScheduledActivityManagementService {
         }
 
         Instructor instructor = instructorRepository.findInstructorByAccountRoleId(accountRoleId);
+
         if (instructor == null) {
             throw new IllegalArgumentException("Instructor does not exist!");
         }
-        if (instructor.getStatus().equals(InstructorStatus.Active)) {
+        if (!instructor.getStatus().equals(InstructorStatus.Active)) {
             throw new IllegalArgumentException("Instructor is not approved!");
         }
         Activity activity = activityRepository.findActivityByName(activityName);
@@ -422,10 +423,7 @@ public class ScheduledActivityManagementService {
         if (scheduledActivityId < 0) {
             throw new IllegalArgumentException("Id cannot be negative!");
         }
-        if (oldCapacity <= 0) {
-            throw new IllegalArgumentException("Capacity must be greater than 0!");
-        }
-        if (newCapacity <= 0) {
+        if (oldCapacity <= 0 || newCapacity <= 0) {
             throw new IllegalArgumentException("Capacity must be greater than 0!");
         }
         ScheduledActivity scheduledActivity = getScheduledActivityById(scheduledActivityId);

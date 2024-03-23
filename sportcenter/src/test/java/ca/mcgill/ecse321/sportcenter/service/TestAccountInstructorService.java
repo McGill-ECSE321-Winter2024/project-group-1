@@ -24,14 +24,10 @@ import org.mockito.stubbing.Answer;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.sportcenter.dao.AccountRepository;
-import ca.mcgill.ecse321.sportcenter.dao.ActivityRepository;
-import ca.mcgill.ecse321.sportcenter.dao.CustomerRepository;
 import ca.mcgill.ecse321.sportcenter.dao.InstructorRepository;
-import ca.mcgill.ecse321.sportcenter.dao.OwnerRepository;
 import ca.mcgill.ecse321.sportcenter.model.Account;
 import ca.mcgill.ecse321.sportcenter.model.Instructor;
 import ca.mcgill.ecse321.sportcenter.model.Instructor.InstructorStatus;
-import jakarta.persistence.criteria.CriteriaBuilder.In;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
@@ -121,6 +117,7 @@ public class TestAccountInstructorService {
     @Test
     public void testCreateInstructor() {
         Instructor instructor = null;
+
         try {
             instructor = accountService.createInstructor(USERNAME_NONDUPLICATE, InstructorStatus.Pending, "description",
                     "image");

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 
 import ca.mcgill.ecse321.sportcenter.dao.AccountRepository;
+import ca.mcgill.ecse321.sportcenter.dao.ActivityRepository;
 import ca.mcgill.ecse321.sportcenter.model.Account;
 import ca.mcgill.ecse321.sportcenter.dao.CustomerRepository;
 import ca.mcgill.ecse321.sportcenter.dao.InstructorRepository;
@@ -32,6 +33,9 @@ public class AccountManagementService {
     InstructorRepository instructorRepository;
     @Autowired
     OwnerRepository ownerRepository;
+
+    @Autowired
+    private ActivityRepository activityManagementRepository;
 
     /**
      * Helper function to turn an iterable into a list

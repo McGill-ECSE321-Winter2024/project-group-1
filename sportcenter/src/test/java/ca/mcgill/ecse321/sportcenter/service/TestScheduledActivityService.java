@@ -3,6 +3,7 @@ package ca.mcgill.ecse321.sportcenter.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -65,13 +66,7 @@ public class TestScheduledActivityService {
     private static final int APPROVED_INSTRUCTOR_ACCOUNT_KEY = 2;
     private static final int DISAPPROVED_INSTRUCTOR_ACCOUNT_KEY = 3;
 
-    private static final int NEW_CUSTOMER_ACCOUNT_KEY = 4;
-
     // Account Role keys
-    // Customer keys
-    private static final int CUSTOMER_KEY = 1;
-
-    private static final int NEW_CUSTOMER_KEY = 4;
 
     // Instructor keys
     private static final int APPROVED_INSTRUCTOR_KEY = 2;
@@ -83,14 +78,10 @@ public class TestScheduledActivityService {
 
     // Scheduled Activity keys
     private static final int SCHEDULED_ACTIVITY_KEY = 1;
-    private static final int NEW_SCHEDULED_ACTIVITY_KEY = 2;
     private static final LocalDate DATE = LocalDate.of(2025, 3, 19);
     private static final LocalTime START_TIME = LocalTime.of(10, 0, 0);
     private static final LocalTime END_TIME = LocalTime.of(12, 0, 0);
     private static final int CAPACITY = 20;
-
-    // Registration keys
-    private static final int REGISTRATION_KEY = 1;
 
     @InjectMocks
     private ScheduledActivityManagementService scheduledActivityService;
@@ -98,7 +89,7 @@ public class TestScheduledActivityService {
     @SuppressWarnings("null")
     @BeforeEach
     void setMockOutput() {
-        when(accountDao.findAccountByAccountId(anyInt())).thenAnswer((InvocationOnMock invocation) -> {
+        lenient().when(accountDao.findAccountByAccountId(anyInt())).thenAnswer((InvocationOnMock invocation) -> {
             if (invocation.getArgument(0).equals(CUSTOMER_ACCOUNT_KEY)) {
                 Account account = new Account();
                 account.setUsername("customer");
@@ -119,27 +110,28 @@ public class TestScheduledActivityService {
             }
         });
 
-        when(instructorDao.findInstructorByAccountRoleId(anyInt())).thenAnswer((InvocationOnMock invocation) -> {
-            if (invocation.getArgument(0).equals(APPROVED_INSTRUCTOR_KEY)) {
-                Instructor instructor = new Instructor();
-                instructor.setAccount(accountDao.findAccountByAccountId(APPROVED_INSTRUCTOR_ACCOUNT_KEY));
-                instructor.setStatus(InstructorStatus.Active);
-                instructor.setDescription("description");
-                instructor.setProfilePicURL("pictureURL");
-                return instructor;
-            } else if (invocation.getArgument(0).equals(DISAPPROVED_INSTRUCTOR_KEY)) {
-                Instructor instructor = new Instructor();
-                instructor.setAccount(accountDao.findAccountByAccountId(DISAPPROVED_INSTRUCTOR_ACCOUNT_KEY));
-                instructor.setStatus(InstructorStatus.Pending);
-                instructor.setDescription("description");
-                instructor.setProfilePicURL("pictureURL");
-                return instructor;
-            } else {
-                return null;
-            }
-        });
+        lenient().when(instructorDao.findInstructorByAccountRoleId(anyInt()))
+                .thenAnswer((InvocationOnMock invocation) -> {
+                    if (invocation.getArgument(0).equals(APPROVED_INSTRUCTOR_KEY)) {
+                        Instructor instructor = new Instructor();
+                        instructor.setAccount(accountDao.findAccountByAccountId(APPROVED_INSTRUCTOR_ACCOUNT_KEY));
+                        instructor.setStatus(InstructorStatus.Active);
+                        instructor.setDescription("description");
+                        instructor.setProfilePicURL("pictureURL");
+                        return instructor;
+                    } else if (invocation.getArgument(0).equals(DISAPPROVED_INSTRUCTOR_KEY)) {
+                        Instructor instructor = new Instructor();
+                        instructor.setAccount(accountDao.findAccountByAccountId(DISAPPROVED_INSTRUCTOR_ACCOUNT_KEY));
+                        instructor.setStatus(InstructorStatus.Pending);
+                        instructor.setDescription("description");
+                        instructor.setProfilePicURL("pictureURL");
+                        return instructor;
+                    } else {
+                        return null;
+                    }
+                });
 
-        when(activityDao.findActivityByName(anyString())).thenAnswer((InvocationOnMock invocation) -> {
+        lenient().when(activityDao.findActivityByName(anyString())).thenAnswer((InvocationOnMock invocation) -> {
             if (invocation.getArgument(0).equals(APPROVED_ACTIVITY_KEY)) {
                 Activity activity = new Activity();
                 activity.setName("activity");
@@ -159,7 +151,7 @@ public class TestScheduledActivityService {
             }
         });
 
-        when(scheduledActivityDao.findScheduledActivityByScheduledActivityId(anyInt()))
+        lenient().when(scheduledActivityDao.findScheduledActivityByScheduledActivityId(anyInt()))
                 .thenAnswer((InvocationOnMock invocation) -> {
                     if (invocation.getArgument(0).equals(SCHEDULED_ACTIVITY_KEY)) {
                         ScheduledActivity scheduledActivity = new ScheduledActivity();
@@ -183,10 +175,11 @@ public class TestScheduledActivityService {
             return invocation.getArgument(0);
         };
 
-        when(scheduledActivityDao.save(any(ScheduledActivity.class))).thenAnswer(returnParameterAsAnswer);
-        when(accountDao.save(any(Account.class))).thenAnswer(returnParameterAsAnswer);
-        when(instructorDao.save(any(Instructor.class))).thenAnswer(returnParameterAsAnswer);
-        when(activityDao.save(any(Activity.class))).thenAnswer(returnParameterAsAnswer);
+        // MATHIAS DELETED THIS
+        lenient().when(scheduledActivityDao.save(any(ScheduledActivity.class))).thenAnswer(returnParameterAsAnswer);
+        lenient().when(accountDao.save(any(Account.class))).thenAnswer(returnParameterAsAnswer);
+        lenient().when(instructorDao.save(any(Instructor.class))).thenAnswer(returnParameterAsAnswer);
+        lenient().when(activityDao.save(any(Activity.class))).thenAnswer(returnParameterAsAnswer);
 
     }
 
@@ -201,7 +194,7 @@ public class TestScheduledActivityService {
             scheduledActivity = scheduledActivityService.createScheduledActivity(DATE, START_TIME, END_TIME,
                     APPROVED_INSTRUCTOR_KEY, APPROVED_ACTIVITY_KEY, CAPACITY);
         } catch (IllegalArgumentException e) {
-            fail();
+            fail(e.getMessage());
         }
 
         assertNotNull(scheduledActivity);
@@ -220,7 +213,7 @@ public class TestScheduledActivityService {
     public void testCreateScheduledActivityNullDate() {
         String error = null;
         try {
-            ScheduledActivity scheduledActivity = scheduledActivityService.createScheduledActivity(null, START_TIME,
+            scheduledActivityService.createScheduledActivity(null, START_TIME,
                     END_TIME, APPROVED_INSTRUCTOR_KEY, APPROVED_ACTIVITY_KEY, CAPACITY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
@@ -236,7 +229,7 @@ public class TestScheduledActivityService {
     public void testCreateScheduledActivityNullStartTime() {
         String error = null;
         try {
-            ScheduledActivity scheduledActivity = scheduledActivityService.createScheduledActivity(DATE, null, END_TIME,
+            scheduledActivityService.createScheduledActivity(DATE, null, END_TIME,
                     APPROVED_INSTRUCTOR_KEY, APPROVED_ACTIVITY_KEY, CAPACITY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
@@ -252,7 +245,7 @@ public class TestScheduledActivityService {
     public void testCreateScheduledActivityNullEndTime() {
         String error = null;
         try {
-            ScheduledActivity scheduledActivity = scheduledActivityService.createScheduledActivity(DATE, START_TIME,
+            scheduledActivityService.createScheduledActivity(DATE, START_TIME,
                     null,
                     APPROVED_INSTRUCTOR_KEY, APPROVED_ACTIVITY_KEY, CAPACITY);
         } catch (IllegalArgumentException e) {
@@ -269,13 +262,13 @@ public class TestScheduledActivityService {
     public void testCreateScheduledActivityNullInstructor() {
         String error = null;
         try {
-            ScheduledActivity scheduledActivity = scheduledActivityService.createScheduledActivity(DATE, START_TIME,
+            scheduledActivityService.createScheduledActivity(DATE, START_TIME,
                     END_TIME, -1, APPROVED_ACTIVITY_KEY, CAPACITY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
 
-        assertEquals("Instructor cannot be empty!", error);
+        assertEquals("Instructor Id must be greater than 0", error);
     }
 
     /**
@@ -285,13 +278,13 @@ public class TestScheduledActivityService {
     public void testCreateScheduledActivityNullActivity() {
         String error = null;
         try {
-            ScheduledActivity scheduledActivity = scheduledActivityService.createScheduledActivity(DATE, START_TIME,
+            scheduledActivityService.createScheduledActivity(DATE, START_TIME,
                     END_TIME, APPROVED_INSTRUCTOR_KEY, null, CAPACITY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
 
-        assertEquals("Scheduled Activity cannot be empty!", error);
+        assertEquals("Activity name cannot be empty!", error);
     }
 
     /**
@@ -302,7 +295,7 @@ public class TestScheduledActivityService {
     public void testCreateScheduledActivityStartTimeAfterEndTime() {
         String error = null;
         try {
-            ScheduledActivity scheduledActivity = scheduledActivityService.createScheduledActivity(DATE, END_TIME,
+            scheduledActivityService.createScheduledActivity(DATE, END_TIME,
                     START_TIME, APPROVED_INSTRUCTOR_KEY, APPROVED_ACTIVITY_KEY, CAPACITY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
@@ -314,6 +307,7 @@ public class TestScheduledActivityService {
     /**
      * Tests updating the date and time of a scheduled activity -> Success
      */
+    @SuppressWarnings("null")
     @Test
     public void testUpdateScheduledActivityByDateAndTime() {
         LocalDate oldDate = scheduledActivityDao.findScheduledActivityByScheduledActivityId(SCHEDULED_ACTIVITY_KEY)
@@ -323,7 +317,7 @@ public class TestScheduledActivityService {
         LocalTime oldEndTime = scheduledActivityDao.findScheduledActivityByScheduledActivityId(SCHEDULED_ACTIVITY_KEY)
                 .getEndTime();
 
-        ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivityByDateAndTime(
+        scheduledActivityService.updateScheduledActivityByDateAndTime(
                 SCHEDULED_ACTIVITY_KEY, DATE, oldDate, START_TIME, oldStartTime, END_TIME, oldEndTime);
         verify(scheduledActivityDao, times(1)).save(any(ScheduledActivity.class));
     }
@@ -343,7 +337,7 @@ public class TestScheduledActivityService {
 
         String error = null;
         try {
-            ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivityByDateAndTime(
+            scheduledActivityService.updateScheduledActivityByDateAndTime(
                     SCHEDULED_ACTIVITY_KEY, null, oldDate, START_TIME, oldStartTime, END_TIME, oldEndTime);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
@@ -367,7 +361,7 @@ public class TestScheduledActivityService {
 
         String error = null;
         try {
-            ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivityByDateAndTime(
+            scheduledActivityService.updateScheduledActivityByDateAndTime(
                     SCHEDULED_ACTIVITY_KEY, DATE, oldDate, null, oldStartTime, END_TIME, oldEndTime);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
@@ -391,7 +385,7 @@ public class TestScheduledActivityService {
 
         String error = null;
         try {
-            ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivityByDateAndTime(
+            scheduledActivityService.updateScheduledActivityByDateAndTime(
                     SCHEDULED_ACTIVITY_KEY, DATE, oldDate, START_TIME, oldStartTime, null, oldEndTime);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
@@ -403,13 +397,14 @@ public class TestScheduledActivityService {
     /**
      * Tests updating the instructor of a scheduled activity -> Success
      */
+    @SuppressWarnings("null")
     @Test
     public void testUpdateScheduledActivityInstructor() {
         int oldAccountRoleId = scheduledActivityDao.findScheduledActivityByScheduledActivityId(SCHEDULED_ACTIVITY_KEY)
                 .getSupervisor().getAccountRoleId();
         int newAccountRoleId = APPROVED_INSTRUCTOR_KEY;
 
-        ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivityInstructor(
+        scheduledActivityService.updateScheduledActivityInstructor(
                 SCHEDULED_ACTIVITY_KEY, newAccountRoleId, oldAccountRoleId);
         verify(scheduledActivityDao, times(1)).save(any(ScheduledActivity.class));
     }
@@ -426,13 +421,13 @@ public class TestScheduledActivityService {
 
         String error = null;
         try {
-            ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivityInstructor(
+            scheduledActivityService.updateScheduledActivityInstructor(
                     SCHEDULED_ACTIVITY_KEY, newAccountRoleId, oldAccountRoleId);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
 
-        assertEquals("Instructor cannot be empty!", error);
+        assertEquals("Instructor Id cannot be negative!", error);
     }
 
     /**
@@ -440,13 +435,25 @@ public class TestScheduledActivityService {
      */
     @Test
     public void testUpdateScheduledActivityActivity() {
-        String oldActivityName = scheduledActivityDao.findScheduledActivityByScheduledActivityId(SCHEDULED_ACTIVITY_KEY)
-                .getActivity().getName();
-        String newActivityName = APPROVED_ACTIVITY_KEY;
+        // String oldActivityName =
+        // scheduledActivityDao.findScheduledActivityByScheduledActivityId(SCHEDULED_ACTIVITY_KEY)
+        // .getActivity().getName();
+        // String newActivityName = APPROVED_ACTIVITY_KEY;
 
-        ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivityActivity(
-                SCHEDULED_ACTIVITY_KEY, newActivityName, oldActivityName);
-        verify(scheduledActivityDao, times(1)).save(any(ScheduledActivity.class));
+        // scheduledActivityService.updateScheduledActivityActivity(
+        // SCHEDULED_ACTIVITY_KEY, newActivityName, oldActivityName);
+        // verify(scheduledActivityDao, times(1)).save(any(ScheduledActivity.class));
+        ScheduledActivity scheduledActivity = null;
+
+        try {
+            scheduledActivity = scheduledActivityService.updateScheduledActivityActivity(
+                    SCHEDULED_ACTIVITY_KEY, APPROVED_ACTIVITY_KEY, DISAPPROVED_ACTIVITY_KEY);
+        } catch (IllegalArgumentException e) {
+            fail(e.getMessage());
+        }
+
+        assertNotNull(scheduledActivity);
+        assertEquals(APPROVED_ACTIVITY_KEY, scheduledActivity.getActivity().getName());
     }
 
     /**
@@ -461,13 +468,13 @@ public class TestScheduledActivityService {
 
         String error = null;
         try {
-            ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivityActivity(
+            scheduledActivityService.updateScheduledActivityActivity(
                     SCHEDULED_ACTIVITY_KEY, newActivityName, oldActivityName);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
 
-        assertEquals("Scheduled Activity cannot be empty!", error);
+        assertEquals("Activity name cannot be empty!", error);
     }
 
     /**
@@ -485,7 +492,7 @@ public class TestScheduledActivityService {
 
         String error = null;
         try {
-            ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivityByDateAndTime(
+            scheduledActivityService.updateScheduledActivityByDateAndTime(
                     SCHEDULED_ACTIVITY_KEY, DATE, oldDate, END_TIME, oldStartTime, START_TIME, oldEndTime);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
@@ -497,13 +504,14 @@ public class TestScheduledActivityService {
     /**
      * Tests updating the capacity of a scheduled activity -> Success
      */
+    @SuppressWarnings("null")
     @Test
     public void testUpdateScheduledActivityCapacity() {
         int oldCapacity = scheduledActivityDao.findScheduledActivityByScheduledActivityId(SCHEDULED_ACTIVITY_KEY)
                 .getCapacity();
         int newCapacity = 20;
 
-        ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivityCapacity(
+        scheduledActivityService.updateScheduledActivityCapacity(
                 SCHEDULED_ACTIVITY_KEY, newCapacity, oldCapacity);
         verify(scheduledActivityDao, times(1)).save(any(ScheduledActivity.class));
     }
@@ -520,13 +528,13 @@ public class TestScheduledActivityService {
 
         String error = null;
         try {
-            ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivityCapacity(
+            scheduledActivityService.updateScheduledActivityCapacity(
                     SCHEDULED_ACTIVITY_KEY, newCapacity, oldCapacity);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
 
-        assertEquals("Capacity cannot be negative!", error);
+        assertEquals("Capacity must be greater than 0!", error);
     }
 
     /**
@@ -537,18 +545,19 @@ public class TestScheduledActivityService {
     public void testUpdateScheduledActivityNullActivity() {
         String error = null;
         try {
-            ScheduledActivity updatedScheduledActivity = scheduledActivityService.updateScheduledActivityActivity(
+            scheduledActivityService.updateScheduledActivityActivity(
                     SCHEDULED_ACTIVITY_KEY, null, DISAPPROVED_ACTIVITY_KEY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
 
-        assertEquals("Scheduled Activity cannot be empty!", error);
+        assertEquals("Activity name cannot be empty!", error);
     }
 
     /**
      * Tests deleting a scheduled activity -> Success
      */
+    @SuppressWarnings("null")
     @Test
     public void testDeleteScheduledActivity() {
         int scheduledActivityId = SCHEDULED_ACTIVITY_KEY;
@@ -556,6 +565,11 @@ public class TestScheduledActivityService {
         when(scheduledActivityDao.findScheduledActivityByScheduledActivityId(scheduledActivityId))
                 .thenReturn(new ScheduledActivity());
 
+        try {
+            scheduledActivityService.deleteScheduledActivity(scheduledActivityId);
+        } catch (IllegalArgumentException e) {
+            fail(e.getMessage());
+        }
         scheduledActivityService.deleteScheduledActivity(scheduledActivityId);
         verify(scheduledActivityDao, times(1)).delete(any(ScheduledActivity.class));
     }
