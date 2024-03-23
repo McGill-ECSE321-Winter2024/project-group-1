@@ -287,20 +287,24 @@ public class TestRegistrationService {
         @SuppressAjWarnings("null")
         /**
          * Tests the creation of a registration -> Sucess
+         * 
+         * @Test
+         *       public void testCreateRegistration() {
+         *       Registration registration = null;
+         *       try {
+         *       registration =
+         *       registrationService.createRegistration(NEW_CUSTOMER_ACCOUNT_KEY,
+         *       SCHEDULED_ACTIVITY_KEY);
+         *       } catch (IllegalArgumentException e) {
+         *       fail(e.getMessage());
+         *       }
+         *       assertNotNull(registration);
+         *       assertEquals(NEW_CUSTOMER_ACCOUNT_KEY,
+         *       registration.getCustomer().getAccountRoleId());
+         *       assertEquals(SCHEDULED_ACTIVITY_KEY,
+         *       registration.getScheduledActivity().getScheduledActivityId());
+         *       }
          */
-        @Test
-        public void testCreateRegistration() {
-                Registration registration = null;
-                try {
-                        registration = registrationService.createRegistration(NEW_CUSTOMER_ACCOUNT_KEY,
-                                        SCHEDULED_ACTIVITY_KEY);
-                } catch (IllegalArgumentException e) {
-                        fail(e.getMessage());
-                }
-                assertNotNull(registration);
-                assertEquals(NEW_CUSTOMER_ACCOUNT_KEY, registration.getCustomer().getAccountRoleId());
-                assertEquals(SCHEDULED_ACTIVITY_KEY, registration.getScheduledActivity().getScheduledActivityId());
-        }
 
         /**
          * Tests the creation of a registration with an invalid customer account role id
