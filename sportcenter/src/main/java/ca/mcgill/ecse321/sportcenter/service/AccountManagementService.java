@@ -14,6 +14,7 @@ import ca.mcgill.ecse321.sportcenter.dao.InstructorRepository;
 import ca.mcgill.ecse321.sportcenter.model.Customer;
 import ca.mcgill.ecse321.sportcenter.model.Instructor;
 import ca.mcgill.ecse321.sportcenter.model.Instructor.InstructorStatus;
+import jakarta.persistence.criteria.CriteriaBuilder.In;
 import ca.mcgill.ecse321.sportcenter.model.Owner;
 import ca.mcgill.ecse321.sportcenter.dao.OwnerRepository;
 
@@ -122,11 +123,16 @@ public class AccountManagementService {
         }
 
         Account account = accountRepository.findAccountByUsername(username);
-        if (account != null) {
-            throw new IllegalArgumentException("Account already exists!");
+        if (account == null) {
+            throw new IllegalArgumentException("Account does not exist!");
         }
 
-        Instructor instructor = new Instructor(InstructorStatus.Pending, description, profilePicURL, account);
+        Instructor instructor = instructorRepository.findInstructorByAccountRoleId(account.getAccountId());
+        if (instructor != null) {
+            throw new IllegalArgumentException("Instructor already exists!");
+        }
+
+        instructor = new Instructor(InstructorStatus.Pending, description, profilePicURL, account);
         instructorRepository.save(instructor);
         return instructor;
     }

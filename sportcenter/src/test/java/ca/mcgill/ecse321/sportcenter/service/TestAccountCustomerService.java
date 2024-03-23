@@ -56,6 +56,15 @@ public class TestAccountCustomerService {
     @InjectMocks
     private AccountManagementService accountManagementService;
 
+    @Mock
+    private ScheduledActivityManagementService scheduledActivityManagementService;
+
+    @Mock
+    private ActivityManagementService activityManagementService;
+
+    @Mock
+    private ScheduledActivityManagementService scheduledActivityService;
+
     @SuppressWarnings("null")
     @BeforeEach
     void setMockOutput() {
@@ -146,7 +155,7 @@ public class TestAccountCustomerService {
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
-        assertEquals("Username cannot be empty!", error);
+        assertEquals("Username cannot be null, empty and spaces!", error);
     }
 
     // test create customer empty -> fail
@@ -160,7 +169,7 @@ public class TestAccountCustomerService {
             error = e.getMessage();
         }
         assertNull(customer);
-        assertEquals("Username cannot be empty!", error);
+        assertEquals("Username cannot be null, empty and spaces!", error);
     }
 
     // test create customer whitespace -> fail
@@ -174,7 +183,7 @@ public class TestAccountCustomerService {
             error = e.getMessage();
         }
         assertNull(customer);
-        assertEquals("Username cannot be empty!", error);
+        assertEquals("Username cannot be null, empty and spaces!", error);
     }
 
     // test get customer account byits accountRoleId -> success

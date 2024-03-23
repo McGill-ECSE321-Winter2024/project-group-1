@@ -3,17 +3,24 @@ package ca.mcgill.ecse321.sportcenter.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.aspectj.lang.annotation.SuppressAjWarnings;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.stubbing.Answer;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.sportcenter.dao.AccountRepository;
@@ -24,6 +31,7 @@ import ca.mcgill.ecse321.sportcenter.dao.OwnerRepository;
 import ca.mcgill.ecse321.sportcenter.model.Account;
 import ca.mcgill.ecse321.sportcenter.model.Instructor;
 import ca.mcgill.ecse321.sportcenter.model.Instructor.InstructorStatus;
+import jakarta.persistence.criteria.CriteriaBuilder.In;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
@@ -33,55 +41,105 @@ public class TestAccountInstructorService {
     private AccountRepository accountRepository;
 
     @Mock
-    private CustomerRepository customerRepository;
-
-    @Mock
-    private OwnerRepository ownerRepository;
-
-    @Mock
-    private ActivityRepository activityRepository;
-
-    @Mock
     private InstructorRepository instructorRepository;
+
+    // Account AccountId
+    private static final String USERNAME = "Shakira";
+    private static final String USERNAME_NONDUPLICATE = "ShakiraBella";
+
+    // AccountRole AccountRoleId
+    private static final int Approved_AccountRoleId = 1;
+    private static final int Pending_AccountRoleId = 2;
+    private static final int Disaproved_AccountRoleId = 3;
 
     @InjectMocks
     private AccountManagementService accountService;
 
+    @SuppressWarnings("null")
+    @BeforeEach
+    void setMockOutput() {
+        lenient().when(accountRepository.findAccountByUsername(anyString()))
+                .thenAnswer((InvocationOnMock invocation) -> {
+                    if (invocation.getArgument(0).equals(USERNAME)) {
+                        Account account = new Account();
+                        account.setUsername(USERNAME);
+                        account.setPassword("password");
+                        account.setAccountId(1);
+                        return account;
+                    } else if (invocation.getArgument(0).equals(USERNAME_NONDUPLICATE)) {
+                        Account account = new Account();
+                        account.setUsername(USERNAME_NONDUPLICATE);
+                        account.setPassword("password");
+                        account.setAccountId(2);
+                        return account;
+                    } else {
+                        return null;
+                    }
+                });
+
+        lenient().when(instructorRepository.findInstructorByAccountRoleId(anyInt()))
+                .thenAnswer((InvocationOnMock invocation) -> {
+                    if (invocation.getArgument(0).equals(Approved_AccountRoleId)) {
+                        Instructor instructor = new Instructor();
+                        instructor.setAccount(accountRepository.findAccountByUsername(USERNAME));
+                        instructor.setDescription("approved_description");
+                        instructor.setStatus(InstructorStatus.Active);
+                        instructor.setProfilePicURL("profilePicURL");
+                        instructor.setAccountRoleId(Approved_AccountRoleId);
+                        return instructor;
+                    }
+                    if (invocation.getArgument(0).equals(Pending_AccountRoleId)) {
+                        Instructor instructor = new Instructor();
+                        instructor.setAccount(accountRepository.findAccountByUsername(USERNAME));
+                        instructor.setDescription("pending_description");
+                        instructor.setStatus(InstructorStatus.Pending);
+                        instructor.setProfilePicURL("profilePicURL");
+                        instructor.setAccountRoleId(Pending_AccountRoleId);
+                        return instructor;
+                    }
+                    if (invocation.getArgument(0).equals(Disaproved_AccountRoleId)) {
+                        Instructor instructor = new Instructor();
+                        instructor.setAccount(accountRepository.findAccountByUsername(USERNAME));
+                        instructor.setDescription("disapproved_description");
+                        instructor.setStatus(InstructorStatus.Inactive);
+                        instructor.setProfilePicURL("profilePicURL");
+                        instructor.setAccountRoleId(Disaproved_AccountRoleId);
+                        return instructor;
+                    } else {
+                        return null;
+                    }
+                });
+
+        Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> {
+            return invocation.getArgument(0);
+        };
+        when(accountRepository.save(any(Account.class))).thenAnswer(returnParameterAsAnswer);
+        when(instructorRepository.save(any(Instructor.class))).thenAnswer(returnParameterAsAnswer);
+    }
+
+    @SuppressAjWarnings("null")
     @Test
     public void testCreateInstructor() {
-        String username = "Shakira";
-        String password = "anastasia";
-        String description = "Made hips don't lie";
-        String image = "image1";
-
-        Account account = new Account(username, password);
-        when(accountRepository.save(any(Account.class)))
-                .thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
-
-        Instructor instructor = accountService.createInstructor(username, InstructorStatus.Pending, description, image);
-
+        Instructor instructor = null;
+        try {
+            instructor = accountService.createInstructor(USERNAME_NONDUPLICATE, InstructorStatus.Pending, "description",
+                    "image");
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            fail();
+        }
         assertNotNull(instructor);
-        assertEquals(username, instructor.getAccount().getUsername());
-        assertEquals(password, instructor.getAccount().getPassword());
-        assertEquals(description, instructor.getDescription());
-        assertEquals(image, instructor.getProfilePicURL());
+        assertEquals(USERNAME_NONDUPLICATE, instructor.getAccount().getUsername());
+        assertEquals("description", instructor.getDescription());
+        assertEquals("image", instructor.getProfilePicURL());
     }
 
     @Test
     public void testCreateInstructorUsernameNull() { // make an empty username
-        String username = null;
-        String password = "anastasia";
-        String description = "Made hips don't lie";
-        String image = "image1";
-
-        Account account = new Account(username, password);
-        when(accountRepository.save(any(Account.class)))
-                .thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
-
         Instructor instructor = null;
 
         try {
-            instructor = accountService.createInstructor(username, InstructorStatus.Pending, description, image);
+            instructor = accountService.createInstructor(USERNAME, InstructorStatus.Pending, "description", "image");
         } catch (IllegalArgumentException e) {
             assertEquals("Username cannot be empty!", e.getMessage());
             assertNull(instructor);
