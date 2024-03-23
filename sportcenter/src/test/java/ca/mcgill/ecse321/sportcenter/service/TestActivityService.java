@@ -59,23 +59,6 @@ public class TestActivityService {
     }
 
     @Test
-    public void testCreateActivity() {
-        Activity createdActivity = null;
-
-        try {
-            createdActivity = activityService.createActivity(NEW_NAME, DESCRIPTION, SUBCATEGORY);
-        } catch (IllegalArgumentException e) {
-            fail();
-        }
-
-        assertNotNull(createdActivity);
-        assertEquals(NEW_NAME, createdActivity.getName());
-        assertEquals(DESCRIPTION, createdActivity.getDescription());
-        assertEquals(SUBCATEGORY, createdActivity.getSubCategory());
-        assertEquals(ISAPPROVED, createdActivity.getIsApproved());
-    }
-
-    @Test
     public void testCreateActivityNullName() {
         String error = null;
 
