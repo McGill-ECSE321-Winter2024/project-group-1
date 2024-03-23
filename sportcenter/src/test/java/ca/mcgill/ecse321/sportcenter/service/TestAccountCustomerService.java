@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.aspectj.lang.annotation.SuppressAjWarnings;
-import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -59,6 +58,15 @@ public class TestAccountCustomerService {
 
     @InjectMocks
     private AccountManagementService accountManagementService;
+
+    @Mock
+    private ScheduledActivityManagementService scheduledActivityManagementService;
+
+    @Mock
+    private ActivityManagementService activityManagementService;
+
+    @Mock
+    private ScheduledActivityManagementService scheduledActivityService;
 
     @SuppressWarnings("null")
     @BeforeEach
@@ -150,7 +158,7 @@ public class TestAccountCustomerService {
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
-        assertEquals("Username cannot be empty!", error);
+        assertEquals("Username cannot be null, empty and spaces!", error);
     }
 
     // test create customer empty -> fail
@@ -164,7 +172,7 @@ public class TestAccountCustomerService {
             error = e.getMessage();
         }
         assertNull(customer);
-        assertEquals("Username cannot be empty!", error);
+        assertEquals("Username cannot be null, empty and spaces!", error);
     }
 
     // test create customer whitespace -> fail
@@ -178,7 +186,7 @@ public class TestAccountCustomerService {
             error = e.getMessage();
         }
         assertNull(customer);
-        assertEquals("Username cannot be empty!", error);
+        assertEquals("Username cannot be null, empty and spaces!", error);
     }
 
     // test get customer account byits accountRoleId -> success
