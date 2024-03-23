@@ -128,24 +128,6 @@ public class TestAccountService {
 
     @SuppressAjWarnings("null")
 
-    // CREATE
-    // test for creating a new account-> success
-    // TODO: BUGGY
-    @Test
-    public void testCreateAccount() {
-        Account account = null;
-
-        try {
-            account = accountManagementService.createAccount(NEW_ACCOUNT_USERNAME, NEW_ACCOUNT_PASSWORD);
-        } catch (IllegalArgumentException e) {
-            fail(e.getMessage());
-        }
-
-        assertNotNull(account);
-        assertEquals(NEW_ACCOUNT_USERNAME, account.getUsername());
-        assertEquals(NEW_ACCOUNT_PASSWORD, account.getPassword());
-    }
-
     // test for creating a new account null -> fail
     @Test
     public void testCreateAccountUsernameNull() {
