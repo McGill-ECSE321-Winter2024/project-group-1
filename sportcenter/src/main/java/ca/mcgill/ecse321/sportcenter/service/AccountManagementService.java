@@ -92,7 +92,6 @@ public class AccountManagementService {
         if (account == null) {
             throw new IllegalArgumentException("Account does not exist!");
         }
-
         Customer customer = new Customer();
         customer.setAccount(account);
         customerRepository.save(customer);

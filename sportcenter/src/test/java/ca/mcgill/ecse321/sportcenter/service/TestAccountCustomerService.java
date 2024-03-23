@@ -71,7 +71,7 @@ public class TestAccountCustomerService {
         lenient().when(accountRepository.findAccountByAccountId(anyInt())).thenAnswer((InvocationOnMock invocation) -> {
             if (invocation.getArgument(0).equals(CUSTOMER_ACCOUNT_KEY)) {
                 Account account = new Account();
-                account.setUsername("customer");
+                account.setUsername(CUSTOMER_USERNAME);
                 account.setPassword("password");
                 account.setAccountId(CUSTOMER_ACCOUNT_KEY);
                 return account;
@@ -97,6 +97,19 @@ public class TestAccountCustomerService {
                 return null;
             }
         });
+
+        lenient().when(accountRepository.findAccountByUsername(anyString()))
+                .thenAnswer((InvocationOnMock invocation) -> {
+                    if (invocation.getArgument(0).equals(CUSTOMER_USERNAME)) {
+                        Account account = new Account();
+                        account.setUsername(CUSTOMER_USERNAME);
+                        account.setPassword("password");
+                        account.setAccountId(CUSTOMER_ACCOUNT_KEY);
+                        return account;
+                    } else {
+                        return null;
+                    }
+                });
 
         lenient().when(customerRepository.findCustomerByAccountRoleId(anyInt()))
                 .thenAnswer((InvocationOnMock invocation) -> {
@@ -134,13 +147,12 @@ public class TestAccountCustomerService {
 
     // test sucessful creation of a customer account
     @Test
-    public void testCreateCustomerAccount() {
+    public void testCreateCustomer() {
         Customer customer = null;
         try {
             customer = accountManagementService.createCustomer(CUSTOMER_USERNAME);
         } catch (IllegalArgumentException e) {
-            // Check that no error occurred
-            fail();
+            fail(e.getMessage());
         }
         assertNotNull(customer);
         assertEquals(CUSTOMER_USERNAME, customer.getAccount().getUsername());
@@ -211,7 +223,7 @@ public class TestAccountCustomerService {
             error = e.getMessage();
         }
         assertNull(customer);
-        assertEquals("Customer not found", error);
+        assertEquals("Customer does not exist!", error);
     }
 
     // test get customer account by its accountId -> success
@@ -239,7 +251,7 @@ public class TestAccountCustomerService {
             error = e.getMessage();
         }
         assertNull(customer);
-        assertEquals("Customer not found", error);
+        assertEquals("Account does not exist!", error);
     }
 
     // test get customer account by its username -> success
@@ -267,7 +279,7 @@ public class TestAccountCustomerService {
             error = e.getMessage();
         }
         assertNull(customer);
-        assertEquals("Customer not found", error);
+        assertEquals("Account does not exist!", error);
     }
 
     // test get customer account by its username -> null, fail
@@ -344,7 +356,7 @@ public class TestAccountCustomerService {
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
-        assertEquals("Customer not found", error);
+        assertEquals("Customer does not exist!", error);
     }
 
     // test delete customer account by accountId -> success
@@ -371,7 +383,7 @@ public class TestAccountCustomerService {
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
-        assertEquals("Customer not found", error);
+        assertEquals("Account does not exist!", error);
     }
 
     // test delete customer account by username -> success
@@ -398,7 +410,7 @@ public class TestAccountCustomerService {
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
-        assertEquals("Customer not found", error);
+        assertEquals("Account does not exist!", error);
     }
 
     // test delete customer account by username -> null, fail
@@ -410,7 +422,7 @@ public class TestAccountCustomerService {
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
-        assertEquals("Username cannot be empty!", error);
+        assertEquals("Username cannot be null, empty and spaces!", error);
     }
 
     // test delete customer account by username -> empty, fail
@@ -422,7 +434,7 @@ public class TestAccountCustomerService {
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
-        assertEquals("Username cannot be empty!", error);
+        assertEquals("Username cannot be null, empty and spaces!", error);
     }
 
     // test delete customer account by username -> whitespace, fail
@@ -434,7 +446,7 @@ public class TestAccountCustomerService {
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
-        assertEquals("Username cannot be empty!", error);
+        assertEquals("Username cannot be null, empty and spaces!", error);
     }
 
     /**
