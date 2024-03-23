@@ -191,6 +191,7 @@ public class RegistrationManagementService {
         if (scheduledActivityRepository.findScheduledActivityByScheduledActivityId(scheduledActivityId) == null) {
             throw new IllegalArgumentException("Scheduled activity does not exist");
         }
+
         for (Registration registration : registrationRepository.findAll()) {
             if (registration.getCustomer().getAccountRoleId() == accountRoleId
                     && registration.getScheduledActivity().getScheduledActivityId() == scheduledActivityId) {
@@ -278,14 +279,6 @@ public class RegistrationManagementService {
             throw new IllegalArgumentException("Registration does not exist");
         }
         registrationRepository.deleteById(registrationId);
-    }
-
-    /**
-     * Delete all registrations
-     */
-    @Transactional
-    public void deleteAllRegistrations() {
-        registrationRepository.deleteAll();
     }
 
     /**

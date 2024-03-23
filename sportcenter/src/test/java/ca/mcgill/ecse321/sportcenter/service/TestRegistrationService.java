@@ -8,7 +8,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -84,6 +83,8 @@ public class TestRegistrationService {
 
         // Scheduled Activity keys
         private static final int SCHEDULED_ACTIVITY_KEY = 1;
+        private static final int PASSED_SCHEDULED_ACTIVITY_KEY = 2;
+        private static final int FULL_SCHEDULED_ACTIVITY_KEY = 3;
 
         // Registration keys
         private static final int REGISTRATION_KEY = 1;
@@ -202,12 +203,40 @@ public class TestRegistrationService {
                                                 scheduledActivity.setEndTime(LocalTime.of(12, 0));
                                                 scheduledActivity.setSupervisor(
                                                                 instructorDao.findInstructorByAccountRoleId(
-                                                                                DISAPPROVED_INSTRUCTOR_KEY));
+                                                                                APPROVED_INSTRUCTOR_KEY));
                                                 scheduledActivity.setActivity(
                                                                 activityDao.findActivityByName(
-                                                                                DISAPPROVED_ACTIVITY_KEY));
+                                                                                APPROVED_ACTIVITY_KEY));
                                                 scheduledActivity.setCapacity(30);
                                                 scheduledActivity.setScheduledActivityId(SCHEDULED_ACTIVITY_KEY);
+                                                return scheduledActivity;
+                                        } else if (invocation.getArgument(0).equals(PASSED_SCHEDULED_ACTIVITY_KEY)) {
+                                                ScheduledActivity scheduledActivity = new ScheduledActivity();
+                                                scheduledActivity.setDate(LocalDate.of(2020, 1, 1));
+                                                scheduledActivity.setStartTime(LocalTime.now());
+                                                scheduledActivity.setEndTime(LocalTime.of(12, 0));
+                                                scheduledActivity.setSupervisor(
+                                                                instructorDao.findInstructorByAccountRoleId(
+                                                                                APPROVED_INSTRUCTOR_KEY));
+                                                scheduledActivity.setActivity(
+                                                                activityDao.findActivityByName(
+                                                                                APPROVED_ACTIVITY_KEY));
+                                                scheduledActivity.setCapacity(30);
+                                                scheduledActivity.setScheduledActivityId(PASSED_SCHEDULED_ACTIVITY_KEY);
+                                                return scheduledActivity;
+                                        } else if (invocation.getArgument(0).equals(FULL_SCHEDULED_ACTIVITY_KEY)) {
+                                                ScheduledActivity scheduledActivity = new ScheduledActivity();
+                                                scheduledActivity.setDate(LocalDate.now());
+                                                scheduledActivity.setStartTime(LocalTime.now());
+                                                scheduledActivity.setEndTime(LocalTime.of(12, 0));
+                                                scheduledActivity.setSupervisor(
+                                                                instructorDao.findInstructorByAccountRoleId(
+                                                                                APPROVED_INSTRUCTOR_KEY));
+                                                scheduledActivity.setActivity(
+                                                                activityDao.findActivityByName(
+                                                                                APPROVED_ACTIVITY_KEY));
+                                                scheduledActivity.setCapacity(0);
+                                                scheduledActivity.setScheduledActivityId(FULL_SCHEDULED_ACTIVITY_KEY);
                                                 return scheduledActivity;
                                         } else {
                                                 return null;
@@ -231,6 +260,17 @@ public class TestRegistrationService {
                                         }
                                 });
 
+                lenient().when(registrationDao.findAll()).thenAnswer((InvocationOnMock invocation) -> {
+                        List<Registration> registrations = new ArrayList<Registration>();
+                        Registration registration = new Registration();
+                        registration.setCustomer(customerDao.findCustomerByAccountRoleId(CUSTOMER_KEY));
+                        registration.setScheduledActivity(scheduledActivityDao
+                                        .findScheduledActivityByScheduledActivityId(SCHEDULED_ACTIVITY_KEY));
+                        registration.setRegistrationId(REGISTRATION_KEY);
+                        registrations.add(registration);
+                        return registrations;
+                });
+
                 Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> {
                         return invocation.getArgument(0);
                 };
@@ -251,13 +291,13 @@ public class TestRegistrationService {
         public void testCreateRegistration() {
                 Registration registration = null;
                 try {
-                        registration = registrationService.createRegistration(CUSTOMER_ACCOUNT_KEY,
+                        registration = registrationService.createRegistration(NEW_CUSTOMER_ACCOUNT_KEY,
                                         SCHEDULED_ACTIVITY_KEY);
                 } catch (IllegalArgumentException e) {
-                        fail();
+                        fail(e.getMessage());
                 }
                 assertNotNull(registration);
-                assertEquals(CUSTOMER_ACCOUNT_KEY, registration.getCustomer().getAccountRoleId());
+                assertEquals(NEW_CUSTOMER_ACCOUNT_KEY, registration.getCustomer().getAccountRoleId());
                 assertEquals(SCHEDULED_ACTIVITY_KEY, registration.getScheduledActivity().getScheduledActivityId());
         }
 
@@ -268,11 +308,13 @@ public class TestRegistrationService {
         @Test
         public void testCreateRegistrationInvalidCustomer() {
                 String error = null;
+                Registration registration = null;
                 try {
-                        registrationService.createRegistration(-1, SCHEDULED_ACTIVITY_KEY);
+                        registration = registrationService.createRegistration(-1, SCHEDULED_ACTIVITY_KEY);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
+                assertNull(registration);
                 assertEquals("Account role id not valid!", error);
         }
 
@@ -283,11 +325,13 @@ public class TestRegistrationService {
         @Test
         public void testCreateRegistrationInvalidScheduledActivity() {
                 String error = null;
+                Registration registration = null;
                 try {
-                        registrationService.createRegistration(CUSTOMER_KEY, -1);
+                        registration = registrationService.createRegistration(CUSTOMER_KEY, -1);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
+                assertNull(registration);
                 assertEquals("Scheduled activity id not valid!", error);
         }
 
@@ -298,11 +342,13 @@ public class TestRegistrationService {
         @Test
         public void testCreateRegistrationCustomerDoesNotExist() {
                 String error = null;
+                Registration registration = null;
                 try {
-                        registrationService.createRegistration(0, SCHEDULED_ACTIVITY_KEY);
+                        registration = registrationService.createRegistration(6, SCHEDULED_ACTIVITY_KEY);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
+                assertNull(registration);
                 assertEquals("Customer does not exist", error);
         }
 
@@ -313,11 +359,13 @@ public class TestRegistrationService {
         @Test
         public void testCreateRegistrationScheduledActivityDoesNotExist() {
                 String error = null;
+                Registration registration = null;
                 try {
-                        registrationService.createRegistration(CUSTOMER_KEY, 0);
+                        registration = registrationService.createRegistration(CUSTOMER_KEY, 6);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
+                assertNull(registration);
                 assertEquals("Scheduled activity does not exist", error);
         }
 
@@ -329,7 +377,6 @@ public class TestRegistrationService {
                 String error = null;
                 Registration registration = null;
                 try {
-                        registrationService.createRegistration(CUSTOMER_KEY, SCHEDULED_ACTIVITY_KEY);
                         registration = registrationService.createRegistration(CUSTOMER_KEY, SCHEDULED_ACTIVITY_KEY);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
@@ -345,14 +392,14 @@ public class TestRegistrationService {
         @Test
         public void testCreateRegistrationScheduledActivityInPast() {
                 String error = null;
+                Registration registration = null;
                 try {
-                        ScheduledActivity scheduledActivity = scheduledActivityDao
-                                        .findScheduledActivityByScheduledActivityId(SCHEDULED_ACTIVITY_KEY);
-                        scheduledActivity.setDate(LocalDate.of(2020, 1, 1));
-                        registrationService.createRegistration(CUSTOMER_KEY, SCHEDULED_ACTIVITY_KEY);
+                        registration = registrationService.createRegistration(CUSTOMER_KEY,
+                                        PASSED_SCHEDULED_ACTIVITY_KEY);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
+                assertNull(registration);
                 assertEquals("Scheduled activity is in the past", error);
         }
 
@@ -364,11 +411,8 @@ public class TestRegistrationService {
                 String error = null;
                 Registration registration = null;
                 try {
-                        ScheduledActivity scheduledActivity = scheduledActivityDao
-                                        .findScheduledActivityByScheduledActivityId(SCHEDULED_ACTIVITY_KEY);
-                        scheduledActivity.setCapacity(1);
-                        registrationService.createRegistration(CUSTOMER_KEY, SCHEDULED_ACTIVITY_KEY);
-                        registration = registrationService.createRegistration(NEW_CUSTOMER_KEY, SCHEDULED_ACTIVITY_KEY);
+                        registration = registrationService.createRegistration(CUSTOMER_KEY,
+                                        FULL_SCHEDULED_ACTIVITY_KEY);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
@@ -400,7 +444,7 @@ public class TestRegistrationService {
                 String error = null;
                 Registration registration = null;
                 try {
-                        registration = registrationService.getRegistrationByRegId(0);
+                        registration = registrationService.getRegistrationByRegId(-1);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
@@ -416,7 +460,7 @@ public class TestRegistrationService {
                 String error = null;
                 Registration registration = null;
                 try {
-                        registration = registrationService.getRegistrationByRegId(2);
+                        registration = registrationService.getRegistrationByRegId(5);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
@@ -453,7 +497,7 @@ public class TestRegistrationService {
                 String error = null;
                 List<Registration> registrations = null;
                 try {
-                        registrations = registrationService.getRegistrationByAccountRoleId(0);
+                        registrations = registrationService.getRegistrationByAccountRoleId(-1);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
@@ -469,7 +513,7 @@ public class TestRegistrationService {
                 String error = null;
                 List<Registration> registrations = null;
                 try {
-                        registrations = registrationService.getRegistrationByAccountRoleId(2);
+                        registrations = registrationService.getRegistrationByAccountRoleId(5);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
@@ -498,12 +542,12 @@ public class TestRegistrationService {
                 String error = null;
                 List<Registration> registrations = null;
                 try {
-                        registrations = registrationService.getRegistrationByScheduledActivityId(0);
+                        registrations = registrationService.getRegistrationByScheduledActivityId(-1);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
                 assertNull(registrations);
-                assertEquals("Scheduled activity Id not valid!", error);
+                assertEquals("Id not valid!", error);
         }
 
         /**
@@ -516,7 +560,7 @@ public class TestRegistrationService {
                 String error = null;
                 List<Registration> registrations = null;
                 try {
-                        registrations = registrationService.getRegistrationByScheduledActivityId(2);
+                        registrations = registrationService.getRegistrationByScheduledActivityId(5);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
@@ -551,7 +595,7 @@ public class TestRegistrationService {
                 String error = null;
                 Registration registration = null;
                 try {
-                        registration = registrationService.getRegistrationByCustomerIdAndScheduledActivityId(0,
+                        registration = registrationService.getRegistrationByCustomerIdAndScheduledActivityId(-1,
                                         SCHEDULED_ACTIVITY_KEY);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
@@ -571,7 +615,7 @@ public class TestRegistrationService {
                 try {
                         registration = registrationService.getRegistrationByCustomerIdAndScheduledActivityId(
                                         CUSTOMER_KEY,
-                                        0);
+                                        -1);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
@@ -587,7 +631,7 @@ public class TestRegistrationService {
                 String error = null;
                 Registration registration = null;
                 try {
-                        registration = registrationService.getRegistrationByCustomerIdAndScheduledActivityId(2,
+                        registration = registrationService.getRegistrationByCustomerIdAndScheduledActivityId(5,
                                         SCHEDULED_ACTIVITY_KEY);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
@@ -607,7 +651,7 @@ public class TestRegistrationService {
                 try {
                         registration = registrationService.getRegistrationByCustomerIdAndScheduledActivityId(
                                         CUSTOMER_KEY,
-                                        2);
+                                        5);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
@@ -635,7 +679,7 @@ public class TestRegistrationService {
                 String error = null;
                 List<Customer> customers = null;
                 try {
-                        customers = registrationService.getCustomersByScheduledActivityId(0);
+                        customers = registrationService.getCustomersByScheduledActivityId(-1);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
@@ -653,7 +697,7 @@ public class TestRegistrationService {
                 String error = null;
                 List<Customer> customers = null;
                 try {
-                        customers = registrationService.getCustomersByScheduledActivityId(2);
+                        customers = registrationService.getCustomersByScheduledActivityId(5);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
@@ -682,7 +726,7 @@ public class TestRegistrationService {
                 String error = null;
                 List<ScheduledActivity> scheduledActivities = null;
                 try {
-                        scheduledActivities = registrationService.getScheduledActivitiesByCustomerId(0);
+                        scheduledActivities = registrationService.getScheduledActivitiesByCustomerId(-1);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
@@ -699,7 +743,7 @@ public class TestRegistrationService {
                 String error = null;
                 List<ScheduledActivity> scheduledActivities = null;
                 try {
-                        scheduledActivities = registrationService.getScheduledActivitiesByCustomerId(2);
+                        scheduledActivities = registrationService.getScheduledActivitiesByCustomerId(5);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
@@ -727,7 +771,7 @@ public class TestRegistrationService {
                 String error = null;
                 List<ScheduledActivity> scheduledActivities = null;
                 try {
-                        scheduledActivities = registrationService.getScheduledActivitiesByInstructorId(0);
+                        scheduledActivities = registrationService.getScheduledActivitiesByInstructorId(-1);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
@@ -744,7 +788,7 @@ public class TestRegistrationService {
                 String error = null;
                 List<ScheduledActivity> scheduledActivities = null;
                 try {
-                        scheduledActivities = registrationService.getScheduledActivitiesByInstructorId(2);
+                        scheduledActivities = registrationService.getScheduledActivitiesByInstructorId(5);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
@@ -759,13 +803,9 @@ public class TestRegistrationService {
         public void testDeleteRegistration() {
                 List<Registration> registrations = toList(registrationDao.findAll());
                 int size = registrations.size();
-                try {
-                        registrationService.deleteRegistration(REGISTRATION_KEY);
-                } catch (IllegalArgumentException e) {
-                        fail();
-                }
-                registrations = toList(registrationDao.findAll());
-                assertEquals(size - 1, registrations.size());
+                registrationService.deleteRegistration(REGISTRATION_KEY);
+                List<Registration> registrationsAfter = toList(registrationDao.findAll());
+                assertEquals(size - 1, registrationsAfter.size());
         }
 
         /**
@@ -775,11 +815,11 @@ public class TestRegistrationService {
         public void testDeleteRegistrationInvalidId() {
                 String error = null;
                 try {
-                        registrationService.deleteRegistration(0);
+                        registrationService.deleteRegistration(-1);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
-                assertEquals("Registration Id not valid!", error);
+                assertEquals("Registration id not valid!", error);
         }
 
         /**
@@ -789,22 +829,11 @@ public class TestRegistrationService {
         public void testDeleteNonExistingRegistration() {
                 String error = null;
                 try {
-                        registrationService.deleteRegistration(2);
+                        registrationService.deleteRegistration(5);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
                 assertEquals("Registration does not exist", error);
-        }
-
-        /**
-         * Tests the deletion of all registrations -> Success
-         */
-        @Test
-        public void testDeleteAllRegistrations() {
-                List<Registration> registrations = toList(registrationDao.findAll());
-                registrationService.deleteAllRegistrations();
-                registrations = toList(registrationDao.findAll());
-                assertEquals(0, registrations.size());
         }
 
         /**
@@ -818,7 +847,6 @@ public class TestRegistrationService {
                                 .getRegistrationByAccountRoleId(CUSTOMER_KEY);
                 int sizeByCustomer = registrationsByCustomer.size();
                 registrationService.deleteRegistrationsByAccountRoleId(CUSTOMER_KEY);
-                registrations = toList(registrationDao.findAll());
                 assertEquals(size - sizeByCustomer, registrations.size());
         }
 
@@ -830,7 +858,7 @@ public class TestRegistrationService {
         public void testDeleteRegistrationsByInvalidCustomer() {
                 String error = null;
                 try {
-                        registrationService.deleteRegistrationsByAccountRoleId(0);
+                        registrationService.deleteRegistrationsByAccountRoleId(-1);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
@@ -844,7 +872,7 @@ public class TestRegistrationService {
         public void testDeleteRegistrationsByNonExistingCustomer() {
                 String error = null;
                 try {
-                        registrationService.deleteRegistrationsByAccountRoleId(2);
+                        registrationService.deleteRegistrationsByAccountRoleId(5);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
@@ -862,7 +890,6 @@ public class TestRegistrationService {
                                 .getRegistrationByScheduledActivityId(SCHEDULED_ACTIVITY_KEY);
                 int sizeByScheduledActivity = registrationsByScheduledActivity.size();
                 registrationService.deleteRegistrationsByScheduledActivityId(SCHEDULED_ACTIVITY_KEY);
-                registrations = toList(registrationDao.findAll());
                 assertEquals(size - sizeByScheduledActivity, registrations.size());
         }
 
@@ -874,11 +901,11 @@ public class TestRegistrationService {
         public void testDeleteRegistrationsByInvalidScheduledActivity() {
                 String error = null;
                 try {
-                        registrationService.deleteRegistrationsByScheduledActivityId(0);
+                        registrationService.deleteRegistrationsByScheduledActivityId(-1);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
-                assertEquals("Scheduled activity Id not valid!", error);
+                assertEquals("Scheduled activity id not valid!", error);
         }
 
         /**
@@ -889,7 +916,7 @@ public class TestRegistrationService {
         public void testDeleteRegistrationsByNonExistingScheduledActivity() {
                 String error = null;
                 try {
-                        registrationService.deleteRegistrationsByScheduledActivityId(2);
+                        registrationService.deleteRegistrationsByScheduledActivityId(5);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }

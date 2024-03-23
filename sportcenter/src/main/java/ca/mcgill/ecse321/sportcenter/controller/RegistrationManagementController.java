@@ -143,14 +143,6 @@ public class RegistrationManagementController {
         registrationService.deleteRegistration(registrationId);
     }
 
-    /**
-     * Delete all registrations
-     */
-    @DeleteMapping(value = { "/registrations", "/registrations/" })
-    public void deleteAllRegistrations() throws IllegalArgumentException {
-        registrationService.deleteAllRegistrations();
-    }
-
     /*
      * Delete all registrations by scheduled activity id
      * 
