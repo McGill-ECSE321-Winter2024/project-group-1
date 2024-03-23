@@ -126,16 +126,6 @@ public class TestAccountCustomerService {
                     }
                 });
 
-        lenient().when(customerRepository.findCustomerByAccountUsername(anyString()))
-                .thenAnswer((InvocationOnMock invocation) -> {
-                    if (invocation.getArgument(0).equals(CUSTOMER_USERNAME)) {
-                        Customer customer = new Customer();
-                        customer.setAccount(accountRepository.findAccountByUsername(CUSTOMER_USERNAME));
-                        return customer;
-                    } else {
-                        return null;
-                    }
-                });
         Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> {
             return invocation.getArgument(0);
         };
