@@ -36,13 +36,13 @@ public class TestAccountDto {
         int accountId = account.getAccountId();
 
         // Load the Account from the database
-        account = repo.findAccountByAccountId(accountId);
+        Account accountFromDatabase = repo.findAccountByAccountId(accountId);
 
         // Check the attributes
-        assertNotNull(account);
-        assertEquals(accountId, account.getAccountId());
-        assertEquals(username, account.getUsername());
-        assertEquals(password, account.getPassword());
+        assertNotNull(accountFromDatabase);
+        assertEquals(accountId, accountFromDatabase.getAccountId());
+        assertEquals(username, accountFromDatabase.getUsername());
+        assertEquals(password, accountFromDatabase.getPassword());
     }
 
 }
