@@ -18,57 +18,90 @@ import ca.mcgill.ecse321.sportcenter.dao.ActivityRepository;
 import ca.mcgill.ecse321.sportcenter.dao.InstructorRepository;
 import ca.mcgill.ecse321.sportcenter.model.Activity;
 import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
+import ca.mcgill.ecse321.sportcenter.model.Instructor;
+import ca.mcgill.ecse321.sportcenter.model.Instructor.InstructorStatus;
 
-@SpringBootTest
+/**
+ * This class tests the ActivityManagementService class
+ * 
+ * @author: Mathias Pacheco Lemina
+ */
+@ExtendWith(MockitoExtension.class)
 public class TestActivityManagementService {
     @Mock
-    private ActivityRepository activityRepository;
+    private ActivityRepository activityDao;
 
     @Mock
-    private InstructorRepository instructorRepository;
+    private InstructorRepository instructorDao;
+
+    // Activity keys
+    private static final String APPROVED_ACTIVITY_KEY = "ApprovedActivity";
+    private static final String DISAPPROVED_ACTIVITY_KEY = "DisapprovedActivity";
+    private static final String INEXISTENT_ACTIVITY_KEY = "InexistentActivity";
+
+    private static final String CREATED_ACTIVITY = "CreatedActivity";
+    private static final String DESCRIPTION = "description";
+    private static final ClassCategory SUBCATEGORY = ClassCategory.Cardio;
+
+    private static final String NEW_NAME = "newName";
+    private static final String NEW_DESCRIPTION = "newDescription";
+    private static final ClassCategory NEW_SUBCATEGORY = ClassCategory.Strength;
 
     @InjectMocks
     private ActivityManagementService activityManagementService;
 
+    @SuppressWarnings("null")
+    @BeforeEach
+    void setMockOutput() {
+        lenient().when(activityDao.findActivityByName(anyString()))
+                .thenAnswer((InvocationOnMock invocation) -> {
+                    if (invocation.getArgument(0).equals(APPROVED_ACTIVITY_KEY)) {
+                        Activity activity = new Activity();
+                        activity.setName("activity");
+                        activity.setDescription("description");
+                        activity.setSubCategory(ClassCategory.Cardio);
+                        activity.setIsApproved(true);
+                        activity.setName(APPROVED_ACTIVITY_KEY);
+                        return activity;
+                    } else if (invocation.getArgument(0).equals(DISAPPROVED_ACTIVITY_KEY)) {
+                        Activity activity = new Activity();
+                        activity.setName("activity");
+                        activity.setDescription("description");
+                        activity.setSubCategory(ClassCategory.Cardio);
+                        activity.setIsApproved(false);
+                        activity.setName(DISAPPROVED_ACTIVITY_KEY);
+                        return activity;
+                    } else if (invocation.getArgument(0).equals(INEXISTENT_ACTIVITY_KEY)) {
+                        return null;
+                    } else {
+                        return null;
+                    }
+                });
+    }
+
     // TEST #1 - CREATE ACTIVITY
     @Test
     public void testCreateActivity() {
-        String name = "activity";
-        ClassCategory subcategory = ClassCategory.Strength;
-        String description = "description";
-        boolean isApproved = false;
+        Activity activity = null;
 
-        when(activityRepository.findActivityByName(name)).thenReturn(null);// this checks if the activity already
-                                                                           // exists, and if it does, it will return
-                                                                           // null
-        when(activityRepository.save(any(Activity.class))).thenAnswer((invocation) -> {
-            Activity activity = new Activity();
-            activity.setName(name);
-            activity.setDescription(description);
-            activity.setSubCategory(subcategory);
-            activity.setIsApproved(isApproved);
-            return (Activity) activity; // Add type cast here
-        });
+        try {
+            activity = activityManagementService.createActivity(CREATED_ACTIVITY, DESCRIPTION, SUBCATEGORY);
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
 
-        Activity createdActivity = activityManagementService.createActivity(name, description, subcategory);
-        verify(activityRepository, times(1)).save(any(Activity.class));
-
-        assertNotNull(createdActivity);
-        assertEquals(name, createdActivity.getName());
-        assertEquals(description, createdActivity.getDescription());
-        assertEquals(subcategory, createdActivity.getSubCategory());
-        assertEquals(isApproved, createdActivity.getIsApproved());
+        assertNotNull(activity);
+        assertEquals(CREATED_ACTIVITY, activity.getName());
+        assertEquals(DESCRIPTION, activity.getDescription());
+        assertEquals(SUBCATEGORY, activity.getSubCategory());
     }
 
     @Test
     public void testCreateActivityNameNull() {
-        String name = null;
-        ClassCategory subcategory = ClassCategory.Strength;
-        String description = "description";
-        String error = "";
+        String error = null;
 
         try {
-            activityManagementService.createActivity(name, description, subcategory);
+            activity = activityManagementService.createActivity(null, DESCRIPTION, SUBCATEGORY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -78,13 +111,10 @@ public class TestActivityManagementService {
 
     @Test
     public void testCreateActivityNameEmpty() {
-        String name = "";
-        ClassCategory subcategory = ClassCategory.Strength;
-        String description = "description";
-        String error = "";
+        String error = null;
 
         try {
-            activityManagementService.createActivity(name, description, subcategory);
+            activity = activityManagementService.createActivity("", DESCRIPTION, SUBCATEGORY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -94,13 +124,10 @@ public class TestActivityManagementService {
 
     @Test
     public void testCreateActivityNameWhitespace() {
-        String name = "             "; // 3x (space then tab)
-        ClassCategory subcategory = ClassCategory.Strength;
-        String description = "          ";
-        String error = "";
+        String error = null;
 
         try {
-            activityManagementService.createActivity(name, description, subcategory);
+            activity = activityManagementService.createActivity("       ", DESCRIPTION, SUBCATEGORY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -110,13 +137,10 @@ public class TestActivityManagementService {
 
     @Test
     public void testCreateActivityDescriptionNull() {
-        String name = "activity";
-        ClassCategory subcategory = ClassCategory.Strength;
-        String description = null;
-        String error = "";
+        String error = null;
 
         try {
-            activityManagementService.createActivity(name, description, subcategory);
+            activity = activityManagementService.createActivity(CREATED_ACTIVITY, null, SUBCATEGORY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -126,13 +150,10 @@ public class TestActivityManagementService {
 
     @Test
     public void testCreateActivityDescriptionEmpty() {
-        String name = "activity";
-        ClassCategory subcategory = ClassCategory.Strength;
-        String description = "";
-        String error = "";
+        String error = null;
 
         try {
-            activityManagementService.createActivity(name, description, subcategory);
+            activity = activityManagementService.createActivity(CREATED_ACTIVITY, "", SUBCATEGORY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -142,13 +163,10 @@ public class TestActivityManagementService {
 
     @Test
     public void testCreateActivityDescriptionWhitespace() {
-        String name = "activity";
-        ClassCategory subcategory = ClassCategory.Strength;
-        String description = "          ";
-        String error = "";
+        String error = null;
 
         try {
-            activityManagementService.createActivity(name, description, subcategory);
+            activity = activityManagementService.createActivity(CREATED_ACTIVITY, "             ", SUBCATEGORY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -158,13 +176,10 @@ public class TestActivityManagementService {
 
     @Test
     public void testCreateActivitySubcategoryNull() {
-        String name = "activity";
-        ClassCategory subcategory = null;
-        String description = "description";
-        String error = "";
+        String error = null;
 
         try {
-            activityManagementService.createActivity(name, description, subcategory);
+            activity = activityManagementService.createActivity(CREATED_ACTIVITY, DESCRIPTION, null);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -172,20 +187,13 @@ public class TestActivityManagementService {
         assertEquals("Subcategory cannot be empty!", error);
     }
 
-    @Test
+    @Test // NOT SURE
     public void testCreateActivityAlreadyExists() {
-        String name = "activity";
-        ClassCategory subcategory = ClassCategory.Strength;
-        String description = "description";
-        String error = "";
-
-        when(activityRepository.findActivityByName(name))
-                .thenReturn(new Activity(subcategory, name, false, description));
-
-        activityManagementService.createActivity(name, description, subcategory);
+        String error = null;
+        Activity activity = null;
 
         try {
-            activityManagementService.createActivity(name, description, subcategory);
+            activity = activityManagementService.createActivity(name, description, subcategory);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -194,72 +202,201 @@ public class TestActivityManagementService {
     }
 
     // TEST #2 - UPDATE ACTIVITY
+    // TODO: REALLY UNSURE THAT IT WORKS
     @Test
     public void testUpdateActivity() {
-        // TODO - COMPLETE BAREBONE
-    }
-
-    @Test
-    public void testProposeActivityNameEmpty() {
-        // TODO
-    }
-
-    @Test
-    public void testProposeActivityNameWhitespace() {
-        // TODO
-    }
-
-    @Test
-    public void testProposeActivityDescriptionNull() {
-        // TODO
-    }
-
-    @Test
-    public void testProposeActivityDescriptionEmpty() {
-        // TODO
-    }
-
-    @Test
-    public void testProposeActivityDescriptionWhitespace() {
-        // TODO
-    }
-
-    @Test
-    public void testProposeActivitySubcategoryNull() {
-        // TODO - TBD
-    }
-
-    // TEST #4 - APPROVE ACTIVITY
-    @Test
-    public void testApproveActivity() {
-        String name = "activity";
-        ClassCategory subcategory = ClassCategory.Strength;
-        boolean isApproved = false;
-        String description = "description";
-
-        activityRepository.save(new Activity(subcategory, name, isApproved, description));
+        Activity activity = null;
 
         try {
-            activityManagementService.approveActivity(name);
+            activity = activityManagementService.updateActivity(CREATED_ACTIVITY, NEW_NAME, NEW_DESCRIPTION,
+                    NEW_SUBCATEGORY);
         } catch (IllegalArgumentException e) {
-            System.err.println(e.getMessage());
+            fail();
         }
 
-        assertTrue(activityRepository.findActivityByName(name).getIsApproved());
+        assertNotNull(activity);
+        assertEquals(NEW_NAME, activity.getName());
+        assertEquals(NEW_DESCRIPTION, activity.getDescription());
+        assertEquals(NEW_SUBCATEGORY, activity.getSubCategory());
+    }
+
+    @Test
+    public void testUpdateActivityNameNull() {
+        String error = null;
+
+        try {
+            activity = activityManagementService.updateActivity(null, NEW_NAME, NEW_DESCRIPTION, NEW_SUBCATEGORY);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+
+        assertEquals("Name cannot be empty!", error);
+    }
+
+    @Test
+    public void testUpdateActivityNameEmpty() {
+        String error = null;
+
+        try {
+            activity = activityManagementService.updateActivity("", NEW_NAME, NEW_DESCRIPTION, NEW_SUBCATEGORY);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+
+        assertEquals("Name cannot be empty!", error);
+    }
+
+    @Test
+    public void testUpdateActivityNameWhitespace() {
+        String error = null;
+
+        try {
+            activity = activityManagementService.updateActivity("       ", NEW_NAME, NEW_DESCRIPTION, NEW_SUBCATEGORY);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+
+        assertEquals("Name cannot be empty!", error);
+    }
+
+    @Test
+    public void testUpdateActivityNewNameNull() {
+        String error = null;
+
+        try {
+            activity = activityManagementService.updateActivity(CREATED_ACTIVITY, null, NEW_DESCRIPTION,
+                    NEW_SUBCATEGORY);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+
+        assertEquals("New name cannot be empty!", error);
+    }
+
+    @Test
+    public void testUpdateActivityNewNameEmpty() {
+        String error = null;
+
+        try {
+            activity = activityManagementService.updateActivity(CREATED_ACTIVITY, "", NEW_DESCRIPTION, NEW_SUBCATEGORY);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+
+        assertEquals("New name cannot be empty!", error);
+    }
+
+    @Test
+    public void testUpdateActivityNewNameWhitespace() {
+        String error = null;
+
+        try {
+            activity = activityManagementService.updateActivity(CREATED_ACTIVITY, "       ", NEW_DESCRIPTION,
+                    NEW_SUBCATEGORY);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+
+        assertEquals("New name cannot be empty!", error);
+    }
+
+    @Test
+    public void testUpdateActivityNewDescriptionNull() {
+        String error = null;
+
+        try {
+            activity = activityManagementService.updateActivity(CREATED_ACTIVITY, NEW_NAME, null, NEW_SUBCATEGORY);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+
+        assertEquals("New description cannot be empty!", error);
+    }
+
+    @Test
+    public void testUpdateActivityNewDescriptionEmpty() {
+        String error = null;
+
+        try {
+            activity = activityManagementService.updateActivity(CREATED_ACTIVITY, NEW_NAME, "", NEW_SUBCATEGORY);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+
+        assertEquals("New description cannot be empty!", error);
+    }
+
+    @Test
+    public void testUpdateActivityNewDescriptionWhitespace() {
+        String error = null;
+
+        try {
+            activity = activityManagementService.updateActivity(CREATED_ACTIVITY, NEW_NAME, "       ", NEW_SUBCATEGORY);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+
+        assertEquals("New description cannot be empty!", error);
+    }
+
+    @Test
+    public void testUpdateActivitySubcategoryNull() {
+        String error = null;
+
+        try {
+            activity = activityManagementService.updateActivity(CREATED_ACTIVITY, NEW_NAME, NEW_DESCRIPTION, null);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+
+        assertEquals("New subcategory cannot be empty!", error);
+    }
+
+    @Test
+    public void testUpdateActivityDoesntExist() {
+        String error = null;
+
+        try {
+            activity = activityManagementService.updateActivity("does not exist", NEW_NAME, NEW_DESCRIPTION,
+                    NEW_SUBCATEGORY);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+
+        assertEquals("Activity does not exist!", error);
+    }
+
+    @Test // TODO: How to test that the activity is updated?
+    public void testUpdateActivityAlreadyApproved() {
+        String error = null;
+
+        try {
+            activity = activityManagementService.updateActivity(APPROVED_ACTIVITY_KEY, NEW_NAME, NEW_DESCRIPTION,
+                    NEW_SUBCATEGORY);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+
+        assertEquals("Activity is already approved!", error);
+    }
+
+    // TEST #3 - APPROVE ACTIVITY
+    @Test
+    public void testApproveActivity() {
+        try {
+            activityManagementService.approveActivity(APPROVED_ACTIVITY_KEY);
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+
+        assertTrue(activityRepository.findActivityByName(APPROVED_ACTIVITY_KEY).getIsApproved());
     }
 
     @Test
     public void testApproveActivityEmpty() {
-        String name = "";
-        ClassCategory subcategory = ClassCategory.Strength;
-        boolean isApproved = false;
-        String description = "";
-        String error = "";
-
-        activityRepository.save(new Activity(subcategory, name, isApproved, description));
-
+        String error = null;
         try {
-            activityManagementService.approveActivity(name);
+            activityManagementService.approveActivity("");
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -269,16 +406,9 @@ public class TestActivityManagementService {
 
     @Test
     public void testApproveActivityNull() {
-        String name = null;
-        ClassCategory subcategory = ClassCategory.Strength;
-        boolean isApproved = false;
-        String description = "description";
-        String error = "";
-
-        activityRepository.save(new Activity(subcategory, name, isApproved, description));
-
+        String error = null;
         try {
-            activityManagementService.approveActivity(name);
+            activityManagementService.approveActivity(null);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -288,16 +418,9 @@ public class TestActivityManagementService {
 
     @Test
     public void testApproveActivityWhitespaces() {
-        String name = "             "; // 3x (space then tab)
-        ClassCategory subcategory = ClassCategory.Strength;
-        boolean isApproved = false;
-        String description = "          ";
-        String error = "";
-
-        activityRepository.save(new Activity(subcategory, name, isApproved, description));
-
+        String error = null;
         try {
-            activityManagementService.approveActivity(name);
+            activityManagementService.approveActivity("            ");
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -307,16 +430,9 @@ public class TestActivityManagementService {
 
     @Test
     public void testApproveActivityDoesntExist() {
-        String name = "doesn't exist";
-        ClassCategory subcategory = ClassCategory.Strength;
-        boolean isApproved = false;
-        String description = "description";
-        String error = "";
-
-        activityRepository.save(new Activity(subcategory, name, isApproved, description));
-
+        String error = null;
         try {
-            activityManagementService.approveActivity(name);
+            activityManagementService.approveActivity(INEXISTENT_ACTIVITY_KEY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -326,16 +442,10 @@ public class TestActivityManagementService {
 
     @Test
     public void testApproveActivityAlreadyTrue() {
-        String name = "activity";
-        ClassCategory subcategory = ClassCategory.Strength;
-        boolean isApproved = false;
-        String description = "description";
-        String error = "";
-
-        activityRepository.save(new Activity(subcategory, name, isApproved, description));
+        String error = null;
 
         try {
-            activityManagementService.approveActivity(name);
+            activityManagementService.approveActivity(APPROVED_ACTIVITY_KEY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -343,37 +453,24 @@ public class TestActivityManagementService {
         assertEquals("Activity is already approved!", error);
     }
 
-    // TEST #5 - DISAPPROVE ACTIVITY
+    // TEST #4 - DISAPPROVE ACTIVITY
     @Test
     public void testDisapproveActivity() {
-        String name = "activity";
-        ClassCategory subcategory = ClassCategory.Strength;
-        boolean isApproved = true;
-        String description = "description";
-
-        activityRepository.save(new Activity(subcategory, name, isApproved, description));
-
         try {
-            activityManagementService.disapproveActivity(name);
+            activityManagementService.disapproveActivity(DISAPPROVED_ACTIVITY_KEY);
         } catch (IllegalArgumentException e) {
-            System.err.println(e.getMessage());
+            fail();
         }
 
-        assertFalse(activityRepository.findActivityByName(name).getIsApproved());
+        assertFalse(activityRepository.findActivityByName(DISAPPROVED_ACTIVITY_KEY).getIsApproved());
     }
 
     @Test
     public void testDisapproveActivityEmpty() {
-        String name = "";
-        ClassCategory subcategory = ClassCategory.Strength;
-        boolean isApproved = true;
-        String description = "";
-        String error = "";
-
-        activityRepository.save(new Activity(subcategory, name, isApproved, description));
+        String error = null;
 
         try {
-            activityManagementService.disapproveActivity(name);
+            activityManagementService.disapproveActivity("");
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -383,16 +480,10 @@ public class TestActivityManagementService {
 
     @Test
     public void testDisapproveActivityNull() {
-        String name = null;
-        ClassCategory subcategory = null;
-        boolean isApproved = true;
-        String description = null;
-        String error = "";
-
-        activityRepository.save(new Activity(subcategory, name, isApproved, description));
+        String error = null;
 
         try {
-            activityManagementService.disapproveActivity(name);
+            activityManagementService.disapproveActivity(null);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -402,16 +493,10 @@ public class TestActivityManagementService {
 
     @Test
     public void testDisapproveActivityWhitespaces() {
-        String name = "             ";
-        ClassCategory subcategory = ClassCategory.Strength;
-        boolean isApproved = true;
-        String description = "          ";
-        String error = "";
-
-        activityRepository.save(new Activity(subcategory, name, isApproved, description));
+        String error = null;
 
         try {
-            activityManagementService.disapproveActivity(name);
+            activityManagementService.disapproveActivity("            ");
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -420,31 +505,11 @@ public class TestActivityManagementService {
     }
 
     @Test
-    public void testDisapproveActivityAlreadyFalse() {
-        String name = "activity";
-        ClassCategory subcategory = ClassCategory.Strength;
-        boolean isApproved = false;
-        String description = "description";
-        String error = "";
-
-        activityRepository.save(new Activity(subcategory, name, isApproved, description));
-
-        try {
-            activityManagementService.disapproveActivity(name);
-        } catch (IllegalArgumentException e) {
-            error = e.getMessage();
-        }
-
-        assertEquals("Activity is already not approved!", error);
-    }
-
-    @Test
     public void testDisapproveActivityDoesNotExist() {
-        String name = "does not exist";
-        String error = "";
+        String error = null;
 
         try {
-            activityManagementService.disapproveActivity(name);
+            activityManagementService.disapproveActivity(INEXISTENT_ACTIVITY_KEY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }

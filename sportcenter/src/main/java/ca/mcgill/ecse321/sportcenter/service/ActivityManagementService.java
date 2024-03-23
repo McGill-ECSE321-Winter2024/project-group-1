@@ -25,9 +25,6 @@ public class ActivityManagementService {
     ActivityRepository activityRepository;
 
     @Autowired
-    InstructorRepository instructorRepository;
-
-    @Autowired
     OwnerRepository ownerRepository;
 
     /**
@@ -248,10 +245,7 @@ public class ActivityManagementService {
         if (activityRepository.findActivityByName(activityName) == null) {
             throw new IllegalArgumentException("Activity does not exist!");
         }
-        // XXXXXXXXXXXXXXXXX Need to rethink this XXXXXXXXXXXXXXXXX
-        if (!activity.getIsApproved()) {
-            throw new IllegalArgumentException("Activity is already not approved!");
-        }
+
         activity.setIsApproved(false);
         activityRepository.save(activity);
     }
