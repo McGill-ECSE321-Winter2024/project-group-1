@@ -246,14 +246,6 @@ public class ScheduledActivityManagementController {
                 scheduledActivityService.deleteScheduledActivity(scheduledActivityId);
         }
 
-        /**
-         * Delete all scheduled activities
-         */
-        @DeleteMapping(value = { "/deleteScheduledActivities", "/deleteScheduledActivities/" })
-        public void deleteAllScheduledActivities() {
-                scheduledActivityService.deleteAllScheduledActivities();
-        }
-
         /*
          * Delete all scheduled activities by instructor id
          */

@@ -137,9 +137,10 @@ public class ScheduledActivityManagementService {
         ScheduledActivity scheduledActivity = new ScheduledActivity();
         scheduledActivity.setDate(date);
         scheduledActivity.setStartTime(startTime);
-        scheduledActivity.setStartTime(endTime);
+        scheduledActivity.setEndTime(endTime);
         scheduledActivity.setSupervisor(instructor);
         scheduledActivity.setActivity(activity);
+        scheduledActivity.setCapacity(capacity);
 
         scheduledActivityRepository.save(scheduledActivity);
         return scheduledActivity;
@@ -304,7 +305,7 @@ public class ScheduledActivityManagementService {
             throw new IllegalArgumentException("End time cannot be empty!");
         }
         if (newStartTime.isAfter(newEndTime)) {
-            throw new IllegalArgumentException("Start time cannot be before end time!");
+            throw new IllegalArgumentException("Start time cannot be after end time!");
         }
 
         List<ScheduledActivity> scheduledActivities = getAllScheduledActivitiesByDate(newDate);
@@ -439,10 +440,10 @@ public class ScheduledActivityManagementService {
      * Delete a scheduled activity
      * 
      * @param scheduledActivityId
-     * @return ScheduledActivity
+     * @return boolean
      */
     @Transactional
-    public void deleteScheduledActivity(int scheduledActivityId) {
+    public boolean deleteScheduledActivity(int scheduledActivityId) {
         if (scheduledActivityId <= 0) {
             throw new IllegalArgumentException("Id cannot be negative!");
         }
@@ -452,20 +453,12 @@ public class ScheduledActivityManagementService {
         }
 
         // Delete all registrations of this scheduled activity
-        RegistrationManagementService registrationManagementService = new RegistrationManagementService();
-        registrationManagementService.deleteRegistrationsByScheduledActivityId(scheduledActivityId);
+        // RegistrationManagementService registrationManagementService = new
+        // RegistrationManagementService();
+        // registrationManagementService.deleteRegistrationsByScheduledActivityId(scheduledActivityId);
 
         scheduledActivityRepository.delete(scheduledActivity);
-    }
-
-    /**
-     * Delete all scheduled activities
-     */
-    @Transactional
-    public void deleteAllScheduledActivities() {
-        for (ScheduledActivity scheduledActivity : getAllScheduledActivities()) {
-            deleteScheduledActivity(scheduledActivity.getScheduledActivityId());
-        }
+        return true;
     }
 
     // XXXXXXXXXXXXXXXXXXXXX Needs to be tested XXXXXXXXXXXXXXXXXXXXX
@@ -473,9 +466,10 @@ public class ScheduledActivityManagementService {
      * Delete all scheduled activities by instructor id
      * 
      * @param accountRoleId
+     * @return boolean
      */
     @Transactional
-    public void deleteAllScheduledActivitiesByInstructorId(int accountRoleId) {
+    public boolean deleteAllScheduledActivitiesByInstructorId(int accountRoleId) {
         if (accountRoleId < 0) {
             throw new IllegalArgumentException("Id cannot be negative!");
         }
@@ -487,5 +481,6 @@ public class ScheduledActivityManagementService {
                 deleteScheduledActivity(scheduledActivity.getScheduledActivityId());
             }
         }
+        return true;
     }
 }

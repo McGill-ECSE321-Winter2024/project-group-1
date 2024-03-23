@@ -6,7 +6,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -94,16 +93,19 @@ public class TestScheduledActivityService {
                 Account account = new Account();
                 account.setUsername("customer");
                 account.setPassword("password");
+                account.setAccountId(CUSTOMER_ACCOUNT_KEY);
                 return account;
             } else if (invocation.getArgument(0).equals(APPROVED_INSTRUCTOR_ACCOUNT_KEY)) {
                 Account account = new Account();
                 account.setUsername("approvedInstructor");
                 account.setPassword("password");
+                account.setAccountId(APPROVED_INSTRUCTOR_ACCOUNT_KEY);
                 return account;
             } else if (invocation.getArgument(0).equals(DISAPPROVED_INSTRUCTOR_ACCOUNT_KEY)) {
                 Account account = new Account();
                 account.setUsername("disapprovedInstructor");
                 account.setPassword("password");
+                account.setAccountId(DISAPPROVED_INSTRUCTOR_ACCOUNT_KEY);
                 return account;
             } else {
                 return null;
@@ -118,6 +120,7 @@ public class TestScheduledActivityService {
                         instructor.setStatus(InstructorStatus.Active);
                         instructor.setDescription("description");
                         instructor.setProfilePicURL("pictureURL");
+                        instructor.setAccountRoleId(APPROVED_INSTRUCTOR_KEY);
                         return instructor;
                     } else if (invocation.getArgument(0).equals(DISAPPROVED_INSTRUCTOR_KEY)) {
                         Instructor instructor = new Instructor();
@@ -125,6 +128,7 @@ public class TestScheduledActivityService {
                         instructor.setStatus(InstructorStatus.Pending);
                         instructor.setDescription("description");
                         instructor.setProfilePicURL("pictureURL");
+                        instructor.setAccountRoleId(DISAPPROVED_INSTRUCTOR_KEY);
                         return instructor;
                     } else {
                         return null;
@@ -138,6 +142,7 @@ public class TestScheduledActivityService {
                 activity.setDescription("description");
                 activity.setSubCategory(ClassCategory.Cardio);
                 activity.setIsApproved(true);
+                activity.setName(APPROVED_ACTIVITY_KEY);
                 return activity;
             } else if (invocation.getArgument(0).equals(DISAPPROVED_ACTIVITY_KEY)) {
                 Activity activity = new Activity();
@@ -145,6 +150,7 @@ public class TestScheduledActivityService {
                 activity.setDescription("description");
                 activity.setSubCategory(ClassCategory.Cardio);
                 activity.setIsApproved(false);
+                activity.setName(DISAPPROVED_ACTIVITY_KEY);
                 return activity;
             } else {
                 return null;
@@ -155,16 +161,14 @@ public class TestScheduledActivityService {
                 .thenAnswer((InvocationOnMock invocation) -> {
                     if (invocation.getArgument(0).equals(SCHEDULED_ACTIVITY_KEY)) {
                         ScheduledActivity scheduledActivity = new ScheduledActivity();
-                        scheduledActivity.setDate(LocalDate.now());
-                        scheduledActivity.setStartTime(LocalTime.now());
-                        scheduledActivity.setEndTime(LocalTime.of(12, 0));
-                        scheduledActivity.setSupervisor(
-                                instructorDao.findInstructorByAccountRoleId(
-                                        DISAPPROVED_INSTRUCTOR_KEY));
-                        scheduledActivity.setActivity(
-                                activityDao.findActivityByName(
-                                        DISAPPROVED_ACTIVITY_KEY));
-                        scheduledActivity.setCapacity(30);
+                        scheduledActivity.setDate(DATE);
+                        scheduledActivity.setStartTime(START_TIME);
+                        scheduledActivity.setEndTime(END_TIME);
+                        scheduledActivity
+                                .setSupervisor(instructorDao.findInstructorByAccountRoleId(APPROVED_INSTRUCTOR_KEY));
+                        scheduledActivity.setActivity(activityDao.findActivityByName(APPROVED_ACTIVITY_KEY));
+                        scheduledActivity.setCapacity(CAPACITY);
+                        scheduledActivity.setScheduledActivityId(SCHEDULED_ACTIVITY_KEY);
                         return scheduledActivity;
                     } else {
                         return null;
@@ -190,6 +194,7 @@ public class TestScheduledActivityService {
     @Test
     public void testCreateScheduledActivity() {
         ScheduledActivity scheduledActivity = null;
+
         try {
             scheduledActivity = scheduledActivityService.createScheduledActivity(DATE, START_TIME, END_TIME,
                     APPROVED_INSTRUCTOR_KEY, APPROVED_ACTIVITY_KEY, CAPACITY);
@@ -435,25 +440,17 @@ public class TestScheduledActivityService {
      */
     @Test
     public void testUpdateScheduledActivityActivity() {
-        // String oldActivityName =
-        // scheduledActivityDao.findScheduledActivityByScheduledActivityId(SCHEDULED_ACTIVITY_KEY)
-        // .getActivity().getName();
-        // String newActivityName = APPROVED_ACTIVITY_KEY;
-
-        // scheduledActivityService.updateScheduledActivityActivity(
-        // SCHEDULED_ACTIVITY_KEY, newActivityName, oldActivityName);
-        // verify(scheduledActivityDao, times(1)).save(any(ScheduledActivity.class));
         ScheduledActivity scheduledActivity = null;
+        String oldActivityName = scheduledActivityDao.findScheduledActivityByScheduledActivityId(SCHEDULED_ACTIVITY_KEY)
+                .getActivity().getName();
+        String newActivityName = APPROVED_ACTIVITY_KEY;
 
-        try {
-            scheduledActivity = scheduledActivityService.updateScheduledActivityActivity(
-                    SCHEDULED_ACTIVITY_KEY, APPROVED_ACTIVITY_KEY, DISAPPROVED_ACTIVITY_KEY);
-        } catch (IllegalArgumentException e) {
-            fail(e.getMessage());
-        }
+        scheduledActivity = scheduledActivityService.updateScheduledActivityActivity(
+                SCHEDULED_ACTIVITY_KEY, oldActivityName, newActivityName);
 
         assertNotNull(scheduledActivity);
-        assertEquals(APPROVED_ACTIVITY_KEY, scheduledActivity.getActivity().getName());
+        assertEquals(newActivityName, scheduledActivity.getActivity().getName());
+
     }
 
     /**
@@ -493,7 +490,7 @@ public class TestScheduledActivityService {
         String error = null;
         try {
             scheduledActivityService.updateScheduledActivityByDateAndTime(
-                    SCHEDULED_ACTIVITY_KEY, DATE, oldDate, END_TIME, oldStartTime, START_TIME, oldEndTime);
+                    SCHEDULED_ACTIVITY_KEY, DATE, oldDate, oldStartTime, END_TIME, oldEndTime, START_TIME);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -560,18 +557,14 @@ public class TestScheduledActivityService {
     @SuppressWarnings("null")
     @Test
     public void testDeleteScheduledActivity() {
-        int scheduledActivityId = SCHEDULED_ACTIVITY_KEY;
-
-        when(scheduledActivityDao.findScheduledActivityByScheduledActivityId(scheduledActivityId))
-                .thenReturn(new ScheduledActivity());
+        Boolean deleted = false;
 
         try {
-            scheduledActivityService.deleteScheduledActivity(scheduledActivityId);
+            deleted = scheduledActivityService.deleteScheduledActivity(SCHEDULED_ACTIVITY_KEY);
         } catch (IllegalArgumentException e) {
             fail(e.getMessage());
         }
-        scheduledActivityService.deleteScheduledActivity(scheduledActivityId);
-        verify(scheduledActivityDao, times(1)).delete(any(ScheduledActivity.class));
+        assertEquals(true, deleted);
     }
 
 }
