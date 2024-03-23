@@ -71,35 +71,32 @@ public class TestActivityPersistence {
     }
 }
 
-    //     Activity activity = new Activity();
-    //     ClassCategory subcategory = ClassCategory.Strength;
-    //     String name = "Yoga";
-    //     String description = "Practice yoga with a professional instructor.";
-    //     boolean isApproved = true;
+// Activity activity = new Activity();
+// ClassCategory subcategory = ClassCategory.Strength;
+// String name = "Yoga";
+// String description = "Practice yoga with a professional instructor.";
+// boolean isApproved = true;
 
-    //     activity.setName(name);
-    //     activity.setDescription(description);
-    //     activity.setSubCategory(subcategory);
-    //     activity.setIsApproved(isApproved);
+// activity.setName(name);
+// activity.setDescription(description);
+// activity.setSubCategory(subcategory);
+// activity.setIsApproved(isApproved);
 
-    //     activityRepository.save(activity);
-    //     name = activity.getName();
+// activityRepository.save(activity);
+// name = activity.getName();
 
-    //     /*
-    //      * Load the Activity from the database, using the name as the key
-    //      */
-    //     activity = activityRepository.findActivityByName(name);
+// /*
+// * Load the Activity from the database, using the name as the key
+// */
+// activity = activityRepository.findActivityByName(name);
 
-    //     /*
-    //      * Check if the Activity was saved and loaded correctly and has the correct
-    //      * attributes
-    //      */
-    //     assertNotNull(activity);
-    //     assertEquals(name, activity.getName());
-    //     assertEquals(description, activity.getDescription());
-    //     assertEquals(subcategory, activity.getSubCategory());
-    //     assertEquals(isApproved, activity.getIsApproved());
-    // }
-
-
-}
+// /*
+// * Check if the Activity was saved and loaded correctly and has the correct
+// * attributes
+// */
+// assertNotNull(activity);
+// assertEquals(name, activity.getName());
+// assertEquals(description, activity.getDescription());
+// assertEquals(subcategory, activity.getSubCategory());
+// assertEquals(isApproved, activity.getIsApproved());
+// }

@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import jakarta.transaction.Transactional;
 
 import ca.mcgill.ecse321.sportcenter.dao.AccountRepository;
 import ca.mcgill.ecse321.sportcenter.model.Account;
@@ -14,7 +14,6 @@ import ca.mcgill.ecse321.sportcenter.dao.InstructorRepository;
 import ca.mcgill.ecse321.sportcenter.model.Customer;
 import ca.mcgill.ecse321.sportcenter.model.Instructor;
 import ca.mcgill.ecse321.sportcenter.model.Instructor.InstructorStatus;
-import jakarta.persistence.criteria.CriteriaBuilder.In;
 import ca.mcgill.ecse321.sportcenter.model.Owner;
 import ca.mcgill.ecse321.sportcenter.dao.OwnerRepository;
 
@@ -57,19 +56,34 @@ public class AccountManagementService {
      */
     @Transactional
     public Account createAccount(String username, String password) {
-        if (username == null || username.trim().isEmpty() || username.contains(" ")) {
-            throw new IllegalArgumentException("Username cannot be null, empty and spaces!");
+        if (username == null) {
+            throw new IllegalArgumentException("Username cannot be null!");
         }
-        if (password == null || password.trim().isEmpty() || password.contains(" ")) {
+
+        if (password == null) {
+            throw new IllegalArgumentException("Password cannot be null!");
+        }
+
+        if (username.trim().isEmpty()) {
+            throw new IllegalArgumentException("Username cannot be empty!");
+        }
+
+        if (password.trim().isEmpty()) {
             throw new IllegalArgumentException("Password cannot be empty!");
         }
 
-        Account account = accountRepository.findAccountByUsername(username);
-        if (account != null) {
-            throw new IllegalArgumentException("Username already exists!");
+        if (username.contains(" ")) {
+            throw new IllegalArgumentException("Username cannot contain spaces!");
         }
 
-        account = new Account();
+        if (password.contains(" ")) {
+            throw new IllegalArgumentException("Password cannot contain spaces!");
+        }
+
+        if (!(accountRepository.findAccountByUsername(username) == null)) {
+            throw new IllegalArgumentException("Account already exists!");
+        }
+        Account account = new Account();
         account.setUsername(username);
         account.setPassword(password);
         accountRepository.save(account);
@@ -84,14 +98,23 @@ public class AccountManagementService {
      */
     @Transactional
     public Customer createCustomer(String username) {
-        if (username == null || username.trim().isEmpty() || username.contains(" ")) {
-            throw new IllegalArgumentException("Username cannot be null, empty and spaces!");
+        if (username == null) {
+            throw new IllegalArgumentException("Username cannot be null!");
+        }
+
+        if (username.trim().isEmpty()) {
+            throw new IllegalArgumentException("Username cannot be empty!");
+        }
+
+        if (username.contains(" ")) {
+            throw new IllegalArgumentException("Username cannot contain spaces!");
+        }
+
+        if (accountRepository.findAccountByUsername(username) == null) {
+            throw new IllegalArgumentException("Account does not exist!");
         }
 
         Account account = accountRepository.findAccountByUsername(username);
-        if (account == null) {
-            throw new IllegalArgumentException("Account does not exist!");
-        }
         Customer customer = new Customer();
         customer.setAccount(account);
         customerRepository.save(customer);
@@ -144,8 +167,16 @@ public class AccountManagementService {
      */
     @Transactional
     public Owner createOwner(String username) {
-        if (username == null || username.trim().isEmpty() || username.contains(" ")) {
-            throw new IllegalArgumentException("Username cannot be null, empty and spaces!");
+        if (username == null) {
+            throw new IllegalArgumentException("Username cannot be null!");
+        }
+
+        if (username.trim().isEmpty()) {
+            throw new IllegalArgumentException("Username cannot be empty!");
+        }
+
+        if (username.contains(" ")) {
+            throw new IllegalArgumentException("Username cannot contain spaces!");
         }
 
         Account account = accountRepository.findAccountByUsername(username);
@@ -194,14 +225,16 @@ public class AccountManagementService {
      */
     @Transactional
     public Account getAccountByAccountId(int accountId) {
-        if (accountId < 0) {
+        if (accountId <= 0) {
             throw new IllegalArgumentException("Account ID must be greater than 0");
         }
 
         Account account = accountRepository.findAccountByAccountId(accountId);
+
         if (account == null) {
             throw new IllegalArgumentException("Account does not exist");
         }
+
         return account;
     }
 
@@ -213,8 +246,16 @@ public class AccountManagementService {
      */
     @Transactional
     public Account getAccountByUsername(String username) {
-        if (username == null || username.trim().isEmpty() || username.contains(" ")) {
-            throw new IllegalArgumentException("Username cannot be null, empty and spaces!");
+        if (username == null) {
+            throw new IllegalArgumentException("Username cannot be null!");
+        }
+
+        if (username.trim().isEmpty()) {
+            throw new IllegalArgumentException("Username cannot be empty!");
+        }
+
+        if (username.contains(" ")) {
+            throw new IllegalArgumentException("Username cannot contain spaces!");
         }
 
         Account account = accountRepository.findAccountByUsername(username);
