@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.apache.catalina.connector.Response;
 import org.checkerframework.checker.units.qual.A;
 import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -16,6 +17,8 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -31,7 +34,7 @@ import ca.mcgill.ecse321.sportcenter.dao.*;
 // @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class TestRegistrationIntegration {
     @Autowired
-    private TestRestTemplate client; // Always stays the same
+    private TestRestTemplate registration; // Always stays the same
 
     @Autowired
     private RegistrationRepository registrationRepository;
@@ -83,7 +86,7 @@ public class TestRegistrationIntegration {
     // attributes for activity
     private static final String ACTIVITY_NAME = "testActivityName";
     private static final String ACTIVITY_DESCRIPTION = "testActivityDescription";
-    private static final int ACTIVITYID = 1;
+    // never set!! private static final int ACTIVITYID = 1;
     private static final ClassCategory ACTIVITY_CATEGORY = ClassCategory.Cardio;
     private static final boolean ACTIVITY_ISAPPROVED = true;
 
@@ -94,14 +97,19 @@ public class TestRegistrationIntegration {
     private static final LocalTime SCHEDULEDACTIVITY_ENDTIME = LocalTime.of(11, 0);
     private static final int SCHEDULEDACTIVITY_CAPACITY = 10;
 
+    // attributes for registration
+    private static final int REGISTRATIONID = 1;
+
     // create all
     @BeforeEach
     @AfterEach
     public void createAll() {
         // create account
         Account account1 = new Account(ACCOUNT1_USERNAME, ACCOUNT_PASSWORD);
+        account1.setAccountId(ACCOUNT1ID);
         accountRepository.save(account1);
         Account account2 = new Account(ACCOUNT2_USERNAME, ACCOUNT_PASSWORD);
+        account2.setAccountId(ACCOUNT2ID);
         accountRepository.save(account2);
 
         // create instructor
@@ -110,6 +118,8 @@ public class TestRegistrationIntegration {
 
         // create customer
         Customer customer = new Customer(account1);
+        customer.setAccountRoleId(ACCOUNT1ROLEID);
+        customerRepository.save(customer);
 
         // create activity
         Activity activity = new Activity(ACTIVITY_CATEGORY, ACTIVITY_NAME, ACTIVITY_ISAPPROVED, ACTIVITY_DESCRIPTION);
@@ -118,7 +128,13 @@ public class TestRegistrationIntegration {
         // create scheduledActivity
         ScheduledActivity scheduledActivity = new ScheduledActivity(SCHEDULEDACTIVITY_DATE, SCHEDULEDACTIVITY_STARTTIME,
                 SCHEDULEDACTIVITY_ENDTIME, instructor, activity, SCHEDULEDACTIVITY_CAPACITY);
+        scheduledActivity.setScheduledActivityId(SCHEDULEDACTIVITYID);
         scheduledActivityRepository.save(scheduledActivity);
+
+        // create registration
+        Registration registration = new Registration(scheduledActivity, customer);
+        registration.setRegistrationId(REGISTRATIONID);
+        registrationRepository.save(registration);
     }
 
     // TODO: Insert your constants here
@@ -141,22 +157,20 @@ public class TestRegistrationIntegration {
     @Test
     @Order(1)
     public void testCreateRegistration() {
-        // create registration
-        Registration registrationDto = new Registration(Cus);
+        Registration registrationDto = registrationRepository.findRegistrationByRegId(REGISTRATIONID);
 
-        // send post request
-        RegistrationDto registration = client.postForObject("/registration/create", registrationDto,
-                RegistrationDto.class);
-
+        ResponseEntity<RegistrationDto> response = registration.postForEntity(
+                "/register/" + ACCOUNT1ID + "/" + SCHEDULEDACTIVITYID, registrationDto, RegistrationDto.class);
         // check that registration was created
-        assertNotNull(registration);
-        assertEquals(ACCOUNT1ID, registration.getAccount());
-        assertEquals(SCHEDULEDACTIVITYID, registration.getScheduledActivity());
-        assertEquals(LocalDate.now(), registration.getRegistrationDate());
-        assertEquals(LocalTime.now(), registration.getRegistrationTime());
-        assertEquals(Registration.RegistrationStatus.Pending, registration.getRegistrationStatus());
-        assertEquals(Registration.RegistrationType.Single, registration.getRegistrationType());
-        assertEquals(1, registration.getRegistrationId());
+        assertNotNull(response);
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+
+        RegistrationDto registrations = response.getBody();
+        assertNotNull(registrations);
+        assertEquals(REGISTRATIONID, registrations.getRegistrationId());
+        assertEquals(ACCOUNT1ID, registrations.getCustomer().getAccountRoleId());
+        assertEquals(SCHEDULEDACTIVITYID, registrations.getScheduledActivity());
+
     }
 
 }
