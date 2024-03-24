@@ -17,11 +17,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import ca.mcgill.ecse321.sportcenter.dao.AccountRepository;
 import ca.mcgill.ecse321.sportcenter.dao.ActivityRepository;
-import ca.mcgill.ecse321.sportcenter.dao.CustomerRepository;
-import ca.mcgill.ecse321.sportcenter.dao.InstructorRepository;
-import ca.mcgill.ecse321.sportcenter.dto.AccountDto;
 import ca.mcgill.ecse321.sportcenter.dto.ActivityDto;
 import ca.mcgill.ecse321.sportcenter.dto.ErrorDto;
 import ca.mcgill.ecse321.sportcenter.model.Activity;
@@ -43,9 +39,14 @@ public class TestActivityManagementIntegration {
     private static final String ACTIVITY_NAME = "Olympic Weightlifting";
     private static final String NEW_ACTIVITY_NAME = "Heavy Resistance III";
     private static final String DESCRIPTION = "Master the art of Clean And Jerks and be explosive.";
+    private static final String ANOTHER_DESCRIPTION = "Classic compound and dumbbell exercises";
 
     private static final ClassCategory CATEGORY = ClassCategory.Strength;
+    private static final ClassCategory ANOTHER_CATEGORY = ClassCategory.Cardio;
+
     private static final boolean NOT_APPROVED = false;
+    private static final boolean APPROVED = true;
+
 
     @BeforeEach
     @AfterEach
@@ -139,13 +140,12 @@ public class TestActivityManagementIntegration {
     }
 
     @Test
-    public void testGetActivityBySubcategory() { // to change
+    public void testGetActivityBySubcategory() { 
 
-        // to change to change
         Activity newActivity = new Activity(CATEGORY, ACTIVITY_NAME, NOT_APPROVED, DESCRIPTION);
         activityRepository.save(newActivity);
 
-        String endpoint = "/activity/" + ACTIVITY_NAME;
+        String endpoint = "/activity/" + CATEGORY;
 
         ResponseEntity<ActivityDto> response = activity.getForEntity(endpoint, ActivityDto.class);
 
@@ -163,6 +163,49 @@ public class TestActivityManagementIntegration {
         assertNotNull(activityRepository.findActivityByName(ACTIVITY_NAME));
 
     }
+
+    @Test
+    public void testGetActivityByIsApproved() { 
+
+        Activity newActivity = new Activity(CATEGORY, ACTIVITY_NAME, APPROVED, DESCRIPTION);
+        activityRepository.save(newActivity);
+
+        //"/activities/{isApproved}"
+        String endpoint = "/activity/" + APPROVED;
+        
+        ResponseEntity<ActivityDto> response = activity.getForEntity(endpoint, ActivityDto.class);
+    
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        //TO CHECK
+    
+    }
+
+    @Test
+    public void testGetActivityByWrongSubcategory() { 
+
+        Activity newActivity = new Activity(CATEGORY, ACTIVITY_NAME, NOT_APPROVED, DESCRIPTION);
+        activityRepository.save(newActivity);
+
+        String endpoint = "/activity/" + ANOTHER_CATEGORY;
+
+        ResponseEntity<ActivityDto> response = activity.getForEntity(endpoint, ActivityDto.class);
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        ActivityDto responseActivity = response.getBody();
+
+        assertNotNull(responseActivity);
+        assertNotEquals(responseActivity.getSubcategory(), ANOTHER_CATEGORY);
+        assertEquals(activityRepository.findActivityBySubcategory(ANOTHER_CATEGORY).size(), 0);
+        assertEquals(activityRepository.findActivityBySubcategory(CATEGORY).size(), 1);
+        assertNotNull(activityRepository.findActivityByName(ACTIVITY_NAME)); //still check if the activity is still there
+
+    }
+
+
 
     @Test
     public void testUpdateActivityName() {
