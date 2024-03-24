@@ -467,11 +467,10 @@ public class ScheduledActivityManagementService {
             throw new IllegalArgumentException("Id cannot be negative!");
         }
 
-        // Minimize queries
         List<ScheduledActivity> scheduledActivities = getAllScheduledActivitiesByInstructorId(accountRoleId);
         if (scheduledActivities != null) {
             for (ScheduledActivity scheduledActivity : scheduledActivities) {
-                deleteScheduledActivity(scheduledActivity.getScheduledActivityId());
+                scheduledActivityRepository.delete(scheduledActivity);
             }
         }
         return true;
