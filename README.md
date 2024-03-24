@@ -23,19 +23,25 @@ Our team of developers have been put in charge of creating a fully functional we
 
 ## Tasks
 ### Deliverable 1
-**The main goal of this deliberable was to think about the software design of the application and start the project on good bases. To do so, it was required to use different techniques such as**
+**The main goal of this deliverable was to think about the software design of the application and start the project on a good basis. To do so, it was required to use different techniques such as**
 * Definition of requirements: Identification and documentation of functional and non-functional requirements related to the system.
-* Domain modeling: Show the different relationships between every class of the system and make it visually appealing.
-* Use case diagrams & detailed use cases: Illustrate the different use cases of the functinalities of the system by different actors.
+* Domain modelling: Show the different relationships between every class of the system and make it visually appealing.
+* Use case diagrams & detailed use cases: Illustrate the different use cases of the functionalities of the system by different actors.
 * Configuration of the system: JDK 17, Spring Boot, Graddle & VS Code used among the team.
-* Detailed use cases: Write short reports about every action that could occur during one of the previously mentionned use cases, and its exceptions.
+* Detailed use cases: Write short reports about every action that could occur during one of the previously mentioned use cases, and its exceptions.
 * Persistence layer & testing: Use of JPA annotation & CRUD operations through a DAO. Write test cases using read/write operations on the local PostgreSQL database.
 * Project management: Creation of communication channels (Discord, Instagram), writing of the README FILE, the Wiki page, the issues and the project and its multiple views.
 
 <br>
 
-> ### Deliverable 2
-> *Released later in the development process*
+### Deliverable 2
+**The main goal of this deliverable is to implement the backend service of the application. This ultimately means setting up the business logic and creating numerous files to increase modularity.**
+* Creation of the service, controller, dto and testing files.
+* Ensure communication between the modelling, persistence and business layers. Ensure that it will eventually communicate with the front end.
+* Apply the business logic and communication between model, service and controller. The business logic must be based on the functional requirements.
+* Create unit and integration tests for services and controller methods. This is done with JUnit and Mockito.
+* Run the tests and application with the gradle command to ensure functionality.
+* Very detailed wiki on backend information and implementation.
 
 <br>
 
