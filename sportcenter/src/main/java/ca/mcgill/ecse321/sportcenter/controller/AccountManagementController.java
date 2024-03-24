@@ -347,14 +347,6 @@ public class AccountManagementController {
     }
 
     /**
-     * Delete all accounts
-     */
-    @DeleteMapping(value = { "/accounts/deleteAll", "/accounts/deleteAll/" })
-    public void deleteAllAccounts() throws IllegalArgumentException {
-        accountService.deleteAllAccounts();
-    }
-
-    /**
      * Delete a customer by its accountRoleId
      * 
      * @param accountRoleId

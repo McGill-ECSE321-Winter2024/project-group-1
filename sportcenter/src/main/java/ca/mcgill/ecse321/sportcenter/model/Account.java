@@ -45,20 +45,12 @@ public class Account {
 
   public boolean setUsername(String aUsername) {
     boolean wasSet = false;
-    String anOldUsername = getUsername();
-    if (anOldUsername != null && anOldUsername.equals(aUsername)) {
-      return true;
-    }
-    if (hasWithUsername(aUsername)) {
+    if (aUsername == null) {
       return wasSet;
     }
     username = aUsername;
-    wasSet = true;
-    if (anOldUsername != null) {
-      accountsByUsername.remove(anOldUsername);
-    }
-    accountsByUsername.put(aUsername, this);
-    return wasSet;
+
+    return !wasSet;
   }
 
   public boolean setPassword(String aPassword) {

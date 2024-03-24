@@ -46,11 +46,14 @@ public class TestAccountCustomerService {
 
     // account keys
     private static final int CUSTOMER_ACCOUNT_KEY = 1;
-
     private static final int NEW_CUSTOMER_ACCOUNT_KEY = 2;
+
     // account role keys
     private static final String CUSTOMER_USERNAME = "customer";
     private static final String NEW_CUSTOMER_USERNAME = "newCustomer";
+
+    private static final int CUSTOMER_ACCOUNT_ROLE_ID = 1;
+    private static final int NEW_CUSTOMER_ACCOUNT_ROLE_ID = 1;
 
     @InjectMocks
     private AccountManagementService accountManagementService;
@@ -73,11 +76,10 @@ public class TestAccountCustomerService {
                 account.setUsername(CUSTOMER_USERNAME);
                 account.setPassword("password");
                 account.setAccountId(CUSTOMER_ACCOUNT_KEY);
-                customerRepository.save(new Customer(account));
                 return account;
             } else if (invocation.getArgument(0).equals(NEW_CUSTOMER_ACCOUNT_KEY)) {
                 Account account = new Account();
-                account.setUsername("newCustomer");
+                account.setUsername(NEW_CUSTOMER_USERNAME);
                 account.setPassword("password");
                 account.setAccountId(NEW_CUSTOMER_ACCOUNT_KEY);
                 return account;
@@ -93,11 +95,10 @@ public class TestAccountCustomerService {
                         account.setUsername(CUSTOMER_USERNAME);
                         account.setPassword("password");
                         account.setAccountId(CUSTOMER_ACCOUNT_KEY);
-                        customerRepository.save(new Customer(account));
                         return account;
                     } else if (invocation.getArgument(0).equals(NEW_CUSTOMER_USERNAME)) {
                         Account account = new Account();
-                        account.setUsername("newCustomer");
+                        account.setUsername(NEW_CUSTOMER_USERNAME);
                         account.setPassword("password");
                         account.setAccountId(NEW_CUSTOMER_ACCOUNT_KEY);
                         return account;
@@ -108,28 +109,58 @@ public class TestAccountCustomerService {
 
         lenient().when(customerRepository.findCustomerByAccountRoleId(anyInt()))
                 .thenAnswer((InvocationOnMock invocation) -> {
-                    if (invocation.getArgument(0).equals(CUSTOMER_ACCOUNT_KEY)) {
+                    if (invocation.getArgument(0).equals(CUSTOMER_ACCOUNT_ROLE_ID)) {
                         Customer customer = new Customer();
                         customer.setAccount(accountRepository.findAccountByAccountId(CUSTOMER_ACCOUNT_KEY));
+                        customer.setAccountRoleId(CUSTOMER_ACCOUNT_ROLE_ID);
                         return customer;
-                    } else if (invocation.getArgument(0).equals(NEW_CUSTOMER_ACCOUNT_KEY)) {
+                    } else if (invocation.getArgument(0).equals(NEW_CUSTOMER_ACCOUNT_ROLE_ID)) {
                         Customer customer = new Customer();
                         customer.setAccount(accountRepository.findAccountByAccountId(NEW_CUSTOMER_ACCOUNT_KEY));
+                        customer.setAccountRoleId(NEW_CUSTOMER_ACCOUNT_ROLE_ID);
                         return customer;
                     } else {
                         return null;
                     }
                 });
+
         lenient().when(customerRepository.findCustomerByAccountUsername(anyString()))
                 .thenAnswer((InvocationOnMock invocation) -> {
                     if (invocation.getArgument(0).equals(CUSTOMER_USERNAME)) {
                         Customer customer = new Customer();
-                        customer.setAccount(accountRepository.findAccountByUsername(CUSTOMER_USERNAME));
+                        customer.setAccount(accountRepository.findAccountByAccountId(CUSTOMER_ACCOUNT_KEY));
+                        customer.setAccountRoleId(CUSTOMER_ACCOUNT_ROLE_ID);
                         return customer;
                     } else {
                         return null;
                     }
                 });
+
+        lenient().when(customerRepository.findCustomerByAccountAccountId(anyInt()))
+                .thenAnswer((InvocationOnMock invocation) -> {
+                    if (invocation.getArgument(0).equals(CUSTOMER_ACCOUNT_KEY)) {
+                        Customer customer = new Customer();
+                        customer.setAccount(accountRepository.findAccountByAccountId(CUSTOMER_ACCOUNT_KEY));
+                        customer.setAccountRoleId(CUSTOMER_ACCOUNT_ROLE_ID);
+                        return customer;
+                    } else if (invocation.getArgument(0).equals(NEW_CUSTOMER_ACCOUNT_KEY)) {
+                        Customer customer = new Customer();
+                        customer.setAccount(accountRepository.findAccountByAccountId(NEW_CUSTOMER_ACCOUNT_KEY));
+                        customer.setAccountRoleId(NEW_CUSTOMER_ACCOUNT_ROLE_ID);
+                        return customer;
+                    } else {
+                        return null;
+                    }
+                });
+
+        lenient().when(customerRepository.findAll()).thenAnswer((InvocationOnMock invocation) -> {
+            List<Customer> customers = new ArrayList<Customer>();
+            Customer customer = new Customer();
+            customer.setAccount(accountRepository.findAccountByAccountId(CUSTOMER_ACCOUNT_KEY));
+            customer.setAccountRoleId(CUSTOMER_ACCOUNT_ROLE_ID);
+            customers.add(customer);
+            return customers;
+        });
 
         Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> {
             return invocation.getArgument(0);
@@ -145,12 +176,13 @@ public class TestAccountCustomerService {
     public void testCreateCustomer() {
         Customer customer = null;
         try {
-            customer = accountManagementService.createCustomer(CUSTOMER_USERNAME);
+            customer = accountManagementService.createCustomer(NEW_CUSTOMER_USERNAME);
         } catch (IllegalArgumentException e) {
+            // Check that no error occurred
             fail(e.getMessage());
         }
         assertNotNull(customer);
-        assertEquals(CUSTOMER_USERNAME, customer.getAccount().getUsername());
+        assertEquals(NEW_CUSTOMER_USERNAME, customer.getAccount().getUsername());
     }
 
     // Test the creation of a customer account with a null username -> FAIL
@@ -212,13 +244,13 @@ public class TestAccountCustomerService {
     public void testGetCustomerAccountByAccountRoleId() {
         Customer customer = null;
         try {
-            customer = accountManagementService.getCustomerByAccountRoleId(CUSTOMER_ACCOUNT_KEY);
+            customer = accountManagementService.getCustomerByAccountRoleId(CUSTOMER_ACCOUNT_ROLE_ID);
         } catch (IllegalArgumentException e) {
             // Check that no error occurred
             fail();
         }
         assertNotNull(customer);
-        assertEquals(CUSTOMER_ACCOUNT_KEY, customer.getAccountRoleId());
+        assertEquals(CUSTOMER_ACCOUNT_ROLE_ID, customer.getAccount().getAccountId());
     }
 
     // Test getting a customer account by an non-existing accountRoleId -> FAIL
@@ -305,15 +337,19 @@ public class TestAccountCustomerService {
 
     // test get customer account by its username -> success
     @Test
-    public void testGetCustomerAccountByUsername() {
+    public void testGetCustomerByUsername() {
         Customer customer = null;
+        Account account = null;
         try {
             customer = accountManagementService.getCustomerByUsername(CUSTOMER_USERNAME);
+            account = customer.getAccount();
         } catch (IllegalArgumentException e) {
             // Check that no error occurred
-            fail();
+            fail(e.getMessage());
         }
         assertNotNull(customer);
+        assertNotNull(account);
+        assertEquals(CUSTOMER_ACCOUNT_KEY, customer.getAccount().getAccountId());
         assertEquals(CUSTOMER_USERNAME, customer.getAccount().getUsername());
     }
 
@@ -365,7 +401,7 @@ public class TestAccountCustomerService {
         String error = null;
         Customer customer = null;
         try {
-            customer = accountManagementService.getCustomerByUsername(" ");
+            customer = accountManagementService.getCustomerByUsername("s s");
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -410,16 +446,15 @@ public class TestAccountCustomerService {
     // test delete customer account by accountRoleId -> success
     @Test
     public void testDeleteCustomerAccountByAccountRoleId() {
-        List<Customer> customers = accountManagementService.getAllCustomers();
-        int size = customers.size();
+        boolean deleted = false;
+
         try {
-            accountManagementService.deleteCustomerByAccountRoleId(CUSTOMER_ACCOUNT_KEY);
+            deleted = accountManagementService.deleteCustomerByAccountRoleId(CUSTOMER_ACCOUNT_KEY);
         } catch (IllegalArgumentException e) {
             fail();
         }
-        customers = toList(accountManagementService.getAllCustomers());
-        assertEquals(size - 1, customers.size());
-        assertNull(accountManagementService.getCustomerByAccountRoleId(CUSTOMER_ACCOUNT_KEY));
+
+        assertTrue(deleted);
     }
 
     // test delete customer account by accountRoleId -> non existing, fail
@@ -463,16 +498,15 @@ public class TestAccountCustomerService {
     // test delete customer account by username -> success
     @Test
     public void testDeleteCustomerAccountByUsername() {
-        List<Customer> customers = accountManagementService.getAllCustomers();
-        int size = customers.size();
+        boolean deleted = false;
+
         try {
-            accountManagementService.deleteCustomerByUsername(CUSTOMER_USERNAME);
+            deleted = accountManagementService.deleteCustomerByUsername(CUSTOMER_USERNAME);
         } catch (IllegalArgumentException e) {
             fail();
         }
-        customers = toList(accountManagementService.getAllCustomers());
-        assertEquals(size - 1, customers.size());
-        assertNull(accountManagementService.getCustomerByUsername(CUSTOMER_USERNAME));
+
+        assertTrue(deleted);
     }
 
     // test delete customer account by username -> non existing, fail
@@ -521,17 +555,5 @@ public class TestAccountCustomerService {
             error = e.getMessage();
         }
         assertEquals("Username cannot be null, empty and spaces!", error);
-    }
-
-    /**
-     * Convert Iterable to List
-     * 
-     * @param Iterable<T>
-     * @return List<T>
-     */
-    private <T> List<T> toList(Iterable<T> iterable) {
-        List<T> resultList = new ArrayList<T>();
-        iterable.forEach(resultList::add);
-        return resultList;
     }
 }

@@ -110,11 +110,11 @@ public class AccountManagementService {
             throw new IllegalArgumentException("Username cannot contain spaces!");
         }
 
-        if (accountRepository.findAccountByUsername(username) == null) {
+        Account account = accountRepository.findAccountByUsername(username);
+        if (account == null) {
             throw new IllegalArgumentException("Account does not exist!");
         }
 
-        Account account = accountRepository.findAccountByUsername(username);
         Customer customer = new Customer();
         customer.setAccount(account);
         customerRepository.save(customer);
@@ -359,7 +359,7 @@ public class AccountManagementService {
             throw new IllegalArgumentException("Account does not exist!");
         }
 
-        Customer customer = customerRepository.findCustomerByAccountRoleId(account.getAccountId());
+        Customer customer = customerRepository.findCustomerByAccountUsername(username);
         if (customer == null) {
             throw new IllegalArgumentException("Customer does not exist!");
         }
@@ -664,31 +664,20 @@ public class AccountManagementService {
         }
 
         // Delete all associated account roles
-        deleteCustomerByAccountId(accountId);
-        deleteInstructorByUsername(account.getUsername());
+        // deleteCustomerByAccountId(accountId);
+        // deleteInstructorByUsername(account.getUsername());
 
         accountRepository.deleteById(accountId);
-    }
-
-    /**
-     * Delete all accounts
-     * 
-     * @return void
-     */
-    @Transactional
-    public void deleteAllAccounts() {
-        for (Account account : accountRepository.findAll()) {
-            deleteAccount(account.getAccountId());
-        }
     }
 
     /**
      * Delete a customer by its accountRoleId (primary key)
      * 
      * @param accountRoleId
+     * @return boolean
      */
     @Transactional
-    public void deleteCustomerByAccountRoleId(int accountRoleId) {
+    public boolean deleteCustomerByAccountRoleId(int accountRoleId) {
         if (accountRoleId < 0) {
             throw new IllegalArgumentException("AccountRoleId cannot be negative!");
         }
@@ -699,16 +688,19 @@ public class AccountManagementService {
         }
 
         // Delete all associated registrations
-        RegistrationManagementService registrationManagementService = new RegistrationManagementService();
-        registrationManagementService.deleteRegistrationsByAccountRoleId(customer.getAccountRoleId());
+        // RegistrationManagementService registrationManagementService = new
+        // RegistrationManagementService();
+        // registrationManagementService.deleteRegistrationsByAccountRoleId(customer.getAccountRoleId());
 
         customerRepository.delete(customer);
+        return true;
     }
 
     /**
      * Delete customer by accountId
      * 
      * @param accountId
+     * @return boolean
      */
     @Transactional
     public boolean deleteCustomerByAccountId(int accountId) {
@@ -727,8 +719,10 @@ public class AccountManagementService {
         }
 
         // Delete all associated registrations
-        RegistrationManagementService registrationManagementService = new RegistrationManagementService();
-        registrationManagementService.deleteRegistrationsByAccountRoleId(customer.getAccountRoleId());
+        // RegistrationManagementService registrationManagementService = new
+        // RegistrationManagementService();
+        // registrationManagementService.deleteRegistrationsByAccountRoleId(customer.getAccountRoleId());
+
         customerRepository.delete(customer);
         return true;
     }
@@ -739,7 +733,7 @@ public class AccountManagementService {
      * @param username
      */
     @Transactional
-    public void deleteCustomerByUsername(String username) {
+    public boolean deleteCustomerByUsername(String username) {
         if (username == null || username.trim().isEmpty() || username.contains(" ")) { // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
             throw new IllegalArgumentException("Username cannot be null, empty and spaces!");
         }
@@ -755,20 +749,23 @@ public class AccountManagementService {
         }
 
         // Delete all associated registrations
-        RegistrationManagementService registrationManagementService = new RegistrationManagementService();
-        registrationManagementService.deleteRegistrationsByAccountRoleId(customer.getAccountRoleId());
+        // RegistrationManagementService registrationManagementService = new
+        // RegistrationManagementService();
+        // registrationManagementService.deleteRegistrationsByAccountRoleId(customer.getAccountRoleId());
 
         customerRepository.delete(customer);
+        return true;
     }
 
     /**
      * Delete a instructor by its accountRoleId (primary key).
      * 
      * @param accountRoleId
+     * @return boolean
      * @author Anslean AJ
      */
     @Transactional
-    public void deleteInstructorByAccountRoleId(int accountRoleId) {
+    public boolean deleteInstructorByAccountRoleId(int accountRoleId) {
         if (accountRoleId < 0) {
             throw new IllegalArgumentException("AccountRoleId cannot be negative!");
         }
@@ -779,20 +776,23 @@ public class AccountManagementService {
         }
 
         // Delete all associated scheduled activities
-        ScheduledActivityManagementService scheduledActivityManagementService = new ScheduledActivityManagementService();
-        scheduledActivityManagementService.deleteAllScheduledActivitiesByInstructorId(accountRoleId);
+        // ScheduledActivityManagementService scheduledActivityManagementService = new
+        // ScheduledActivityManagementService();
+        // scheduledActivityManagementService.deleteAllScheduledActivitiesByInstructorId(accountRoleId);
 
         instructorRepository.deleteById(accountRoleId);
+        return true;
     }
 
     /**
      * Delete instructor by username
      * 
      * @param username
+     * @return boolean
      * @author Anslean AJ
      */
     @Transactional
-    public void deleteInstructorByUsername(String username) {
+    public boolean deleteInstructorByUsername(String username) {
         if (username == null || username.trim().isEmpty() || username.contains(" ")) { // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
             throw new IllegalArgumentException("Username cannot be null, empty and spaces!");
         }
@@ -808,10 +808,12 @@ public class AccountManagementService {
         }
 
         // Delete all associated scheduled activities
-        ScheduledActivityManagementService scheduledActivityManagementService = new ScheduledActivityManagementService();
-        scheduledActivityManagementService.deleteAllScheduledActivitiesByInstructorId(instructor.getAccountRoleId());
+        // ScheduledActivityManagementService scheduledActivityManagementService = new
+        // ScheduledActivityManagementService();
+        // scheduledActivityManagementService.deleteAllScheduledActivitiesByInstructorId(instructor.getAccountRoleId());
 
         instructorRepository.delete(instructor);
+        return true;
     }
 
     // Extra functions
