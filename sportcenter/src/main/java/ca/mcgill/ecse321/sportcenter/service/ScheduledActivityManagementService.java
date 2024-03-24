@@ -238,7 +238,6 @@ public class ScheduledActivityManagementService {
         return scheduledActivity.getActivity();
     }
 
-    // XXXXXXXXXXXXXXXXXXXXX Needs to be tested XXXXXXXXXXXXXXXXXXXXX
     /**
      * Get all scheduled activities of an activity
      * 
@@ -452,16 +451,10 @@ public class ScheduledActivityManagementService {
             throw new IllegalArgumentException("Scheduled Activity does not exist!");
         }
 
-        // Delete all registrations of this scheduled activity
-        // RegistrationManagementService registrationManagementService = new
-        // RegistrationManagementService();
-        // registrationManagementService.deleteRegistrationsByScheduledActivityId(scheduledActivityId);
-
         scheduledActivityRepository.delete(scheduledActivity);
         return true;
     }
 
-    // XXXXXXXXXXXXXXXXXXXXX Needs to be tested XXXXXXXXXXXXXXXXXXXXX
     /**
      * Delete all scheduled activities by instructor id
      * 

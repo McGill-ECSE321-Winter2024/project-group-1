@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.catalina.connector.Response;
-import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 
 import ca.mcgill.ecse321.sportcenter.dao.AccountRepository;
 import ca.mcgill.ecse321.sportcenter.dao.ActivityRepository;
@@ -29,8 +27,6 @@ import ca.mcgill.ecse321.sportcenter.dto.ErrorDto;
 import ca.mcgill.ecse321.sportcenter.model.Activity;
 import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
 
-
-
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class TestActivityManagementIntegration {
 
@@ -40,8 +36,8 @@ public class TestActivityManagementIntegration {
     @Autowired
     private ActivityRepository activityRepository;
 
-   // @Autowired
-   // private AccountRepository accountRepository;
+    // @Autowired
+    // private AccountRepository accountRepository;
 
     private static final String NULL_NAME = null;
     private static final String ACTIVITY_NAME = "Olympic Weightlifting";
@@ -51,23 +47,19 @@ public class TestActivityManagementIntegration {
     private static final ClassCategory CATEGORY = ClassCategory.Strength;
     private static final boolean NOT_APPROVED = false;
 
-
-
-
-
     @BeforeEach
     @AfterEach
     public void clearDatabase() {
-		activityRepository.deleteAll();
+        activityRepository.deleteAll();
     }
 
-
     @Test
-    public void testCreateActivity() { 
+    public void testCreateActivity() {
 
         ActivityDto request = new ActivityDto(CATEGORY, ACTIVITY_NAME, NOT_APPROVED, DESCRIPTION);
-        
-        ResponseEntity<ActivityDto> response = activity.postForEntity("/activity/" + ACTIVITY_NAME, request, ActivityDto.class);
+
+        ResponseEntity<ActivityDto> response = activity.postForEntity("/activity/" + ACTIVITY_NAME, request,
+                ActivityDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode(), "Response has correct status");
@@ -85,15 +77,15 @@ public class TestActivityManagementIntegration {
     }
 
     @Test
-    public void testCreateActivityInvalidUsername() { 
+    public void testCreateActivityInvalidUsername() {
 
         ActivityDto request = new ActivityDto(CATEGORY, NULL_NAME, NOT_APPROVED, DESCRIPTION);
-        
+
         ResponseEntity<ErrorDto> response = activity.postForEntity("/activity/" + NULL_NAME, request, ErrorDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        
+
         ErrorDto responseError = response.getBody();
 
         assertNotNull(responseError);
@@ -102,17 +94,17 @@ public class TestActivityManagementIntegration {
 
     }
 
-
     @Test
-    public void testCreateActivityInvalidDescription() { 
+    public void testCreateActivityInvalidDescription() {
 
         ActivityDto request = new ActivityDto(CATEGORY, ACTIVITY_NAME, NOT_APPROVED, NULL_NAME);
-        
-        ResponseEntity<ErrorDto> response = activity.postForEntity("/activity/" + ACTIVITY_NAME, request, ErrorDto.class);
+
+        ResponseEntity<ErrorDto> response = activity.postForEntity("/activity/" + ACTIVITY_NAME, request,
+                ErrorDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        
+
         ErrorDto responseError = response.getBody();
 
         assertNotNull(responseError);
@@ -120,7 +112,6 @@ public class TestActivityManagementIntegration {
         assertEquals("Description cannot be empty!", responseError.getErrors().get(0));
 
     }
-
 
     @Test
     public void testGetActivity() {
@@ -147,11 +138,10 @@ public class TestActivityManagementIntegration {
 
     }
 
-
     @Test
-    public void testGetActivityBySubcategory() { //to change
-        
-        //to change to change
+    public void testGetActivityBySubcategory() { // to change
+
+        // to change to change
         Activity newActivity = new Activity(CATEGORY, ACTIVITY_NAME, NOT_APPROVED, DESCRIPTION);
         activityRepository.save(newActivity);
 
@@ -174,13 +164,13 @@ public class TestActivityManagementIntegration {
 
     }
 
-
     @Test
     public void testUpdateActivityName() {
 
         ActivityDto activityDto = new ActivityDto(CATEGORY, ACTIVITY_NAME, NOT_APPROVED, DESCRIPTION);
 
-        String endpoint = "/activity/update/" + ACTIVITY_NAME +"/"+ NEW_ACTIVITY_NAME + "/" + DESCRIPTION + "/" + CATEGORY;
+        String endpoint = "/activity/update/" + ACTIVITY_NAME + "/" + NEW_ACTIVITY_NAME + "/" + DESCRIPTION + "/"
+                + CATEGORY;
 
         ResponseEntity<ActivityDto> response = activity.postForEntity(endpoint, activityDto, ActivityDto.class);
 
@@ -214,7 +204,6 @@ public class TestActivityManagementIntegration {
 
     }
 
-
     @Test
     public void testCreateAndGetAllAndDeleteActivity() {
 
@@ -225,7 +214,7 @@ public class TestActivityManagementIntegration {
 
         ResponseEntity<ActivityDto> response = activity.getForEntity(endpointToGetAll, ActivityDto.class);
 
-        //assertions
+        // assertions
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
@@ -245,17 +234,8 @@ public class TestActivityManagementIntegration {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
 
-       activityDTO = response.getBody();
-
+        activityDTO = response.getBody();
 
     }
-
-
-
-
-
-
-
-
 
 }

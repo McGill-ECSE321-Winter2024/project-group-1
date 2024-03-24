@@ -2,6 +2,7 @@ package ca.mcgill.ecse321.sportcenter.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.lenient;
@@ -11,6 +12,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ca.mcgill.ecse321.sportcenter.dao.ActivityRepository;
@@ -53,9 +56,60 @@ public class TestActivityService {
             }
         });
 
-        lenient().when(activityRepository.findActivityByName(any(String.class))).thenReturn(null);
-        lenient().when(accountService.checkAccountHasInstructorRole(any(Integer.class))).thenReturn(true);
-        lenient().when(activityRepository.findActivityByName(EXISTING_NAME)).thenReturn(new Activity());
+        lenient().when(activityRepository.findActivityByName(any(String.class))).thenAnswer((invocation) -> {
+            if (invocation.getArgument(0).equals(EXISTING_NAME)) {
+                Activity activity = new Activity();
+                activity.setName(EXISTING_NAME);
+                activity.setDescription(DESCRIPTION);
+                activity.setSubCategory(SUBCATEGORY);
+                activity.setIsApproved(ISAPPROVED);
+                return activity;
+            } else {
+                return null;
+            }
+        });
+
+        lenient().when(activityRepository.findActivityBySubcategory(any(ClassCategory.class)))
+                .thenAnswer((invocation) -> {
+                    if (invocation.getArgument(0).equals(SUBCATEGORY)) {
+                        Activity activity = new Activity();
+                        activity.setName(EXISTING_NAME);
+                        activity.setDescription(DESCRIPTION);
+                        activity.setSubCategory(SUBCATEGORY);
+                        activity.setIsApproved(ISAPPROVED);
+                        return activity;
+                    } else {
+                        return null;
+                    }
+                });
+
+        lenient().when(activityRepository.findActivityByIsApproved(any(Boolean.class))).thenAnswer((invocation) -> {
+            if (invocation.getArgument(0).equals(ISAPPROVED)) {
+                Activity activity = new Activity();
+                activity.setName(EXISTING_NAME);
+                activity.setDescription(DESCRIPTION);
+                activity.setSubCategory(SUBCATEGORY);
+                activity.setIsApproved(ISAPPROVED);
+                return activity;
+            } else {
+                return null;
+            }
+        });
+
+        lenient().when(activityRepository.findAll()).thenAnswer((invocation) -> {
+            Activity activity = new Activity();
+            activity.setName(EXISTING_NAME);
+            activity.setDescription(DESCRIPTION);
+            activity.setSubCategory(SUBCATEGORY);
+            activity.setIsApproved(ISAPPROVED);
+            return activity;
+        });
+
+        Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> {
+            return invocation.getArgument(0);
+        };
+        lenient().when(activityRepository.save(any(Activity.class))).thenAnswer(returnParameterAsAnswer);
+
     }
 
     @Test
@@ -365,12 +419,13 @@ public class TestActivityService {
 
     @Test
     public void testDeleteActivity() {
-        ;
-        String name = "Soccer";
-        String description = "Soccer for beginners";
-        ClassCategory subCategory = ClassCategory.Cardio;
-        activityService.createActivity(name, description, subCategory);
-        activityService.deleteActivity(name);
+        boolean deleted = false;
+        try {
+            deleted = activityService.deleteActivity(EXISTING_NAME);
+        } catch (IllegalArgumentException e) {
+            fail(e.getMessage());
+        }
+        assertTrue(deleted);
     }
 
     @Test

@@ -120,8 +120,7 @@ public class TestAccountInstructorService {
             instructor = accountService.createInstructor(USERNAME_NONDUPLICATE, InstructorStatus.Pending, "description",
                     "image");
         } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-            fail();
+            fail(e.getMessage());
         }
         assertNotNull(instructor);
         assertEquals(USERNAME_NONDUPLICATE, instructor.getAccount().getUsername());
@@ -435,4 +434,94 @@ public class TestAccountInstructorService {
     }
 
     // TODO: UPDATE TESTING
+
+    /**
+     * Tests for updating an instructor's description and profile picture
+     */
+    @Test
+    public void testUpdateInstructorDescription() {
+        Instructor instructor = null;
+        try {
+            instructor = accountService.updateInstructor(USERNAME, "new_description", "new_profilePicURL");
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+        assertNotNull(instructor);
+        assertEquals("new_description", instructor.getDescription());
+        assertEquals("new_profilePicURL", instructor.getProfilePicURL());
+    }
+
+    /**
+     * Tests for updating an instructor's with an invalid username
+     */
+    @Test
+    public void testUpdateInstructorDescriptionInvalidUsername() {
+        Instructor instructor = null;
+        try {
+            instructor = accountService.updateInstructor("Goku", "new_description", "profilePicURL");
+        } catch (IllegalArgumentException e) {
+            assertEquals("Account does not exist!", e.getMessage());
+            assertNull(instructor);
+        }
+    }
+
+    /**
+     * Tests for updating an instructor's profile with an invalid description
+     */
+    @Test
+    public void testUpdateInstructorDescriptionInvalidDescription() {
+        Instructor instructor = null;
+        try {
+            instructor = accountService.updateInstructor(USERNAME, null, "profilePicURL");
+        } catch (IllegalArgumentException e) {
+            assertEquals("Description cannot be null, empty and spaces!", e.getMessage());
+            assertNull(instructor);
+        }
+    }
+
+    /**
+     * Tests for updating an instructor's profile with an invalid profile picture
+     * URL
+     */
+    @Test
+    public void testUpdateInstructorDescriptionInvalidProfilePicURL() {
+        Instructor instructor = null;
+        try {
+            instructor = accountService.updateInstructor(USERNAME, "description", null);
+        } catch (IllegalArgumentException e) {
+            assertEquals("ProfilePic URL cannot be null, empty and spaces!", e.getMessage());
+            assertNull(instructor);
+        }
+    }
+
+    /**
+     * Tests for updating an instructor's profile with an account that does not
+     * exist
+     */
+    @Test
+    public void testUpdateInstructorDescriptionInvalidAccount() {
+        Instructor instructor = null;
+        try {
+            instructor = accountService.updateInstructor("Goku", "description", "profilePicURL");
+        } catch (IllegalArgumentException e) {
+            assertEquals("Account does not exist!", e.getMessage());
+            assertNull(instructor);
+        }
+    }
+
+    /**
+     * Tests for updating an instructor's profile with an instructor that does not
+     * exist
+     */
+    @Test
+    public void testUpdateInstructorDescriptionInvalidInstructor() {
+        Instructor instructor = null;
+        try {
+            instructor = accountService.updateInstructor(USERNAME_NONDUPLICATE, "description", "profilePicURL");
+        } catch (IllegalArgumentException e) {
+            assertEquals("Instructor does not exist!", e.getMessage());
+            assertNull(instructor);
+        }
+    }
+
 }

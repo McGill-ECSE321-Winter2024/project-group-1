@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +15,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.stubbing.Answer;
+
 import ca.mcgill.ecse321.sportcenter.dao.ActivityRepository;
 import ca.mcgill.ecse321.sportcenter.model.Activity;
 import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
@@ -45,6 +48,7 @@ public class TestActivityManagementService {
     private ActivityManagementService activityManagementService;
 
     // @SuppressWarnings("null")
+    @SuppressWarnings("null")
     @BeforeEach
     void setMockOutput() {
         lenient().when(activityDao.findActivityByName(anyString()))
@@ -76,6 +80,11 @@ public class TestActivityManagementService {
                         return null;
                     }
                 });
+
+        Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> {
+            return invocation.getArgument(0);
+        };
+        lenient().when(activityDao.save(any(Activity.class))).thenAnswer(returnParameterAsAnswer);
     }
 
     // TEST #1 - CREATE ACTIVITY
@@ -376,6 +385,50 @@ public class TestActivityManagementService {
         }
 
         assertEquals("Activity is already approved!", error);
+    }
+
+    // Delete tests
+
+    /**
+     * Test delete activity
+     */
+    @Test
+    public void testDeleteActivity() {
+        boolean deleted = false;
+
+        try {
+            deleted = activityManagementService.deleteActivity(CREATED_ACTIVITY_KEY);
+        } catch (IllegalArgumentException e) {
+            fail(e.getMessage());
+        }
+
+        assertTrue(deleted);
+    }
+
+    @Test
+    public void testDeleteActivityEmpty() {
+        String error = null;
+
+        try {
+            activityManagementService.deleteActivity("");
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+
+        assertEquals("Name cannot be empty!", error);
+    }
+
+    @Test
+    public void testDeleteActivityNull() {
+        String error = null;
+
+        try {
+            activityManagementService.deleteActivity(INEXISTENT_ACTIVITY_KEY);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+
+        assertEquals("Activity does not exist!", error);
     }
 
     // TEST #3 - APPROVE ACTIVITY

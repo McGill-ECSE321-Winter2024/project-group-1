@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import ca.mcgill.ecse321.sportcenter.dao.ActivityRepository;
 import ca.mcgill.ecse321.sportcenter.model.Activity;
 import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
-import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity;
 import jakarta.transaction.Transactional;
 
 /**
@@ -79,7 +78,7 @@ public class ActivityManagementService {
             throw new IllegalArgumentException("Name cannot be empty!");
         }
 
-        Activity activity = activityRepository.findActivityByName(name); // XXXXXXXX needs to be tested XXXXXXXX
+        Activity activity = activityRepository.findActivityByName(name);
         if (activity == null) {
             throw new IllegalArgumentException("Activity does not exist!");
         }
@@ -181,11 +180,11 @@ public class ActivityManagementService {
      * Delete an activity
      * 
      * @param name
-     * @return Activity
+     * @return boolean
      **/
     @Transactional
-    public void deleteActivity(String name) {
-        if (name == null || name.trim().length() == 0 || name.contains("")) {
+    public boolean deleteActivity(String name) {
+        if (name == null || name.trim().length() == 0) {
             throw new IllegalArgumentException("Name cannot be empty!");
         }
 
@@ -194,14 +193,8 @@ public class ActivityManagementService {
             throw new IllegalArgumentException("Activity does not exist!");
         }
 
-        // Delete all scheduled activities associated with the activity
-        ScheduledActivityManagementService scheduledActivityManagementService = new ScheduledActivityManagementService();
-        for (ScheduledActivity scheduledActivity : scheduledActivityManagementService
-                .getAllScheduledActivitiesByActivityName(activity.getName())) {
-            scheduledActivityManagementService.deleteScheduledActivity(scheduledActivity.getScheduledActivityId());
-        }
-
         activityRepository.delete(activity);
+        return true;
     }
 
     /**

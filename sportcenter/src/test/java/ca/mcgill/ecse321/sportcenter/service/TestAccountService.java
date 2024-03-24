@@ -120,6 +120,26 @@ public class TestAccountService {
                         return null;
                     }
                 });
+
+        lenient().when(accountRepository.findAll()).thenAnswer((InvocationOnMock invocation) -> {
+            Account customer = new Account();
+            customer.setUsername(CUSTOMER_USERNAME);
+            customer.setPassword(CUSTOMER_PASSWORD);
+            customer.setAccountId(CUSTOMER_ACCOUNT_KEY);
+
+            Account approvedInstructor = new Account();
+            approvedInstructor.setUsername(APPROVED_INSTRUCTOR_USERNAME);
+            approvedInstructor.setPassword(APPROVED_INSTRUCTOR_PASSWORD);
+            approvedInstructor.setAccountId(APPROVED_INSTRUCTOR_ACCOUNT_KEY);
+
+            Account disapprovedInstructor = new Account();
+            disapprovedInstructor.setUsername(DISAPPROVED_INSTRUCTOR_USERNAME);
+            disapprovedInstructor.setPassword(DISAPPROVED_INSTRUCTOR_PASSWORD);
+            disapprovedInstructor.setAccountId(DISAPPROVED_INSTRUCTOR_ACCOUNT_KEY);
+
+            return List.of(customer, approvedInstructor, disapprovedInstructor);
+        });
+
         Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> {
             return invocation.getArgument(0);
         };
@@ -612,12 +632,13 @@ public class TestAccountService {
     // test delete account -> success
     @Test
     public void testDeleteAccount() {
+        boolean deleted = false;
         try {
-            accountManagementService.deleteAccount(CUSTOMER_ACCOUNT_KEY);
+            deleted = accountManagementService.deleteAccount(CUSTOMER_ACCOUNT_KEY);
         } catch (IllegalArgumentException e) {
             fail();
         }
 
-        assertTrue(accountManagementService.getAccountByAccountId(CUSTOMER_ACCOUNT_KEY).equals(null));
+        assertTrue(deleted);
     }
 }
