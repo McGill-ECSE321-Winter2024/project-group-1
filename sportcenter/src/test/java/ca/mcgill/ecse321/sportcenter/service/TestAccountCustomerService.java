@@ -28,12 +28,10 @@ import ca.mcgill.ecse321.sportcenter.dao.CustomerRepository;
 import ca.mcgill.ecse321.sportcenter.model.Account;
 import ca.mcgill.ecse321.sportcenter.model.Customer;
 
-/*
+/**
  * Test class for Customer Account
  * 
- * @autor Emilie Ruel and Andrew Nemr
- *
- * 
+ * @author Emilie Ruel and Andrew Nemr
  */
 @ExtendWith(MockitoExtension.class)
 public class TestAccountCustomerService {

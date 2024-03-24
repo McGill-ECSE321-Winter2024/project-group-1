@@ -167,16 +167,8 @@ public class AccountManagementService {
      */
     @Transactional
     public Owner createOwner(String username) {
-        if (username == null) {
-            throw new IllegalArgumentException("Username cannot be null!");
-        }
-
-        if (username.trim().isEmpty()) {
-            throw new IllegalArgumentException("Username cannot be empty!");
-        }
-
-        if (username.contains(" ")) {
-            throw new IllegalArgumentException("Username cannot contain spaces!");
+        if (username == null || username.trim().isEmpty() || username.contains(" ")) {
+            throw new IllegalArgumentException("Username cannot be null, empty or contain spaces!");
         }
 
         Account account = accountRepository.findAccountByUsername(username);
@@ -468,9 +460,9 @@ public class AccountManagementService {
             throw new IllegalArgumentException("Account does not exist!");
         }
 
-        Owner owner = ownerRepository.findOwnerByAccountRoleId(account.getAccountId());
+        Owner owner = ownerRepository.findOwnerByAccountUsername(username);
         if (owner == null) {
-            throw new IllegalArgumentException("Owner does not exist!");
+            throw new IllegalArgumentException("The account is not an owner!");
         }
         return owner;
     }
