@@ -5,8 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.catalina.connector.Response;
-import org.checkerframework.checker.units.qual.A;
-import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -59,9 +57,9 @@ public class TestRegistrationIntegration {
     public void clearDatabase() {
         registrationRepository.deleteAll();
         customerRepository.deleteAll();
+        scheduledActivityRepository.deleteAll();
         instructorRepository.deleteAll();
         accountRepository.deleteAll();
-        scheduledActivityRepository.deleteAll();
         activityRepository.deleteAll();
     }
 
@@ -170,7 +168,21 @@ public class TestRegistrationIntegration {
         assertEquals(REGISTRATIONID, registrations.getRegistrationId());
         assertEquals(ACCOUNT1ID, registrations.getCustomer().getAccountRoleId());
         assertEquals(SCHEDULEDACTIVITYID, registrations.getScheduledActivity());
+    }
 
+    @Test
+    @Order(2)
+    public void testGetRegistrationByRegistrationId() {
+        ResponseEntity<RegistrationDto> response = registration.getForEntity("/register/" + REGISTRATIONID,
+                RegistrationDto.class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        RegistrationDto registration = response.getBody();
+        assertNotNull(registration);
+        assertEquals(REGISTRATIONID, registration.getRegistrationId());
+        assertEquals(ACCOUNT1ID, registration.getCustomer().getAccountRoleId());
+        assertEquals(SCHEDULEDACTIVITYID, registration.getScheduledActivity());
     }
 
 }
