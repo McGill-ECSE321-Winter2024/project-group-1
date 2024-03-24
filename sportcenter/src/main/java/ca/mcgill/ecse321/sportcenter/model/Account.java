@@ -10,8 +10,6 @@ import jakarta.persistence.Id;
 @Entity
 public class Account {
 
-  private static Map<String, Account> accountsByUsername = new HashMap<String, Account>();
-
   // User Attributes
   private String username;
   private String password;
@@ -64,14 +62,6 @@ public class Account {
 
   public String getUsername() {
     return username;
-  }
-
-  public static Account getWithUsername(String aUsername) {
-    return accountsByUsername.get(aUsername);
-  }
-
-  public static boolean hasWithUsername(String aUsername) {
-    return getWithUsername(aUsername) != null;
   }
 
   public String getPassword() {
