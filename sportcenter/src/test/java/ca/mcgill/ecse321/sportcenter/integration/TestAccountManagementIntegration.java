@@ -2,10 +2,9 @@ package ca.mcgill.ecse321.sportcenter.integration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.aspectj.lang.annotation.After;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
@@ -20,7 +19,6 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
 import ca.mcgill.ecse321.sportcenter.dao.AccountRepository;
 import ca.mcgill.ecse321.sportcenter.dao.CustomerRepository;
@@ -345,7 +343,7 @@ public class TestAccountManagementIntegration {
         instructorRepository.save(instructor);
 
         ResponseEntity<InstructorDto[]> response = account.postForEntity(
-                "/createInstructorAccount/" + USERNAME + "/" + PASSWORD,
+                "/createInstructor/" + USERNAME + "/" + PASSWORD,
                 instructor, InstructorDto[].class);
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -355,4 +353,252 @@ public class TestAccountManagementIntegration {
         assertEquals(INSTRUCTOR_PICTURE, response.getBody()[0].getProfilePicURL());
         assertEquals(INSTRUCTOR_STATUS, response.getBody()[0].getStatus());
     }
+
+    @Test
+    @Order(20)
+    public void createInstructorAccountInvalidDescription() {
+        Account account1 = new Account(USERNAME, PASSWORD);
+        accountRepository.save(account1);
+        Instructor instructor = new Instructor(INSTRUCTOR_STATUS, "", INSTRUCTOR_PICTURE, account1);
+        instructorRepository.save(instructor);
+
+        ResponseEntity<ErrorDto> response = account.postForEntity(
+                "/createInstructor/" + USERNAME + "/" + PASSWORD,
+                instructor, ErrorDto.class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("Description not valid", response.getBody().getErrors().get(0));
+    }
+
+    @Test
+    @Order(21)
+    public void createInstructorAccountInvalidPicture() {
+        Account account1 = new Account(USERNAME, PASSWORD);
+        accountRepository.save(account1);
+        Instructor instructor = new Instructor(INSTRUCTOR_STATUS, INSTRUCTOR_DESCRIPRION, "", account1);
+        instructorRepository.save(instructor);
+
+        ResponseEntity<ErrorDto> response = account.postForEntity(
+                "/createInstructor/" + USERNAME + "/" + PASSWORD,
+                instructor, ErrorDto.class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("Picture not valid", response.getBody().getErrors().get(0));
+    }
+
+    @Test
+    @Order(22)
+    public void getInstructorByAccountRoleId() {
+        Account account1 = new Account(USERNAME, PASSWORD);
+        accountRepository.save(account1);
+        Instructor instructor = new Instructor(INSTRUCTOR_STATUS, INSTRUCTOR_DESCRIPRION, INSTRUCTOR_PICTURE, account1);
+        instructor.setAccountRoleId(ACCOUNTROLEID);
+        instructorRepository.save(instructor);
+
+        ResponseEntity<InstructorDto> response = account.getForEntity("/getinstructor/" + ACCOUNTROLEID,
+                InstructorDto.class);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(USERNAME, response.getBody().getAccount().getUsername());
+        assertEquals(PASSWORD, response.getBody().getAccount().getPassword());
+        assertEquals(INSTRUCTOR_DESCRIPRION, response.getBody().getDescription());
+        assertEquals(INSTRUCTOR_PICTURE, response.getBody().getProfilePicURL());
+        assertEquals(INSTRUCTOR_STATUS, response.getBody().getStatus());
+    }
+
+    @Test
+    @Order(23)
+    public void getInstructorByAccountRoleIdInvalid() {
+        Account account1 = new Account(USERNAME, PASSWORD);
+        accountRepository.save(account1);
+        Instructor instructor = new Instructor(INSTRUCTOR_STATUS, INSTRUCTOR_DESCRIPRION, INSTRUCTOR_PICTURE, account1);
+        instructor.setAccountRoleId(INVALID_ACCOUNTROLEID);
+        instructorRepository.save(instructor);
+
+        ResponseEntity<ErrorDto> response = account.getForEntity("/getinstructor/" + INVALID_ACCOUNTROLEID,
+                ErrorDto.class);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(1, response.getBody().getErrors().size());
+        assertEquals("Instructor not found", response.getBody().getErrors().get(0));
+    }
+
+    @Test
+    @Order(24)
+    public void testGetAllInstructorAccount() {
+        Account account1 = new Account(USERNAME, PASSWORD);
+        Account account2 = new Account("testUsername2", "testPassword2");
+        accountRepository.save(account1);
+        accountRepository.save(account2);
+        Instructor instructor = new Instructor(INSTRUCTOR_STATUS, INSTRUCTOR_DESCRIPRION, INSTRUCTOR_PICTURE, account1);
+        Instructor instructor2 = new Instructor(INSTRUCTOR_STATUS, "testDescription2", "testPicture2", account2);
+        instructorRepository.save(instructor);
+        instructorRepository.save(instructor2);
+
+        ResponseEntity<InstructorDto[]> response = account.getForEntity("/instructors", InstructorDto[].class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        InstructorDto[] responseInstructor = response.getBody();
+        assertNotNull(responseInstructor);
+        assertEquals(2, responseInstructor.length);
+    }
+
+    @Test
+    @Order(25)
+    public void testUpdateInstructorAccount() {
+        Account account1 = new Account(USERNAME, PASSWORD);
+        accountRepository.save(account1);
+        Instructor instructor = new Instructor(INSTRUCTOR_STATUS, INSTRUCTOR_DESCRIPRION, INSTRUCTOR_PICTURE, account1);
+        instructor.setDescription("newDescription");
+        instructor.setProfilePicURL("newPicture");
+
+        ResponseEntity<InstructorDto> response = account.postForEntity("/updateInstructorAccount/" + USERNAME + "/"
+                + PASSWORD, instructor, InstructorDto.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response);
+        assertEquals("newDescription", response.getBody().getDescription());
+        assertEquals("newPicture", response.getBody().getProfilePicURL());
+    }
+
+    @Test
+    @Order(26)
+    public void testUpdateInstructorAccountInvalid() {
+        Account account1 = new Account(USERNAME, PASSWORD);
+        accountRepository.save(account1);
+        Instructor instructor = new Instructor(INSTRUCTOR_STATUS, INSTRUCTOR_DESCRIPRION, INSTRUCTOR_PICTURE, account1);
+        instructor.setDescription("");
+        instructor.setProfilePicURL("");
+
+        ResponseEntity<ErrorDto> response = account.postForEntity("/updateInstructorAccount/" + USERNAME + "/"
+                + PASSWORD, instructor, ErrorDto.class);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response);
+        assertEquals(2, response.getBody().getErrors().size());
+        assertEquals("Description not valid", response.getBody().getErrors().get(0));
+        assertEquals("Picture not valid", response.getBody().getErrors().get(1));
+    }
+
+    @Test
+    @Order(27)
+    public void testDeleteInstructorByAccountRoleId() {
+        Account account1 = new Account(USERNAME, PASSWORD);
+        accountRepository.save(account1);
+        Instructor instructor = new Instructor(INSTRUCTOR_STATUS, INSTRUCTOR_DESCRIPRION, INSTRUCTOR_PICTURE, account1);
+        instructor.setAccountRoleId(ACCOUNTROLEID);
+        instructorRepository.save(instructor);
+
+        ResponseEntity<InstructorDto> response = account.getForEntity("/deleteInstructorAccount/" + ACCOUNTROLEID,
+                InstructorDto.class);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertNull(instructorRepository.findInstructorByAccountRoleId(ACCOUNTROLEID));
+    }
+
+    @Test
+    @Order(28)
+    public void testDeleteInstructorByAccountRoleIdInvalid() {
+        Account account1 = new Account(USERNAME, PASSWORD);
+        accountRepository.save(account1);
+        Instructor instructor = new Instructor(INSTRUCTOR_STATUS, INSTRUCTOR_DESCRIPRION, INSTRUCTOR_PICTURE, account1);
+        instructor.setAccountRoleId(INVALID_ACCOUNTROLEID);
+        instructorRepository.save(instructor);
+
+        ResponseEntity<ErrorDto> response = account.getForEntity("/deleteInstructorAccount/" + INVALID_ACCOUNTROLEID,
+                ErrorDto.class);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(1, response.getBody().getErrors().size());
+        assertEquals("Instructor not found", response.getBody().getErrors().get(0));
+    }
+
+    @Test
+    @Order(29)
+    public void testDeleteInstructorByUsername() {
+        Account account1 = new Account(USERNAME, PASSWORD);
+        accountRepository.save(account1);
+        Instructor instructor = new Instructor(INSTRUCTOR_STATUS, INSTRUCTOR_DESCRIPRION, INSTRUCTOR_PICTURE, account1);
+        instructor.setAccountRoleId(ACCOUNTROLEID);
+        instructorRepository.save(instructor);
+
+        ResponseEntity<InstructorDto> response = account.getForEntity("/deleteInstructorAccount/" + USERNAME,
+                InstructorDto.class);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertNull(instructorRepository.findInstructorByAccountRoleId(ACCOUNTROLEID));
+    }
+
+    @Test
+    @Order(30)
+    public void testDeleteInstructorByUsernameInvalid() {
+        Account account1 = new Account(USERNAME, PASSWORD);
+        accountRepository.save(account1);
+        Instructor instructor = new Instructor(INSTRUCTOR_STATUS, INSTRUCTOR_DESCRIPRION, INSTRUCTOR_PICTURE, account1);
+        instructor.setAccountRoleId(INVALID_ACCOUNTROLEID);
+        instructorRepository.save(instructor);
+
+        ResponseEntity<ErrorDto> response = account.getForEntity("/deleteInstructorAccount/" + INVALID_USERNAME,
+                ErrorDto.class);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(1, response.getBody().getErrors().size());
+        assertEquals("Instructor not found", response.getBody().getErrors().get(0));
+    }
+
+    @Test
+    @Order(31)
+    public void testCreateOwnerAccount() {
+        Account account1 = new Account(USERNAME, PASSWORD);
+        accountRepository.save(account1);
+        Owner owner = new Owner(account1);
+        ownerRepository.save(owner);
+
+        ResponseEntity<AccountDto[]> response = account.postForEntity(
+                "/createOwner/" + USERNAME + "/" + PASSWORD,
+                owner, AccountDto[].class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+    }
+
+    @Test
+    @Order(32)
+    public void testGetOwnerAccountByAccountRoleId() {
+        Account account1 = new Account(USERNAME, PASSWORD);
+        accountRepository.save(account1);
+        Owner owner = new Owner(account1);
+        owner.setAccountRoleId(ACCOUNTROLEID);
+        ownerRepository.save(owner);
+
+        ResponseEntity<AccountDto> response = account.getForEntity("/getowner/" + ACCOUNTROLEID,
+                AccountDto.class);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(USERNAME, response.getBody().getUsername());
+        assertEquals(PASSWORD, response.getBody().getPassword());
+    }
+
+    @Test
+    @Order(33)
+    public void testGetOwnerAccountByAccountRoleIdInvalid() {
+        Account account1 = new Account(USERNAME, PASSWORD);
+        accountRepository.save(account1);
+        Owner owner = new Owner(account1);
+        owner.setAccountRoleId(INVALID_ACCOUNTROLEID);
+        ownerRepository.save(owner);
+
+        ResponseEntity<ErrorDto> response = account.getForEntity("/getowner/" + INVALID_ACCOUNTROLEID,
+                ErrorDto.class);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(1, response.getBody().getErrors().size());
+        assertEquals("Owner not found", response.getBody().getErrors().get(0));
+    }
+
+    @Test
+    @Order(34)
+    public void testApproveInstructor() {
+    }
+
 }
