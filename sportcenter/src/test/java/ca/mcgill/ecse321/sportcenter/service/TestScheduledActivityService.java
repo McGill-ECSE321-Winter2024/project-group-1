@@ -554,7 +554,6 @@ public class TestScheduledActivityService {
     /**
      * Tests deleting a scheduled activity -> Success
      */
-    @SuppressWarnings("null")
     @Test
     public void testDeleteScheduledActivity() {
         Boolean deleted = false;

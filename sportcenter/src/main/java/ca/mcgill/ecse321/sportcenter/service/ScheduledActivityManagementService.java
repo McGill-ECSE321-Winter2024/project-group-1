@@ -461,6 +461,7 @@ public class ScheduledActivityManagementService {
      * @param accountRoleId
      * @return boolean
      */
+    @SuppressWarnings("null")
     @Transactional
     public boolean deleteAllScheduledActivitiesByInstructorId(int accountRoleId) {
         if (accountRoleId < 0) {

@@ -433,8 +433,6 @@ public class TestAccountInstructorService {
         }
     }
 
-    // TODO: UPDATE TESTING
-
     /**
      * Tests for updating an instructor's description and profile picture
      */

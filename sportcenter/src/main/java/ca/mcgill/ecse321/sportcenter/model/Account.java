@@ -1,7 +1,5 @@
 package ca.mcgill.ecse321.sportcenter.model;
 
-import java.util.*;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

@@ -149,7 +149,6 @@ public class TestAccountService {
     @SuppressAjWarnings("null")
     // CREATE
     // test for creating a new account-> success
-    // TODO: BUGGY
     @Test
     public void testCreateAccount() {
         Account account = null;

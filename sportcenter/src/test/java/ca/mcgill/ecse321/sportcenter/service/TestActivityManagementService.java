@@ -209,7 +209,6 @@ public class TestActivityManagementService {
     }
 
     // TEST #2 - UPDATE ACTIVITY
-    // TODO: REALLY UNSURE THAT IT WORKS
     @Test
     public void testUpdateActivity() {
         Activity activity = null;
@@ -373,7 +372,7 @@ public class TestActivityManagementService {
         assertEquals("Activity does not exist!", error);
     }
 
-    @Test // TODO: How to test that the activity is updated?
+    @Test
     public void testUpdateActivityAlreadyApproved() {
         String error = null;
 
