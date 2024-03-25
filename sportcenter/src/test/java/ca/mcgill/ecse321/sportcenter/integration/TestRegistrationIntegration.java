@@ -94,6 +94,7 @@ public class TestRegistrationIntegration {
     private static final LocalTime SCHEDULEDACTIVITY_STARTTIME = LocalTime.of(10, 0);
     private static final LocalTime SCHEDULEDACTIVITY_ENDTIME = LocalTime.of(11, 0);
     private static final int SCHEDULEDACTIVITY_CAPACITY = 10;
+    private static final int INVALID_SCHEDULEDACTIVITYID = -1;
 
     // attributes for registration
     private static final int REGISTRATIONID = 1;
@@ -172,8 +173,28 @@ public class TestRegistrationIntegration {
 
     @Test
     @Order(2)
+    public void testCreateRegistrationInvalid() {
+        Registration registrationDto = registrationRepository.findRegistrationByRegId(REGISTRATIONID);
+
+        ResponseEntity<RegistrationDto> response = registration.postForEntity(
+                "/register/" + INVALID_ACCOUNTID + "/" + SCHEDULEDACTIVITYID, registrationDto, RegistrationDto.class);
+        // check that registration was not created
+        assertNotNull(response);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+
+        ResponseEntity<RegistrationDto> response2 = registration.postForEntity(
+                "/register/" + ACCOUNT1ID + "/" + INVALID_SCHEDULEDACTIVITYID, registrationDto, RegistrationDto.class);
+        // check that registration was not created
+        assertNotNull(response2);
+        assertEquals(HttpStatus.BAD_REQUEST, response2.getStatusCode());
+    }
+
+    @Test
+    @Order(3)
     public void testGetRegistrationByRegistrationId() {
-        ResponseEntity<RegistrationDto> response = registration.getForEntity("/register/" + REGISTRATIONID,
+
+        ResponseEntity<RegistrationDto> response = registration.getForEntity(
+                "/getRegistrationByRegId/" + REGISTRATIONID,
                 RegistrationDto.class);
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -182,7 +203,109 @@ public class TestRegistrationIntegration {
         assertNotNull(registration);
         assertEquals(REGISTRATIONID, registration.getRegistrationId());
         assertEquals(ACCOUNT1ID, registration.getCustomer().getAccountRoleId());
-        assertEquals(SCHEDULEDACTIVITYID, registration.getScheduledActivity());
+        assertEquals(SCHEDULEDACTIVITYID, registration.getScheduledActivity().getScheduledActivityId());
     }
 
+    @Test
+    @Order(3)
+    public void testGetRegistrationsByScheduledActivityIdandCustomerId() {
+        ResponseEntity<RegistrationDto[]> response = registration.getForEntity(
+                "/registration/" + SCHEDULEDACTIVITYID + ACCOUNT1ROLEID, RegistrationDto[].class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        RegistrationDto[] registrations = response.getBody();
+        assertNotNull(registrations);
+        assertEquals(1, registrations.length);
+
+    }
+
+    @Test
+    @Order(4)
+    public void testGetAllRegistrations() {
+        ResponseEntity<RegistrationDto[]> response = registration.getForEntity("/registrations",
+                RegistrationDto[].class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        RegistrationDto[] registrations = response.getBody();
+        assertNotNull(registrations);
+        assertEquals(1, registrations.length);
+
+    }
+
+    @Test
+    @Order(5)
+    public void testGetRegistrationsByCustomerId() {
+        ResponseEntity<RegistrationDto[]> response = registration.getForEntity(
+                "/getRegistrationsByAccountRoleId/" + ACCOUNT1ID,
+                RegistrationDto[].class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        RegistrationDto[] registrations = response.getBody();
+        assertNotNull(registrations);
+        assertEquals(1, registrations.length);
+    }
+
+    @Test
+    @Order(6)
+    public void testGetRegistrationsByScheduledActivityId() {
+        ResponseEntity<RegistrationDto[]> response = registration
+                .getForEntity("/registrations/scheduledActivity/" + SCHEDULEDACTIVITYID, RegistrationDto[].class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        RegistrationDto[] registrations = response.getBody();
+        assertNotNull(registrations);
+        assertEquals(1, registrations.length);
+
+    }
+
+    @Test
+    @Order(7)
+    public void testGetCustomersByScheduledActivityId() {
+        ResponseEntity<CustomerDto[]> response = registration.getForEntity(
+                "/registrations/costumers/" + SCHEDULEDACTIVITYID,
+                CustomerDto[].class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        CustomerDto[] customers = response.getBody();
+        assertNotNull(customers);
+        assertEquals(1, customers.length);
+    }
+
+    @Test
+    @Order(8)
+    public void testGetScheduledActivitiesByCustomer() {
+        ResponseEntity<RegistrationDto[]> response = registration.getForEntity(
+                "/registrations/scheduledActivity/customer/" + ACCOUNT1ROLEID,
+                RegistrationDto[].class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        RegistrationDto[] registrations = response.getBody();
+        assertNotNull(registrations);
+        assertEquals(1, registrations.length);
+    }
+
+    /*
+     * @Test
+     * 
+     * @Order(9)
+     * public void testDeleteRegistrationByegistrationId() {
+     * 
+     * ResponseEntity<RegistrationDto> response = registration.???("/registration/"
+     * + REGISTRATIONID, Response.class);
+     * assertNotNull(response);
+     * assertEquals(HttpStatus.OK, response.getStatusCode());
+     * 
+     * // check that registration was deleted
+     * Registration registration =
+     * registrationRepository.findRegistrationByRegId(REGISTRATIONID);
+     * assertTrue(registration == null);
+     * }
+     * 
+     */
 }
