@@ -601,11 +601,6 @@ public class TestAccountManagementIntegration {
         assertEquals("Owner not found", response.getBody().getErrors().get(0));
     }
 
-    // @Test
-    // @Order()
-    // public void testApproveInstructor() {
-    // }
-
     @Test
     public void testLogin() {
         Account account1 = new Account(USERNAME, PASSWORD);
@@ -620,6 +615,3 @@ public class TestAccountManagementIntegration {
         assertEquals(PASSWORD, response.getBody().getPassword());
     }
 }
-// }
-
-//
