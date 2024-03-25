@@ -2,16 +2,11 @@ package ca.mcgill.ecse321.sportcenter.integration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.apache.catalina.connector.Response;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -72,9 +67,6 @@ public class TestRegistrationIntegration {
     private static final int INVALID_ACCOUNTID = -1;
     private static final int ACCOUNT1ROLEID = 1;
     private static final int ACCOUNT2ROLEID = 2;
-
-    private static final String OLD_USERNAME = "testUsername_old";
-    private static final String OLD_PASSWORD = "testPassword_old";
 
     // attributes for intructor
     private static final String INSTRUCTOR_DESCRIPRION = "testDescription";

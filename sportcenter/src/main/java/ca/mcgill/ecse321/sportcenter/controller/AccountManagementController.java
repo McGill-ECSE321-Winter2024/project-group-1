@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import ca.mcgill.ecse321.sportcenter.dto.AccountDto;
 import ca.mcgill.ecse321.sportcenter.dto.CustomerDto;
@@ -42,29 +45,12 @@ public class AccountManagementController {
      * @param password
      * @return AccountDto
      */
-    @PostMapping(value = { "/createAccount/{username}/{password}", "/createAccount/{username}/{password}/" })
-    public AccountDto createAccount(@PathVariable("username") String username,
-            @PathVariable("password") String password) throws IllegalArgumentException {
-        Account account = accountService.createAccount(username, password);
-        return convertAccountToDto(account);
+    @PostMapping("/createAccount")
+    @ResponseStatus(HttpStatus.CREATED)
+    public AccountDto createAccount(@RequestBody AccountDto accountDto) {
+        Account account = accountService.createAccount(accountDto.getUsername(), accountDto.getPassword());
+        return new AccountDto(account);
     }
-
-    /**
-     * Create a customer from accountId
-     * 
-     * @param accountId
-     * @return CustomerDto
-     *
-     * @PostMapping(value = { "/createCustomer/{accountId}",
-     *                    "/createCustomer/{accountId}/" })
-     *                    public CustomerDto
-     *                    createCustomer(@PathVariable("accountId") int accountId)
-     *                    throws IllegalArgumentException {
-     *                    Customer customer =
-     *                    accountService.createCustomer(accountId);
-     *                    return convertCustomerDto(customer);
-     *                    }
-     */
 
     /**
      * Create a customer from username

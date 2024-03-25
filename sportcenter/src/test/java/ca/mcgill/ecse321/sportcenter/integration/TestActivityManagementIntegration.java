@@ -4,9 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.apache.catalina.connector.Response;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +22,7 @@ import ca.mcgill.ecse321.sportcenter.model.Activity;
 import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@SuppressWarnings("null")
 public class TestActivityManagementIntegration {
 
     @Autowired
@@ -49,7 +48,6 @@ public class TestActivityManagementIntegration {
 
     private static final boolean NOT_APPROVED = false;
     private static final boolean APPROVED = true;
-
 
     @BeforeEach
     @AfterEach
@@ -80,7 +78,6 @@ public class TestActivityManagementIntegration {
 
     }
 
-
     @Test
     public void testCreateActivityAndApprove() {
 
@@ -108,7 +105,7 @@ public class TestActivityManagementIntegration {
 
         assertNotNull(approvalResponse);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        
+
         ActivityDto approvedResponseActivity = response.getBody();
 
         assertNotNull(approvedResponseActivity);
@@ -117,9 +114,7 @@ public class TestActivityManagementIntegration {
         assertEquals(approvedResponseActivity.getIsApproved(), APPROVED);
         assertEquals(approvedResponseActivity.getSubcategory(), CATEGORY);
 
-
     }
-
 
     @Test
     public void testCreateActivityInvalidUsername() {
@@ -183,8 +178,8 @@ public class TestActivityManagementIntegration {
 
     }
 
-    @Test 
-    public void testGetActivityBySubcategory() { 
+    @Test
+    public void testGetActivityBySubcategory() {
 
         Activity newActivity = new Activity(CATEGORY, ACTIVITY_NAME, NOT_APPROVED, DESCRIPTION);
         activityRepository.save(newActivity);
@@ -209,16 +204,16 @@ public class TestActivityManagementIntegration {
     }
 
     @Test
-    public void testGetActivityByIsApproved() { 
+    public void testGetActivityByIsApproved() {
 
         Activity newActivity = new Activity(CATEGORY, ACTIVITY_NAME, APPROVED, DESCRIPTION);
         activityRepository.save(newActivity);
 
-        //"/activities/{isApproved}"
+        // "/activities/{isApproved}"
         String endpoint = "/activities/" + APPROVED;
-        
+
         ResponseEntity<ActivityDto> response = activity.getForEntity(endpoint, ActivityDto.class);
-    
+
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
@@ -231,12 +226,11 @@ public class TestActivityManagementIntegration {
         assertEquals(responseActivity.getSubcategory(), CATEGORY);
 
         assertNotNull(activityRepository.findActivityByName(ACTIVITY_NAME));
-    
+
     }
 
-
     @Test
-    public void testGetActivitiesSizeAndGetByIsApproved() { 
+    public void testGetActivitiesSizeAndGetByIsApproved() {
 
         Activity newActivity1 = new Activity(CATEGORY, ACTIVITY_NAME, NOT_APPROVED, DESCRIPTION);
         Activity newActivity2 = new Activity(CATEGORY, NEW_ACTIVITY_NAME, APPROVED, ANOTHER_DESCRIPTION);
@@ -245,18 +239,18 @@ public class TestActivityManagementIntegration {
         activityRepository.save(newActivity2);
         activityRepository.save(newActivity3);
 
-        //"/activities/{isApproved}"
+        // "/activities/{isApproved}"
         String endpoint = "/activities/" + APPROVED;
-        
+
         ResponseEntity<ActivityDto[]> response = activity.getForEntity(endpoint, ActivityDto[].class);
-    
+
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         ActivityDto[] responseActivity = response.getBody();
 
         assertNotNull(responseActivity);
-        //check if 3 activities were added
+        // check if 3 activities were added
         assertEquals(responseActivity.length, 3);
         assertEquals(responseActivity[0].getIsApproved(), NOT_APPROVED);
         assertEquals(responseActivity[1].getIsApproved(), APPROVED);
@@ -264,13 +258,11 @@ public class TestActivityManagementIntegration {
         assertEquals(responseActivity[0].getName(), ACTIVITY_NAME);
 
         assertNotNull(activityRepository.findActivityByName(ACTIVITY_NAME));
-    
+
     }
 
-
-
     @Test
-    public void testGetActivityByWrongSubcategory() { 
+    public void testGetActivityByWrongSubcategory() {
 
         Activity newActivity = new Activity(CATEGORY, ACTIVITY_NAME, NOT_APPROVED, DESCRIPTION);
         activityRepository.save(newActivity);
@@ -288,11 +280,10 @@ public class TestActivityManagementIntegration {
         assertNotEquals(responseActivity.getSubcategory(), ANOTHER_CATEGORY);
         assertEquals(activityRepository.findActivityBySubcategory(ANOTHER_CATEGORY).size(), 0);
         assertEquals(activityRepository.findActivityBySubcategory(CATEGORY).size(), 1);
-        assertNotNull(activityRepository.findActivityByName(ACTIVITY_NAME)); //still check if the activity is still there
+        assertNotNull(activityRepository.findActivityByName(ACTIVITY_NAME)); // still check if the activity is still
+                                                                             // there
 
     }
-
-
 
     @Test
     public void testUpdateActivityName() {
@@ -325,7 +316,8 @@ public class TestActivityManagementIntegration {
 
         ActivityDto activityDto = new ActivityDto(CATEGORY, ACTIVITY_NAME, NOT_APPROVED, DESCRIPTION);
 
-        String endpoint = "/activity/update/" + ACTIVITY_NAME + "/" + NEW_ACTIVITY_NAME + "/" + ANOTHER_DESCRIPTION + "/"
+        String endpoint = "/activity/update/" + ACTIVITY_NAME + "/" + NEW_ACTIVITY_NAME + "/" + ANOTHER_DESCRIPTION
+                + "/"
                 + CATEGORY;
 
         ResponseEntity<ActivityDto> response = activity.postForEntity(endpoint, activityDto, ActivityDto.class);
@@ -352,7 +344,8 @@ public class TestActivityManagementIntegration {
 
         ActivityDto activityDto = new ActivityDto(CATEGORY, ACTIVITY_NAME, NOT_APPROVED, DESCRIPTION);
 
-        String endpoint = "/activity/update/" + ACTIVITY_NAME + "/" + NEW_ACTIVITY_NAME + "/" + ANOTHER_DESCRIPTION + "/"
+        String endpoint = "/activity/update/" + ACTIVITY_NAME + "/" + NEW_ACTIVITY_NAME + "/" + ANOTHER_DESCRIPTION
+                + "/"
                 + ANOTHER_CATEGORY;
 
         ResponseEntity<ActivityDto> response = activity.postForEntity(endpoint, activityDto, ActivityDto.class);
@@ -387,9 +380,7 @@ public class TestActivityManagementIntegration {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
 
-
     }
-
 
     @Test
     public void testDeleteSpecificActivity() {
@@ -415,8 +406,6 @@ public class TestActivityManagementIntegration {
         assertNull(activityRepository.findActivityByName(NEW_ACTIVITY_NAME));
 
     }
-
-
 
     @Test
     public void testGetAllAndDeleteActivity() {
@@ -445,7 +434,6 @@ public class TestActivityManagementIntegration {
         String endpointToDelete2 = "/activity/delete/" + NEW_ACTIVITY_NAME;
         String endpointToDelete3 = "/activity/delete/" + NEW_ACTIVITY_NAME_2;
 
-
         response = activity.getForEntity(endpointToDelete1, ActivityDto[].class);
 
         activityDTO = response.getBody();
@@ -473,7 +461,6 @@ public class TestActivityManagementIntegration {
 
         String endpoint = "/activity/disapprove/" + ACTIVITY_NAME;
 
-
         ResponseEntity<ActivityDto> response = activity.getForEntity(endpoint, ActivityDto.class);
 
         assertNotNull(response);
@@ -485,10 +472,6 @@ public class TestActivityManagementIntegration {
         assertEquals(responseActivity.getName(), ACTIVITY_NAME);
         assertEquals(responseActivity.getIsApproved(), NOT_APPROVED);
 
-    
-    
     }
-
-
 
 }

@@ -6,6 +6,9 @@ import java.util.*;
 public class CustomerDto {
     private int accountRoleId;
 
+    public CustomerDto() {
+    }
+
     public CustomerDto(int accountRoleId) {
         this.accountRoleId = accountRoleId;
     }
