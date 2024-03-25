@@ -207,7 +207,17 @@ public class TestRegistrationIntegration {
     }
 
     @Test
-    @Order(3)
+    @Order(4)
+    public void testGetRegistrationByRegistrationIdInvalid() {
+        ResponseEntity<RegistrationDto> response = registration.getForEntity(
+                "/getRegistrationByRegId/" + INVALID_ACCOUNTID,
+                RegistrationDto.class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    @Order(5)
     public void testGetRegistrationsByScheduledActivityIdandCustomerId() {
         ResponseEntity<RegistrationDto[]> response = registration.getForEntity(
                 "/registration/" + SCHEDULEDACTIVITYID + ACCOUNT1ROLEID, RegistrationDto[].class);
@@ -221,7 +231,21 @@ public class TestRegistrationIntegration {
     }
 
     @Test
-    @Order(4)
+    @Order(6)
+    public void testGetRegistrationsByScheduledActivityIdandCustomerIdInvalid() {
+        ResponseEntity<RegistrationDto[]> response = registration.getForEntity(
+                "/registration/" + INVALID_SCHEDULEDACTIVITYID + ACCOUNT1ROLEID, RegistrationDto[].class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+
+        ResponseEntity<RegistrationDto[]> response2 = registration.getForEntity(
+                "/registration/" + SCHEDULEDACTIVITYID + ACCOUNT2ROLEID, RegistrationDto[].class);
+        assertNotNull(response2);
+        assertEquals(HttpStatus.BAD_REQUEST, response2.getStatusCode());
+    }
+
+    @Test
+    @Order(7)
     public void testGetAllRegistrations() {
         ResponseEntity<RegistrationDto[]> response = registration.getForEntity("/registrations",
                 RegistrationDto[].class);
@@ -235,7 +259,7 @@ public class TestRegistrationIntegration {
     }
 
     @Test
-    @Order(5)
+    @Order(8)
     public void testGetRegistrationsByCustomerId() {
         ResponseEntity<RegistrationDto[]> response = registration.getForEntity(
                 "/getRegistrationsByAccountRoleId/" + ACCOUNT1ID,
@@ -249,7 +273,17 @@ public class TestRegistrationIntegration {
     }
 
     @Test
-    @Order(6)
+    @Order(9)
+    public void testGetRegistrationsByCustomerIdInvalid() {
+        ResponseEntity<RegistrationDto[]> response = registration.getForEntity(
+                "/getRegistrationsByAccountRoleId/" + INVALID_ACCOUNTID,
+                RegistrationDto[].class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    @Order(10)
     public void testGetRegistrationsByScheduledActivityId() {
         ResponseEntity<RegistrationDto[]> response = registration
                 .getForEntity("/registrations/scheduledActivity/" + SCHEDULEDACTIVITYID, RegistrationDto[].class);
@@ -263,7 +297,17 @@ public class TestRegistrationIntegration {
     }
 
     @Test
-    @Order(7)
+    @Order(11)
+    public void testGetRegistrationsByScheduledActivityIdInvalid() {
+        ResponseEntity<RegistrationDto[]> response = registration
+                .getForEntity("/registrations/scheduledActivity/" + INVALID_SCHEDULEDACTIVITYID,
+                        RegistrationDto[].class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    @Order(12)
     public void testGetCustomersByScheduledActivityId() {
         ResponseEntity<CustomerDto[]> response = registration.getForEntity(
                 "/registrations/costumers/" + SCHEDULEDACTIVITYID,
@@ -277,7 +321,17 @@ public class TestRegistrationIntegration {
     }
 
     @Test
-    @Order(8)
+    @Order(13)
+    public void testGetCustomersByScheduledActivityIdInvalid() {
+        ResponseEntity<CustomerDto[]> response = registration.getForEntity(
+                "/registrations/costumers/" + INVALID_SCHEDULEDACTIVITYID,
+                CustomerDto[].class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    @Order(14)
     public void testGetScheduledActivitiesByCustomer() {
         ResponseEntity<RegistrationDto[]> response = registration.getForEntity(
                 "/registrations/scheduledActivity/customer/" + ACCOUNT1ROLEID,
@@ -288,6 +342,16 @@ public class TestRegistrationIntegration {
         RegistrationDto[] registrations = response.getBody();
         assertNotNull(registrations);
         assertEquals(1, registrations.length);
+    }
+
+    @Test
+    @Order(15)
+    public void testGetScheduledActivitiesByCustomerInvalid() {
+        ResponseEntity<RegistrationDto[]> response = registration.getForEntity(
+                "/registrations/scheduledActivity/customer/" + INVALID_ACCOUNTID,
+                RegistrationDto[].class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
     /*
