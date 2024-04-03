@@ -1,7 +1,5 @@
 package ca.mcgill.ecse321.sportcenter.model;
 
-import java.util.*;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,8 +7,6 @@ import jakarta.persistence.Id;
 
 @Entity
 public class Account {
-
-  private static Map<String, Account> accountsByUsername = new HashMap<String, Account>();
 
   // User Attributes
   private String username;
@@ -36,22 +32,21 @@ public class Account {
 
   // SETTERS
 
+  public boolean setAccountId(int aAccountId) {
+    boolean wasSet = false;
+    accountId = aAccountId;
+    wasSet = true;
+    return wasSet;
+  }
+
   public boolean setUsername(String aUsername) {
     boolean wasSet = false;
-    String anOldUsername = getUsername();
-    if (anOldUsername != null && anOldUsername.equals(aUsername)) {
-      return true;
-    }
-    if (hasWithUsername(aUsername)) {
+    if (aUsername == null) {
       return wasSet;
     }
     username = aUsername;
-    wasSet = true;
-    if (anOldUsername != null) {
-      accountsByUsername.remove(anOldUsername);
-    }
-    accountsByUsername.put(aUsername, this);
-    return wasSet;
+
+    return !wasSet;
   }
 
   public boolean setPassword(String aPassword) {
@@ -65,14 +60,6 @@ public class Account {
 
   public String getUsername() {
     return username;
-  }
-
-  public static Account getWithUsername(String aUsername) {
-    return accountsByUsername.get(aUsername);
-  }
-
-  public static boolean hasWithUsername(String aUsername) {
-    return getWithUsername(aUsername) != null;
   }
 
   public String getPassword() {

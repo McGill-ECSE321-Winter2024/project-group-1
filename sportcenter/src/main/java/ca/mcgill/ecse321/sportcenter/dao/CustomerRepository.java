@@ -9,9 +9,11 @@ import ca.mcgill.ecse321.sportcenter.model.Customer;
  */
 public interface CustomerRepository extends CrudRepository<Customer, Integer> {
 
-    public Customer findAccountRoleByAccountRoleId(int accountRoleId); // Account role is parent class. Primary Key
-                                                                       // accountRoleId
+    public Customer findCustomerByAccountRoleId(int accountRoleId); // Account role is parent class. Primary Key
+                                                                    // accountRoleId
 
-    public Customer findAccountRoleByUsername(String username); // Username is unique
+    public Customer findCustomerByAccountUsername(String username); // Username is unique
+
+    public Customer findCustomerByAccountAccountId(int accountId); // AccountId is unique
 
 }

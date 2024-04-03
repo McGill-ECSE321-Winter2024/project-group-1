@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import ca.mcgill.ecse321.sportcenter.dto.AccountDto;
 import ca.mcgill.ecse321.sportcenter.dto.CustomerDto;
@@ -42,29 +45,12 @@ public class AccountManagementController {
      * @param password
      * @return AccountDto
      */
-    @PostMapping(value = { "/createAccount", "/createAccount/" })
-    public AccountDto createAccount(@PathVariable("username") String username,
-            @PathVariable("password") String password) throws IllegalArgumentException {
-        Account account = accountService.createAccount(username, password);
-        return convertAccountToDto(account);
+    @PostMapping("/createAccount")
+    @ResponseStatus(HttpStatus.CREATED)
+    public AccountDto createAccount(@RequestBody AccountDto accountDto) {
+        Account account = accountService.createAccount(accountDto.getUsername(), accountDto.getPassword());
+        return new AccountDto(account);
     }
-
-    /**
-     * Create a customer from accountId
-     * 
-     * @param accountId
-     * @return CustomerDto
-     *
-     * @PostMapping(value = { "/createCustomer/{accountId}",
-     *                    "/createCustomer/{accountId}/" })
-     *                    public CustomerDto
-     *                    createCustomer(@PathVariable("accountId") int accountId)
-     *                    throws IllegalArgumentException {
-     *                    Customer customer =
-     *                    accountService.createCustomer(accountId);
-     *                    return convertCustomerDto(customer);
-     *                    }
-     */
 
     /**
      * Create a customer from username
@@ -241,7 +227,7 @@ public class AccountManagementController {
      * @param username
      * @return InstructorDto
      */
-    @GetMapping(value = { "/getInstructor{username}", "/getInstructor/{username}/" })
+    @GetMapping(value = { "/getInstructor/{username}", "/getInstructor/{username}/" })
     public InstructorDto getInstructorByUsername(@PathVariable("username") String username)
             throws IllegalArgumentException {
         Instructor instructor = accountService.getInstructorByUsername(username);
@@ -347,14 +333,6 @@ public class AccountManagementController {
     }
 
     /**
-     * Delete all accounts
-     */
-    @DeleteMapping(value = { "/accounts/deleteAll", "/accounts/deleteAll/" })
-    public void deleteAllAccounts() throws IllegalArgumentException {
-        accountService.deleteAllAccounts();
-    }
-
-    /**
      * Delete a customer by its accountRoleId
      * 
      * @param accountRoleId
@@ -390,16 +368,6 @@ public class AccountManagementController {
     }
 
     /**
-     * Delete all customers
-     * 
-     * @return
-     */
-    @DeleteMapping(value = { "/deleteAllCustomers", "/deleteAllCustomers/" })
-    public void deleteAllCustomers() {
-        accountService.deleteAllCustomers();
-    }
-
-    /**
      * Delete a instructor by its accountRoleId
      * 
      * @param accountRoleId
@@ -421,14 +389,6 @@ public class AccountManagementController {
     @DeleteMapping(value = { "/deleteInstructorByUsername/{username}", "/deleteInstructorByUsername/{username}/" })
     public void deleteInstructorByUsername(@PathVariable("username") String username) throws IllegalArgumentException {
         accountService.deleteInstructorByUsername(username);
-    }
-
-    /**
-     * Delete all instructors
-     */
-    @DeleteMapping(value = { "/deleteAllInstructors", "/deleteAllInstructors/" })
-    public void deleteAllInstructors() {
-        accountService.deleteAllInstructors();
     }
 
     // Account Role Checkers

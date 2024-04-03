@@ -20,7 +20,7 @@ import ca.mcgill.ecse321.sportcenter.service.RegistrationManagementService;
  */
 @CrossOrigin(origins = "*")
 @RestController
-public class RegistrationController {
+public class RegistrationManagementController {
 
     @Autowired
     private RegistrationManagementService registrationService;
@@ -32,7 +32,8 @@ public class RegistrationController {
      * @param scheduledActivityId
      * @return RegistrationDto
      */
-    @PostMapping(value = { "/register/{customerId}/{scheduledActivityId}" })
+    @PostMapping(value = { "/register/{customerId}/{scheduledActivityId}",
+            "/register/{customerId}/{scheduledActivityId}/" })
     public RegistrationDto register(@PathVariable("customerId") int customerId,
             @PathVariable("scheduledActivityId") int scheduledActivityId) throws IllegalArgumentException {
         Registration registration = registrationService.createRegistration(customerId, scheduledActivityId);
@@ -45,7 +46,7 @@ public class RegistrationController {
      * @param registrationId
      * @return RegistrationDto
      */
-    @GetMapping(value = { "/registration/{registrationId}" })
+    @GetMapping(value = { "/getRegistrationByRegId/{registrationId}", "/getRegistrationByRegId/{registrationId}/" })
     public RegistrationDto getRegistrationByRegId(@PathVariable("registrationId") int registrationId)
             throws IllegalArgumentException {
         Registration registration = registrationService.getRegistrationByRegId(registrationId);
@@ -59,12 +60,13 @@ public class RegistrationController {
      * @param accountRoleId
      * @return RegistrationDto
      */
-    @GetMapping(value = { "/registration/{scheduledActivityId}/{accountRoleId}" })
+    @GetMapping(value = { "/registration/{scheduledActivityId}/{accountRoleId}",
+            "/registration/{scheduledActivityId}/{accountRoleId}/" })
     public RegistrationDto getRegistrationByScheduledActivityIdAndAccountRoleId(
             @PathVariable("scheduledActivityId") int scheduledActivityId,
             @PathVariable("accountRoleId") int accountRoleId) throws IllegalArgumentException {
         Registration registration = registrationService
-                .getRegistrationByAccountRoleIdAndScheduledActivityId(scheduledActivityId, accountRoleId);
+                .getRegistrationByCustomerIdAndScheduledActivityId(scheduledActivityId, accountRoleId);
         return convertToDto(registration);
     }
 
@@ -84,7 +86,8 @@ public class RegistrationController {
      * @param accountRoleId
      * @return List<RegistrationDto>
      */
-    @GetMapping(value = { "/registrations/{accountRoleId}" })
+    @GetMapping(value = { "/getRegistrationsByAccountRoleId/{accountRoleId}",
+            "/getRegistrationsByAccountRoleId/{accountRoleId}/" })
     public List<RegistrationDto> getRegistrationsByAccountRoleId(@PathVariable("accountRoleId") int accountRoleId)
             throws IllegalArgumentException {
         return convertToDto(registrationService.getRegistrationByAccountRoleId(accountRoleId));
@@ -96,7 +99,8 @@ public class RegistrationController {
      * @param scheduledActivityId
      * @return List<RegistrationDto>
      */
-    @GetMapping(value = { "/registrations/scheduledActivity/{scheduledActivityId}" })
+    @GetMapping(value = { "/registrations/scheduledActivity/{scheduledActivityId}",
+            "/registrations/scheduledActivity/{scheduledActivityId}/" })
     public List<RegistrationDto> getRegistrationsByScheduledActivityId(
             @PathVariable("scheduledActivityId") int scheduledActivityId) throws IllegalArgumentException {
         return convertToDto(registrationService.getRegistrationByScheduledActivityId(scheduledActivityId));
@@ -106,12 +110,14 @@ public class RegistrationController {
      * Get all costumers attending a scheduled activity by scheduledActivityId
      * 
      * @param scheduledActivityId
-     * @return List<RegistrationDto>
+     * @return List<CustomerDto>
      */
-    @GetMapping(value = { "/registrations/scheduledActivity/{scheduledActivityId}" })
-    public List<RegistrationDto> getCustomersByScheduledActivityId(
+    @GetMapping(value = { "/registrations/costumers/{scheduledActivityId}",
+            "/registrations/costumers/{scheduledActivityId}" })
+    public List<CustomerDto> getCustomersByScheduledActivityId(
             @PathVariable("scheduledActivityId") int scheduledActivityId) throws IllegalArgumentException {
-        return convertToDto(registrationService.getRegistrationByScheduledActivityId(scheduledActivityId));
+        return AccountManagementController
+                .convertCustomersToDto(registrationService.getCustomersByScheduledActivityId(scheduledActivityId));
     }
 
     /**
@@ -120,7 +126,8 @@ public class RegistrationController {
      * @param accountRoleId
      * @return List<RegistrationDto>
      */
-    @GetMapping(value = { "/registrations/customer/{accountRoleId}" })
+    @GetMapping(value = { "/registrations/scheduledActivity/customer/{accountRoleId}",
+            "/registrations/scheduledActivity/customer/{accountRoleId}/" })
     public List<RegistrationDto> getScheduledActivitiesByCustomer(@PathVariable("accountRoleId") int accountRoleId)
             throws IllegalArgumentException {
         return convertToDto(registrationService.getRegistrationByAccountRoleId(accountRoleId));
@@ -136,15 +143,16 @@ public class RegistrationController {
         registrationService.deleteRegistration(registrationId);
     }
 
-    /**
-     * Delete all registrations
+    /*
+     * Delete all registrations by scheduled activity id
+     * 
      */
-    @DeleteMapping(value = { "/registrations", "/registrations/" })
-    public void deleteAllRegistrations() throws IllegalArgumentException {
-        registrationService.deleteAllRegistrations();
+    @DeleteMapping(value = { "/registrations/scheduledActivity/{scheduledActivityId}",
+            "/registrations/scheduledActivity/{scheduledActivityId}/" })
+    public void deleteRegistrationsByScheduledActivityId(@PathVariable("scheduledActivityId") int scheduledActivityId)
+            throws IllegalArgumentException {
+        registrationService.deleteRegistrationsByScheduledActivityId(scheduledActivityId);
     }
-
-    //
 
     /**
      * Convert Registration to RegistrationDto
@@ -158,7 +166,7 @@ public class RegistrationController {
         }
 
         CustomerDto customerDto = AccountManagementController.convertCustomerToDto(registration.getCustomer());
-        ScheduledActivityDto scheduledActivityDto = ScheduledActivityController
+        ScheduledActivityDto scheduledActivityDto = ScheduledActivityManagementController
                 .convertToDto(registration.getScheduledActivity());
 
         return new RegistrationDto(customerDto, scheduledActivityDto, registration.getRegistrationId());

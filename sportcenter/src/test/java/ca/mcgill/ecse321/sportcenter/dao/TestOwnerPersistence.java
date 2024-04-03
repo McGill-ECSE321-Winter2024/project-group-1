@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,6 +26,7 @@ public class TestOwnerPersistence {
     /**
      * Clear the database after each test
      */
+    @BeforeEach
     @AfterEach
     public void clearDatabase() {
         ownerRepository.deleteAll();
@@ -60,7 +62,7 @@ public class TestOwnerPersistence {
         /**
          * Load the Owner
          */
-        owner = ownerRepository.findAccountRoleByAccountRoleId(accountRoleId);
+        owner = ownerRepository.findOwnerByAccountRoleId(accountRoleId);
 
         /**
          * Check the attributes of the Owner

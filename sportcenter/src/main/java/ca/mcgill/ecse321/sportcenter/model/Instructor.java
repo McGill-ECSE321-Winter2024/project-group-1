@@ -8,7 +8,7 @@ import jakarta.persistence.OneToOne;
 public class Instructor extends AccountRole {
 
   public enum InstructorStatus {
-    Active, Inactive, Fired, Suspended, Pending
+    Active, Inactive, Pending
   }
 
   // attributes

@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,6 +26,7 @@ public class TestCustomerPersistence {
     /**
      * Clear the database after each test
      */
+    @BeforeEach
     @AfterEach
     public void clearDatabase() {
         customerRepository.deleteAll();
@@ -64,11 +66,11 @@ public class TestCustomerPersistence {
         /**
          * Load the Customer
          */
-        customer = customerRepository.findAccountRoleByAccountRoleId(accountRoleId);
+        customer = customerRepository.findCustomerByAccountRoleId(accountRoleId);
 
         /**
          * Check the attributes of the Customer
-         */    
+         */
         assertNotNull(customer);
         assertEquals(accountRoleId, customer.getAccountRoleId());
         assertEquals(username, customer.getAccount().getUsername());
@@ -76,4 +78,3 @@ public class TestCustomerPersistence {
         assertEquals(accountId, customer.getAccount().getAccountId());
     }
 }
-

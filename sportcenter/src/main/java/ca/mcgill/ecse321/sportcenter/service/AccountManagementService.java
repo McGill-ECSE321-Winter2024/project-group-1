@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import jakarta.transaction.Transactional;
 
 import ca.mcgill.ecse321.sportcenter.dao.AccountRepository;
 import ca.mcgill.ecse321.sportcenter.model.Account;
@@ -56,43 +56,39 @@ public class AccountManagementService {
      */
     @Transactional
     public Account createAccount(String username, String password) {
-        if (username == null || username.trim().isEmpty() || username.contains(" ")) {
-            throw new IllegalArgumentException("Username cannot be null, empty and spaces!");
+        if (username == null) {
+            throw new IllegalArgumentException("Username cannot be null!");
         }
-        if (password == null || password.trim().isEmpty() || password.contains(" ")) {
+
+        if (password == null) {
+            throw new IllegalArgumentException("Password cannot be null!");
+        }
+
+        if (username.trim().isEmpty()) {
+            throw new IllegalArgumentException("Username cannot be empty!");
+        }
+
+        if (password.trim().isEmpty()) {
             throw new IllegalArgumentException("Password cannot be empty!");
         }
-        Account account;
-        if (accountRepository.findAccountByUsername(username) != null) {
-            throw new IllegalArgumentException("Username already exists!");
+
+        if (username.contains(" ")) {
+            throw new IllegalArgumentException("Username cannot contain spaces!");
         }
-        account = new Account();
+
+        if (password.contains(" ")) {
+            throw new IllegalArgumentException("Password cannot contain spaces!");
+        }
+
+        if (!(accountRepository.findAccountByUsername(username) == null)) {
+            throw new IllegalArgumentException("Account already exists!");
+        }
+        Account account = new Account();
         account.setUsername(username);
         account.setPassword(password);
         accountRepository.save(account);
         return account;
     }
-
-    // /**
-    // * Create a customer from accountId
-    // *
-    // * @param accountId
-    // * @return Customer
-    // */
-    // @Transactional
-    // public Customer createCustomer(int accountId) {
-    // if (accountId < 0) {
-    // throw new IllegalArgumentException("AccountId cannot be negative!");
-    // }
-    // Account account = accountRepository.findAccountByAccountId(accountId);
-    // if (account == null) {
-    // throw new IllegalArgumentException("Account does not exist!");
-    // }
-    // Customer customer = new Customer();
-    // customer.setAccount(account);
-    // customerRepository.save(customer);
-    // return customer;
-    // }
 
     /**
      * Create a customer from username
@@ -102,13 +98,23 @@ public class AccountManagementService {
      */
     @Transactional
     public Customer createCustomer(String username) {
-        if (username == null || username.trim().isEmpty() || username.contains(" ")) {
-            throw new IllegalArgumentException("Username cannot be null, empty and spaces!");
+        if (username == null) {
+            throw new IllegalArgumentException("Username cannot be null!");
         }
+
+        if (username.trim().isEmpty()) {
+            throw new IllegalArgumentException("Username cannot be empty!");
+        }
+
+        if (username.contains(" ")) {
+            throw new IllegalArgumentException("Username cannot contain spaces!");
+        }
+
         Account account = accountRepository.findAccountByUsername(username);
         if (account == null) {
             throw new IllegalArgumentException("Account does not exist!");
         }
+
         Customer customer = new Customer();
         customer.setAccount(account);
         customerRepository.save(customer);
@@ -137,12 +143,18 @@ public class AccountManagementService {
         if (profilePicURL == null || profilePicURL.trim().isEmpty() || profilePicURL.contains(" ")) {
             throw new IllegalArgumentException("ProfilePic URL cannot be null, empty and spaces!");
         }
+
         Account account = accountRepository.findAccountByUsername(username);
-        if (account != null) {
-            throw new IllegalArgumentException("Account already exists!");
+        if (account == null) {
+            throw new IllegalArgumentException("Account does not exist!");
         }
 
-        Instructor instructor = new Instructor(InstructorStatus.Pending, description, profilePicURL, account);
+        Instructor instructor = instructorRepository.findInstructorByAccountUsername(account.getUsername());
+        if (instructor != null) {
+            throw new IllegalArgumentException("Instructor already exists!");
+        }
+
+        instructor = new Instructor(InstructorStatus.Pending, description, profilePicURL, account);
         instructorRepository.save(instructor);
         return instructor;
     }
@@ -156,16 +168,19 @@ public class AccountManagementService {
     @Transactional
     public Owner createOwner(String username) {
         if (username == null || username.trim().isEmpty() || username.contains(" ")) {
-            throw new IllegalArgumentException("Username cannot be null, empty and spaces!");
+            throw new IllegalArgumentException("Username cannot be null, empty or contain spaces!");
         }
+
         Account account = accountRepository.findAccountByUsername(username);
         if (account == null) {
             throw new IllegalArgumentException("Account does not exist!");
         }
+
         // Can only have 1 Owner
         if (ownerRepository.findAll().iterator().hasNext()) {
             throw new IllegalArgumentException("Owner already exists!");
         }
+
         Owner owner = new Owner();
         owner.setAccount(account);
         ownerRepository.save(owner);
@@ -186,6 +201,7 @@ public class AccountManagementService {
         if (password == null || password.trim().isEmpty() || password.contains(" ")) {
             throw new IllegalArgumentException("Password cannot be empty");
         }
+
         Account account = accountRepository.findAccountByUsername(username);
         if (account == null) {
             throw new IllegalArgumentException("Account does not exist");
@@ -201,13 +217,16 @@ public class AccountManagementService {
      */
     @Transactional
     public Account getAccountByAccountId(int accountId) {
-        if (accountId < 0) {
+        if (accountId <= 0) {
             throw new IllegalArgumentException("Account ID must be greater than 0");
         }
+
         Account account = accountRepository.findAccountByAccountId(accountId);
+
         if (account == null) {
             throw new IllegalArgumentException("Account does not exist");
         }
+
         return account;
     }
 
@@ -219,9 +238,18 @@ public class AccountManagementService {
      */
     @Transactional
     public Account getAccountByUsername(String username) {
-        if (username == null || username.trim().isEmpty() || username.contains(" ")) {
-            throw new IllegalArgumentException("Username cannot be null, empty and spaces!");
+        if (username == null) {
+            throw new IllegalArgumentException("Username cannot be null!");
         }
+
+        if (username.trim().isEmpty()) {
+            throw new IllegalArgumentException("Username cannot be empty!");
+        }
+
+        if (username.contains(" ")) {
+            throw new IllegalArgumentException("Username cannot contain spaces!");
+        }
+
         Account account = accountRepository.findAccountByUsername(username);
         if (account == null) {
             throw new IllegalArgumentException("Account does not exist");
@@ -240,7 +268,8 @@ public class AccountManagementService {
         if (accountRoleId < 0) {
             throw new IllegalArgumentException("AccountRoleId cannot be negative!");
         }
-        Customer customer = customerRepository.findAccountRoleByAccountRoleId(accountRoleId);
+
+        Customer customer = customerRepository.findCustomerByAccountRoleId(accountRoleId);
         if (customer == null) {
             throw new IllegalArgumentException("Customer does not exist!");
         }
@@ -269,7 +298,8 @@ public class AccountManagementService {
         if (accountRoleId < 0) {
             throw new IllegalArgumentException("AccountRoleId cannot be negative!");
         }
-        Customer customer = customerRepository.findAccountRoleByAccountRoleId(accountRoleId);
+
+        Customer customer = customerRepository.findCustomerByAccountRoleId(accountRoleId);
         if (customer == null) {
             throw new IllegalArgumentException("Customer does not exist!");
         }
@@ -287,11 +317,13 @@ public class AccountManagementService {
         if (accountId < 0) {
             throw new IllegalArgumentException("AccountId cannot be negative!");
         }
+
         Account account = accountRepository.findAccountByAccountId(accountId);
         if (account == null) {
             throw new IllegalArgumentException("Account does not exist!");
         }
-        Customer customer = customerRepository.findAccountRoleByAccountRoleId(accountId);
+
+        Customer customer = customerRepository.findCustomerByAccountRoleId(accountId);
         if (customer == null) {
             throw new IllegalArgumentException("Customer does not exist!");
         }
@@ -309,11 +341,17 @@ public class AccountManagementService {
         if (username == null || username.trim().length() == 0) {
             throw new IllegalArgumentException("Username cannot be empty!");
         }
+
+        if (username.contains(" ")) {
+            throw new IllegalArgumentException("Username cannot contain spaces!");
+        }
+
         Account account = accountRepository.findAccountByUsername(username);
         if (account == null) {
             throw new IllegalArgumentException("Account does not exist!");
         }
-        Customer customer = customerRepository.findAccountRoleByAccountRoleId(account.getAccountId());
+
+        Customer customer = customerRepository.findCustomerByAccountUsername(username);
         if (customer == null) {
             throw new IllegalArgumentException("Customer does not exist!");
         }
@@ -342,7 +380,8 @@ public class AccountManagementService {
         if (accountRoleId < 0) {
             throw new IllegalArgumentException("AccountRoleId cannot be negative!");
         }
-        Instructor instructor = instructorRepository.findAccountRoleByAccountRoleId(accountRoleId);
+
+        Instructor instructor = instructorRepository.findInstructorByAccountRoleId(accountRoleId);
         if (instructor == null) {
             throw new IllegalArgumentException("Instructor does not exist!");
         }
@@ -358,11 +397,16 @@ public class AccountManagementService {
      */
     @Transactional
     public Instructor getInstructorByUsername(String username) {
+        if (username == null || username.trim().isEmpty() || username.contains(" ")) {
+            throw new IllegalArgumentException("Username cannot be null, empty and spaces!");
+        }
+
         Account account = accountRepository.findAccountByUsername(username);
         if (account == null) {
             throw new IllegalArgumentException("Account does not exist!");
         }
-        Instructor instructor = instructorRepository.findAccountRoleByAccountRoleId(account.getAccountId());
+
+        Instructor instructor = instructorRepository.findInstructorByAccountRoleId(account.getAccountId());
         if (instructor == null) {
             throw new IllegalArgumentException("Instructor does not exist!");
         }
@@ -391,7 +435,8 @@ public class AccountManagementService {
         if (accountRoleId < 0) {
             throw new IllegalArgumentException("AccountRoleId cannot be negative!");
         }
-        Owner owner = ownerRepository.findAccountRoleByAccountRoleId(accountRoleId);
+
+        Owner owner = ownerRepository.findOwnerByAccountRoleId(accountRoleId);
         if (owner == null) {
             throw new IllegalArgumentException("Owner does not exist!");
         }
@@ -406,13 +451,18 @@ public class AccountManagementService {
      */
     @Transactional
     public Owner getOwnerByUsername(String username) {
+        if (username == null || username.trim().isEmpty() || username.contains(" ")) {
+            throw new IllegalArgumentException("Username cannot be null, empty and spaces!");
+        }
+
         Account account = accountRepository.findAccountByUsername(username);
         if (account == null) {
             throw new IllegalArgumentException("Account does not exist!");
         }
-        Owner owner = ownerRepository.findAccountRoleByAccountRoleId(account.getAccountId());
+
+        Owner owner = ownerRepository.findOwnerByAccountUsername(username);
         if (owner == null) {
-            throw new IllegalArgumentException("Owner does not exist!");
+            throw new IllegalArgumentException("The account is not an owner!");
         }
         return owner;
     }
@@ -427,20 +477,40 @@ public class AccountManagementService {
      */
     @Transactional
     public Account updateAccountUsername(String oldUsername, String newUsername) {
-        if (oldUsername == null || oldUsername.trim().isEmpty() || oldUsername.contains(" ")) {
-            throw new IllegalArgumentException("Username cannot be empty");
+        if (oldUsername == null) {
+            throw new IllegalArgumentException("Old Username cannot be null");
         }
-        if (newUsername == null || newUsername.trim().isEmpty() || newUsername.contains(" ")) {
-            throw new IllegalArgumentException("Username cannot be empty");
+
+        if (newUsername == null) {
+            throw new IllegalArgumentException("New Username cannot be null");
+        }
+
+        if (oldUsername.trim().isEmpty()) {
+            throw new IllegalArgumentException("Old Username cannot be empty");
+        }
+
+        if (newUsername.trim().isEmpty()) {
+            throw new IllegalArgumentException("New Username cannot be empty");
+        }
+
+        if (oldUsername.contains(" ")) {
+            throw new IllegalArgumentException("Old Username cannot contain spaces");
+        }
+
+        if (newUsername.contains(" ")) {
+            throw new IllegalArgumentException("New Username cannot contain spaces");
         }
 
         Account account = accountRepository.findAccountByUsername(oldUsername);
+
         if (account == null) {
             throw new IllegalArgumentException("Account with the old Username does not exist");
         }
+
         if (accountRepository.findAccountByUsername(newUsername) != null) {
             throw new IllegalArgumentException("Account with the new Username already exists");
         }
+
         account.setUsername(newUsername);
         accountRepository.save(account);
         return account;
@@ -457,13 +527,15 @@ public class AccountManagementService {
         if (id < 0) {
             throw new IllegalArgumentException("AccountRoleId cannot be negative");
         }
-        Instructor instructor = instructorRepository.findAccountRoleByAccountRoleId(id);
+
+        Instructor instructor = instructorRepository.findInstructorByAccountRoleId(id);
         if (instructor == null) {
             throw new IllegalArgumentException("Instructor does not exist");
         }
         if (instructor.getStatus() == InstructorStatus.Active) {
             throw new IllegalArgumentException("Instructor is already approved");
         }
+
         instructor.setStatus(InstructorStatus.Active);
         instructorRepository.save(instructor);
         return true;
@@ -481,13 +553,15 @@ public class AccountManagementService {
         if (id < 0) {
             throw new IllegalArgumentException("AccountRoleId cannot be negative");
         }
-        Instructor instructor = instructorRepository.findAccountRoleByAccountRoleId(id);
+
+        Instructor instructor = instructorRepository.findInstructorByAccountRoleId(id);
         if (instructor == null) {
             throw new IllegalArgumentException("Instructor does not exist");
         }
         if (instructor.getStatus() == InstructorStatus.Inactive) {
             throw new IllegalArgumentException("Instructor is already disapproved");
         }
+
         instructor.setStatus(InstructorStatus.Inactive);
         instructorRepository.save(instructor);
         return true;
@@ -523,6 +597,7 @@ public class AccountManagementService {
         if (account.getPassword().equals(newPassword)) {
             throw new IllegalArgumentException("New password cannot be the same as the old password");
         }
+
         account.setPassword(newPassword);
         accountRepository.save(account);
         return account;
@@ -538,7 +613,7 @@ public class AccountManagementService {
      * @author Anslean AJ
      */
     @Transactional
-    public void updateInstructor(String username, String description, String picture) {
+    public Instructor updateInstructor(String username, String description, String picture) {
         if (username == null || username.trim().isEmpty() || username.contains(" ")) {
             throw new IllegalArgumentException("Username cannot be null, empty and spaces!");
         }
@@ -548,11 +623,12 @@ public class AccountManagementService {
         if (picture == null || picture.trim().isEmpty() || picture.contains(" ")) {
             throw new IllegalArgumentException("ProfilePic URL cannot be null, empty and spaces!");
         }
+
         Account account = accountRepository.findAccountByUsername(username);
         if (account == null) {
             throw new IllegalArgumentException("Account does not exist!");
         }
-        Instructor instructor = instructorRepository.findAccountRoleByAccountRoleId(account.getAccountId());
+        Instructor instructor = instructorRepository.findInstructorByAccountRoleId(account.getAccountId());
         if (instructor == null) {
             throw new IllegalArgumentException("Instructor does not exist!");
         }
@@ -560,59 +636,76 @@ public class AccountManagementService {
         instructor.setDescription(description);
         instructor.setProfilePicURL(picture);
         instructorRepository.save(instructor);
+        return instructor;
     }
+
+    // Delete functions
 
     /**
      * Delete an account by its account ID (primary key)
      * 
      * @param accountId
+     * @return boolean
      */
     @Transactional
-    public void deleteAccount(int accountId) {
-        accountRepository.deleteById(accountId);
-    }
+    public boolean deleteAccount(int accountId) {
+        if (accountId < 0) {
+            throw new IllegalArgumentException("Account ID must be greater than 0");
+        }
+        Account account = accountRepository.findAccountByAccountId(accountId);
+        if (account == null) {
+            throw new IllegalArgumentException("Account does not exist");
+        }
 
-    /**
-     * Delete all accounts
-     * 
-     * @return void
-     */
-    @Transactional
-    public void deleteAllAccounts() {
-        accountRepository.deleteAll();
+        accountRepository.deleteById(accountId);
+        return true;
     }
 
     /**
      * Delete a customer by its accountRoleId (primary key)
      * 
      * @param accountRoleId
+     * @return boolean
      */
     @Transactional
-    public void deleteCustomerByAccountRoleId(int accountRoleId) {
-        Customer customer = customerRepository.findAccountRoleByAccountRoleId(accountRoleId);
+    public boolean deleteCustomerByAccountRoleId(int accountRoleId) {
+        if (accountRoleId < 0) {
+            throw new IllegalArgumentException("AccountRoleId cannot be negative!");
+        }
+
+        Customer customer = customerRepository.findCustomerByAccountRoleId(accountRoleId);
         if (customer == null) {
             throw new IllegalArgumentException("Customer does not exist!");
         }
+
         customerRepository.delete(customer);
+        return true;
     }
 
     /**
      * Delete customer by accountId
      * 
      * @param accountId
+     * @return boolean
      */
     @Transactional
-    public void deleteCustomerByAccountId(int accountId) {
+    public boolean deleteCustomerByAccountId(int accountId) {
+        if (accountId < 0) {
+            throw new IllegalArgumentException("AccountId cannot be negative!");
+        }
+
         Account account = accountRepository.findAccountByAccountId(accountId);
         if (account == null) {
             throw new IllegalArgumentException("Account does not exist!");
         }
-        Customer customer = customerRepository.findAccountRoleByAccountRoleId(accountId);
+
+        Customer customer = customerRepository.findCustomerByAccountRoleId(accountId);
         if (customer == null) {
             throw new IllegalArgumentException("Customer does not exist!");
         }
-        // customer.setAccount(null);
+
         customerRepository.delete(customer);
+        return true;
     }
 
     /**
@@ -621,77 +714,75 @@ public class AccountManagementService {
      * @param username
      */
     @Transactional
-    public void deleteCustomerByUsername(String username) {
+    public boolean deleteCustomerByUsername(String username) {
+        if (username == null || username.trim().isEmpty() || username.contains(" ")) {
+            throw new IllegalArgumentException("Username cannot be null, empty and spaces!");
+        }
+
         Account account = accountRepository.findAccountByUsername(username);
         if (account == null) {
             throw new IllegalArgumentException("Account does not exist!");
         }
-        Customer customer = customerRepository.findAccountRoleByAccountRoleId(account.getAccountId());
+
+        Customer customer = customerRepository.findCustomerByAccountRoleId(account.getAccountId());
         if (customer == null) {
             throw new IllegalArgumentException("Customer does not exist!");
         }
-        customerRepository.delete(customer);
-    }
 
-    /**
-     * Delete all customers
-     * 
-     * @return void
-     */
-    @Transactional
-    public void deleteAllCustomers() {
-        customerRepository.deleteAll();
+        customerRepository.delete(customer);
+        return true;
     }
 
     /**
      * Delete a instructor by its accountRoleId (primary key).
      * 
      * @param accountRoleId
+     * @return boolean
      * @author Anslean AJ
      */
     @Transactional
-    public void deleteInstructorByAccountRoleId(int accountRoleId) {
+    public boolean deleteInstructorByAccountRoleId(int accountRoleId) {
         if (accountRoleId < 0) {
             throw new IllegalArgumentException("AccountRoleId cannot be negative!");
         }
-        Instructor instructor = instructorRepository.findAccountRoleByAccountRoleId(accountRoleId);
+
+        Instructor instructor = instructorRepository.findInstructorByAccountRoleId(accountRoleId);
         if (instructor == null) {
-            throw new IllegalArgumentException("Account does not exist!");
+            throw new IllegalArgumentException("Instructor does not exist!");
         }
-        instructorRepository.deleteById(accountRoleId);
+
+        instructorRepository.delete(instructor);
+        return true;
     }
 
     /**
      * Delete instructor by username
      * 
      * @param username
+     * @return boolean
      * @author Anslean AJ
      */
     @Transactional
-    public void deleteInstructorByUsername(String username) {
+    public boolean deleteInstructorByUsername(String username) {
+        if (username == null || username.trim().isEmpty() || username.contains(" ")) {
+            throw new IllegalArgumentException("Username cannot be null, empty and spaces!");
+        }
+
         Account account = accountRepository.findAccountByUsername(username);
         if (account == null) {
             throw new IllegalArgumentException("Account does not exist!");
         }
-        Instructor instructor = instructorRepository.findAccountRoleByAccountRoleId(account.getAccountId());
+
+        Instructor instructor = instructorRepository.findInstructorByAccountRoleId(account.getAccountId());
         if (instructor == null) {
             throw new IllegalArgumentException("Instructor does not exist!");
         }
-        instructor.setAccount(account);
+
         instructorRepository.delete(instructor);
+        return true;
     }
 
-    /**
-     * Delete all instructors
-     * 
-     * @return void
-     * @author Anslean AJ
-     */
-    @Transactional
-    public void deleteAllInstructors() {
-        instructorRepository.deleteAll();
-
-    }
+    // Extra functions
 
     /**
      * Check if account has customer role
@@ -700,12 +791,17 @@ public class AccountManagementService {
      * @return boolean
      */
     @Transactional
-    public boolean checkAccountHasCustomerRole(int accountId) { // can't instantiate an abstract class
+    public boolean checkAccountHasCustomerRole(int accountId) {
+        if (accountId < 0) {
+            throw new IllegalArgumentException("Account ID must be greater than 0");
+        }
+
         Account account = accountRepository.findAccountByAccountId(accountId);
         if (account == null) {
             throw new IllegalArgumentException("Account does not exist!");
         }
-        Customer customer = customerRepository.findAccountRoleByAccountRoleId(accountId);
+
+        Customer customer = customerRepository.findCustomerByAccountRoleId(accountId);
         return customer == null;
     }
 
@@ -717,11 +813,16 @@ public class AccountManagementService {
      */
     @Transactional
     public boolean checkAccountHasInstructorRole(int accountId) {
+        if (accountId < 0) {
+            throw new IllegalArgumentException("Account ID must be greater than 0");
+        }
+
         Account account = accountRepository.findAccountByAccountId(accountId);
         if (account == null) {
             throw new IllegalArgumentException("Account does not exist!");
         }
-        Instructor instructor = instructorRepository.findAccountRoleByAccountRoleId(accountId);
+
+        Instructor instructor = instructorRepository.findInstructorByAccountRoleId(accountId);
         return instructor == null;
     }
 
@@ -733,11 +834,16 @@ public class AccountManagementService {
      */
     @Transactional
     public boolean checkAccountHasOwnerRole(int accountId) {
+        if (accountId < 0) {
+            throw new IllegalArgumentException("Account ID must be greater than 0");
+        }
+
         Account account = accountRepository.findAccountByAccountId(accountId);
         if (account == null) {
             throw new IllegalArgumentException("Account does not exist!");
         }
-        Owner owner = ownerRepository.findAccountRoleByAccountRoleId(accountId);
+
+        Owner owner = ownerRepository.findOwnerByAccountRoleId(accountId);
         return owner == null;
     }
 }

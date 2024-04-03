@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import ca.mcgill.ecse321.sportcenter.model.Instructor;
 import ca.mcgill.ecse321.sportcenter.model.Instructor.InstructorStatus;
 import ca.mcgill.ecse321.sportcenter.model.Account;
+
 /**
  * @author Andrew Nemr and Patrick Zakaria
  */
@@ -25,6 +27,7 @@ public class TestInstructorPersistence {
     /**
      * Clear the database after each test
      */
+    @BeforeEach
     @AfterEach
     public void clearDatabase() {
         instructorRepository.deleteAll();
@@ -36,10 +39,10 @@ public class TestInstructorPersistence {
      */
     @Test
     public void testPersistAndLoadInstructor() {
-        
+
         /**
-        * Create an Account, set the attributes of the Account, and save the Account
-        */
+         * Create an Account, set the attributes of the Account, and save the Account
+         */
         Account account = new Account();
         String username = "Jose";
         String password = "password";
@@ -50,7 +53,8 @@ public class TestInstructorPersistence {
         accountRepository.save(account);
 
         /**
-         * Create an Instructor, set the attributes of the Instructor, and save the Instructor
+         * Create an Instructor, set the attributes of the Instructor, and save the
+         * Instructor
          */
         Instructor instructor = new Instructor();
         InstructorStatus status = InstructorStatus.Active;
@@ -68,7 +72,7 @@ public class TestInstructorPersistence {
         /**
          * Load the Instructor and check the attributes of the Instructor
          */
-        instructor = instructorRepository.findAccountRoleByAccountRoleId(accountRoleId);
+        instructor = instructorRepository.findInstructorByAccountRoleId(accountRoleId);
 
         /**
          * Check the attributes of the Instructor

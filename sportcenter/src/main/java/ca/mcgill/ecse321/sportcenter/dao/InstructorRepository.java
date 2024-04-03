@@ -9,10 +9,11 @@ import ca.mcgill.ecse321.sportcenter.model.Instructor;
  */
 public interface InstructorRepository extends CrudRepository<Instructor, Integer> {
 
-    public Instructor findAccountRoleByAccountRoleId(int accountRoleId); // Account role is parent class. Primary Key
-                                                                         // accountRoleId
+    public Instructor findInstructorByAccountRoleId(int accountRoleId); // Account role is parent class. Primary Key
+                                                                        // accountRoleId
 
-    public Instructor findInstructorByUsername(String username); // Instructor is a child class of AccountRole. Username
-                                                                 // is a field in AccountRole
+    public Instructor findInstructorByAccountUsername(String username); // Instructor is a child class of AccountRole.
+                                                                        // Username
+    // is a field in AccountRole
 
 }

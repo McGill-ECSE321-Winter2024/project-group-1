@@ -1,323 +1,557 @@
 package ca.mcgill.ecse321.sportcenter.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.lenient;
 
-import java.sql.Date;
-import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.aspectj.lang.annotation.SuppressAjWarnings;
-import org.checkerframework.checker.units.qual.A;
-import org.checkerframework.checker.units.qual.C;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.mockito.invocation.InvocationOnMock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.stubbing.Answer;
 
-import ca.mcgill.ecse321.sportcenter.model.Account;
-import ca.mcgill.ecse321.sportcenter.model.Activity;
-import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
-import ca.mcgill.ecse321.sportcenter.model.Customer;
-import ca.mcgill.ecse321.sportcenter.model.Instructor;
-import ca.mcgill.ecse321.sportcenter.model.Owner;
 import ca.mcgill.ecse321.sportcenter.dao.AccountRepository;
-import ca.mcgill.ecse321.sportcenter.dao.ActivityRepository;
 import ca.mcgill.ecse321.sportcenter.dao.CustomerRepository;
-import ca.mcgill.ecse321.sportcenter.dao.InstructorRepository;
-import ca.mcgill.ecse321.sportcenter.dao.OwnerRepository;
-import ca.mcgill.ecse321.sportcenter.service.AccountManagementService;
+import ca.mcgill.ecse321.sportcenter.model.Account;
+import ca.mcgill.ecse321.sportcenter.model.Customer;
 
+/**
+ * Test class for Customer Account
+ * 
+ * @author Emilie Ruel and Andrew Nemr
+ */
+@ExtendWith(MockitoExtension.class)
 public class TestAccountCustomerService {
+
     @Mock
     private AccountRepository accountRepository;
 
     @Mock
     private CustomerRepository customerRepository;
 
-    @Mock
-    private OwnerRepository ownerRepository;
+    // account keys
+    private static final int CUSTOMER_ACCOUNT_KEY = 1;
+    private static final int NEW_CUSTOMER_ACCOUNT_KEY = 2;
 
-    @Mock
-    private ActivityRepository activityRepository;
+    // account role keys
+    private static final String CUSTOMER_USERNAME = "customer";
+    private static final String NEW_CUSTOMER_USERNAME = "newCustomer";
 
-    @Mock
-    private InstructorRepository instructorRepository;
+    private static final int CUSTOMER_ACCOUNT_ROLE_ID = 1;
+    private static final int NEW_CUSTOMER_ACCOUNT_ROLE_ID = 1;
 
     @InjectMocks
-    private AccountManagementService accountService;
+    private AccountManagementService accountManagementService;
 
-    @AfterEach
-    public void clearDatabase() {
-        customerRepository.deleteAll();
-        accountRepository.deleteAll();
+    @Mock
+    private ScheduledActivityManagementService scheduledActivityManagementService;
+
+    @Mock
+    private ActivityManagementService activityManagementService;
+
+    @Mock
+    private ScheduledActivityManagementService scheduledActivityService;
+
+    @SuppressWarnings("null")
+    @BeforeEach
+    void setMockOutput() {
+        lenient().when(accountRepository.findAccountByAccountId(anyInt())).thenAnswer((InvocationOnMock invocation) -> {
+            if (invocation.getArgument(0).equals(CUSTOMER_ACCOUNT_KEY)) {
+                Account account = new Account();
+                account.setUsername(CUSTOMER_USERNAME);
+                account.setPassword("password");
+                account.setAccountId(CUSTOMER_ACCOUNT_KEY);
+                return account;
+            } else if (invocation.getArgument(0).equals(NEW_CUSTOMER_ACCOUNT_KEY)) {
+                Account account = new Account();
+                account.setUsername(NEW_CUSTOMER_USERNAME);
+                account.setPassword("password");
+                account.setAccountId(NEW_CUSTOMER_ACCOUNT_KEY);
+                return account;
+            } else {
+                return null;
+            }
+        });
+
+        lenient().when(accountRepository.findAccountByUsername(anyString()))
+                .thenAnswer((InvocationOnMock invocation) -> {
+                    if (invocation.getArgument(0).equals(CUSTOMER_USERNAME)) {
+                        Account account = new Account();
+                        account.setUsername(CUSTOMER_USERNAME);
+                        account.setPassword("password");
+                        account.setAccountId(CUSTOMER_ACCOUNT_KEY);
+                        return account;
+                    } else if (invocation.getArgument(0).equals(NEW_CUSTOMER_USERNAME)) {
+                        Account account = new Account();
+                        account.setUsername(NEW_CUSTOMER_USERNAME);
+                        account.setPassword("password");
+                        account.setAccountId(NEW_CUSTOMER_ACCOUNT_KEY);
+                        return account;
+                    } else {
+                        return null;
+                    }
+                });
+
+        lenient().when(customerRepository.findCustomerByAccountRoleId(anyInt()))
+                .thenAnswer((InvocationOnMock invocation) -> {
+                    if (invocation.getArgument(0).equals(CUSTOMER_ACCOUNT_ROLE_ID)) {
+                        Customer customer = new Customer();
+                        customer.setAccount(accountRepository.findAccountByAccountId(CUSTOMER_ACCOUNT_KEY));
+                        customer.setAccountRoleId(CUSTOMER_ACCOUNT_ROLE_ID);
+                        return customer;
+                    } else if (invocation.getArgument(0).equals(NEW_CUSTOMER_ACCOUNT_ROLE_ID)) {
+                        Customer customer = new Customer();
+                        customer.setAccount(accountRepository.findAccountByAccountId(NEW_CUSTOMER_ACCOUNT_KEY));
+                        customer.setAccountRoleId(NEW_CUSTOMER_ACCOUNT_ROLE_ID);
+                        return customer;
+                    } else {
+                        return null;
+                    }
+                });
+
+        lenient().when(customerRepository.findCustomerByAccountUsername(anyString()))
+                .thenAnswer((InvocationOnMock invocation) -> {
+                    if (invocation.getArgument(0).equals(CUSTOMER_USERNAME)) {
+                        Customer customer = new Customer();
+                        customer.setAccount(accountRepository.findAccountByAccountId(CUSTOMER_ACCOUNT_KEY));
+                        customer.setAccountRoleId(CUSTOMER_ACCOUNT_ROLE_ID);
+                        return customer;
+                    } else {
+                        return null;
+                    }
+                });
+
+        lenient().when(customerRepository.findCustomerByAccountAccountId(anyInt()))
+                .thenAnswer((InvocationOnMock invocation) -> {
+                    if (invocation.getArgument(0).equals(CUSTOMER_ACCOUNT_KEY)) {
+                        Customer customer = new Customer();
+                        customer.setAccount(accountRepository.findAccountByAccountId(CUSTOMER_ACCOUNT_KEY));
+                        customer.setAccountRoleId(CUSTOMER_ACCOUNT_ROLE_ID);
+                        return customer;
+                    } else if (invocation.getArgument(0).equals(NEW_CUSTOMER_ACCOUNT_KEY)) {
+                        Customer customer = new Customer();
+                        customer.setAccount(accountRepository.findAccountByAccountId(NEW_CUSTOMER_ACCOUNT_KEY));
+                        customer.setAccountRoleId(NEW_CUSTOMER_ACCOUNT_ROLE_ID);
+                        return customer;
+                    } else {
+                        return null;
+                    }
+                });
+
+        lenient().when(customerRepository.findAll()).thenAnswer((InvocationOnMock invocation) -> {
+            List<Customer> customers = new ArrayList<Customer>();
+            Customer customer = new Customer();
+            customer.setAccount(accountRepository.findAccountByAccountId(CUSTOMER_ACCOUNT_KEY));
+            customer.setAccountRoleId(CUSTOMER_ACCOUNT_ROLE_ID);
+            customers.add(customer);
+            return customers;
+        });
+
+        Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> {
+            return invocation.getArgument(0);
+        };
+        lenient().when(accountRepository.save(any(Account.class))).thenAnswer(returnParameterAsAnswer);
+        lenient().when(customerRepository.save(any(Customer.class))).thenAnswer(returnParameterAsAnswer);
     }
 
+    @SuppressAjWarnings("null")
+
+    // Test the creation of a customer account -> SUCCESS
     @Test
     public void testCreateCustomer() {
-
-        String username = "Person1";
-        String password = "Password1";
-        Account account = new Account(username, password);
-        when(accountRepository.save(any(Account.class))).thenReturn(account);
-
-        Customer customer = accountService.createCustomer("Person1");
-
+        Customer customer = null;
+        try {
+            customer = accountManagementService.createCustomer(NEW_CUSTOMER_USERNAME);
+        } catch (IllegalArgumentException e) {
+            // Check that no error occurred
+            fail(e.getMessage());
+        }
         assertNotNull(customer);
-        assertEquals("Person1", customer.getAccount().getUsername());
-        assertEquals("Password1", customer.getAccount().getPassword());
+        assertEquals(NEW_CUSTOMER_USERNAME, customer.getAccount().getUsername());
     }
 
+    // Test the creation of a customer account with a null username -> FAIL
     @Test
     public void testCreateCustomerNull() {
-        String username = null;
-        Customer customer = null;
+        String error = null;
         try {
-            customer = accountService.createCustomer(username);
+            accountManagementService.createCustomer(null);
         } catch (IllegalArgumentException e) {
-            assertEquals("Username cannot be empty!", e.getMessage());
-            assertEquals(null, customer);
+            error = e.getMessage();
         }
-
+        assertEquals("Username cannot be null!", error);
     }
 
+    // Test the creation of a customer account with an empty username -> FAIL
     @Test
     public void testCreateCustomerEmpty() {
-        String username = "";
+        String error = null;
         Customer customer = null;
         try {
-            customer = accountService.createCustomer(username);
+            customer = accountManagementService.createCustomer("");
         } catch (IllegalArgumentException e) {
-            assertEquals("Username cannot be empty!", e.getMessage());
-            assertEquals(null, customer);
+            error = e.getMessage();
         }
-
+        assertNull(customer);
+        assertEquals("Username cannot be empty!", error);
     }
 
+    // Test the creation of a customer account with a whitespace username -> FAIL
     @Test
-    public void testCreateCustomerSpaces() {
-        String username = " ";
+    public void testCreateCustomerWhitespace() {
+        String error = null;
         Customer customer = null;
         try {
-            customer = accountService.createCustomer(username);
+            customer = accountManagementService.createCustomer(" b a ");
         } catch (IllegalArgumentException e) {
-            assertEquals("Username cannot be empty!", e.getMessage());
-            assertEquals(null, customer);
+            error = e.getMessage();
         }
-
+        assertNull(customer);
+        assertEquals("Username cannot contain spaces!", error);
     }
 
+    // Test the creation of a customer account with a non-existing username -> FAIL
     @Test
-    public void testDeleteCustomer() {
-        String username = "Person1";
-        String password = "Password1";
-        Account account = new Account(username, password);
-        when(accountRepository.save(any(Account.class))).thenReturn(account);
-
-        Customer customer = accountService.createCustomer("Person1");
-        accountService.deleteCustomerByUsername("Person1");
-        verify(customerRepository, times(1)).delete(customer);
-    }
-
-    @Test
-    public void testDeleteCustomerNull() {
-        String username = "Person1";
-        String password = "Password1";
-        Account account = new Account(username, password);
-        when(accountRepository.save(any(Account.class))).thenReturn(account);
-        Customer customer = accountService.createCustomer("Person1");
-        String username_empty = null;
+    public void testCreateCustomerNonExisting() {
+        String error = null;
+        Customer customer = null;
         try {
-            accountService.deleteCustomerByUsername(username_empty);
+            customer = accountManagementService.createCustomer("nonExisting");
         } catch (IllegalArgumentException e) {
-            assertEquals("Username cannot be empty!", e.getMessage());
-            assertEquals(customer, customerRepository.findAccountRoleByUsername("Person1"));
+            error = e.getMessage();
         }
+        assertNull(customer);
+        assertEquals("Account does not exist!", error);
     }
 
+    // Test getting a customer account by its accountRoleId -> SUCCESS
     @Test
-    public void testDeleteCustomerEmpty() {
-        String username = "Person1";
-        String password = "Password1";
-        Account account = new Account(username, password);
-        when(accountRepository.save(any(Account.class))).thenReturn(account);
-        Customer customer = accountService.createCustomer("Person1");
-        String username_empty = "";
+    public void testGetCustomerAccountByAccountRoleId() {
+        Customer customer = null;
         try {
-            accountService.deleteCustomerByUsername(username_empty);
+            customer = accountManagementService.getCustomerByAccountRoleId(CUSTOMER_ACCOUNT_ROLE_ID);
         } catch (IllegalArgumentException e) {
-            assertEquals("Username cannot be empty!", e.getMessage());
-            assertEquals(customer, customerRepository.findAccountRoleByUsername("Person1"));
-
+            // Check that no error occurred
+            fail();
         }
-
+        assertNotNull(customer);
+        assertEquals(CUSTOMER_ACCOUNT_ROLE_ID, customer.getAccount().getAccountId());
     }
 
+    // Test getting a customer account by an non-existing accountRoleId -> FAIL
     @Test
-    public void testDeleteCustomerSpaces() {
-        String username = "Person1";
-        String password = "Password1";
-        Account account = new Account(username, password);
-        when(accountRepository.save(any(Account.class))).thenReturn(account);
-        Customer customer = accountService.createCustomer("Person1");
-        String username_empty = " ";
+    public void testGetCustomerAccountByInvalidAccountRoleId() {
+        String error = null;
+        Customer customer = null;
         try {
-            accountService.deleteCustomerByUsername(username_empty);
+            customer = accountManagementService.getCustomerByAccountRoleId(0);
         } catch (IllegalArgumentException e) {
-            assertEquals("Username cannot be empty!", e.getMessage());
-            assertEquals(customer, customerRepository.findAccountRoleByUsername("Person1"));
+            error = e.getMessage();
         }
+        assertNull(customer);
+        assertEquals("Customer does not exist!", error);
     }
 
+    // Test getting a non-existing customer
     @Test
-    public void testGetCustomer() {
-        String username = "Person1";
-        String password = "Password1";
-        Account account = new Account(username, password);
-        when(accountRepository.save(any(Account.class))).thenReturn(account);
-
-        Customer customer = accountService.createCustomer("Person1");
-
-        when(customerRepository.findAccountRoleByUsername("Person1")).thenReturn(customer);
-        accountService.getCustomerByUsername("Person1");
-        verify(customerRepository, times(1)).findAccountRoleByUsername("Person1");
-    }
-
-    @Test
-    public void testGetCustomerNull() {
-        String username = null;
+    public void testGetCustomerAccountByNonExistingAccountRoleId() {
+        String error = null;
+        Customer customer = null;
         try {
-            accountService.getCustomerByUsername(username);
+            customer = accountManagementService.getCustomerByAccountRoleId(1000);
         } catch (IllegalArgumentException e) {
-            assertEquals("Username cannot be empty!", e.getMessage());
+            error = e.getMessage();
         }
+        assertNull(customer);
+        assertEquals("Customer does not exist!", error);
     }
 
+    // test get customer account by its accountId -> success
     @Test
-    public void testGetCustomerEmpty() {
-        String username = "";
+    public void testGetCustomerAccountByAccountId() {
+        Customer customer = null;
         try {
-            accountService.getCustomerByUsername(username);
+            customer = accountManagementService.getCustomerByAccountId(CUSTOMER_ACCOUNT_KEY);
         } catch (IllegalArgumentException e) {
-            assertEquals("Username cannot be empty!", e.getMessage());
+            // Check that no error occurred
+            fail();
         }
+        assertNotNull(customer);
+        assertEquals(CUSTOMER_ACCOUNT_KEY, customer.getAccount().getAccountId());
     }
 
+    // test get customer account by its accountId -> non existing, fail
     @Test
-    public void testGetCustomerSpaces() {
-        String username = " ";
+    public void testGetCustomerAccountByInvalidAccountId() {
+        String error = null;
+
         try {
-            accountService.getCustomerByUsername(username);
+            accountManagementService.getCustomerByAccountId(-1);
         } catch (IllegalArgumentException e) {
-            assertEquals("Username cannot be empty!", e.getMessage());
+            error = e.getMessage();
         }
+
+        assertEquals("AccountId cannot be negative!", error);
     }
 
     @Test
-    public void testGetCustomerDoesNotExist() {
-        String username = "testUsername";
+    public void testGetCustomerAccountbyNonExistingAccountId() {
+        String error = null;
+
         try {
-            accountService.getCustomerByUsername(username);
+            accountManagementService.getCustomerByAccountId(1000);
         } catch (IllegalArgumentException e) {
-            assertEquals("Customer does not exist!", e.getMessage());
+            error = e.getMessage();
         }
+
+        assertEquals("Account does not exist!", error);
     }
 
     @Test
-    public void testDeleteAllCustomers() {
-        Account account1 = new Account();
-        account1.setUsername("Person1");
-        account1.setPassword("Password1");
-        when(accountRepository.save(any(Account.class))).thenReturn(account1);
-        Account account2 = new Account();
-        account2.setUsername("Person2");
-        account2.setPassword("Password2");
-        when(accountRepository.save(any(Account.class))).thenReturn(account2);
-        Customer customer1 = accountService.createCustomer("Person1");
-        Customer customer2 = accountService.createCustomer("Person2");
-        accountService.deleteAllCustomers();
-        verify(customerRepository, times(1)).deleteAll();
-    }
+    public void testGetCustomerAccountbyNonExistingAccountId2() {
+        String error = null;
 
-    @Test
-    public void testGetAllCustomers() {
-        String username = "Person1";
-        String password = "Password1";
-        Account account1 = new Account(username, password);
-        when(accountRepository.save(any(Account.class))).thenReturn(account1);
-        String username2 = "Person2";
-        String password2 = "Password2";
-        Account account2 = new Account(username2, password2);
-        when(accountRepository.save(any(Account.class))).thenReturn(account2);
-        Customer customer1 = accountService.createCustomer("Person1");
-        Customer customer2 = accountService.createCustomer("Person2");
-        accountService.getAllCustomers();
-        verify(customerRepository, times(1)).findAll();
-    }
-
-    @Test
-    public void getCustomerByRoleId() {
-        String username = "Person1";
-        String password = "Password1";
-        Account account = new Account(username, password);
-        when(accountRepository.save(any(Account.class))).thenReturn(account);
-
-        Customer customer = accountService.createCustomer("Person1");
-        int roleId = 1;
-        when(customerRepository.findAccountRoleByAccountRoleId(roleId))
-                .thenReturn(customerRepository.findAccountRoleByUsername("Person1"));
-
-        Customer customer2 = accountService.getCustomerByAccountRoleId(roleId);
-
-        assertEquals(customer, customer2);
-        assertEquals("Person1", customer2.getAccount().getUsername());
-        assertEquals("Password1", customer2.getAccount().getPassword());
-    }
-
-    @Test
-    public void getCustomerByRoleIdDoesNotExist() {
-        String username = "Person1";
-        String password = "Password1";
-        Account account = new Account(username, password);
-        when(accountRepository.save(any(Account.class))).thenReturn(account);
-
-        Customer customer = accountService.createCustomer("Person1");
-        int roleId = 1;
-        when(customerRepository.findAccountRoleByAccountRoleId(2))
-                .thenReturn(customerRepository.findAccountRoleByUsername("Person1"));
         try {
-            accountService.getCustomerByAccountRoleId(roleId);
+            accountManagementService.getCustomerByAccountId(NEW_CUSTOMER_ACCOUNT_KEY);
         } catch (IllegalArgumentException e) {
-            assertEquals("Customer does not exist!", e.getMessage());
-            assertEquals(customer, accountService.getCustomerByAccountRoleId(2));
+            error = e.getMessage();
         }
+
+        assertEquals("Customer does not exist!", error);
     }
 
-    @Test ///////////////
-    public void getCustomerByRoleIdNull() {
-        String username = "Person1";
-        String password = "Password1";
-        Account account = new Account(username, password);
-        when(accountRepository.save(any(Account.class))).thenReturn(account);
-
-        Customer customer = accountService.createCustomer("Person1");
-        int roleId = -1;
-        when(customerRepository.findAccountRoleByAccountRoleId(2))
-                .thenReturn(customerRepository.findAccountRoleByUsername("Person1"));
+    // test get customer account by its username -> success
+    @Test
+    public void testGetCustomerByUsername() {
+        Customer customer = null;
+        Account account = null;
         try {
-            accountService.getCustomerByAccountRoleId(roleId);
+            customer = accountManagementService.getCustomerByUsername(CUSTOMER_USERNAME);
+            account = customer.getAccount();
         } catch (IllegalArgumentException e) {
-            assertEquals("Customer does not exist!", e.getMessage());
-            assertEquals(customer, accountService.getCustomerByAccountRoleId(2));
+            // Check that no error occurred
+            fail(e.getMessage());
         }
+        assertNotNull(customer);
+        assertNotNull(account);
+        assertEquals(CUSTOMER_ACCOUNT_KEY, customer.getAccount().getAccountId());
+        assertEquals(CUSTOMER_USERNAME, customer.getAccount().getUsername());
+    }
+
+    // test get customer account by its username -> non existing, fail
+    @Test
+    public void testGetCustomerAccountByInvalidUsername() {
+        String error = null;
+
+        try {
+            accountManagementService.getCustomerByUsername("invalid");
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+
+        assertEquals("Account does not exist!", error);
+    }
+
+    // test get customer account by its username -> null, fail
+    @Test
+    public void testGetCustomerAccountByNullUsername() {
+        String error = null;
+
+        try {
+            accountManagementService.getCustomerByUsername(null);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+
+        assertEquals("Username cannot be empty!", error);
+    }
+
+    // test get customer account by its username -> empty, fail
+    @Test
+    public void testGetCustomerAccountByEmptyUsername() {
+        String error = null;
+        Customer customer = null;
+        try {
+            customer = accountManagementService.getCustomerByUsername("");
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertNull(customer);
+        assertEquals("Username cannot be empty!", error);
+    }
+
+    // test get customer account by its username -> whitespace, fail
+    @Test
+    public void testGetCustomerAccountByWhitespaceUsername() {
+        String error = null;
+        Customer customer = null;
+        try {
+            customer = accountManagementService.getCustomerByUsername("s s");
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertNull(customer);
+        assertEquals("Username cannot contain spaces!", error);
+    }
+
+    @Test
+    public void testGetCustomerAccountByNonExistingUsername() {
+        String error = null;
+        Customer customer = null;
+        try {
+            customer = accountManagementService.getCustomerByUsername("nonExisting");
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertNull(customer);
+        assertEquals("Account does not exist!", error);
+    }
+
+    @Test
+    public void testGetCustomerAccountByNonExistingUsername2() {
+        String error = null;
+
+        try {
+            accountManagementService.getCustomerByUsername(NEW_CUSTOMER_USERNAME);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+
+        assertEquals("Customer does not exist!", error);
+    }
+
+    // Test get all customer accounts
+    @Test
+    public void testGetAllCustomerAccounts() {
+        List<Customer> customers = accountManagementService.getAllCustomers();
+        assertNotNull(customers);
+        assertEquals(1, customers.size());
+    }
+
+    // test delete customer account by accountRoleId -> success
+    @Test
+    public void testDeleteCustomerAccountByAccountRoleId() {
+        boolean deleted = false;
+
+        try {
+            deleted = accountManagementService.deleteCustomerByAccountRoleId(CUSTOMER_ACCOUNT_KEY);
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+
+        assertTrue(deleted);
+    }
+
+    // test delete customer account by accountRoleId -> non existing, fail
+    @Test
+    public void testDeleteCustomerAccountByInvalidAccountRoleId() {
+        String error = null;
+        try {
+            accountManagementService.deleteCustomerByAccountRoleId(0);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertEquals("Customer does not exist!", error);
+    }
+
+    // test delete customer account by accountId -> success
+    @Test
+    public void testDeleteCustomerAccountByAccountId() {
+        boolean deleted = false;
+
+        try {
+            deleted = accountManagementService.deleteCustomerByAccountId(CUSTOMER_ACCOUNT_KEY);
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+
+        assertTrue(deleted);
+    }
+
+    // test delete customer account by accountId -> non existing, fail
+    @Test
+    public void testDeleteCustomerAccountByInvalidAccountId() {
+        String error = null;
+        try {
+            accountManagementService.deleteCustomerByAccountId(0);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertEquals("Account does not exist!", error);
+    }
+
+    // test delete customer account by username -> success
+    @Test
+    public void testDeleteCustomerAccountByUsername() {
+        boolean deleted = false;
+
+        try {
+            deleted = accountManagementService.deleteCustomerByUsername(CUSTOMER_USERNAME);
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+
+        assertTrue(deleted);
+    }
+
+    // test delete customer account by username -> non existing, fail
+    @Test
+    public void testDeleteCustomerAccountByInvalidUsername() {
+        String error = null;
+        try {
+            accountManagementService.deleteCustomerByUsername("invalid");
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertEquals("Account does not exist!", error);
+    }
+
+    // test delete customer account by username -> null, fail
+    @Test
+    public void testDeleteCustomerAccountByNullUsername() {
+        String error = null;
+        try {
+            accountManagementService.deleteCustomerByUsername(null);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertEquals("Username cannot be null, empty and spaces!", error);
+    }
+
+    // test delete customer account by username -> empty, fail
+    @Test
+    public void testDeleteCustomerAccountByEmptyUsername() {
+        String error = null;
+        try {
+            accountManagementService.deleteCustomerByUsername("");
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertEquals("Username cannot be null, empty and spaces!", error);
+    }
+
+    // test delete customer account by username -> whitespace, fail
+    @Test
+    public void testDeleteCustomerAccountByWhitespaceUsername() {
+        String error = null;
+        try {
+            accountManagementService.deleteCustomerByUsername(" ");
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertEquals("Username cannot be null, empty and spaces!", error);
     }
 }

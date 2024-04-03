@@ -1,16 +1,14 @@
 package ca.mcgill.ecse321.sportcenter.service;
 
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.lenient;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -20,20 +18,32 @@ import java.util.List;
 import org.aspectj.lang.annotation.SuppressAjWarnings;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 
-import ca.mcgill.ecse321.sportcenter.dao.*;
-import ca.mcgill.ecse321.sportcenter.model.*;
+import ca.mcgill.ecse321.sportcenter.dao.AccountRepository;
+import ca.mcgill.ecse321.sportcenter.dao.ActivityRepository;
+import ca.mcgill.ecse321.sportcenter.dao.CustomerRepository;
+import ca.mcgill.ecse321.sportcenter.dao.InstructorRepository;
+import ca.mcgill.ecse321.sportcenter.dao.RegistrationRepository;
+import ca.mcgill.ecse321.sportcenter.dao.ScheduledActivityRepository;
+import ca.mcgill.ecse321.sportcenter.model.Account;
+import ca.mcgill.ecse321.sportcenter.model.Activity;
 import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
+import ca.mcgill.ecse321.sportcenter.model.Customer;
+import ca.mcgill.ecse321.sportcenter.model.Instructor;
 import ca.mcgill.ecse321.sportcenter.model.Instructor.InstructorStatus;
+import ca.mcgill.ecse321.sportcenter.model.Registration;
+import ca.mcgill.ecse321.sportcenter.model.ScheduledActivity;
 
 /**
  * Test class for the Registration entity
  * 
- * @author Emilie Ruel
+ * @author Patrick Zakaria
  */
 @ExtendWith(MockitoExtension.class)
 public class TestRegistrationService {
@@ -74,6 +84,8 @@ public class TestRegistrationService {
 
         // Scheduled Activity keys
         private static final int SCHEDULED_ACTIVITY_KEY = 1;
+        private static final int PASSED_SCHEDULED_ACTIVITY_KEY = 2;
+        private static final int FULL_SCHEDULED_ACTIVITY_KEY = 3;
 
         // Registration keys
         private static final int REGISTRATION_KEY = 1;
@@ -84,42 +96,58 @@ public class TestRegistrationService {
         @SuppressWarnings("null")
         @BeforeEach
         void setMockOutput() {
-                when(accountDao.findAccountByAccountId(anyInt())).thenAnswer((InvocationOnMock invocation) -> {
-                        if (invocation.getArgument(0).equals(CUSTOMER_ACCOUNT_KEY)) {
-                                Account account = new Account();
-                                account.setUsername("customer");
-                                account.setPassword("password");
-                                return account;
-                        } else if (invocation.getArgument(0).equals(APPROVED_INSTRUCTOR_ACCOUNT_KEY)) {
-                                Account account = new Account();
-                                account.setUsername("approvedInstructor");
-                                account.setPassword("password");
-                                return account;
-                        } else if (invocation.getArgument(0).equals(DISAPPROVED_INSTRUCTOR_ACCOUNT_KEY)) {
-                                Account account = new Account();
-                                account.setUsername("disapprovedInstructor");
-                                account.setPassword("password");
-                                return account;
-                        } else {
-                                return null;
-                        }
-                });
+                lenient().when(accountDao.findAccountByAccountId(anyInt()))
+                                .thenAnswer((InvocationOnMock invocation) -> {
+                                        if (invocation.getArgument(0).equals(CUSTOMER_ACCOUNT_KEY)) {
+                                                Account account = new Account();
+                                                account.setUsername("customer");
+                                                account.setPassword("password");
+                                                account.setAccountId(CUSTOMER_ACCOUNT_KEY);
+                                                return account;
+                                        } else if (invocation.getArgument(0).equals(APPROVED_INSTRUCTOR_ACCOUNT_KEY)) {
+                                                Account account = new Account();
+                                                account.setUsername("approvedInstructor");
+                                                account.setPassword("password");
+                                                account.setAccountId(APPROVED_INSTRUCTOR_ACCOUNT_KEY);
+                                                return account;
+                                        } else if (invocation.getArgument(0)
+                                                        .equals(DISAPPROVED_INSTRUCTOR_ACCOUNT_KEY)) {
+                                                Account account = new Account();
+                                                account.setUsername("disapprovedInstructor");
+                                                account.setPassword("password");
+                                                account.setAccountId(DISAPPROVED_INSTRUCTOR_ACCOUNT_KEY);
+                                                return account;
+                                        } else if (invocation.getArgument(0).equals(NEW_CUSTOMER_ACCOUNT_KEY)) {
+                                                Account account = new Account();
+                                                account.setUsername("newCustomer");
+                                                account.setPassword("password");
+                                                account.setAccountId(NEW_CUSTOMER_ACCOUNT_KEY);
+                                                return account;
+                                        } else {
+                                                return null;
+                                        }
+                                });
 
-                when(customerDao.findAccountRoleByAccountRoleId(anyInt())).thenAnswer((InvocationOnMock invocation) -> {
-                        if (invocation.getArgument(0).equals(CUSTOMER_KEY)) {
-                                Customer customer = new Customer();
-                                customer.setAccount(accountDao.findAccountByAccountId(CUSTOMER_ACCOUNT_KEY));
-                                return customer;
-                        } else if (invocation.getArgument(0).equals(NEW_CUSTOMER_KEY)) {
-                                Customer customer = new Customer();
-                                customer.setAccount(accountDao.findAccountByAccountId(NEW_CUSTOMER_ACCOUNT_KEY));
-                                return customer;
-                        } else {
-                                return null;
-                        }
-                });
+                lenient().when(customerDao.findCustomerByAccountRoleId(anyInt()))
+                                .thenAnswer((InvocationOnMock invocation) -> {
+                                        if (invocation.getArgument(0).equals(CUSTOMER_KEY)) {
+                                                Customer customer = new Customer();
+                                                customer.setAccount(accountDao
+                                                                .findAccountByAccountId(CUSTOMER_ACCOUNT_KEY));
+                                                customer.setAccountRoleId(CUSTOMER_KEY);
+                                                return customer;
+                                        } else if (invocation.getArgument(0).equals(NEW_CUSTOMER_KEY)) {
+                                                Customer customer = new Customer();
+                                                customer.setAccount(accountDao
+                                                                .findAccountByAccountId(NEW_CUSTOMER_ACCOUNT_KEY));
+                                                customer.setAccountRoleId(NEW_CUSTOMER_KEY);
+                                                return customer;
+                                        } else {
+                                                return null;
+                                        }
+                                });
 
-                when(instructorDao.findAccountRoleByAccountRoleId(anyInt()))
+                lenient().when(instructorDao.findInstructorByAccountRoleId(anyInt()))
                                 .thenAnswer((InvocationOnMock invocation) -> {
                                         if (invocation.getArgument(0).equals(APPROVED_INSTRUCTOR_KEY)) {
                                                 Instructor instructor = new Instructor();
@@ -128,6 +156,7 @@ public class TestRegistrationService {
                                                 instructor.setStatus(InstructorStatus.Active);
                                                 instructor.setDescription("description");
                                                 instructor.setProfilePicURL("pictureURL");
+                                                instructor.setAccountRoleId(APPROVED_INSTRUCTOR_KEY);
                                                 return instructor;
                                         } else if (invocation.getArgument(0).equals(DISAPPROVED_INSTRUCTOR_KEY)) {
                                                 Instructor instructor = new Instructor();
@@ -136,33 +165,37 @@ public class TestRegistrationService {
                                                 instructor.setStatus(InstructorStatus.Pending);
                                                 instructor.setDescription("description");
                                                 instructor.setProfilePicURL("pictureURL");
+                                                instructor.setAccountRoleId(DISAPPROVED_INSTRUCTOR_KEY);
                                                 return instructor;
                                         } else {
                                                 return null;
                                         }
                                 });
 
-                when(activityDao.findActivityByName(anyString())).thenAnswer((InvocationOnMock invocation) -> {
-                        if (invocation.getArgument(0).equals(APPROVED_ACTIVITY_KEY)) {
-                                Activity activity = new Activity();
-                                activity.setName("activity");
-                                activity.setDescription("description");
-                                activity.setSubCategory(ClassCategory.Cardio);
-                                activity.setIsApproved(true);
-                                return activity;
-                        } else if (invocation.getArgument(0).equals(DISAPPROVED_ACTIVITY_KEY)) {
-                                Activity activity = new Activity();
-                                activity.setName("activity");
-                                activity.setDescription("description");
-                                activity.setSubCategory(ClassCategory.Cardio);
-                                activity.setIsApproved(false);
-                                return activity;
-                        } else {
-                                return null;
-                        }
-                });
+                lenient().when(activityDao.findActivityByName(anyString()))
+                                .thenAnswer((InvocationOnMock invocation) -> {
+                                        if (invocation.getArgument(0).equals(APPROVED_ACTIVITY_KEY)) {
+                                                Activity activity = new Activity();
+                                                activity.setName("activity");
+                                                activity.setDescription("description");
+                                                activity.setSubCategory(ClassCategory.Cardio);
+                                                activity.setIsApproved(true);
+                                                activity.setName(APPROVED_ACTIVITY_KEY);
+                                                return activity;
+                                        } else if (invocation.getArgument(0).equals(DISAPPROVED_ACTIVITY_KEY)) {
+                                                Activity activity = new Activity();
+                                                activity.setName("activity");
+                                                activity.setDescription("description");
+                                                activity.setSubCategory(ClassCategory.Cardio);
+                                                activity.setIsApproved(false);
+                                                activity.setName(DISAPPROVED_ACTIVITY_KEY);
+                                                return activity;
+                                        } else {
+                                                return null;
+                                        }
+                                });
 
-                when(scheduledActivityDao.findScheduledActivityByScheduledActivityId(anyInt()))
+                lenient().when(scheduledActivityDao.findScheduledActivityByScheduledActivityId(anyInt()))
                                 .thenAnswer((InvocationOnMock invocation) -> {
                                         if (invocation.getArgument(0).equals(SCHEDULED_ACTIVITY_KEY)) {
                                                 ScheduledActivity scheduledActivity = new ScheduledActivity();
@@ -170,40 +203,85 @@ public class TestRegistrationService {
                                                 scheduledActivity.setStartTime(LocalTime.now());
                                                 scheduledActivity.setEndTime(LocalTime.of(12, 0));
                                                 scheduledActivity.setSupervisor(
-                                                                instructorDao.findAccountRoleByAccountRoleId(
-                                                                                DISAPPROVED_INSTRUCTOR_KEY));
+                                                                instructorDao.findInstructorByAccountRoleId(
+                                                                                APPROVED_INSTRUCTOR_KEY));
                                                 scheduledActivity.setActivity(
                                                                 activityDao.findActivityByName(
-                                                                                DISAPPROVED_ACTIVITY_KEY));
+                                                                                APPROVED_ACTIVITY_KEY));
                                                 scheduledActivity.setCapacity(30);
+                                                scheduledActivity.setScheduledActivityId(SCHEDULED_ACTIVITY_KEY);
+                                                return scheduledActivity;
+                                        } else if (invocation.getArgument(0).equals(PASSED_SCHEDULED_ACTIVITY_KEY)) {
+                                                ScheduledActivity scheduledActivity = new ScheduledActivity();
+                                                scheduledActivity.setDate(LocalDate.of(2020, 1, 1));
+                                                scheduledActivity.setStartTime(LocalTime.now());
+                                                scheduledActivity.setEndTime(LocalTime.of(12, 0));
+                                                scheduledActivity.setSupervisor(
+                                                                instructorDao.findInstructorByAccountRoleId(
+                                                                                APPROVED_INSTRUCTOR_KEY));
+                                                scheduledActivity.setActivity(
+                                                                activityDao.findActivityByName(
+                                                                                APPROVED_ACTIVITY_KEY));
+                                                scheduledActivity.setCapacity(30);
+                                                scheduledActivity.setScheduledActivityId(PASSED_SCHEDULED_ACTIVITY_KEY);
+                                                return scheduledActivity;
+                                        } else if (invocation.getArgument(0).equals(FULL_SCHEDULED_ACTIVITY_KEY)) {
+                                                ScheduledActivity scheduledActivity = new ScheduledActivity();
+                                                scheduledActivity.setDate(LocalDate.now());
+                                                scheduledActivity.setStartTime(LocalTime.now());
+                                                scheduledActivity.setEndTime(LocalTime.of(12, 0));
+                                                scheduledActivity.setSupervisor(
+                                                                instructorDao.findInstructorByAccountRoleId(
+                                                                                APPROVED_INSTRUCTOR_KEY));
+                                                scheduledActivity.setActivity(
+                                                                activityDao.findActivityByName(
+                                                                                APPROVED_ACTIVITY_KEY));
+                                                scheduledActivity.setCapacity(0);
+                                                scheduledActivity.setScheduledActivityId(FULL_SCHEDULED_ACTIVITY_KEY);
                                                 return scheduledActivity;
                                         } else {
                                                 return null;
                                         }
                                 });
 
-                when(registrationDao.findRegistrationByRegId(anyInt())).thenAnswer((InvocationOnMock invocation) -> {
-                        if (invocation.getArgument(0).equals(REGISTRATION_KEY)) {
-                                Registration registration = new Registration();
-                                registration.setCustomer(customerDao.findAccountRoleByAccountRoleId(CUSTOMER_KEY));
-                                registration.setScheduledActivity(
-                                                scheduledActivityDao.findScheduledActivityByScheduledActivityId(
-                                                                SCHEDULED_ACTIVITY_KEY));
-                                return registration;
-                        } else {
-                                return null;
-                        }
+                lenient().when(registrationDao.findRegistrationByRegId(anyInt()))
+                                .thenAnswer((InvocationOnMock invocation) -> {
+                                        if (invocation.getArgument(0).equals(REGISTRATION_KEY)) {
+                                                Registration registration = new Registration();
+                                                registration.setCustomer(
+                                                                customerDao.findCustomerByAccountRoleId(CUSTOMER_KEY));
+                                                registration.setScheduledActivity(
+                                                                scheduledActivityDao
+                                                                                .findScheduledActivityByScheduledActivityId(
+                                                                                                SCHEDULED_ACTIVITY_KEY));
+                                                registration.setRegistrationId(REGISTRATION_KEY);
+                                                return registration;
+                                        } else {
+                                                return null;
+                                        }
+                                });
+
+                lenient().when(registrationDao.findAll()).thenAnswer((InvocationOnMock invocation) -> {
+                        List<Registration> registrations = new ArrayList<Registration>();
+                        Registration registration = new Registration();
+                        registration.setCustomer(customerDao.findCustomerByAccountRoleId(CUSTOMER_KEY));
+                        registration.setScheduledActivity(scheduledActivityDao
+                                        .findScheduledActivityByScheduledActivityId(SCHEDULED_ACTIVITY_KEY));
+                        registration.setRegistrationId(REGISTRATION_KEY);
+                        registrations.add(registration);
+                        return registrations;
                 });
 
                 Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> {
                         return invocation.getArgument(0);
                 };
-                when(accountDao.save(any(Account.class))).thenAnswer(returnParameterAsAnswer);
-                when(customerDao.save(any(Customer.class))).thenAnswer(returnParameterAsAnswer);
-                when(instructorDao.save(any(Instructor.class))).thenAnswer(returnParameterAsAnswer);
-                when(activityDao.save(any(Activity.class))).thenAnswer(returnParameterAsAnswer);
-                when(scheduledActivityDao.save(any(ScheduledActivity.class))).thenAnswer(returnParameterAsAnswer);
-                when(registrationDao.save(any(Registration.class))).thenAnswer(returnParameterAsAnswer);
+                lenient().when(accountDao.save(any(Account.class))).thenAnswer(returnParameterAsAnswer);
+                lenient().when(customerDao.save(any(Customer.class))).thenAnswer(returnParameterAsAnswer);
+                lenient().when(instructorDao.save(any(Instructor.class))).thenAnswer(returnParameterAsAnswer);
+                lenient().when(activityDao.save(any(Activity.class))).thenAnswer(returnParameterAsAnswer);
+                lenient().when(scheduledActivityDao.save(any(ScheduledActivity.class)))
+                                .thenAnswer(returnParameterAsAnswer);
+                lenient().when(registrationDao.save(any(Registration.class))).thenAnswer(returnParameterAsAnswer);
         }
 
         @SuppressAjWarnings("null")
@@ -217,11 +295,13 @@ public class TestRegistrationService {
                         registration = registrationService.createRegistration(NEW_CUSTOMER_ACCOUNT_KEY,
                                         SCHEDULED_ACTIVITY_KEY);
                 } catch (IllegalArgumentException e) {
-                        fail();
+                        fail(e.getMessage());
                 }
                 assertNotNull(registration);
-                assertEquals(NEW_CUSTOMER_ACCOUNT_KEY, registration.getCustomer().getAccountRoleId());
-                assertEquals(SCHEDULED_ACTIVITY_KEY, registration.getScheduledActivity().getScheduledActivityId());
+                assertEquals(NEW_CUSTOMER_ACCOUNT_KEY,
+                                registration.getCustomer().getAccountRoleId());
+                assertEquals(SCHEDULED_ACTIVITY_KEY,
+                                registration.getScheduledActivity().getScheduledActivityId());
         }
 
         /**
@@ -231,11 +311,13 @@ public class TestRegistrationService {
         @Test
         public void testCreateRegistrationInvalidCustomer() {
                 String error = null;
+                Registration registration = null;
                 try {
-                        registrationService.createRegistration(-1, SCHEDULED_ACTIVITY_KEY);
+                        registration = registrationService.createRegistration(-1, SCHEDULED_ACTIVITY_KEY);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
+                assertNull(registration);
                 assertEquals("Account role id not valid!", error);
         }
 
@@ -246,11 +328,13 @@ public class TestRegistrationService {
         @Test
         public void testCreateRegistrationInvalidScheduledActivity() {
                 String error = null;
+                Registration registration = null;
                 try {
-                        registrationService.createRegistration(CUSTOMER_KEY, -1);
+                        registration = registrationService.createRegistration(CUSTOMER_KEY, -1);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
+                assertNull(registration);
                 assertEquals("Scheduled activity id not valid!", error);
         }
 
@@ -261,11 +345,13 @@ public class TestRegistrationService {
         @Test
         public void testCreateRegistrationCustomerDoesNotExist() {
                 String error = null;
+                Registration registration = null;
                 try {
-                        registrationService.createRegistration(0, SCHEDULED_ACTIVITY_KEY);
+                        registration = registrationService.createRegistration(6, SCHEDULED_ACTIVITY_KEY);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
+                assertNull(registration);
                 assertEquals("Customer does not exist", error);
         }
 
@@ -276,11 +362,13 @@ public class TestRegistrationService {
         @Test
         public void testCreateRegistrationScheduledActivityDoesNotExist() {
                 String error = null;
+                Registration registration = null;
                 try {
-                        registrationService.createRegistration(CUSTOMER_KEY, 0);
+                        registration = registrationService.createRegistration(CUSTOMER_KEY, 6);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
+                assertNull(registration);
                 assertEquals("Scheduled activity does not exist", error);
         }
 
@@ -290,12 +378,14 @@ public class TestRegistrationService {
         @Test
         public void testCreateRegistrationDuplicate() {
                 String error = null;
+                Registration registration = null;
                 try {
-                        registrationService.createRegistration(CUSTOMER_KEY, SCHEDULED_ACTIVITY_KEY);
+                        registration = registrationService.createRegistration(CUSTOMER_KEY, SCHEDULED_ACTIVITY_KEY);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
-                assertEquals("Registration already exists", error);
+                assertNull(registration);
+                assertEquals("Registration already exists for this customer and scheduled activity", error);
         }
 
         /**
@@ -305,14 +395,14 @@ public class TestRegistrationService {
         @Test
         public void testCreateRegistrationScheduledActivityInPast() {
                 String error = null;
+                Registration registration = null;
                 try {
-                        ScheduledActivity scheduledActivity = scheduledActivityDao
-                                        .findScheduledActivityByScheduledActivityId(SCHEDULED_ACTIVITY_KEY);
-                        scheduledActivity.setDate(LocalDate.of(2020, 1, 1));
-                        registrationService.createRegistration(CUSTOMER_KEY, SCHEDULED_ACTIVITY_KEY);
+                        registration = registrationService.createRegistration(CUSTOMER_KEY,
+                                        PASSED_SCHEDULED_ACTIVITY_KEY);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
+                assertNull(registration);
                 assertEquals("Scheduled activity is in the past", error);
         }
 
@@ -322,14 +412,14 @@ public class TestRegistrationService {
         @Test
         public void testCreateRegistrationScheduledActivityFull() {
                 String error = null;
+                Registration registration = null;
                 try {
-                        ScheduledActivity scheduledActivity = scheduledActivityDao
-                                        .findScheduledActivityByScheduledActivityId(SCHEDULED_ACTIVITY_KEY);
-                        scheduledActivity.setCapacity(0);
-                        registrationService.createRegistration(CUSTOMER_KEY, SCHEDULED_ACTIVITY_KEY);
+                        registration = registrationService.createRegistration(CUSTOMER_KEY,
+                                        FULL_SCHEDULED_ACTIVITY_KEY);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
+                assertNull(registration);
                 assertEquals("Scheduled activity is full", error);
         }
 
@@ -357,7 +447,7 @@ public class TestRegistrationService {
                 String error = null;
                 Registration registration = null;
                 try {
-                        registration = registrationService.getRegistrationByRegId(0);
+                        registration = registrationService.getRegistrationByRegId(-1);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
@@ -373,7 +463,7 @@ public class TestRegistrationService {
                 String error = null;
                 Registration registration = null;
                 try {
-                        registration = registrationService.getRegistrationByRegId(2);
+                        registration = registrationService.getRegistrationByRegId(5);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
@@ -410,7 +500,7 @@ public class TestRegistrationService {
                 String error = null;
                 List<Registration> registrations = null;
                 try {
-                        registrations = registrationService.getRegistrationByAccountRoleId(0);
+                        registrations = registrationService.getRegistrationByAccountRoleId(-1);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
@@ -426,7 +516,7 @@ public class TestRegistrationService {
                 String error = null;
                 List<Registration> registrations = null;
                 try {
-                        registrations = registrationService.getRegistrationByAccountRoleId(2);
+                        registrations = registrationService.getRegistrationByAccountRoleId(5);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
@@ -455,12 +545,12 @@ public class TestRegistrationService {
                 String error = null;
                 List<Registration> registrations = null;
                 try {
-                        registrations = registrationService.getRegistrationByScheduledActivityId(0);
+                        registrations = registrationService.getRegistrationByScheduledActivityId(-1);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
                 assertNull(registrations);
-                assertEquals("Scheduled activity Id not valid!", error);
+                assertEquals("Id not valid!", error);
         }
 
         /**
@@ -473,7 +563,7 @@ public class TestRegistrationService {
                 String error = null;
                 List<Registration> registrations = null;
                 try {
-                        registrations = registrationService.getRegistrationByScheduledActivityId(2);
+                        registrations = registrationService.getRegistrationByScheduledActivityId(5);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
@@ -489,7 +579,7 @@ public class TestRegistrationService {
         public void testGetRegistrationByCustomerAndScheduledActivity() {
                 Registration registration = null;
                 try {
-                        registration = registrationService.getRegistrationByAccountRoleIdAndScheduledActivityId(
+                        registration = registrationService.getRegistrationByCustomerIdAndScheduledActivityId(
                                         CUSTOMER_KEY,
                                         SCHEDULED_ACTIVITY_KEY);
                 } catch (IllegalArgumentException e) {
@@ -508,7 +598,7 @@ public class TestRegistrationService {
                 String error = null;
                 Registration registration = null;
                 try {
-                        registration = registrationService.getRegistrationByAccountRoleIdAndScheduledActivityId(0,
+                        registration = registrationService.getRegistrationByCustomerIdAndScheduledActivityId(-1,
                                         SCHEDULED_ACTIVITY_KEY);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
@@ -526,9 +616,9 @@ public class TestRegistrationService {
                 String error = null;
                 Registration registration = null;
                 try {
-                        registration = registrationService.getRegistrationByAccountRoleIdAndScheduledActivityId(
+                        registration = registrationService.getRegistrationByCustomerIdAndScheduledActivityId(
                                         CUSTOMER_KEY,
-                                        0);
+                                        -1);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
@@ -544,7 +634,7 @@ public class TestRegistrationService {
                 String error = null;
                 Registration registration = null;
                 try {
-                        registration = registrationService.getRegistrationByAccountRoleIdAndScheduledActivityId(2,
+                        registration = registrationService.getRegistrationByCustomerIdAndScheduledActivityId(5,
                                         SCHEDULED_ACTIVITY_KEY);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
@@ -562,9 +652,9 @@ public class TestRegistrationService {
                 String error = null;
                 Registration registration = null;
                 try {
-                        registration = registrationService.getRegistrationByAccountRoleIdAndScheduledActivityId(
+                        registration = registrationService.getRegistrationByCustomerIdAndScheduledActivityId(
                                         CUSTOMER_KEY,
-                                        2);
+                                        5);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
@@ -592,7 +682,7 @@ public class TestRegistrationService {
                 String error = null;
                 List<Customer> customers = null;
                 try {
-                        customers = registrationService.getCustomersByScheduledActivityId(0);
+                        customers = registrationService.getCustomersByScheduledActivityId(-1);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
@@ -610,7 +700,7 @@ public class TestRegistrationService {
                 String error = null;
                 List<Customer> customers = null;
                 try {
-                        customers = registrationService.getCustomersByScheduledActivityId(2);
+                        customers = registrationService.getCustomersByScheduledActivityId(5);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
@@ -625,7 +715,7 @@ public class TestRegistrationService {
         @Test
         public void testGetScheduledActivitiesByCustomer() {
                 List<ScheduledActivity> scheduledActivities = registrationService
-                                .getScheduledActivitiesByAccountRoleId(CUSTOMER_KEY);
+                                .getScheduledActivitiesByCustomerId(CUSTOMER_KEY);
                 assertNotNull(scheduledActivities);
                 assertEquals(1, scheduledActivities.size());
         }
@@ -639,7 +729,7 @@ public class TestRegistrationService {
                 String error = null;
                 List<ScheduledActivity> scheduledActivities = null;
                 try {
-                        scheduledActivities = registrationService.getScheduledActivitiesByAccountRoleId(0);
+                        scheduledActivities = registrationService.getScheduledActivitiesByCustomerId(-1);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
@@ -656,7 +746,7 @@ public class TestRegistrationService {
                 String error = null;
                 List<ScheduledActivity> scheduledActivities = null;
                 try {
-                        scheduledActivities = registrationService.getScheduledActivitiesByAccountRoleId(2);
+                        scheduledActivities = registrationService.getScheduledActivitiesByCustomerId(5);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
@@ -665,19 +755,62 @@ public class TestRegistrationService {
         }
 
         /**
+         * Tests the getting of all scheduled activities of an instructor -> Success
+         */
+        @Test
+        public void testGetScheduledActivitiesByInstructor() {
+                List<ScheduledActivity> scheduledActivities = registrationService
+                                .getScheduledActivitiesByInstructorId(APPROVED_INSTRUCTOR_KEY);
+                assertNotNull(scheduledActivities);
+                assertEquals(1, scheduledActivities.size());
+        }
+
+        /**
+         * Tests the getting of all scheduled activities of an instructor with an
+         * invalid id -> Fail
+         */
+        @Test
+        public void testGetScheduledActivitiesByInvalidInstructor() {
+                String error = null;
+                List<ScheduledActivity> scheduledActivities = null;
+                try {
+                        scheduledActivities = registrationService.getScheduledActivitiesByInstructorId(-1);
+                } catch (IllegalArgumentException e) {
+                        error = e.getMessage();
+                }
+                assertNull(scheduledActivities);
+                assertEquals("Account role id not valid!", error);
+        }
+
+        /**
+         * Tests the getting of all scheduled activities of a non existing instructor ->
+         * Fail
+         */
+        @Test
+        public void testGetScheduledActivitiesByNonExistingInstructor() {
+                String error = null;
+                List<ScheduledActivity> scheduledActivities = null;
+                try {
+                        scheduledActivities = registrationService.getScheduledActivitiesByInstructorId(5);
+                } catch (IllegalArgumentException e) {
+                        error = e.getMessage();
+                }
+                assertNull(scheduledActivities);
+                assertEquals("Instructor does not exist", error);
+        }
+
+        /**
          * Tests the deletion of a registration -> Success
          */
         @Test
         public void testDeleteRegistration() {
-                List<Registration> registrations = toList(registrationDao.findAll());
-                int size = registrations.size();
+                boolean deleted = false;
                 try {
-                        registrationService.deleteRegistration(REGISTRATION_KEY);
+                        deleted = registrationService.deleteRegistration(REGISTRATION_KEY);
                 } catch (IllegalArgumentException e) {
                         fail();
                 }
-                registrations = toList(registrationDao.findAll());
-                assertEquals(size - 1, registrations.size());
+                assertTrue(deleted);
         }
 
         /**
@@ -687,11 +820,11 @@ public class TestRegistrationService {
         public void testDeleteRegistrationInvalidId() {
                 String error = null;
                 try {
-                        registrationService.deleteRegistration(0);
+                        registrationService.deleteRegistration(-1);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
-                assertEquals("Registration Id not valid!", error);
+                assertEquals("Registration id not valid!", error);
         }
 
         /**
@@ -701,7 +834,7 @@ public class TestRegistrationService {
         public void testDeleteNonExistingRegistration() {
                 String error = null;
                 try {
-                        registrationService.deleteRegistration(2);
+                        registrationService.deleteRegistration(5);
                 } catch (IllegalArgumentException e) {
                         error = e.getMessage();
                 }
@@ -709,25 +842,89 @@ public class TestRegistrationService {
         }
 
         /**
-         * Tests the deletion of all registrations -> Success
+         * Tests the deletion of all registrations of a customer -> Success
          */
         @Test
-        public void testDeleteAllRegistrations() {
-                List<Registration> registrations = toList(registrationDao.findAll());
-                registrationService.deleteAllRegistrations();
-                registrations = toList(registrationDao.findAll());
-                assertEquals(0, registrations.size());
+        public void testDeleteRegistrationsByCustomer() {
+                boolean deleted = false;
+                try {
+                        deleted = registrationService.deleteRegistrationsByAccountRoleId(CUSTOMER_KEY);
+                } catch (IllegalArgumentException e) {
+                        fail();
+                }
+                assertTrue(deleted);
         }
 
         /**
-         * Convert Iterable to List
-         * 
-         * @param Iterable<T>
-         * @return List<T>
+         * Tests the deletion of all registrations of a customer with an invalid id ->
+         * Fail
          */
-        private <T> List<T> toList(Iterable<T> iterable) {
-                List<T> resultList = new ArrayList<T>();
-                iterable.forEach(resultList::add);
-                return resultList;
+        @Test
+        public void testDeleteRegistrationsByInvalidCustomer() {
+                String error = null;
+                try {
+                        registrationService.deleteRegistrationsByAccountRoleId(-1);
+                } catch (IllegalArgumentException e) {
+                        error = e.getMessage();
+                }
+                assertEquals("Account role id not valid!", error);
+        }
+
+        /**
+         * Tests the deletion of all registrations of a non existing customer -> Fail
+         */
+        @Test
+        public void testDeleteRegistrationsByNonExistingCustomer() {
+                String error = null;
+                try {
+                        registrationService.deleteRegistrationsByAccountRoleId(5);
+                } catch (IllegalArgumentException e) {
+                        error = e.getMessage();
+                }
+                assertEquals("Customer does not exist", error);
+        }
+
+        /**
+         * Tests the deletion of all registrations of a scheduled activity -> Success
+         */
+        @Test
+        public void testDeleteRegistrationsByScheduledActivity() {
+                boolean deleted = false;
+                try {
+                        deleted = registrationService.deleteRegistrationsByScheduledActivityId(SCHEDULED_ACTIVITY_KEY);
+                } catch (IllegalArgumentException e) {
+                        fail();
+                }
+                assertTrue(deleted);
+        }
+
+        /**
+         * Tests the deletion of all registrations of a scheduled activity with an
+         * invalid id -> Fail
+         */
+        @Test
+        public void testDeleteRegistrationsByInvalidScheduledActivity() {
+                String error = null;
+                try {
+                        registrationService.deleteRegistrationsByScheduledActivityId(-1);
+                } catch (IllegalArgumentException e) {
+                        error = e.getMessage();
+                }
+                assertEquals("Scheduled activity id not valid!", error);
+        }
+
+        /**
+         * Tests the deletion of all registrations of a non existing scheduled activity
+         * -> Fail
+         */
+        @Test
+        public void testDeleteRegistrationsByNonExistingScheduledActivity() {
+                String error = null;
+                try {
+                        registrationService.deleteRegistrationsByScheduledActivityId(5);
+                } catch (IllegalArgumentException e) {
+                        error = e.getMessage();
+                }
+                assertEquals("Scheduled activity does not exist", error);
         }
 }

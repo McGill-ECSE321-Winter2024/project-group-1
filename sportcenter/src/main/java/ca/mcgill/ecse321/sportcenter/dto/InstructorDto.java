@@ -2,7 +2,7 @@ package ca.mcgill.ecse321.sportcenter.dto;
 
 public class InstructorDto {
     public enum InstructorStatus {
-        Active, Inactive, Fired, Suspended
+        Active, Inactive, Pending
     }
 
     private int accountRoleId;
