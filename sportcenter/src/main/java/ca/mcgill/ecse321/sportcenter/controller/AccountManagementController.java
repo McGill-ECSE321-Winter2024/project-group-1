@@ -1,9 +1,11 @@
 package ca.mcgill.ecse321.sportcenter.controller;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,8 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import ca.mcgill.ecse321.sportcenter.dto.AccountDto;
 import ca.mcgill.ecse321.sportcenter.dto.CustomerDto;
@@ -22,8 +22,8 @@ import ca.mcgill.ecse321.sportcenter.dto.OwnerDto;
 import ca.mcgill.ecse321.sportcenter.model.Account;
 import ca.mcgill.ecse321.sportcenter.model.Customer;
 import ca.mcgill.ecse321.sportcenter.model.Instructor;
-import ca.mcgill.ecse321.sportcenter.model.Owner;
 import ca.mcgill.ecse321.sportcenter.model.Instructor.InstructorStatus;
+import ca.mcgill.ecse321.sportcenter.model.Owner;
 import ca.mcgill.ecse321.sportcenter.service.AccountManagementService;
 
 /**
@@ -45,11 +45,13 @@ public class AccountManagementController {
      * @param password
      * @return AccountDto
      */
-    @PostMapping("/createAccount")
+    @PostMapping(value = { "/createAccount/{username}/{password}", "/createAccount/{username}/{password}/" })
     @ResponseStatus(HttpStatus.CREATED)
-    public AccountDto createAccount(@RequestBody AccountDto accountDto) {
-        Account account = accountService.createAccount(accountDto.getUsername(), accountDto.getPassword());
-        return new AccountDto(account);
+    public AccountDto createAccount(@PathVariable("username") String username,
+            @PathVariable("password") String password)
+            throws IllegalArgumentException {
+        Account account = accountService.createAccount(username, password);
+        return convertAccountToDto(account);
     }
 
     /**
@@ -58,6 +60,7 @@ public class AccountManagementController {
      * @param username
      * @return CustomerDto
      */
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = { "/createCustomer/{username}", "/createCustomer/{username}/" })
     public CustomerDto createCustomer(@PathVariable("username") String username) throws IllegalArgumentException {
         Customer customer = accountService.createCustomer(username);
@@ -73,6 +76,7 @@ public class AccountManagementController {
      * @param profilePicURL
      * @return InstructorDto
      */
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = { "/createInstructor/{username}/{status}/{description}/{profilePicURL}",
             "/createInstructor/{username}/{status}/{description}/{profilePicURL}/" })
     public InstructorDto createInstructor(@PathVariable("username") String username,
@@ -89,6 +93,7 @@ public class AccountManagementController {
      * @param username
      * @return OwnerDto
      */
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = { "/createOwner/{username}", "/createOwner/{username}/" })
     public OwnerDto createOwner(@PathVariable("username") String username) throws IllegalArgumentException {
         Owner owner = accountService.createOwner(username);
@@ -118,7 +123,7 @@ public class AccountManagementController {
      * @param accountId
      * @return AccountDto
      */
-    @GetMapping(value = { "/account/{accountId}", "/account/{accountId}/" })
+    @GetMapping(value = { "/getAccountById/{accountId}", "/getAccountById/{accountId}/" })
     public AccountDto getAccountById(@PathVariable("accountId") int accountId) throws IllegalArgumentException {
         Account account = accountService.getAccountByAccountId(accountId);
         return convertAccountToDto(account);
@@ -130,7 +135,7 @@ public class AccountManagementController {
      * @param username
      * @return AccountDto
      */
-    @GetMapping(value = { "/account/{username}", "/account/{username}/" })
+    @GetMapping(value = { "/getAccountByUsername/{username}", "/getAccountByUsername/{username}/" })
     public AccountDto getAccountByUsername(@PathVariable("username") String username) throws IllegalArgumentException {
         Account account = accountService.getAccountByUsername(username);
         return convertAccountToDto(account);
@@ -326,69 +331,104 @@ public class AccountManagementController {
      * Delete an account by its account ID
      * 
      * @param accountId
+     * @return response entity
      */
     @DeleteMapping(value = { "/deleteAccount/{accountId}", "/deleteAccount/{accountId}/" })
-    public void deleteAccount(@PathVariable("accountId") int accountId) throws IllegalArgumentException {
-        accountService.deleteAccount(accountId);
+    public ResponseEntity<String> deleteAccount(@PathVariable("accountId") int accountId)
+            throws IllegalArgumentException {
+        try {
+            accountService.deleteAccount(accountId);
+            return new ResponseEntity<String>("Account deleted", HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
      * Delete a customer by its accountRoleId
      * 
      * @param accountRoleId
-     * @return
+     * @return response entity
      */
     @DeleteMapping(value = { "/deleteCustomer/{accountRoleId}",
             "/deleteCustomer/{accountRoleId}/" })
-    public void deleteCustomer(@PathVariable("accountRoleId") int accountRoleId)
+    public ResponseEntity<String> deleteCustomer(@PathVariable("accountRoleId") int accountRoleId)
             throws IllegalArgumentException {
-        accountService.deleteCustomerByAccountRoleId(accountRoleId);
+        try {
+            accountService.deleteCustomerByAccountRoleId(accountRoleId);
+            return new ResponseEntity<String>("Customer deleted", HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
      * Delete a customer by its accountId
      * 
      * @param username
-     * @return CustomerDto
+     * @return response entity
      */
     @DeleteMapping(value = { "/deleteCustomerByAccountId/{accountId}", "/deleteCustomerByAccountId/{accountId}/" })
-    public void deleteCustomerByAccountId(@PathVariable("accountId") int accountId) throws IllegalArgumentException {
-        accountService.deleteCustomerByAccountId(accountId);
+    public ResponseEntity<String> deleteCustomerByAccountId(@PathVariable("accountId") int accountId)
+            throws IllegalArgumentException {
+        try {
+            accountService.deleteCustomerByAccountId(accountId);
+            return new ResponseEntity<String>("Customer deleted", HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
      * Delete a customer by its username
      * 
      * @param username
-     * @return
+     * @return response entity
      */
     @DeleteMapping(value = { "/deleteCustomer/{username}", "/deleteCustomer/{username}/" })
-    public void deleteCustomer(@PathVariable("username") String username) throws IllegalArgumentException {
-        accountService.deleteCustomerByUsername(username);
+    public ResponseEntity<String> deleteCustomer(@PathVariable("username") String username)
+            throws IllegalArgumentException {
+        try {
+            accountService.deleteCustomerByUsername(username);
+            return new ResponseEntity<String>("Customer deleted", HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
      * Delete a instructor by its accountRoleId
      * 
      * @param accountRoleId
-     * @return
+     * @return response entity
      */
     @DeleteMapping(value = { "/deleteInstructorByAccountRoleId/{accountRoleId}",
             "/deleteInstructorByAccountRoleId/{accountRoleId}/" })
-    public void deleteInstructorByAccountRoleId(@PathVariable("accountRoleId") int accountRoleId)
+    public ResponseEntity<String> deleteInstructorByAccountRoleId(@PathVariable("accountRoleId") int accountRoleId)
             throws IllegalArgumentException {
-        accountService.deleteInstructorByAccountRoleId(accountRoleId);
+        try {
+            accountService.deleteInstructorByAccountRoleId(accountRoleId);
+            return new ResponseEntity<String>("Instructor deleted", HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
      * Delete a instructor by its username
      * 
      * @param username
-     * @return
+     * @return response entity
      */
     @DeleteMapping(value = { "/deleteInstructorByUsername/{username}", "/deleteInstructorByUsername/{username}/" })
-    public void deleteInstructorByUsername(@PathVariable("username") String username) throws IllegalArgumentException {
-        accountService.deleteInstructorByUsername(username);
+    public ResponseEntity<String> deleteInstructorByUsername(@PathVariable("username") String username)
+            throws IllegalArgumentException {
+        try {
+            accountService.deleteInstructorByUsername(username);
+            return new ResponseEntity<String>("Instructor deleted", HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     // Account Role Checkers

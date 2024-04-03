@@ -42,17 +42,32 @@ public class TestRegistrationIntegration {
         private TestRestTemplate client; // Always stays the same
 
         @Autowired
+        private RegistrationRepository registrationRepository;
+
+        @Autowired
+        private ScheduledActivityRepository scheduledActivityRepository;
+
+        @Autowired
+        private ActivityRepository activityRepository;
+
+        @Autowired
+        private CustomerRepository customerRepository;
+
+        @Autowired
         private InstructorRepository instructorRepository; // TODO: Make sure it's the good type
+
+        @Autowired
+        private AccountRepository accountRepository;
 
         @BeforeEach
         @AfterEach
         public void clearDatabase() {
                 registrationRepository.deleteAll();
-                customerRepository.deleteAll();
                 scheduledActivityRepository.deleteAll();
+                activityRepository.deleteAll();
+                customerRepository.deleteAll();
                 instructorRepository.deleteAll();
                 accountRepository.deleteAll();
-                activityRepository.deleteAll();
         }
 
         // attributes for account
