@@ -1,19 +1,13 @@
 <template>
   <nav>
-    <img src="./assets/SC.png" alt="logo" class="SC" />
-    <div class="menu-item"><a href="#">Home</a></div>
-    <div class="menu-item"><a href="#">About</a></div>
-    <Dropdown title="Services" :items="services" />
-    <div class="menu-item"><a href="#">Contact</a></div>
-  </nav>
-</template>
-<template>
-  <nav>
-    <div class="menu-item"><a href="#">Home</a></div>
-    <div class="menu-item"><a href="#">About</a></div>
-    <Dropdown title="Services" :items="services" />
-    <div class="menu-item"><a href="#">Contact</a></div>
-  </nav>
+    <img src="@/assets/SC.png" alt=""/>
+    <nav class="text">
+      <div class="menu-item"><a href="#">Home</a></div>
+      <div class="menu-item"><a href="#">About</a></div>
+      <Dropdown title="Services" :items="services" />
+      <div class="menu-item"><a href="#">Contact</a></div>
+    </nav>
+    </nav>
 </template>
 
 <script>
@@ -39,6 +33,7 @@ export default {
           title: 'Videos',
           link: '#'
         }
+        
       ]
     }
   }
@@ -46,14 +41,23 @@ export default {
 </script>
 
 <style>
-nav {
+.text{
   display: flex;
-  align-items: center;
-  justify-content: center;
+  text-align: left;
+  position: middle;
 }
 
+.logo{
+  display: absolute;  
+  align-items: normal;
+  position: left;
+}
+.menu-container {
+  display: flex;
+  align-items: center; /* Center menu items vertically */
+}
 nav .menu-item {
-  color: #FFF;
+  color: #FF5858;
   padding: 10px 20px;
   position: relative;
   text-align: center;
@@ -73,8 +77,8 @@ nav .menu-item a {
   text-decoration: none;
 }
 
-.SC { 
-  width: 50px;
-  height: 50px;
-  }
+nav img {
+  width: auto;
+  height: 60px;
+}
 </style>

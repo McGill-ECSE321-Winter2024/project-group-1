@@ -1,9 +1,10 @@
 <template>
-  <div id="app">
+  <div class="app">
     <header>
       <Navbar />
     </header>
   </div>
+
 </template>
 
 <script>
@@ -28,9 +29,22 @@ body {
   font-family: 'montserrat', sans-serif;
 }
 
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
 header {
-  width: 100vw;
-  background-color: #222;
-  padding: 15px;
+  background-color: #333;
+  color: #FFF;
+  padding: 10px 0;
+}
+
+
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>
