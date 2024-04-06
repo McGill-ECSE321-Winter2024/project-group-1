@@ -1,18 +1,46 @@
 <template>
-    <div>
-      <h1>New Page</h1>
-      <!-- Your page content goes here -->
+  <div class="popup">
+    <div class="popup-content">
+      <h2>{{ activity.name }}</h2>
+      <p>Category: {{ activity.category }}</p>
+      <p>Date: {{ activity.date }}</p>
+      <p>Capacity: {{ activity.capacity }}</p>
+      <button @click="close">Close</button>
+      <button @click="close">Register</button>
     </div>
-  </template>
+  </div>
+</template>
+
+<script>
+export default {
   
-  <script>
-  export default {
-    name: 'ViewActivity',
-    // Any logic for your page goes here
+  props: ['activity'],
+  
+  methods: {
+    close() {
+      this.$emit('close');
+    }
   }
-  </script>
-  
-  <style scoped>
-  /* Your page-specific styles go here */
-  </style>
-  
+};
+
+</script>
+
+<style scoped>
+
+.popup {
+  width: 100;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #e77b16;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  margin-top: 20px; /* Adjust gap between table and popup */
+  width: 300px; /* Fixed width */
+  height: 300px; /* Fixed height */
+}
+
+
+
+</style>
