@@ -1,98 +1,175 @@
 <template>
-  <div class="acitvityTable">
+  <div class="activityTable">
     <h1>View Activities</h1>
     <br>
-    <table align="center" width="700">
+    
+    <input type="text" v-model="search" placeholder="Search activities">
+
+
+
+    <table id="ACTIVITYTABLE" align="center" width="700">
       <thead>
-      <tr>
-
-        <th width="100">Name</th>
-        <th width="100">Category</th>
-        <th width="100">Date</th>
-        <th width="100">Capacity</th>
-
-      </tr>
-      </thead>
-
-      <!-- Table body-->
-
-      <tbody id="activityData"></tbody>
-
-      <tbody>
-        <tr v-for="(activity, index) in activityData" :key="index" @click="showActivityDetails(activity)">
-          <td>{{ activity.name }}</td>
-          <td>{{ activity.category }}</td>
-          <td>{{ activity.date }}</td>
-          <td>{{ activity.capacity }}</td>
+        <tr>
+          <th width="100">Name</th>
+          <th width="100">Category</th>
+          <th width="100">Date</th>
+          <th width="100">Capacity</th>
         </tr>
+      </thead>
+      <tbody>
+        <template v-if="scheduledActivities.length === 0">
+          <tr>
+            <td colspan="4">No activities</td>
+          </tr>
+        </template>
+        <template v-else>
+          <tr v-for="(activity, index) in filteredActivities" :key="index" @click="showActivityDetails(activity)">
+            <td>{{ activity.name }}</td>
+            <td>{{ activity.category }}</td>
+            <td>{{ activity.date }}</td>
+            <td>{{ activity.capacity }}</td>
+          </tr>
+        </template>
         <ViewActivity v-if="selectedActivity" :activity="selectedActivity" @close="closePopup" />
       </tbody>
-
-
     </table>
+    
     <br>
-
+    <div class="button-container">
+      <button type="button">Add Activity</button>
+    </div>
   </div>
 </template>
 
 <script>
 
+import axios from 'axios'
+import config from '../../config'
 import ViewActivity from './ViewActivity.vue';
+
+const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
+const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
+const AXIOS = axios.create({
+  baseURL: backendUrl,
+  headers: { 'Access-Control-Allow-Origin': frontendUrl }
+})
 
 export default {
   data() {
     return {
       
+      //scheduledActivities: [],
+      filteredActivityData: [],
+      selectedActivity: null,
+      search:'',
+
+
+
       //logic here would get all activities
 
-      activityData: [
+      scheduledActivities: [
         { name: 'Borneo', category: 'Expedition', date: '6 march', capacity: 30 },
         { name: 'Trifecta', category: 'YoloSwag', date: '6 april', capacity: 10 },
         { name: 'Running', category: 'Cardio', date: '6 january', capacity: 20 },
         { name: 'INSTAGATION', category: 'Vroom', date: '6 january', capacity: 20 },
       ],
-      selectedActivity: null
     };
   },
+
+
+  mounted() {
+    // Call method to fetch scheduled activities when the component is mounted
+    this.fetchScheduledActivities();
+  },
+
+
+
+  
+
+
+
   methods: {
+
+    fetchScheduledActivities() {
+      // Make HTTP request to fetch scheduled activities from backend
+      axios.get('/scheduledActivities')
+        .then(response => {
+          // Assign response data to scheduledActivities
+          this.scheduledActivities = response.data;
+
+          this.scheduledActivitiesTable = response.data.map(activity => ({
+          activityName: activity.activity.name,
+          activityCategory: activity.activity.category,
+          date: activity.date,
+          capacity: activity.capacity
+        }));
+        })
+        .catch(error => {
+          console.error('Error fetching scheduled activities:', error);
+        });
+    },
+
+ 
     showActivityDetails(activity) {
       this.selectedActivity = activity;
     },
     closePopup() {
       this.selectedActivity = null;
-    }
+    },
+
+
+  }, //end of methods
+
+  computed: {
+
+    //filter for stuff in table
+    
+    
+    /*
+    filteredActivities: function() {
+
+        const query = this.search.toLowerCase();
+
+        return this.scheduledActivities.filter((activity) => {   
+          //return activity.name.match(this.query);
+        });
+
+      }
+      */
+
+        // Filter activities based on search query
+  filteredActivities: function() {
+    const query = this.search.toLowerCase();
+    return this.scheduledActivities.filter(activity =>
+      activity.name.toLowerCase().includes(query) ||
+      activity.category.toLowerCase().includes(query) ||
+      activity.date.toLowerCase().includes(query) ||
+      activity.capacity.toString().includes(query)
+    );
   },
+
+
+
+
+
+  },
+
+
   components: {
     ViewActivity
   }
-  };
 
 
-  //inject the content after the table load!
-  function loadActivityData(activityData) {
+};
 
-    const activityBody = document.getElementById('activityData');
-    let dataHtml = '';
-
-    for(let activity of activityData) {
-      dataHtml += `<tr><td>${activity.name}</td><td>${activity.category}</td><td>${activity.date}</td><td>${activity.capacity}</td></tr>`;
-    }
-
-    activityBody.innerHTML = dataHtml;
-
-    console.log(dataHtml)
-
-  }
-
-  //};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
 
 table {
-  background-color: #d0a4dd;
-  color: aquamarine;
+  background-color: #d3ffd6;
+  color: rgb(0, 0, 0);
   font-family: Arial, Helvetica, sans-serif;
   width: 70%;
   border-collapse: collapse;
@@ -100,28 +177,28 @@ table {
 
 
 td, th  {
-  border: 1px solid #d0a4dd;
+  border: 1px solid #000000;
   padding: 10px;
 }
 
 tbody tr:nth-child(even) {
-  background-color: #8b0808; /* Set even row color */
+  background-color: #a5a5a5; /* Set even row color */
 }
 
 tbody tr:nth-child(odd) {
-  background-color: #385209; /* Set odd row color */
+  background-color: #c2c2c2; /* Set odd row color */
 }
 
 tbody tr:hover {
-  background-color: #e0cfb9;
-  color: rgb(0, 0, 0);
+  background-color: #272727;
+  color: rgb(255, 255, 255);
 }
 
 
 
 h1, h2 {
   font-weight: bold;
-  color: #740404;
+  color: #000000;
 }
 
 ul {
