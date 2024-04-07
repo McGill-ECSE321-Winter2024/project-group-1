@@ -2,11 +2,13 @@
   <nav>
     <img src="@/assets/SC.png" alt=""/>
     <nav class="text">
-      <div class="menu-item"><a href="#">Home</a></div>
+      <div class="menu-item"><router-link to="/">Home</router-link></div>
       <div class="menu-item"><a href="#">About</a></div>
       <Dropdown title="Services" :items="services" />
       <div class="menu-item"><a href="#">Contact</a></div>
     </nav>
+    <button @click="goToHome">Home</button>
+
     </nav>
 </template>
 
