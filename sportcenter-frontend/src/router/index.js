@@ -1,47 +1,62 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Hello from '@/components/Hello'
-import sportcenter from '@/components/sportcenter'
 
-import LoginPage from '@/components/LoginPage.vue'
-import ForgotPasswordPage from '@/components/ForgotPasswordPage.vue'
-import RegisterPage from '@/components/RegisterPage.vue'
+import Login from '@/components/authentification/Login.vue'
+import ForgotPassword from '@/components/authentification/ForgotPassword.vue'
+import CreateAccount from '@/components/authentification/CreateAccount.vue'
 
-import AccountPage from '@/components/AccountPage.vue'
+import CustomerAccount from '@/components/account/CustomerAccount.vue'
+import InstructorAccount from '@/components/account/InstructorAccount.vue'
+import OwnerAccount from '@/components/account/OwnerAccount.vue'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
     {
-      path: '/',
-      name: 'Hello',
-      component: Hello
+      path: '/app/customer-account',
+      name: 'CustomerAccount',
+      component: CustomerAccount
     },
     {
-      path: '/app',
-      name: 'SportCenter',
-      component: sportcenter
+      path: '/app/instructor-account',
+      name: 'InstructorAccount',
+      component: InstructorAccount
     },
     {
-      path: '/app/account',
-      name: 'AccountPage',
-      component: AccountPage
+      path: '/app/owner-account',
+      name: 'OwnerAccount',
+      component: OwnerAccount
     },
     {
-      path: '/app/login',
-      name: 'LoginPage',
-      component: LoginPage
+      path: '/app/auth/login',
+      name: 'Login',
+      component: Login
     },
     {
-      path: '/app/forgotpassword',
-      name: 'Logout',
-      component: ForgotPasswordPage
+      path: '/app/auth/forgotpassword',
+      name: 'ForgotPassword',
+      component: ForgotPassword
     },
     {
-      path: '/app/register',
-      name: 'Register',
-      component: RegisterPage
-    }
+      path: '/app/auth/createaccount',
+      name: 'CreateAccount',
+      component: CreateAccount
+    },
+    {
+      path: '/app/account/customer-account',
+      name: 'CustomerAccount',
+      component: CustomerAccount
+    },
+    {
+      path: '/app/account/instructor-account',
+      name: 'InstructorAccount',
+      component: InstructorAccount
+    },
+    {
+      path: '/app/account/owner-account',
+      name: 'OwnerAccount',
+      component: OwnerAccount
+    },
   ]
 })

@@ -1,17 +1,17 @@
 <template>
-    <div id="LoginPage">
-        <h1><b>Login</b></h1>
+    <div id="forgotPasswordPage">
+        <h1><b>Password reset</b></h1>
         <VBox id="containerV">
             <VBox id="containerV">
-                <input id="inputBox" type="username" placeholder="Username"></input>
-                <input id="inputBox" type="password" placeholder="Password"></input>
-                <button id="mainButton" @click="login()"><b>Login</b></button>
+                <input id="inputBox" type="username" placeholder="Existing username"></input>
+                <input id="inputBox" type="password" placeholder="New password"></input>
+                <button id="mainButton" @click="forgotPassword()"><b>Reset my password</b></button>
             </VBox>
             <br>
             <v-divider>Other options</v-divider>
             <HBox id="containerH">
-                <button id="optionButton" @click="forgotPassword()"><b>Forgot Password</b></button>
-                <button id="optionButton" @click="register()"><b>Register Menu</b></button>
+                <button id="optionButton" @click="goToLogin()"><b>I already have an account</b></button>
+                <button id="optionButton" @click="goToCreateAccount()"><b>Create a new account</b></button>
             </HBox>
         </VBox>
     </div>
@@ -21,14 +21,15 @@
     export default {
         name: 'LoginPage',
         methods: {
-            login() {
-                alert("Login button clicked");
-            },
             forgotPassword() {
                 alert("Forgot Password button clicked");
+                console.log("Forgot Password button clicked");
             },
-            register() {
-                alert("Register button clicked");
+            goToCreateAccount() {
+                this.$router.push('/app/auth/createaccount');
+            },
+            goToLogin() {
+                this.$router.push('/app/auth/login');
             }
         }
     }
@@ -39,7 +40,7 @@
         text-align: center;
     }
 
-    #LoginPage {
+    #forgotPasswordPage {
         font-family: 'Avenir', Helvetica, Arial sans-serif;
         margin: 60px;
         border-radius: 30px;
@@ -48,7 +49,8 @@
         color: #2c3e50;
         background: #e4e3e394;
         align-items: center;
-        width: 600px;
+        width: 85%;
+        max-width: 800px;
         max-height: fit-content;
         text-align: center;
     }

@@ -1,15 +1,16 @@
 <template>
-    <div id="LoginPage">
-        <br>
-        <h1><b>Register</b></h1>
-        <VBox id="containerMain">
-            <input id="inputBox" type="newUsername" placeholder="New username"></input>
-            <input id="inputBox" type="newPassword" placeholder="New password"></input>
-
-            <button id="registerButton" @click="register()">Register</button>
-            
-            <HBox id="containerSub">
-                <button id="loginButton" @click="login()">Login menu</button>
+    <div id="createAccountPage">
+        <h1><b>Create a new account</b></h1>
+        <VBox id="containerV">
+            <VBox id="containerV">
+                <input id="inputBox" type="username" placeholder="Username"></input>
+                <input id="inputBox" type="password" placeholder="Password"></input>
+                <button id="mainButton" @click="createAccount()"><b>Create account</b></button>
+            </VBox>
+            <br>
+            <v-divider>Other options</v-divider>
+            <HBox id="containerH">
+                <button id="optionButton" @click="goToLogin()"><b>I already have an account</b></button>
             </HBox>
         </VBox>
     </div>
@@ -19,11 +20,12 @@
     export default {
         name: 'LoginPage',
         methods: {
-            register() {
-                alert("Register button clicked");
+            createAccount() {
+                alert("Create account button clicked");
+                console.log("Create account button clicked");
             },
-            login() {
-                alert("Login button clicked");
+            goToLogin() {
+                this.$router.push('/app/auth/login');
             }
         }
     }
@@ -34,30 +36,30 @@
         text-align: center;
     }
 
-    #LoginPage {
+    #createAccountPage {
         font-family: 'Avenir', Helvetica, Arial sans-serif;
         margin: 60px;
         border-radius: 30px;
-        padding: 30px;
-        box-shadow: 0 50px 50px 0 rgba(0, 0, 0, 0.2);
+        padding: 40px;
+        box-shadow: 0 50px 50px 0 rgba(209, 184, 52, 0.2);
         color: #2c3e50;
         background: #e4e3e394;
+        align-items: center;
+        width: 85%;
+        max-width: 800px;
+        max-height: fit-content;
+        text-align: center;
     }
 
-    #containerMain {
-        max-height: fit-content;
+    #containerV {
         display: flex;
         flex-direction: column;
-        align-items: top;
         justify-content: center;
-        height: 100vh;
-        margin: 60px;
     }
 
-    #containerSub {
+    #containerH {
         display: flex;
         flex-direction: row;
-        align-items: center;
         justify-content: center;
     }
 
@@ -72,8 +74,8 @@
         text-align: center;
     }
 
-    #registerButton {
-        background-color: #4CAF50;
+    #mainButton {
+        background-color: #3f5b0b;
         color: white;
         border: none;
         border-radius: 5px;
@@ -85,12 +87,12 @@
         margin: 4px 2px;
         cursor: pointer;
         border-radius: 30px;
-        margin: 20px 0;
+        width: 100%;
     }
 
-        #loginButton {
-        background-color: #3989de;
-        color: white;
+    #optionButton {
+        background-color: #6D8517;
+        color: rgb(255, 255, 255);
         border: none;
         border-radius: 5px;
         padding: 10px 20px;
@@ -101,6 +103,6 @@
         margin: 4px 2px;
         cursor: pointer;
         border-radius: 30px;
-        margin-left: 20px;
+        margin-inline: 10px;
     }
 </style>
