@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
+    <!-- <img src="./assets/logo.png"> -->
+    <h1>SportCenter</h1>
+    <h2>Get fit, not fat!</h2>
     <router-view></router-view>
   </div>
 </template>
