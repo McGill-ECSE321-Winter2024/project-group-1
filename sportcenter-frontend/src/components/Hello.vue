@@ -7,7 +7,7 @@
     </ul>
     <h2>Ecosystem</h2>
     <ul>
-      <router-link to="./fabian">Go to Fabian Page</router-link>
+      <router-link to="/fabian">Go to Fabian Page</router-link>
     </ul>
   </div>
 </template>
