@@ -53,7 +53,7 @@
 
 <script>
     export default {
-        name: 'LoginPage',
+        name: 'InstructorAccount',
         methods: {
             updateUsername() {
                 alert("Update button clicked");

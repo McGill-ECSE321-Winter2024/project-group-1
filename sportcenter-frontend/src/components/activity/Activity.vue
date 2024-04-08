@@ -1,16 +1,6 @@
 <template>
-    <div id="home">
-        <h1><b>Home menu</b></h1>
-        <VBox id="box">
-            <button id="sectionTwoButton" @click="goToLogin()">Login</button>
-            <button id="sectionTwoButton" @click="goToForgotPassword()">Forgot password</button>
-            <button id="sectionTwoButton" @click="goToCreateAccount()">Create a new account</button>
-        </VBox>
-        <VBox id="box">
-            <button id="sectionTwoButton" @click="goToCustomerMode()">Customer mode</button>
-            <button id="sectionTwoButton" @click="goToInstructorMode()">Instructor mode</button>
-            <button id="sectionTwoButton" @click="goToOwnerMode()">Owner mode</button>
-        </VBox>
+    <div id="account">
+        <h1><b>Activity menu</b></h1>
         <VBox id="box">
             <button id="sectionTwoButton" @click="goToCreateActivity()">Create an activity</button>
             <button id="sectionTwoButton" @click="goToUpdateActivity()">Update an activity</button>
@@ -24,50 +14,32 @@
 
 <script>
     export default {
-        name: 'HomePage',
+        name: 'Activity',
         methods: {
-            goToLogin() {
-                this.$router.push('/app/auth/login');
-            },
-            goToForgotPassword() {
-                this.$router.push('/app/auth/forgotpassword');
-            },
-            goToCreateAccount() {
-                this.$router.push('/app/auth/createaccount');
-            },
-            goToCustomerMode() {
-                this.$router.push('/app/account/customer-account');
-            },
-            goToInstructorMode() {
-                this.$router.push('/app/account/instructor-account');
-            },
-            goToOwnerMode() {
-                this.$router.push('/app/account/owner-account');
-            },
             goToCreateActivity() {
-                this.$router.push('/app/activity/create-activity');
+                this.$router.push({ name: '/app/activity/create-activity' });
             },
             goToUpdateActivity() {
-                this.$router.push('/app/activity/update-activity');
+                this.$router.push({ name: '/app/activity/update-activity' });
             },
             goToDeleteActivity() {
-                this.$router.push('/app/activity/delete-activity');
+                this.$router.push({ name: '/app/activity/delete-activity' });
             },
             goToScheduleActivity() {
-                this.$router.push('/app/activity/schedule-activity');
+                this.$router.push({ name: '/app/activity/schedule-activity' });
             },
             goToUpdateScheduledActivity() {
-                this.$router.push('/app/activity/update-scheduled-activity');
+                this.$router.push({ name: '/app/activity/update-scheduled-activity' });
             },
             goToDeleteScheduledActivity() {
-                this.$router.push('/app/activity/delete-scheduled-activity');
+                this.$router.push({ name: '/app/activity/delete-scheduled-activity' });
             }
         }
     }
 </script>
 
 <style>
-    #home{
+    #account{
         font-family: 'Avenir', Helvetica, Arial sans-serif;
         margin: 60px;
         border-radius: 30px;
@@ -86,7 +58,6 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        padding-top: 30px;
     }
 
     #sectionOneButton {

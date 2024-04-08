@@ -18,7 +18,7 @@
 
 <script>
     export default {
-        name: 'LoginPage',
+        name: 'CreateAccount',
         methods: {
             createAccount() {
                 alert("Create account button clicked");
@@ -27,7 +27,7 @@
             goToLogin() {
                 this.$router.push('/app/auth/login');
             }
-        }
+        },
     }
 </script>
 

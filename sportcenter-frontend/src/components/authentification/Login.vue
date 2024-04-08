@@ -19,7 +19,7 @@
 
 <script>
     export default {
-        name: 'LoginPage',
+        name: 'Login',
         methods: {
             login() {
                 alert("Login button clicked");

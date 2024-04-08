@@ -19,7 +19,7 @@
 
 <script>
     export default {
-        name: 'LoginPage',
+        name: 'ForgotPassword',
         methods: {
             forgotPassword() {
                 alert("Forgot Password button clicked");

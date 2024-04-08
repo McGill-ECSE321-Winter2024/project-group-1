@@ -33,7 +33,7 @@
 
 <script>
     export default {
-        name: 'LoginPage',
+        name: 'CustomerAccount',
         methods: {
             updateUsername() {
                 alert("Update button clicked");
