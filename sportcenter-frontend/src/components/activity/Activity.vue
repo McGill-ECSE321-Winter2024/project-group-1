@@ -5,6 +5,7 @@
             <button id="sectionTwoButton" @click="goToCreateActivity()">Create an activity</button>
             <button id="sectionTwoButton" @click="goToUpdateActivity()">Update an activity</button>
             <button id="sectionTwoButton" @click="goToDeleteActivity()">Delete an activity</button>
+            <button id="sectionTwoButton" @click="goToViewActivity()">View an activity</button>
             <button id="sectionTwoButton" @click="goToScheduleActivity()">Schedule an activity</button>
             <button id="sectionTwoButton" @click="goToUpdateScheduledActivity()">Update a scheduled activity</button>
             <button id="sectionTwoButton" @click="goToDeleteScheduledActivity()">Delete a scheduled activity</button>
@@ -17,22 +18,25 @@
         name: 'Activity',
         methods: {
             goToCreateActivity() {
-                this.$router.push({ name: '/app/activity/create-activity' });
+                this.$router.push('/app/activity/create-activity');
             },
             goToUpdateActivity() {
-                this.$router.push({ name: '/app/activity/update-activity' });
+                this.$router.push('/app/activity/update-activity');
             },
             goToDeleteActivity() {
-                this.$router.push({ name: '/app/activity/delete-activity' });
+                this.$router.push('/app/activity/delete-activity');
+            },
+            goToViewActivity() {
+                this.$router.push('/app/activity/view-activity');
             },
             goToScheduleActivity() {
-                this.$router.push({ name: '/app/activity/schedule-activity' });
+                this.$router.push('/app/activity/schedule-activity');
             },
             goToUpdateScheduledActivity() {
-                this.$router.push({ name: '/app/activity/update-scheduled-activity' });
+                this.$router.push('/app/activity/update-scheduled-activity');
             },
             goToDeleteScheduledActivity() {
-                this.$router.push({ name: '/app/activity/delete-scheduled-activity' });
+                this.$router.push('/app/activity/delete-scheduled-activity');
             }
         }
     }
