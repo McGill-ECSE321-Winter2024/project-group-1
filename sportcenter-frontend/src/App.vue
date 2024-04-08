@@ -2,6 +2,8 @@
   <div class="app">
     <header>
       <Navbar />
+      <router-view>
+      </router-view>
     </header>
   </div>
 
@@ -9,6 +11,7 @@
 
 <script>
 import Navbar from './components/Navbar';
+import Hello from './components/Hello';
 
 export default {
   name: 'app',

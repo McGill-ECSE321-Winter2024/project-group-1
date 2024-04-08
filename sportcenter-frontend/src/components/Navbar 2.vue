@@ -1,17 +1,17 @@
 <template>
   <nav>
-    <img src="@/assets/SC.png" alt=""/>
-    <nav class="text">
-      <div class="menu-item">
-        <router-link to="/">Home</router-link>
+      <div id="NavBar">
+          <b-navbar-brand class="icon">
+          <a href="/#">
+              <img src="../assets/SC.png">
+          </a>
+          </b-navbar-brand>
       </div>
-      <div class="menu-item">
-        <router-link to="/hello2">About</router-link>
-      </div>
+      <div class="menu-item"><a href="#">Home</a></div>
+      <div class="menu-item"><a href="#">About</a></div>
       <Dropdown title="Services" :items="services" />
       <div class="menu-item"><a href="#">Contact</a></div>
-    </nav>
-    </nav>
+  </nav>
 </template>
 
 <script>
@@ -50,7 +50,6 @@ export default {
   text-align: left;
   position: middle;
 }
-
 
 .logo{
   display: absolute;  

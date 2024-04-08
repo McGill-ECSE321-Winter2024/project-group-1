@@ -1,7 +1,6 @@
 <template>
   <!-- Adding the image -->
   <div id="mainPage">
-    <img id="mainLogo" src="../assets/SC.png">
   </div>
 </template>
 
