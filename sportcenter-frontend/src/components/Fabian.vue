@@ -9,16 +9,19 @@
                 <br>
                 <input type="text" placeholder="Subcategory" v-model="activitySubcategory">
             </div>
-            <button @click="submitProposeActivity"> Submit Left Section</button>
+            <button @click="submitProposeActivity"> Propose to Owner</button>
         </div>
         <div class = "schedule-activity">
             <h2> Schedule Activity</h2>
             <div class="right-text-fields">
-                <input type="text" placeholder="Date" v-model="date">
+                <h2> Date</h2>
+                <input type="date" id="scheduled" name="scheduled">
                 <br>
-                <input type="text" placeholder="Start time" v-model="startTime">
+                <h2> Start Time</h2>
+                <input type="time" id="startTime" name="startTime">
                 <br>
-                <input type="text" placeholder="End time" v-model="endTime">
+                <h2> End Time</h2>
+                <input type="time" id="endTime" name="endTime">
                 <br>
                 <input type="text" placeholder="Account Role Id" v-model="accountRoleId">
                 <br>
@@ -26,12 +29,19 @@
                 <br>
                 <input type="text" placeholder="Capacity" v-model="capacity">
             </div>
-            <button @click="submitScheduleActivity"> Submit Right Section</button>
+            <button @click="submitScheduleActivity"> Schedule Activity</button>
         </div>
     </div>
 </template>
   
 <script>
+import axios from 'axios';
+import config from '../../config';
+
+const client = axios.create({
+    baseURL: config.dev.backendBaseUrl
+});
+
 export default {
     name: 'Fabian',
     data () {
@@ -69,6 +79,17 @@ export default {
         },
         async createScheduleActivity(date, startTime, endTime, accountRoleId, activityName, capacity){
             return {date, startTime, endTime, accountRoleId, activityName, capacity};
+        },
+        clearInputs(){
+            this.activityName = '';
+            this.activityDescription = '';
+            this.activitySubcategory = '';
+            this.date = '';
+            this.startTime = '';
+            this.endTime = '';
+            this.accountRoleId = '';
+            this.activityName = '';
+            this.capacity = '';
         }
 
     }
