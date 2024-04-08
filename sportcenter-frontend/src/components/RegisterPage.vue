@@ -1,17 +1,15 @@
 <template>
     <div id="LoginPage">
-        <h1><b>Login</b></h1>
-        <VBox id="containerV">
-            <VBox id="containerV">
-                <input id="inputBox" type="username" placeholder="Username"></input>
-                <input id="inputBox" type="password" placeholder="Password"></input>
-                <button id="mainButton" @click="login()"><b>Login</b></button>
-            </VBox>
-            <br>
-            <v-divider>Other options</v-divider>
-            <HBox id="containerH">
-                <button id="optionButton" @click="forgotPassword()"><b>Forgot Password</b></button>
-                <button id="optionButton" @click="register()"><b>Register Menu</b></button>
+        <br>
+        <h1><b>Register</b></h1>
+        <VBox id="containerMain">
+            <input id="inputBox" type="newUsername" placeholder="New username"></input>
+            <input id="inputBox" type="newPassword" placeholder="New password"></input>
+
+            <button id="registerButton" @click="register()">Register</button>
+            
+            <HBox id="containerSub">
+                <button id="loginButton" @click="login()">Login menu</button>
             </HBox>
         </VBox>
     </div>
@@ -21,14 +19,11 @@
     export default {
         name: 'LoginPage',
         methods: {
-            login() {
-                alert("Login button clicked");
-            },
-            forgotPassword() {
-                alert("Forgot Password button clicked");
-            },
             register() {
                 alert("Register button clicked");
+            },
+            login() {
+                alert("Login button clicked");
             }
         }
     }
@@ -43,25 +38,26 @@
         font-family: 'Avenir', Helvetica, Arial sans-serif;
         margin: 60px;
         border-radius: 30px;
-        padding: 40px;
-        box-shadow: 0 50px 50px 0 rgba(209, 184, 52, 0.2);
+        padding: 30px;
+        box-shadow: 0 50px 50px 0 rgba(0, 0, 0, 0.2);
         color: #2c3e50;
         background: #e4e3e394;
-        align-items: center;
-        width: 600px;
-        max-height: fit-content;
-        text-align: center;
     }
 
-    #containerV {
+    #containerMain {
+        max-height: fit-content;
         display: flex;
         flex-direction: column;
+        align-items: top;
         justify-content: center;
+        height: 100vh;
+        margin: 60px;
     }
 
-    #containerH {
+    #containerSub {
         display: flex;
         flex-direction: row;
+        align-items: center;
         justify-content: center;
     }
 
@@ -76,8 +72,8 @@
         text-align: center;
     }
 
-    #mainButton {
-        background-color: #3f5b0b;
+    #registerButton {
+        background-color: #4CAF50;
         color: white;
         border: none;
         border-radius: 5px;
@@ -89,12 +85,12 @@
         margin: 4px 2px;
         cursor: pointer;
         border-radius: 30px;
-        width: 100%;
+        margin: 20px 0;
     }
 
-    #optionButton {
-        background-color: #6D8517;
-        color: rgb(255, 255, 255);
+        #loginButton {
+        background-color: #3989de;
+        color: white;
         border: none;
         border-radius: 5px;
         padding: 10px 20px;
@@ -105,6 +101,6 @@
         margin: 4px 2px;
         cursor: pointer;
         border-radius: 30px;
-        margin-inline: 10px;
+        margin-left: 20px;
     }
 </style>

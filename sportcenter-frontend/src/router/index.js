@@ -2,8 +2,12 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Hello from '@/components/Hello'
 import sportcenter from '@/components/sportcenter'
-import AccountPage from '@/components/AccountPage.vue'
+
 import LoginPage from '@/components/LoginPage.vue'
+import ForgotPasswordPage from '@/components/ForgotPasswordPage.vue'
+import RegisterPage from '@/components/RegisterPage.vue'
+
+import AccountPage from '@/components/AccountPage.vue'
 
 Vue.use(Router)
 
@@ -20,7 +24,7 @@ export default new Router({
       component: sportcenter
     },
     {
-      path: '/app/account', // :id is a dynamic parameter
+      path: '/app/account',
       name: 'AccountPage',
       component: AccountPage
     },
@@ -28,6 +32,16 @@ export default new Router({
       path: '/app/login',
       name: 'LoginPage',
       component: LoginPage
+    },
+    {
+      path: '/app/forgotpassword',
+      name: 'Logout',
+      component: ForgotPasswordPage
+    },
+    {
+      path: '/app/register',
+      name: 'Register',
+      component: RegisterPage
     }
   ]
 })

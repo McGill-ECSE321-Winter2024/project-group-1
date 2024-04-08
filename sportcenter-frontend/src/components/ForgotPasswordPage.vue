@@ -1,17 +1,16 @@
 <template>
     <div id="LoginPage">
+        <br>
         <h1><b>Login</b></h1>
-        <VBox id="containerV">
-            <VBox id="containerV">
-                <input id="inputBox" type="username" placeholder="Username"></input>
-                <input id="inputBox" type="password" placeholder="Password"></input>
-                <button id="mainButton" @click="login()"><b>Login</b></button>
-            </VBox>
-            <br>
-            <v-divider>Other options</v-divider>
-            <HBox id="containerH">
-                <button id="optionButton" @click="forgotPassword()"><b>Forgot Password</b></button>
-                <button id="optionButton" @click="register()"><b>Register Menu</b></button>
+        <VBox id="containerMain">
+            <input id="inputBox" type="username" placeholder="Username"></input>
+            <input id="inputBox" type="password" placeholder="Password"></input>
+
+            <button id="loginButton" @click="login()">Login</button>
+            
+            <HBox id="containerSub">
+                <button id="forgotPasswordButton" @click="forgotPassword()">Forgot Password</button>
+                <button id="registerButton" @click="register">Register</button>
             </HBox>
         </VBox>
     </div>
@@ -43,25 +42,26 @@
         font-family: 'Avenir', Helvetica, Arial sans-serif;
         margin: 60px;
         border-radius: 30px;
-        padding: 40px;
-        box-shadow: 0 50px 50px 0 rgba(209, 184, 52, 0.2);
+        padding: 30px;
+        box-shadow: 0 50px 50px 0 rgba(0, 0, 0, 0.2);
         color: #2c3e50;
         background: #e4e3e394;
-        align-items: center;
-        width: 600px;
-        max-height: fit-content;
-        text-align: center;
     }
 
-    #containerV {
+    #containerMain {
+        max-height: fit-content;
         display: flex;
         flex-direction: column;
+        align-items: top;
         justify-content: center;
+        height: 100vh;
+        margin: 60px;
     }
 
-    #containerH {
+    #containerSub {
         display: flex;
         flex-direction: row;
+        align-items: center;
         justify-content: center;
     }
 
@@ -76,8 +76,8 @@
         text-align: center;
     }
 
-    #mainButton {
-        background-color: #3f5b0b;
+    #loginButton {
+        background-color: #3989de;
         color: white;
         border: none;
         border-radius: 5px;
@@ -89,12 +89,12 @@
         margin: 4px 2px;
         cursor: pointer;
         border-radius: 30px;
-        width: 100%;
+        margin: 20px 0;
     }
 
-    #optionButton {
-        background-color: #6D8517;
-        color: rgb(255, 255, 255);
+    #forgotPasswordButton {
+        background-color: #f44336;
+        color: white;
         border: none;
         border-radius: 5px;
         padding: 10px 20px;
@@ -105,6 +105,21 @@
         margin: 4px 2px;
         cursor: pointer;
         border-radius: 30px;
-        margin-inline: 10px;
+    }
+
+    #registerButton {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 30px;
+        margin-left: 20px;
     }
 </style>
