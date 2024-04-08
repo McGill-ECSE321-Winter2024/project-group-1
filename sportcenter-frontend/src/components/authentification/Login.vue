@@ -35,7 +35,7 @@
     }
 </script>
 
-<style>
+<style scoped>
     ::placeholder {
         text-align: center;
     }
@@ -67,7 +67,7 @@
         justify-content: center;
     }
 
-    #inputBox {
+    /* #inputBox {
         width: 100%;
         padding: 12px 20px;
         margin: 8px 0;
@@ -76,7 +76,7 @@
         box-sizing: border-box;
         border-radius: 30px;
         text-align: center;
-    }
+    } */
 
     #mainButton {
         background-color: #3f5b0b;

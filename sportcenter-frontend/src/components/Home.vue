@@ -66,7 +66,7 @@
     }
 </script>
 
-<style>
+<style scoped>
     #home{
         font-family: 'Avenir', Helvetica, Arial sans-serif;
         margin: 60px;

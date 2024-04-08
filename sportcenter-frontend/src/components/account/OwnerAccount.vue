@@ -57,7 +57,7 @@
     }
 </script>
 
-<style>
+<style scoped>
     ::placeholder {
         text-align: center;
     }

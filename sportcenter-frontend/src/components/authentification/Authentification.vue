@@ -26,7 +26,7 @@
     }
 </script>
 
-<style>
+<style scoped>
     #authentification{
         font-family: 'Avenir', Helvetica, Arial sans-serif;
         margin: 60px;

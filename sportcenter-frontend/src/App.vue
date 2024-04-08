@@ -1,15 +1,16 @@
 <template>
   <div id="app">
-    <img src="./assets/logo_internet.png" width=200px>
-    <br>
+    <!-- <img src="./assets/logo_internet.png" width=200px> -->
     <h1><b>SportCenter</b></h1>
     <h2><i>Get fit, not fat!</i></h2>
+
     <HBox>
       <button id="homeButton" @click="goHome()">Home</button>
       <button id="homeButton" @click="goAccount()">Account</button>
       <button id="homeButton" @click="goActivity()">Activity</button>
       <button id="logoutButton" @click="goAuth()">Logout</button>
     </HBox>
+    
     <router-view></router-view>
   </div>
 </template>
@@ -41,7 +42,7 @@ export default {
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2c3e50;
-    margin-top: 15%;
+    margin-top: 30px;
     align-content: center;
     display: flex;
     flex-direction: column;
