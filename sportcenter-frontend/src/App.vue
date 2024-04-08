@@ -4,13 +4,19 @@
     <br>
     <h1><b>SportCenter</b></h1>
     <h2><i>Get fit, not fat!</i></h2>
+    <button id="homeButton" @click="goHome()">Home</button>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'app'
+  name: 'app',
+    methods: {
+      goHome() {
+        this.$router.push('/app/home');
+      }
+    }
 }
 </script>
 
@@ -27,5 +33,19 @@ export default {
     flex-direction: column;
     justify-items: center;
     align-items: center;
+  }
+
+  #homeButton {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 12px;
+    padding: 10px 24px;
   }
 </style>

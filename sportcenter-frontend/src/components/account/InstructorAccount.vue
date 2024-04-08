@@ -2,17 +2,19 @@
     <div id="InstructorAccount">
         <h1><b>My instructor account</b></h1>
         <VBox id="containerV">
+            <img id="profilePic" src="@/assets/instructor.jpg" alt="Instructor" width="200" height="200">
+            <br>
             <p id="currentInformation">
                     Username: Joe Mama<br>
                     Email: joe@gym.com<br>
-                    Description: Expert in goat yoga, certified in pilates and zumba, all the moms love me
+                    Description: Expert in goat yoga, certified in pilates and zumba, all the moms love me, I'm the best instructor in the world (I started a cult)
             </p>
-            <img src="@/assets/instructor.jpg" alt="Instructor" width="200" height="200">
+            
             <HBox id="containerH">
                 
                 <VBox>
                     <input id="inputBox" type="username" placeholder="New username"></input>
-                    <input id="inputBox" type="username" placeholder="Confirm new username"></input>
+                    <input id="inputBox" type="confirmUsername" placeholder="Confirm new username"></input>
                 </VBox>
                 <button id="updateButton" @click="updateUsername()"><b>Update</b></button>
             </HBox>
@@ -24,9 +26,25 @@
                 </VBox>
                 <button id="updateButton" @click="updatePassword()"><b>Update</b></button>
             </HBox>
-
             <HBox id="containerH">
-                <button id="returnButton" @click="goToPaymentMethods()"><b>Return</b></button>
+                <VBox>
+                    <input id="inputBox" type="newImageURL" placeholder="New image URL"></input>
+                    <input id="inputBox" type="confirmNewImageURL" placeholder="Confirm new image URL"></input>
+                </VBox>
+                <button id="updateButton" @click="updateImageURL()"><b>Update</b></button>
+            </HBox>
+            
+            <HBox>
+                <VBox>
+                    <input id="inputBox" type="newDescription" placeholder="New description" style="width: 620px;"></input>
+                </br>
+                </VBox>
+                <button id="updateButton" @click="updateDescription()"><b>Update</b></button>
+            </HBox>
+            <br>
+            <HBox id="containerH">
+                <button id="modeButton" @click="goToCustomerMode()"><b>Customer mode</b></button>
+                <button id="modeButton" @click="goToOwnerMode()"><b>Owner mode</b></button>
                 <button id="deleteButton" @click="deleteAccount()"><b>Delete account</b></button>
             </HBox>
         </VBox>
@@ -40,6 +58,28 @@
             updateUsername() {
                 alert("Update button clicked");
                 console.log("Update button clicked");
+            },
+            updatePassword() {
+                alert("Update button clicked");
+                console.log("Update button clicked");
+            },
+            updateImageURL() {
+                alert("Update button clicked");
+                console.log("Update button clicked");
+            },
+            updateDescription() {
+                alert("Update button clicked");
+                console.log("Update button clicked");
+            },
+            goToCustomerMode() {
+                this.$router.push('/app/account/customer-account');
+            },
+            goToOwnerMode() {
+                this.$router.push('/app/account/owner-account');
+            },
+            deleteAccount() {
+                alert("Delete account button clicked");
+                console.log("Delete account button clicked");
             }
         }
     }
@@ -84,6 +124,12 @@
         font-size: 20px;
     }
 
+    #profilePic {
+        border-radius: 50%;
+        margin-inline: 10px;
+        align-self: center;
+    }
+
     #inputBox {
         width: 500px;
         height: 50px;
@@ -114,7 +160,7 @@
         align-self: center;
     }
 
-    #returnButton {
+    #modeButton {
         background-color: #0e628f;
         height: 50px;
         color: rgb(255, 255, 255);

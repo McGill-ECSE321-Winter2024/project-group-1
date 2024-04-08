@@ -23,7 +23,8 @@
             </HBox>
 
             <HBox id="containerH">
-                <button id="returnButton" @click="goToPreviousScreen()"><b>Return</b></button>
+                <button id="modeButton" @click="goToInstructorMode()"><b>Instructor mode</b></button>
+                <button id="modeButton" @click="goToOwnerMode()"><b>Owner mode</b></button>
                 <button id="deleteButton" @click="deleteAccount()"><b>Delete account</b></button>
             </HBox>
         </VBox>
@@ -42,9 +43,16 @@
                 alert("Update button clicked");
                 console.log("Update button clicked");
             },
-            goToPreviousScreen() {
-                this.$router.push('/app/');
+            goToInstructorMode() {
+                this.$router.push('/app/account/instructor-account');
             },
+            goToOwnerMode() {
+                this.$router.push('/app/account/owner-account');
+            },
+            deleteAccount() {
+                alert("Delete account button clicked");
+                console.log("Delete account button clicked");
+            }
         }
     }
 </script>
@@ -119,7 +127,7 @@
         align-self: center;
     }
 
-    #returnButton {
+    #modeButton {
         background-color: #0e628f;
         height: 50px;
         color: rgb(255, 255, 255);
