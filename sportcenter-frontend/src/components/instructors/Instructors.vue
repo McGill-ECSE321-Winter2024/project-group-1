@@ -4,6 +4,7 @@
         <VBox id="verticalContainer">
             <button id="mainButton" @click="goToViewInstructors()">View instructors</button>
             <button id="mainButton" @click="goToManageInstructors()">Manage instructors</button>
+            <button id="mainButton" @click="goToManageActivities()">Manage activities</button>
         </VBox>
     </div>
 </template>
@@ -17,6 +18,9 @@
             },
             goToManageInstructors() {
                 this.$router.push('/app/instructors/manage-instructors');
+            },
+            goToManageActivities() {
+                this.$router.push('/app/instructors/manage-activities');
             }
         }
     }

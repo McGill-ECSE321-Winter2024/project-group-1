@@ -46,19 +46,20 @@
       <div id="mainContainer" style="width: 560px;">
         <h1>Update activity</h1>
         <VBox>
-          <input id="inputBox" placeholder="Name of activity to update">
-          <input id="inputBox" placeholder="Updated category">
-          <input id="inputBox" placeholder="Updated capacity">
-          <button id="mainButton" type="button">Update</button>
+
+          <input id="inputBox" placeholder="Name of activity to update" v-model="name">
+          <input id="inputBox" placeholder="Updated category" v-model="category">
+          <input id="inputBox" placeholder="Updated capacity" v-model="capacity">
+          <button id="mainButton" @click="updateActivity()"><b>Update</b></button>
         </VBox>
       </div>
 
       <div id="mainContainer" style="width: 560px; margin-left: 80px;">
         <h1>Delete activity</h1>
-        <input id="inputBox" placeholder="Name of activity to delete">
+        <input id="inputBox" placeholder="Name of activity to delete" v-model="name2">
         <input id="inputBox" placeholder="Confirm name of activity to delete">
         <input id="inputBox" placeholder="Write 'DELETE' to confirm deletion">
-        <button id="destroyButton">Delete</button>
+        <button id="destroyButton" @click="deleteActivity()" style="width: 100%;"><b>Delete</b></button>
       </div>
     </div>
   </div>
@@ -105,12 +106,6 @@ export default {
     this.fetchScheduledActivities();
   },
 
-
-
-  
-
-
-
   methods: {
 
     fetchScheduledActivities() {
@@ -131,7 +126,39 @@ export default {
           console.error('Error fetching scheduled activities:', error);
         });
     },
+    async updateActivity() {
+      const updatedActivity = {
+        name: this.name,
+        category: this.category,
+        capacity: this.capacity
+      };
+      try {
+        const response = await AXIOS.put('/updateActivity/' + this.name + '/' + this.category + '/' + this.capacity);
+        this.scheduledActivities.push(response.data);
+        this.clearInputs();
+      } catch (error) {
+        console.error('Error updating activity:', error);
+      }
+    },
+    async deleteActivity() {
+      const deletedActivity = {
+        name2: this.name2
+      };
+      try {
+        const response = await AXIOS.delete('/deleteActivity/', + this.name2);
+        this.scheduledActivities.push(response.data);
+        this.clearInputs();
+        console.log('Activity deleted:', response.data);
+      } catch (error) {
+        console.error('Error deleting activity:', error);
+      }
+    },
 
+    clearInputs() {
+      this.activityName = null;
+      this.category = null;
+      this.capacity = null;
+    },
  
     showActivityDetails(activity) {
       this.selectedActivity = activity;

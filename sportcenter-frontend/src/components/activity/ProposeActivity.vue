@@ -1,12 +1,13 @@
-
 <template>
     <div class="Fabian" id="mainContainer">
         <h1>Propose an activity</h1>
         
         <VBox id="verticalContainer">
+            
             <input id="inputBox" type="text" placeholder="Activity name" v-model="activityName">
             <input id="inputBox" type="text" placeholder="Description" v-model="description">
             <input id="inputBox" type="text" placeholder="Subcategory" v-model="subcategory">
+            <button id="mainButton" @click="created()">GetActivities</button>
             <button id="mainButton" @click="submitProposeActivity()">Propose to the owner</button>
         </VBox>
     </div>
@@ -25,35 +26,57 @@ const AXIOS = axios.create({
 })
 
 export default {
-    name: 'ProposeActivity',
+    //name: 'ProposeActivity',
+    name: "Activities",
     data () {
         return {
-            activityName: '',
-            description: '',
-            subcategory: '',
-            date: '',
-            startTime: '',
-            endTime: '',
-            accountRoleId: '',
-            activityName2: '',
-            capacity: ''
+            accounts: [],
+            activities: [],
+            activityName: null,
+            description: null,
+            subcategory: null,
+            date: null,
+            startTime: null,
+            endTime: null,
+            accountRoleId: null,
+            activityName2: null,
+            capacity: null
         };
     },
     methods:{
+        /*
+        async createdAccounts(){
+            try{
+                const response = await AXIOS.get('/accounts');
+                this.accounts = response.data.accounts; // or response.data
+            } catch(error){
+                console.error('Error fetching accounts', error.message);
+            }
+        },
+        async createdActivities(){
+            try{
+                const response = await AXIOS.get('/activities');
+                this.activities = response.data;
+            } catch(error){
+                console.error('Error fetching activities', error.message);
+            }
+        },
+        */
         async submitProposeActivity(){
             const newActivity = {
-                name: this.activityName,
-                description: this.activityDescription,
-                subcategory: this.activitySubcategory
+                activityName: this.activityName,
+                description: this.description,
+                subcategory: this.subcategory
             };
             try{
-                const response = await AXIOS.post('http://localhost:8080/createActivity', newActivity);
-                this.createActivity.push(response.data);
+                const response = await AXIOS.post('/createActivity/' + his.activityName + '/' + this.description + '/' + this.subcategory);
+                this.activities.push(response.data);
                 this.clearInputs();
             } catch(error){
                 console.error('Error creating activity', error.message);
             }
         },
+        /*
         async submitScheduleActivity(){
             const newScheduleActivity = {
                 date: this.date,
@@ -64,23 +87,24 @@ export default {
                 capacity: this.capacity
             };
             try{
-                const response = await AXIOS.cteateScheduleActivity("http://localhost:8080/createScheduleActivity", newScheduleActivity);
+                const response = await AXIOS.cteateScheduleActivity("/createScheduleActivity", newScheduleActivity);
                 this.createScheduleActivity.push(response.data);
                 this.clearInputs();
             } catch(error){
                 console.error('Error creating scheduled activity', error.message);
             }
         },
+        */
         clearInputs(){
-            this.activityName = '';
-            this.activityDescription = '';
-            this.activitySubcategory = '';
-            this.date = '';
-            this.startTime = '';
-            this.endTime = '';
-            this.accountRoleId = '';
-            this.activityName2 = '';
-            this.capacity = '';
+            this.activityName = null;
+            this.activityDescription = null;
+            this.activitySubcategory = null;
+            this.date = null;
+            this.startTime = null;
+            this.endTime = null;
+            this.accountRoleId = null;
+            this.activityName2 = null;
+            this.capacity = null;
         }
 
     }

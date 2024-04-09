@@ -16,6 +16,7 @@ import OwnerAccount from '@/components/account/OwnerAccount.vue'
 import Instructors from '@/components/instructors/Instructors.vue'
 import ViewInstructors from '@/components/instructors/ViewInstructors.vue'
 import ManageInstructors from '@/components/instructors/ManageInstructors.vue'
+import ManageActivities from '../components/instructors/ManageActivities.vue'
 
 import Activity from '@/components/activity/Activity.vue'
 import ViewActivityTable from '@/components/activity/ViewActivityTable.vue'
@@ -117,6 +118,11 @@ export default new Router({
       path: '/app/instructors/manage-instructors',
       name: 'ManageInstructors',
       component: ManageInstructors
+    },
+    {
+      path: '/app/instructors/manage-activities',
+      name: 'ManageActivities',
+      component: ManageActivities
     }
   ]
 })
