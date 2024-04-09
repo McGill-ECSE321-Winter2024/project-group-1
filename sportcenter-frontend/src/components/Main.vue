@@ -115,4 +115,28 @@ export default {
   max-height: fit-content;
   text-align: center;
 }
+
+#table {
+  background-color: #deffd6;
+  color: rgb(0, 0, 0);
+  font-family: Arial, Helvetica, sans-serif;
+  width: 70%;
+  border-collapse: collapse;
+}
+
+td,
+th {
+  border: 1px solid #000000;
+  padding: 10px;
+}
+tbody tr:nth-child(even) {
+  background-color: #a5a5a5;
+}
+tbody tr:nth-child(odd) {
+  background-color: #c2c2c2;
+}
+tbody tr:hover {
+  background-color: #272727;
+  color: rgb(255, 255, 255);
+}
 </style>
