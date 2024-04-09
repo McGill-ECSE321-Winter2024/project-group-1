@@ -2,7 +2,7 @@
     <div id="mainContainer">
         <h1>My instructor account</h1>
         <VBox id="verticalContainer">
-            <img id="profilePic" src="@/assets/instructor.jpg" alt="Instructor" width="200" height="200">
+            <img id="profilePic" src="@/assets/zyzz.jpg" alt="Instructor" width="200" height="200">
             <br>
 
             <p id="currentInformation">
@@ -11,38 +11,32 @@
                     Description: Expert in goat yoga, certified in pilates and zumba, all the moms love me, I'm the best instructor in the world (I started a cult)
             </p>
             
-            <HBox id="horizontalContainer">
-                <VBox id="verticalContainer">
-                    <input id="inputBox" type="username" placeholder="New username" style="width: 500px;"></input>
-                    <input id="inputBox" type="username" placeholder="Confirm new username" style="width: 500px;"></input>
-                </VBox>
+            <VBox id="verticalContainer">
+                <input id="inputBox" type="username" placeholder="New username" style="width: 100%;"></input>
+                <input id="inputBox" type="username" placeholder="Confirm new username" style="width: 100%;"></input>
                 <button id="mainButton" @click="updateUsername()" style="margin-left: 10px; align-self: center;"><b>Update</b></button>
-            </HBox>
+            </VBox>
             <br>
 
-            <HBox id="horizontalContainer">
-                <VBox id="verticalContainer">
-                    <input id="inputBox" type="oldPassword" placeholder="Old password" style="width: 500px;"></input>
-                    <input id="inputBox" type="newPassword" placeholder="New password" style="width: 500px;"></input>
-                    <input id="inputBox" type="confirmNewPassword" placeholder="Confirm new password" style="width: 500px;"></input>
-                </VBox>
+            <VBox id="verticalContainer">
+                <input id="inputBox" type="oldPassword" placeholder="Old password" style="width: 100%;"></input>
+                <input id="inputBox" type="newPassword" placeholder="New password" style="width: 100%;"></input>
+                <input id="inputBox" type="confirmNewPassword" placeholder="Confirm new password" style="width: 100%;"></input>
                 <button id="mainButton" @click="updatePassword()" style="margin-left: 10px; align-self: center;"><b>Update</b></button>
-            </HBox>
+            </VBox>
             <br>
 
-            <HBox id="horizontalContainer">
-                <VBox id="verticalContainer">
-                    <input id="inputBox" type="newImageURL" placeholder="New image URL" style="width: 500px;"></input>
-                    <input id="inputBox" type="confirmNewImageURL" placeholder="Confirm new image URL" style="width: 500px;"></input>
-                </VBox>
+            <VBox id="verticalContainer">
+                <input id="inputBox" type="newImageURL" placeholder="New image URL" style="width: 100%;"></input>
+                <input id="inputBox" type="confirmNewImageURL" placeholder="Confirm new image URL" style="width: 100%;"></input>
                 <button id="mainButton" @click="updateImageURL()" style="margin-left: 10px; align-self: center;"><b>Update</b></button>
-            </HBox>
+            </VBox>
             <br>
 
-            <HBox id="horizontalContainer">
-                <input id="inputBox" type="newDescription" placeholder="New description" style="width: 500px;"></input>
+            <VBox id="verticalContainer">
+                <input id="inputBox" type="newDescription" placeholder="New description" style="width: 100%;"></input>
                 <button id="mainButton" @click="updateDescription()" style="margin-left: 10px; align-self: center;"><b>Update</b></button>
-            </HBox>
+            </VBox>
             <br>
 
             <HBox id="horizontalContainer">

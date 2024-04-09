@@ -1,5 +1,5 @@
 <template>
-  <div class="ViewActivityTable" id="mainDiv">
+  <div class="ViewActivityTable" id="mainContainer">
     <h1><b>View Activities</b></h1>
     <br>
     
@@ -237,3 +237,5 @@ export default {
     background-color: #3f5b0b;
   }
 </style>
+
+<style src="../../assets/main.css"></style>
