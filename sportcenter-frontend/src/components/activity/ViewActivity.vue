@@ -1,7 +1,7 @@
 <template>
   <div class="popup">
     <div class="popup-content">
-      <VBox id="verticalContainer"></VBox>
+      <VBox id="verticalContainer">
         <h2>{{ activity.name }}</h2>
 
         <p>

@@ -27,9 +27,17 @@
                 <h2 style="align-self:center;">to</h2>
                 <input id="datePickerInput" type="time" name="endTime">
             </HBox>
-
+            <select v-model="selectAccount">
+                <option v-for="account in accounts" :key="account.accountRoleId" :value="account.accountRoleId">{{account.accountRoleId}}</option>>
+            </select>
+            <br>
+            <select v-model="selectActivity">
+                <option v-for="activity in activities" :key="activity.name" :value="activity.name">{{activity.name}}</option>>
+            </select>
+            <!--
             <input id="inputBox" type="text" placeholder="Account Role Id" v-model="accountRoleId">
             <input id="inputBox" type="text" placeholder="Activity Name" v-model="activityName2">
+            -->
             <input id="inputBox" type="text" placeholder="Capacity" v-model="capacity">
             
             <button id="mainButton" @click="submitScheduleActivity()">Schedule Activity</button>
@@ -50,29 +58,55 @@ const AXIOS = axios.create({
 })
 
 export default {
-    name: 'Fabian',
+    //name: 'Fabian',
+    name: "Activities",
     data () {
         return {
-            activityName: '',
-            description: '',
-            subcategory: '',
-            date: '',
-            startTime: '',
-            endTime: '',
-            accountRoleId: '',
-            activityName2: '',
-            capacity: ''
+            accounts: [],
+            selectAccount: null,
+            activities: [],
+            selectActivity: null,
+
+            activityName: null,
+            description: null,
+            subcategory: null,
+            date: null,
+            startTime: null,
+            endTime: null,
+            //accountRoleId: null,
+            //activityName2: null,
+            capacity: null
         };
     },
+    mounted(){
+        this.createdAccounts();
+        this.createdActivities();
+    },
     methods:{
+        async createdAccounts(){
+            try{
+                const response = await AXIOS.get('/accounts');
+                this.accounts = response.data.accounts; // or response.data
+            } catch(error){
+                console.error('Error fetching accounts', error.message);
+            }
+        },
+        async createdActivities(){
+            try{
+                const response = await AXIOS.get('/activities');
+                this.activities = response.data;
+            } catch(error){
+                console.error('Error fetching activities', error.message);
+            }
+        },
         async submitProposeActivity(){
             const newActivity = {
                 name: this.activityName,
-                description: this.activityDescription,
-                subcategory: this.activitySubcategory
+                description: this.description,
+                subcategory: this.subcategory
             };
             try{
-                const response = await AXIOS.post('http://localhost:8080/createActivity', newActivity);
+                const response = await AXIOS.post('/createActivity', newActivity);
                 this.createActivity.push(response.data);
                 this.clearInputs();
             } catch(error){
@@ -84,12 +118,12 @@ export default {
                 date: this.date,
                 startTime: this.startTime,
                 endTime: this.endTime,
-                accountRoleId: this.accountRoleId,
-                activityName2: this.activityName2,
+                selectAccount: this.selectAccount,
+                selectActivity: this.selectActivity,
                 capacity: this.capacity
             };
             try{
-                const response = await AXIOS.cteateScheduleActivity("http://localhost:8080/createScheduleActivity", newScheduleActivity);
+                const response = await AXIOS.createScheduleActivity("/createScheduleActivity", newScheduleActivity);
                 this.createScheduleActivity.push(response.data);
                 this.clearInputs();
             } catch(error){
@@ -97,15 +131,17 @@ export default {
             }
         },
         clearInputs(){
-            this.activityName = '';
-            this.activityDescription = '';
-            this.activitySubcategory = '';
-            this.date = '';
-            this.startTime = '';
-            this.endTime = '';
-            this.accountRoleId = '';
-            this.activityName2 = '';
-            this.capacity = '';
+            this.selectAccount = null;
+            this.selectActivity = null;
+            this.activityName = null;
+            this.activityDescription = null;
+            this.activitySubcategory = null;
+            this.date = null;
+            this.startTime = null;
+            this.endTime = null;
+            this.accountRoleId = null;
+            this.activityName2 = null;
+            this.capacity = null;
         }
 
     }
