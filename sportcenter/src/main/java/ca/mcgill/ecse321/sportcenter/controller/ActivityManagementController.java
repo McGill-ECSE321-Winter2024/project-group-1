@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ca.mcgill.ecse321.sportcenter.dto.ActivityDto;
 import ca.mcgill.ecse321.sportcenter.model.Activity;
+import ca.mcgill.ecse321.sportcenter.model.Activity.ClassCategory;
 import ca.mcgill.ecse321.sportcenter.service.ActivityManagementService;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 
 /**
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
  * 
  * @Author Mathias Lamina & Patrick Zacharia & Fabian Saldana
  */
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 public class ActivityManagementController {
     @Autowired
@@ -38,8 +41,9 @@ public class ActivityManagementController {
             "/createActivity/{name}/{description}/{subcategory}/" })
     public ActivityDto createActivity(@PathVariable("name") String name,
             @PathVariable("description") String description,
-            @PathVariable("subcategory") Activity.ClassCategory subcategory) throws IllegalArgumentException {
-        Activity activity = activityManagementService.createActivity(name, description, subcategory);
+            @PathVariable("subcategory") String subcategory) throws IllegalArgumentException {
+        Activity activity = activityManagementService.createActivity(name, description,
+                ClassCategory.valueOf(subcategory));
         return convertToDto(activity);
     }
 
