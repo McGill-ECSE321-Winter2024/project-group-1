@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
  * 
  * @Author Mathias Lamina & Patrick Zacharia & Fabian Saldana
  */
-@CrossOrigin(origins = "http://localhost:8087")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 public class ActivityManagementController {
     @Autowired

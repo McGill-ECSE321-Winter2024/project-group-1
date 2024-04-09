@@ -30,7 +30,7 @@ import ca.mcgill.ecse321.sportcenter.service.AccountManagementService;
  * Controller class for the AccountManagement
  * 
  */
-@CrossOrigin(origins = "http://localhost:8087")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 public class AccountManagementController {
     @Autowired
@@ -45,11 +45,13 @@ public class AccountManagementController {
      * @param password
      * @return AccountDto
      */
-    @PostMapping("/createAccount")
+    @PostMapping(value = { "/createAccount/{username}/{password}", "/createAccount/{username}/{password}/" })
     @ResponseStatus(HttpStatus.CREATED)
-    public AccountDto createAccount(@RequestBody AccountDto accountDto) {
-        Account account = accountService.createAccount(accountDto.getUsername(), accountDto.getPassword());
-        return new AccountDto(account);
+    public AccountDto createAccount(@PathVariable("username") String username,
+            @PathVariable("password") String password)
+            throws IllegalArgumentException {
+        Account account = accountService.createAccount(username, password);
+        return convertAccountToDto(account);
     }
 
     /**
@@ -118,7 +120,7 @@ public class AccountManagementController {
      * @param accountId
      * @return AccountDto
      */
-    @GetMapping(value = { "/account/{accountId}", "/account/{accountId}/" })
+    @GetMapping(value = { "/getAccountById/{accountId}", "/getAccountById/{accountId}/" })
     public AccountDto getAccountById(@PathVariable("accountId") int accountId) throws IllegalArgumentException {
         Account account = accountService.getAccountByAccountId(accountId);
         return convertAccountToDto(account);
@@ -166,7 +168,7 @@ public class AccountManagementController {
      * @param accountRoleId
      * @return CustomerDto
      */
-    @GetMapping(value = { "/customer/{accountRoleId}", "/customer/{accountRoleId}/" })
+    @GetMapping(value = { "/getCustomer/{accountRoleId}", "/getCustomer/{accountRoleId}/" })
     public CustomerDto getCustomer(@PathVariable("accountRoleId") int accountRoleId) throws IllegalArgumentException {
         Customer customer = accountService.getCustomerByAccountRoleId(accountRoleId);
         return convertCustomerToDto(customer);
