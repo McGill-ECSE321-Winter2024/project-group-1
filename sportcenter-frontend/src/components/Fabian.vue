@@ -8,9 +8,9 @@
                     <div class="left-text-fields"> 
                         <input type="text" placeholder="Activity name" v-model="activityName">
                         <br>
-                        <input type="text" placeholder="Description" v-model="activityDescription">
+                        <input type="text" placeholder="Description" v-model="description">
                         <br>
-                        <input type="text" placeholder="Subcategory" v-model="activitySubcategory">
+                        <input type="text" placeholder="Subcategory" v-model="subcategory">
                     </div>
                     <button id="submitPropose" @click="submitProposeActivity()"><b>Propose to Owner</b></button>
                 </VBox>
@@ -37,7 +37,7 @@
                         <br>
                         <input type="text" placeholder="Capacity" v-model="capacity">
                     </div>
-                    <button id="scheduleActivity" @click="submitScheduleActivity()"><b>Schedule Activity</b></button>
+                    <button id="scheduleActivity" @click="createScheduleActivity()"><b>Schedule Activity</b></button>
                 </VBox>
             </div>
         </div>
@@ -78,6 +78,7 @@ export default {
             capacity: ''
         };
     },
+    /*
     async createActivity(activityName, description, subcategory){
         try{
             const response = await AXIOS.post(`http://localhost:8080/createActivity/${activityName}/${description}/${subcategory}`, {
@@ -87,9 +88,11 @@ export default {
             });
             this.createActivity = response.data.createActivity;
         } catch(error){
-            console.error('Error creating activity', error.message); /*Handle error*/
+            console.error('Error creating activity', error.message); 
         }
     },
+    */
+    /*
     async createScheduleActivity(date, startTime, endTime, accountRoleId, activityName2, capacity){
         try{
             const response = await AXIOS.post(`http://localhost:8080/createScheduledActivity/${date}/${startTime}/${endTime}/${instructorId}/${activityName2}/${capacity}`, {
@@ -101,9 +104,10 @@ export default {
                 capacity: capacity});
             this.createScheduleActivity = response.data.createScheduleActivity;
         } catch(error){
-            console.error('Error creating scheduled activity', error.message); /*Handle error*/
+            console.error('Error creating scheduled activity', error.message);
         }
     },
+    */
     methods:{
         async submitProposeActivity(){
             const newActivity = {
