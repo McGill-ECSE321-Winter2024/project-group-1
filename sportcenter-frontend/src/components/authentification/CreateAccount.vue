@@ -3,8 +3,8 @@
         <h1>Create a new account</h1>
         <VBox id="verticalContainer">
             <VBox id="verticalContainer">
-                <input id="inputBox" type="username" placeholder="Username"></input>
-                <input id="inputBox" type="password" placeholder="Password"></input>
+                <input id="inputBox" type="text" placeholder="Username" v-model="username">
+                <input id="inputBox" type="text" placeholder="Password" v-model="password">
                 <button id="mainButton" @click="createAccount()"><b>Create account</b></button>
             </VBox>
             <br>
@@ -18,21 +18,55 @@
 </template>
 
 <script>
-    export default {
-        name: 'CreateAccount',
-        methods: {
-            createAccount() {
-                alert("Create account button clicked");
-                console.log("Create account button clicked");
-            },
-            goToLogin() {
-                this.$router.push('/app/auth/login');
-            },
-            goToForgotPassword() {
-                this.$router.push('/app/auth/forgotpassword')
+import axios from "axios";
+import config from "../../../config";
+
+const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
+const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
+
+const AXIOS = axios.create({
+    baseURL: backendUrl,
+    headers: { 'Access-Control-Allow-Origin': frontendUrl }
+})
+
+export default {
+    name: 'CreateAccount',
+    data() {
+        return {
+            accounts: [],
+            username: null,
+            password: null
+        }
+    },
+    methods: {
+        async createAccount() {
+            //alert("Create account button clicked");
+            //console.log("Create account button clicked");
+            const newAccount = {
+                username: this.username,
+                password: this.password
+            };
+            try{
+                const response = await AXIOS.post('/createAccount/' + this.username + '/' + this.password);
+                this.accounts.push(response.data);
+                this.clearInputs();
+                //this.accounts = response.data.accounts; // or response.data
+            } catch(error){
+                console.error('Error fetching accounts', error.message);
             }
         },
-    }
+        goToLogin() {
+            this.$router.push('/app/auth/login');
+        },
+        goToForgotPassword() {
+            this.$router.push('/app/auth/forgotpassword')
+        },
+        clearInputs() {
+            this.username = null;
+            this.password = null;
+        }
+    },
+}
 </script>
 
 <style scoped src="../../assets/main.css"></style>

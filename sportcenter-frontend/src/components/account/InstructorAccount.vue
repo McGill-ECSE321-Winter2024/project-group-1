@@ -27,14 +27,14 @@
             <br>
 
             <VBox id="verticalContainer">
-                <input id="inputBox" type="newImageURL" placeholder="New image URL" style=";"></input>
-                <input id="inputBox" type="confirmNewImageURL" placeholder="Confirm new image URL" style=";"></input>
+                <input id="inputBox" type="newImageURL" placeholder="New image URL"></input>
+                <input id="inputBox" type="confirmNewImageURL" placeholder="Confirm new image URL"></input>
                 <button id="mainButton" @click="updateImageURL()" style="margin-left: 10px; align-self: center;"><b>Update</b></button>
             </VBox>
             <br>
 
             <VBox id="verticalContainer">
-                <input id="inputBox" type="newDescription" placeholder="New description" style=";"></input>
+                <input id="inputBox" type="newDescription" placeholder="New description"></input>
                 <button id="mainButton" @click="updateDescription()" style="margin-left: 10px; align-self: center;"><b>Update</b></button>
             </VBox>
             <br>
