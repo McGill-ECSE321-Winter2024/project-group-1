@@ -14,8 +14,11 @@ import InstructorAccount from '@/components/account/InstructorAccount.vue'
 import OwnerAccount from '@/components/account/OwnerAccount.vue'
 
 import Activity from '@/components/activity/Activity.vue'
+import Fabian from '@/components/activity/Fabian.vue'
 import ViewActivityTable from '@/components/activity/ViewActivityTable.vue'
-import Instructors from '../components/instructors/Instructors.vue'
+import Instructors from '@/components/instructors/Instructors.vue'
+import ViewInstructors from '@/components/instructors/ViewInstructors.vue'
+import ManageInstructors from '@/components/instructors/ManageInstructors.vue'
 
 Vue.use(Router)
 
@@ -72,6 +75,11 @@ export default new Router({
       component: Activity
     },
     {
+      path: '/app/activity/fabian',
+      name: 'Fabian',
+      component: Fabian
+    },
+    {
       path: '/app/activity/view-activity',
       name: 'ViewActivityTable',
       component: ViewActivityTable
@@ -80,6 +88,16 @@ export default new Router({
       path: '/app/instructors',
       name: 'Instructors',
       component: Instructors
+    },
+    {
+      path: '/app/instructors/view-instructors',
+      name: 'ViewInstructors',
+      component: ViewInstructors
+    },
+    {
+      path: '/app/instructors/manage-instructors',
+      name: 'ManageInstructors',
+      component: ManageInstructors
     }
   ]
 })

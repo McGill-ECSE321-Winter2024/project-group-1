@@ -6,7 +6,11 @@
                 <input id="inputBox" type="username" placeholder="Username"></input>
                 <input id="inputBox" type="password" placeholder="Password"></input>
                 <!--TODO: ADD ACCOUNT TYPE LOGIN CHOICE-->
-                <button id="mainButton" @click="login()"><b>Login</b></button>
+                <HBox id="horizontalContainer">
+                    <button id="mainButton" @click="loginCustomer()"><b>Login as customer</b></button>
+                    <button id="mainButton" @click="loginInstructor()"><b>Login as instructor</b></button>
+                    <button id="mainButton" @click="loginOwner()"><b>Login as owner</b></button>
+                </HBox>
             </VBox>
             <br>
             <VBox id="verticalContainer" style="width: 40%; align-self: center;">
@@ -22,7 +26,17 @@
     export default {
         name: 'Login',
         methods: {
-            login() {
+            loginCustomer() {
+                alert("Login button clicked");
+                var currentDate = new Date();
+                console.log("Login button clicked: " + currentDate);
+            },
+            loginInstructor() {
+                alert("Login button clicked");
+                var currentDate = new Date();
+                console.log("Login button clicked: " + currentDate);
+            },
+            loginOwner() {
                 alert("Login button clicked");
                 var currentDate = new Date();
                 console.log("Login button clicked: " + currentDate);

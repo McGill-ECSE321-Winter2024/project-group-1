@@ -11,6 +11,7 @@
             <VBox id="verticalContainer" style="width: 40%; align-self: center;">
                 <v-divider>Other options</v-divider>
                 <button id="subButton" @click="goToLogin()"><b>I already have an account</b></button>
+                <button id="subButton" @click="goToForgotPassword()">Forgot password</button>
             </VBox>
         </VBox>
     </div>
@@ -26,6 +27,9 @@
             },
             goToLogin() {
                 this.$router.push('/app/auth/login');
+            },
+            goToForgotPassword() {
+                this.$router.push('/app/auth/forgotpassword')
             }
         },
     }

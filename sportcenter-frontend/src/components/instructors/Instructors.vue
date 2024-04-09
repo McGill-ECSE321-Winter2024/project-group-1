@@ -1,10 +1,9 @@
 <template>
     <div id="mainContainer">
-        <h1>Authentification menu</h1>
+        <h1>Instructors management menu</h1>
         <VBox id="verticalContainer">
-            <button id="mainButton" @click="goToLogin()">Function 1</button>
-            <button id="mainButton" @click="goToForgotPassword()">Function 2</button>
-            <button id="mainButton" @click="goToCreateAccount()">Function 3</button>
+            <button id="mainButton" @click="goToViewInstructors()">View instructors</button>
+            <button id="mainButton" @click="goToManageInstructors()">Manage instructors</button>
         </VBox>
     </div>
 </template>
@@ -13,14 +12,11 @@
     export default {
         name: 'Authentification',
         methods: {
-            goToLogin() {
-                this.$router.push('/app/auth/login');
+            goToViewInstructors() {
+                this.$router.push('/app/instructors/view-instructors');
             },
-            goToForgotPassword() {
-                this.$router.push('/app/auth/forgotpassword');
-            },
-            goToCreateAccount() {
-                this.$router.push('/app/auth/createaccount');
+            goToManageInstructors() {
+                this.$router.push('/app/instructors/manage-instructors');
             }
         }
     }
