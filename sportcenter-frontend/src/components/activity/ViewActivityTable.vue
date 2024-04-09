@@ -1,13 +1,12 @@
 <template>
-  <div class="ViewActivityTable">
-    <h1>View Activities</h1>
+  <div class="ViewActivityTable" id="mainDiv">
+    <h1><b>View Activities</b></h1>
     <br>
     
-    <input type="text" v-model="search" placeholder="Search activities">
+    <input id="inputBox" type="text" v-model="search" placeholder="Search activities">
 
-
-
-    <table id="ACTIVITYTABLE" align="center" width="700">
+    <HBox id="containerH">
+    <table id="activityTable" align="center" width="700">
       <thead>
         <tr>
           <th width="100">Name</th>
@@ -33,10 +32,13 @@
         <ViewActivity v-if="selectedActivity" :activity="selectedActivity" @close="closePopup" />
       </tbody>
     </table>
+    <p>HEHE</p>
+
+    </HBox>
     
     <br>
     <div class="button-container">
-      <button type="button">Add Activity</button>
+      <button id="optionButton" type="button">Add Activity</button>
     </div>
   </div>
 </template>
@@ -167,12 +169,35 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
 
+    #mainDiv {
+        font-family: 'Avenir', Helvetica, Arial sans-serif;
+        margin: 60px;
+        border-radius: 30px;
+        padding: 40px;
+        box-shadow: 0 50px 50px 0 rgba(209, 184, 52, 0.2);
+        color: #2c3e50;
+        background: #e4e3e394;
+        align-items: center;
+        width: 85%;
+        max-width: 800px;
+        max-height: fit-content;
+        text-align: center;
+    }
+
+        #containerH {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+    }
+
 table {
   background-color: #d3ffd6;
   color: rgb(0, 0, 0);
   font-family: Arial, Helvetica, sans-serif;
   width: 70%;
   border-collapse: collapse;
+  margin-top: 20px;
+  /* border-radius: 30px; */
 }
 
 
@@ -196,20 +221,56 @@ tbody tr:hover {
 
 
 
-h1, h2 {
-  font-weight: bold;
-  color: #000000;
-}
 
-ul {
-  list-style-type: none;
-  padding: 0;
-}
+    #inputBox {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+        border-radius: 30px;
+        text-align: center;
+    }
 
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
+        #mainButton {
+        background-color: #3f5b0b;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 30px;
+        width: 100%;
+    }
+
+    #optionButton {
+        background-color: #3f5b0b;
+        color: rgb(255, 255, 255);
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 30px;
+        margin-inline: 10px;
+    }
+
+
+    #activityTable {
+        /* margin: 20px; */
+        align: center;
+        background-color: #3f5b0b;
+    }
 
 
 </style>

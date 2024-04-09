@@ -23,7 +23,8 @@
         methods: {
             login() {
                 alert("Login button clicked");
-                console.log("Login button clicked");
+                var currentDate = new Date();
+                console.log("Login button clicked: " + currentDate);
             },
             goToForgotPassword() {
                 this.$router.push('/app/auth/forgotpassword');
