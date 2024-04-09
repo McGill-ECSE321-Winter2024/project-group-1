@@ -22,10 +22,13 @@
             </VBox>
             <br>
 
+            <button id="subButton" @click="instructorRequest()" style="margin-left: 10px; align-self: center;">Request to become an instructor</button>
+            <br>
+
             <HBox id="containerH">
-                <button id="subButton" @click="goToInstructorMode()"><b>Instructor mode</b></button>
-                <button id="subButton" @click="goToOwnerMode()"><b>Owner mode</b></button>
-                <button id="destroyButton" @click="deleteAccount()"><b>Delete account</b></button>
+                <button id="subButton" @click="goToInstructorMode()">Instructor mode</button>
+                <button id="subButton" @click="goToOwnerMode()">Owner mode</button>
+                <button id="destroyButton" @click="deleteAccount()">Delete account</button>
             </HBox>
         </VBox>
     </div>
@@ -42,6 +45,10 @@
             updatePassword() {
                 alert("Update button clicked");
                 console.log("Update button clicked");
+            },
+            instructorRequest() {
+                alert("Instructor request button clicked");
+                console.log("Instructor request button clicked");
             },
             goToInstructorMode() {
                 this.$router.push('/app/account/instructor-account');

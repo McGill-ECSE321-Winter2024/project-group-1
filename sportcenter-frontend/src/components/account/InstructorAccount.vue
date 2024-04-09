@@ -40,9 +40,9 @@
             <br>
 
             <HBox id="horizontalContainer">
-                <button id="subButton" @click="goToCustomerMode()"><b>Customer mode</b></button>
-                <button id="subButton" @click="goToOwnerMode()"><b>Owner mode</b></button>
-                <button id="destroyButton" @click="deleteAccount()"><b>Delete account</b></button>
+                <button id="subButton" @click="goToCustomerMode()">Customer mode</button>
+                <button id="subButton" @click="goToOwnerMode()">Owner mode</button>
+                <button id="destroyButton" @click="deleteAccount()">Delete account</button>
             </HBox>
         </VBox>
     </div>

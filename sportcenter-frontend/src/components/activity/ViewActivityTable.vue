@@ -59,7 +59,7 @@ export default {
   data() {
     return {
       
-      //scheduledActivities: [],
+      scheduledActivities: [],
       filteredActivityData: [],
       selectedActivity: null,
       search:'',
@@ -68,12 +68,12 @@ export default {
 
       //logic here would get all activities
 
-      scheduledActivities: [
-        { name: 'Borneo', category: 'Expedition', date: '6 march', capacity: 30 },
-        { name: 'Trifecta', category: 'YoloSwag', date: '6 april', capacity: 10 },
-        { name: 'Running', category: 'Cardio', date: '6 january', capacity: 20 },
-        { name: 'INSTAGATION', category: 'Vroom', date: '6 january', capacity: 20 },
-      ],
+      // scheduledActivities: [
+      //   { name: 'Borneo', category: 'Expedition', date: '6 march', capacity: 30 },
+      //   { name: 'Trifecta', category: 'YoloSwag', date: '6 april', capacity: 10 },
+      //   { name: 'Running', category: 'Cardio', date: '6 january', capacity: 20 },
+      //   { name: 'INSTAGATION', category: 'Vroom', date: '6 january', capacity: 20 },
+      // ],
     };
   },
 

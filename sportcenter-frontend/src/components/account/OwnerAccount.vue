@@ -23,9 +23,9 @@
             <br>
 
             <HBox id="containerH">
-                <button id="subButton" @click="goToCustomerMode()"><b>Customer mode</b></button>
-                <button id="subButton" @click="goToInstructorMode()"><b>Instructor mode</b></button>
-                <button id="destroyButton" @click="deleteAccount()"><b>Delete account</b></button>
+                <button id="subButton" @click="goToCustomerMode()">Customer mode</button>
+                <button id="subButton" @click="goToInstructorMode()">Instructor mode</button>
+                <button id="destroyButton" @click="deleteAccount()">Delete account</button>
             </HBox>
         </VBox>
     </div>

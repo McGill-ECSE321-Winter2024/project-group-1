@@ -62,6 +62,20 @@
                             </VBox>
                         </td>
                     </tr>
+
+                    <tr>
+                        <td><img id="profilePic" src="@/assets/messi.jpg" alt="Instructor" width="120" height="120"></td>
+                        <td id="information">The Little Guy from Rizzario</td>
+                        <td>GOAT</td>
+                        <td>Expert in football, World Cup winner, MVP, fuck Ronaldo</td>
+                        <td>
+                            <VBox id="verticalContainer">
+                                <button id="subButton">Approve</button>
+                                <button id="subButton">Disapprove</button>
+                                <button id="subButton">Other</button>
+                            </VBox>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </VBox>

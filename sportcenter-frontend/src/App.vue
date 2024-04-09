@@ -4,7 +4,7 @@
     <HBox id="horizontalContainer">
       <VBox id="verticalContainer" style="margin-right: 25px;">
         <h1>FullForm</h1>
-        <h2>Fit N Fast</h2>
+        <h2>Put yourself first</h2>
       </VBox>
       <img src="./assets/gym-icon.jpg" alt="Logo" contain height="110px" width="110px" style="border-radius: 55px;" @click="goHome()"></img>
     </HBox>
