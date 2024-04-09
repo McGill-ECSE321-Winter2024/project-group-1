@@ -69,7 +69,7 @@ export default {
                 subcategory: this.subcategory
             };
             try{
-                const response = await AXIOS.post('/createActivity/' + his.activityName + '/' + this.description + '/' + this.subcategory);
+                const response = await AXIOS.post('/createActivity/' + this.activityName + '/' + this.description + '/' + this.subcategory);
                 this.activities.push(response.data);
                 this.clearInputs();
             } catch(error){
