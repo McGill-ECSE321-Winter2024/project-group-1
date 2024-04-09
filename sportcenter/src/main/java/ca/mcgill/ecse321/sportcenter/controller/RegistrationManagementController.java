@@ -18,7 +18,7 @@ import ca.mcgill.ecse321.sportcenter.service.RegistrationManagementService;
  * 
  * @author Emilie Ruel
  */
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:8087")
 @RestController
 public class RegistrationManagementController {
 

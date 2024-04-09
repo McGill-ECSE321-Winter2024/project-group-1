@@ -14,6 +14,7 @@ import ca.mcgill.ecse321.sportcenter.service.ActivityManagementService;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 
 /**
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
  * 
  * @Author Mathias Lamina & Patrick Zacharia & Fabian Saldana
  */
+@CrossOrigin(origins = "http://localhost:8087")
 @RestController
 public class ActivityManagementController {
     @Autowired

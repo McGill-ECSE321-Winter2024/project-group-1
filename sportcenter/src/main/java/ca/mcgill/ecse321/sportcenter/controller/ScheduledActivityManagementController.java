@@ -24,7 +24,7 @@ import ca.mcgill.ecse321.sportcenter.service.ScheduledActivityManagementService;
  * 
  * @author Fabian Saldana
  */
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:8087")
 @RestController
 public class ScheduledActivityManagementController {
 

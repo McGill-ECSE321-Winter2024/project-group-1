@@ -1,84 +1,140 @@
 <template>
-    <div class="fabian">
-        <div class = "propose-activity">
-            <h2> Propose Activity</h2>
-            <div class="left-text-fields"> 
-                <input type="text" placeholder="Activity name" v-model="activityName">
-                <br>
-                <input type="text" placeholder="Description" v-model="activityDescription">
-                <br>
-                <input type="text" placeholder="Subcategory" v-model="activitySubcategory">
+    <div class="something">
+        <h1><b>Instructor Page</b></h1>
+        <div class="fabian">
+            <div id="proposeBox" class = "propose-activity">
+                <VBox id="containerF">
+                    <h1><b> Propose Activity</b></h1>
+                    <div class="left-text-fields"> 
+                        <input type="text" placeholder="Activity name" v-model="activityName">
+                        <br>
+                        <input type="text" placeholder="Description" v-model="activityDescription">
+                        <br>
+                        <input type="text" placeholder="Subcategory" v-model="activitySubcategory">
+                    </div>
+                    <button id="submitPropose" @click="submitProposeActivity()"><b>Propose to Owner</b></button>
+                </VBox>
             </div>
-            <button @click="submitProposeActivity"> Propose to Owner</button>
-        </div>
-        <div class = "schedule-activity">
-            <h2> Schedule Activity</h2>
-            <div class="right-text-fields">
-                <h2> Date</h2>
-                <input type="date" id="scheduled" name="scheduled">
-                <br>
-                <h2> Start Time</h2>
-                <input type="time" id="startTime" name="startTime">
-                <br>
-                <h2> End Time</h2>
-                <input type="time" id="endTime" name="endTime">
-                <br>
-                <input type="text" placeholder="Account Role Id" v-model="accountRoleId">
-                <br>
-                <input type="text" placeholder="Activity Name" v-model="activityName">
-                <br>
-                <input type="text" placeholder="Capacity" v-model="capacity">
+            <div id="scheduleBox" class = "schedule-activity">
+                <VBox id="containerF2">
+                <h1><b>Schedule Activity</b></h1>
+                    <div class="right-text-fields">
+                        <div class="textDate">
+                            <h2> Date</h2>
+                            <input type="date" id="scheduled" name="scheduled">
+                        </div>
+                        <div class="textStart">
+                            <h2> Start Time</h2>
+                            <input type="time" id="startTime" name="startTime">
+                        </div>
+                        <div class="textEnd">
+                            <h2> End Time</h2>
+                            <input type="time" id="endTime" name="endTime">
+                        </div>
+                        <input type="text" placeholder="Account Role Id" v-model="accountRoleId">
+                        <br>
+                        <input type="text" placeholder="Activity Name" v-model="activityName2">
+                        <br>
+                        <input type="text" placeholder="Capacity" v-model="capacity">
+                    </div>
+                    <button id="scheduleActivity" @click="submitScheduleActivity()"><b>Schedule Activity</b></button>
+                </VBox>
             </div>
-            <button @click="submitScheduleActivity"> Schedule Activity</button>
         </div>
     </div>
 </template>
   
 <script>
-import axios from 'axios';
-import config from '../../config';
+import axios from "axios";
+import config from "../../config";
 
-const client = axios.create({
-    baseURL: config.dev.backendBaseUrl
+const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
+const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
+
+const AXIOS = axios.create({
+    baseURL: backendUrl,
+    headers: { 'Access-Control-Allow-Origin': frontendUrl }
+})
+
+/*
+const AXIOS = axios.create({
+    // IMPORTANT: baseURL, not baseUrl
+    //baseURL: config.dev.backendBaseURL
 });
+*/
 
 export default {
     name: 'Fabian',
     data () {
         return {
             activityName: '',
-            activityDescription: '',
-            activitySubcategory: '',
+            description: '',
+            subcategory: '',
             date: '',
             startTime: '',
             endTime: '',
             accountRoleId: '',
-            activityName: '',
+            activityName2: '',
             capacity: ''
         };
     },
+    async createActivity(activityName, description, subcategory){
+        try{
+            const response = await AXIOS.post(`http://localhost:8080/createActivity/${activityName}/${description}/${subcategory}`, {
+                activityName: activityName, 
+                description: description, 
+                subcategory: subcategory
+            });
+            this.createActivity = response.data.createActivity;
+        } catch(error){
+            console.error('Error creating activity', error.message); /*Handle error*/
+        }
+    },
+    async createScheduleActivity(date, startTime, endTime, accountRoleId, activityName2, capacity){
+        try{
+            const response = await AXIOS.post(`http://localhost:8080/createScheduledActivity/${date}/${startTime}/${endTime}/${instructorId}/${activityName2}/${capacity}`, {
+                date: date, 
+                startTime: startTime, 
+                endTime: endTime, 
+                accountRoleId: accountRoleId, 
+                activityName2: activityName2, 
+                capacity: capacity});
+            this.createScheduleActivity = response.data.createScheduleActivity;
+        } catch(error){
+            console.error('Error creating scheduled activity', error.message); /*Handle error*/
+        }
+    },
     methods:{
         async submitProposeActivity(){
+            const newActivity = {
+                name: this.activityName,
+                description: this.activityDescription,
+                subcategory: this.activitySubcategory
+            };
             try{
-                const response = await this.createActivity(this.activityName, this.activityDescription, this.activitySubcategory);
-                console.log('Activity created', response); /*Handle success*/
-            } catch(error){
+                const response = await AXIOS.post('http://localhost:8080/createActivity', newActivity);
+                this.createActivity.push(response.data);
+                this.clearInputs();
+            } catch(error){y
                 console.error('Error creating activity', error.message); /*Handle error*/
             }
         },
-        async createActivity(name, description, subcategory){
-            return {name,desctiption,subcategory};
-        },
         async submitScheduleActivity(){
+            const newScheduleActivity = {
+                date: this.date,
+                startTime: this.startTime,
+                endTime: this.endTime,
+                accountRoleId: this.accountRoleId,
+                activityName2: this.activityName2,
+                capacity: this.capacity
+            };
             try{
-                const response = await this.cteateScheduleActivity(this.date, this.startTime, this.endTime, this.accountRoleId, this.activityName, this.capacity);
-                console.log('Scheduled activity created:', response); /*Handle success*/
+                const response = await AXIOS.cteateScheduleActivity("/createScheduleActivity", newScheduleActivity);
+                this.createScheduleActivity.push(response.data);
+                this.clearInputs();
             } catch(error){
                 console.error('Error creating scheduled activity', error.message); /*Handle error*/
             }
-        },
-        async createScheduleActivity(date, startTime, endTime, accountRoleId, activityName, capacity){
-            return {date, startTime, endTime, accountRoleId, activityName, capacity};
         },
         clearInputs(){
             this.activityName = '';
@@ -88,7 +144,7 @@ export default {
             this.startTime = '';
             this.endTime = '';
             this.accountRoleId = '';
-            this.activityName = '';
+            this.activityName2 = '';
             this.capacity = '';
         }
 
@@ -101,6 +157,25 @@ export default {
 <style scoped>
 .fabian {
     display: flex;
+    padding: 20px;
+    flex-direction: row;
+}
+.textDate {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.textStart{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.textEnd{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
   
 .propose-activity,
@@ -108,9 +183,61 @@ export default {
     flex: 1;
     padding: 20px; /* Add some padding */
 }
+
+h1 {
+    font-weight: normal;
+    font-size: 24px;
+}
   
 h2 {
     font-weight: normal;
+    font-size: 18px;
+}
+
+#proposeBox {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    background-color: grey;
+    border-radius: 30px;
+}
+
+#scheduleBox {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    background-color: grey;
+    border-radius: 30px;
+}
+
+#submitPropose {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 30px;
+    width: 100%;
+}
+
+#scheduleActivity {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 30px;
+    width: 100%;
 }
 
 ul {
@@ -124,7 +251,7 @@ li {
 }
 
 a {
-    color: #42b983;
+    color: white;
 }
 </style>
   
