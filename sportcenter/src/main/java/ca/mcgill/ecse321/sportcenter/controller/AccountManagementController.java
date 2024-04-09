@@ -1,9 +1,10 @@
 package ca.mcgill.ecse321.sportcenter.controller;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,8 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import ca.mcgill.ecse321.sportcenter.dto.AccountDto;
 import ca.mcgill.ecse321.sportcenter.dto.CustomerDto;
@@ -22,15 +21,15 @@ import ca.mcgill.ecse321.sportcenter.dto.OwnerDto;
 import ca.mcgill.ecse321.sportcenter.model.Account;
 import ca.mcgill.ecse321.sportcenter.model.Customer;
 import ca.mcgill.ecse321.sportcenter.model.Instructor;
-import ca.mcgill.ecse321.sportcenter.model.Owner;
 import ca.mcgill.ecse321.sportcenter.model.Instructor.InstructorStatus;
+import ca.mcgill.ecse321.sportcenter.model.Owner;
 import ca.mcgill.ecse321.sportcenter.service.AccountManagementService;
 
 /**
  * Controller class for the AccountManagement
  * 
  */
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 public class AccountManagementController {
     @Autowired
@@ -45,11 +44,13 @@ public class AccountManagementController {
      * @param password
      * @return AccountDto
      */
-    @PostMapping("/createAccount")
+    @PostMapping(value = { "/createAccount/{username}/{password}", "/createAccount/{username}/{password}/" })
     @ResponseStatus(HttpStatus.CREATED)
-    public AccountDto createAccount(@RequestBody AccountDto accountDto) {
-        Account account = accountService.createAccount(accountDto.getUsername(), accountDto.getPassword());
-        return new AccountDto(account);
+    public AccountDto createAccount(@PathVariable("username") String username,
+            @PathVariable("password") String password)
+            throws IllegalArgumentException {
+        Account account = accountService.createAccount(username, password);
+        return convertAccountToDto(account);
     }
 
     /**
@@ -118,7 +119,7 @@ public class AccountManagementController {
      * @param accountId
      * @return AccountDto
      */
-    @GetMapping(value = { "/account/{accountId}", "/account/{accountId}/" })
+    @GetMapping(value = { "/getAccountById/{accountId}", "/getAccountById/{accountId}/" })
     public AccountDto getAccountById(@PathVariable("accountId") int accountId) throws IllegalArgumentException {
         Account account = accountService.getAccountByAccountId(accountId);
         return convertAccountToDto(account);
@@ -166,7 +167,7 @@ public class AccountManagementController {
      * @param accountRoleId
      * @return CustomerDto
      */
-    @GetMapping(value = { "/customer/{accountRoleId}", "/customer/{accountRoleId}/" })
+    @GetMapping(value = { "/getCustomer/{accountRoleId}", "/getCustomer/{accountRoleId}/" })
     public CustomerDto getCustomer(@PathVariable("accountRoleId") int accountRoleId) throws IllegalArgumentException {
         Customer customer = accountService.getCustomerByAccountRoleId(accountRoleId);
         return convertCustomerToDto(customer);
