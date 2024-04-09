@@ -2,9 +2,9 @@
     <div id="mainContainer">
         <h1>Authentification menu</h1>
         <VBox id="verticalContainer">
-            <button id="mainButton" @click="goToLogin()">Login</button>
-            <button id="mainButton" @click="goToForgotPassword()">Forgot password</button>
-            <button id="mainButton" @click="goToCreateAccount()">Create a new account</button>
+            <button id="mainButton" @click="goToLogin()">Function 1</button>
+            <button id="mainButton" @click="goToForgotPassword()">Function 2</button>
+            <button id="mainButton" @click="goToCreateAccount()">Function 3</button>
         </VBox>
     </div>
 </template>

@@ -15,6 +15,7 @@ import OwnerAccount from '@/components/account/OwnerAccount.vue'
 
 import Activity from '@/components/activity/Activity.vue'
 import ViewActivityTable from '@/components/activity/ViewActivityTable.vue'
+import Instructors from '../components/instructors/Instructors.vue'
 
 Vue.use(Router)
 
@@ -74,6 +75,11 @@ export default new Router({
       path: '/app/activity/view-activity',
       name: 'ViewActivityTable',
       component: ViewActivityTable
+    },
+    {
+      path: '/app/instructors',
+      name: 'Instructors',
+      component: Instructors
     }
   ]
 })

@@ -5,7 +5,6 @@
     
     <input id="inputBox" type="text" v-model="search" placeholder="Search activities">
 
-    <HBox id="containerH">
     <table id="activityTable" align="center" width="700">
       <thead>
         <tr>
@@ -21,6 +20,7 @@
             <td colspan="4">No activities</td>
           </tr>
         </template>
+
         <template v-else>
           <tr v-for="(activity, index) in filteredActivities" :key="index" @click="showActivityDetails(activity)">
             <td>{{ activity.name }}</td>
@@ -29,12 +29,11 @@
             <td>{{ activity.capacity }}</td>
           </tr>
         </template>
-        <ViewActivity v-if="selectedActivity" :activity="selectedActivity" @close="closePopup" />
+
       </tbody>
     </table>
-    <p>HEHE</p>
-
-    </HBox>
+    
+    <ViewActivity v-if="selectedActivity" :activity="selectedActivity" @close="closePopup" style="align-self: center;"/>
     
     <br>
     <div class="button-container">

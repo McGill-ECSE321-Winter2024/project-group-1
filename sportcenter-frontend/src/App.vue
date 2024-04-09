@@ -1,13 +1,22 @@
 <template>
   <div id="app">
-    <!-- <img src="./assets/logo_internet.png" width=200px> -->
-    <h1><b>SportCenter</b></h1>
-    <h2><i>Get fit, not fat!</i></h2>
+    
+    <HBox id="horizontalContainer">
+      <VBox id="verticalContainer" style="margin-right: 25px;">
+        <h1>SportCenter</h1>
+        <h2>Get fit n fast!</h2>
+      </VBox>
+      <img src="./assets/gym-icon.jpg" alt="Logo" contain height="110px" width="110px" style="border-radius: 55px;"></img>
+    </HBox>
+
+
+    <br>
 
     <HBox>
-      <button id="homeButton" @click="goHome()">Home</button>
-      <button id="homeButton" @click="goAccount()">Account</button>
-      <button id="homeButton" @click="goActivity()">Activity</button>
+      <button id="menuButton" @click="goHome()">Home</button>
+      <button id="menuButton" @click="goAccount()">Account</button>
+      <button id="menuButton" @click="goActivity()">Activity</button>
+      <button id="menuButton" @click="goInstructors()">Instructors</button>
       <button id="logoutButton" @click="goAuth()">Logout</button>
     </HBox>
     
@@ -16,65 +25,34 @@
 </template>
 
 <script>
-export default {
-  name: 'app',
-  methods: {
-    goHome() {
-      this.$router.push('/app/home');
+  export default {
+    name: 'app',
+    methods: {
+      goHome() {
+        this.$router.push('/app/home');
+      },
+      goAccount() {
+        this.$router.push('/app/account');
+      },
+      goActivity() {
+        this.$router.push('/app/activity');
+      },
+      goAuth() {
+        this.$router.push('/app/auth');
+      },
+      goInstructors() {
+        this.$router.push('/app/instructors');
+      }
     },
-    goAccount() {
-      this.$router.push('/app/account');
+    created() {
+      this.currentDate = new Date().getDay() + "/" + new Date().getMonth() + "/" + new Date().getFullYear();
     },
-    goActivity() {
-      this.$router.push('/app/activity');
+    data() {
+      return {
+      currentDate: null
+      };
     },
-    goAuth() {
-      this.$router.push('/app/auth');
-    }
   }
-}
 </script>
 
-<style>
-  #app {
-    font-family: 'Avenir', Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
-    margin-top: 30px;
-    align-content: center;
-    display: flex;
-    flex-direction: column;
-    justify-items: center;
-    align-items: center;
-  }
-
-  #homeButton {
-    background-color: #4CAF50;
-    border: none;
-    color: white;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
-    border-radius: 12px;
-    padding: 10px 24px;
-  }
-
-  #logoutButton {
-    background-color: #ff0000;
-    border: none;
-    color: white;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
-    border-radius: 12px;
-    padding: 10px 24px;
-  }
-</style>
+<style scoped src="./assets/main.css">
