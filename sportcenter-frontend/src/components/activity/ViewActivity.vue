@@ -1,7 +1,7 @@
 <template>
-  <div class="popup">
+  <div class="popup" id="mainContainer" style="margin-top: 150px;">
     <div class="popup-content">
-      <VBox id="verticalContainer"></VBox>
+      <VBox id="verticalContainer">
         <h2>{{ activity.name }}</h2>
 
         <p>
@@ -10,8 +10,8 @@
           Capacity: {{ activity.capacity }}
         </p>
 
-        <button @click="close">Close</button>
-        <button @click="close">Register</button>
+        <button id="subButton" @click="close">Register</button>
+        <button id="subButton" @click="close">Close</button>
       </VBox>
     </div>
   </div>
@@ -28,28 +28,4 @@ export default {
 };
 </script>
 
-<style scoped>
-  .popup {
-    width: 100;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #a4e0bb;
-    padding: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    margin-top: 20px; /* Adjust gap between table and popup */
-    min-width: 260px;
-    min-height: 200px;
-    width: fit-content;
-    height: fit-content;
-    /*width: 300px; /* Fixed width */
-    /*height: 300px; /* Fixed height */
-  }
-
-  #verticalContainer {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-</style>
+<style src="../../assets/main.css"></style>

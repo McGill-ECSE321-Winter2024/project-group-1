@@ -23,7 +23,7 @@
           </template>
 
           <template v-else>
-            <tr v-for="(activity, index) in filteredActivities" :key="index" @click="showActivityDetails(activity)">
+            <tr v-for="(activity, index) in filteredActivities" :key="index">
               <td>{{ activity.name }}</td>
               <td>{{ activity.category }}</td>
               <td>{{ activity.date }}</td>
@@ -38,7 +38,7 @@
       
       <br>
       <div class="button-container">
-        <button id="optionButton" type="button">Add Activity</button>
+        <button id="mainButton" type="button">Add Activity</button>
       </div>
     </div>
 
@@ -49,7 +49,7 @@
           <input id="inputBox" placeholder="Name of activity to update">
           <input id="inputBox" placeholder="Updated category">
           <input id="inputBox" placeholder="Updated capacity">
-          <button id="mainButton">Update</button>
+          <button id="mainButton" type="button">Update</button>
         </VBox>
       </div>
 
@@ -58,7 +58,7 @@
         <input id="inputBox" placeholder="Name of activity to delete">
         <input id="inputBox" placeholder="Confirm name of activity to delete">
         <input id="inputBox" placeholder="Write 'DELETE' to confirm deletion">
-        <button id="destroyButton" style="width: 100%;">Delete</button>
+        <button id="destroyButton">Delete</button>
       </div>
     </div>
   </div>
@@ -160,104 +160,5 @@ export default {
   }
 };
 </script>
-
-<style>
-  #mainDiv {
-    font-family: 'Avenir', Helvetica, Arial sans-serif;
-    margin: 60px;
-    border-radius: 30px;
-    padding: 40px;
-    box-shadow: 0 50px 50px 0 rgba(209, 184, 52, 0.2);
-    color: #2c3e50;
-    background: #e4e3e394;
-    align-items: center;
-    width: 85%;
-    max-width: 800px;
-    max-height: fit-content;
-    text-align: center;
-  }
-
-  #containerH {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-  }
-
-  table {
-    background-color: #d3ffd6;
-    color: rgb(0, 0, 0);
-    font-family: Arial, Helvetica, sans-serif;
-    width: 70%;
-    border-collapse: collapse;
-    margin-top: 20px;
-  }
-
-
-  td, th  {
-    border: 1px solid #000000;
-    padding: 10px;
-  }
-
-  tbody tr:nth-child(even) {
-    background-color: #a5a5a5; /* Set even row color */
-  }
-
-  tbody tr:nth-child(odd) {
-    background-color: #c2c2c2; /* Set odd row color */
-  }
-
-  tbody tr:hover {
-    background-color: #272727;
-    color: rgb(255, 255, 255);
-  }
-
-  #inputBox {
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-    border-radius: 30px;
-    text-align: center;
-  }
-
-  #mainButton {
-    background-color: #3f5b0b;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
-    border-radius: 30px;
-    width: 100%;
-  }
-
-  #optionButton {
-    background-color: #3f5b0b;
-    color: rgb(255, 255, 255);
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
-    border-radius: 30px;
-    margin-inline: 10px;
-  }
-
-  #activityTable {
-    align: center;
-    background-color: #3f5b0b;
-  }
-</style>
 
 <style src="../../assets/main.css"></style>

@@ -40,6 +40,12 @@
     justify-content: center;
 }
 
+#profilePic {
+    border-radius: 50%;
+    margin-inline: 10px;
+    align-self: center;
+}
+
 /* INPUT SECTION */
 #inputBox {
     width: 100%;
@@ -103,6 +109,7 @@
     border-radius: 30px;
     font-weight: bold;
     font-size: large;
+    width: 100%;
 }
 
 #mainButton:hover {
@@ -124,6 +131,7 @@
     border-radius: 30px;
     font-weight: bold;
     font-size: large;
+    /* width: 100%; */
 }
 
 #subButton:hover {
@@ -166,6 +174,7 @@
     border-radius: 30px;
     font-weight: bold;
     font-size: large;
+    width: fit-content;
 }
 
 #destroyButton:hover {
@@ -187,6 +196,13 @@ h2 {
     font-size: 2em;
     font-style: italic;
     margin-top: 20px;
+}
+
+#currentInformation {
+    margin-inline: 10px;
+    vertical-align: center;
+    text-align: center;
+    font-size: 20px;
 }
 
 /* TABLE SECTION */
@@ -224,4 +240,61 @@ tbody tr:hover {
 
 tbody {
     color: #000000;
+}
+
+/* FABIAN STUFF */
+.textDate {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.textStart {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.textEnd {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.propose-activity,
+.schedule-activity {
+    flex: 1;
+    padding: 20px;
+    /* Add some padding */
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    display: inline-block;
+    margin: 0 10px;
+}
+
+a {
+    color: white;
+}
+
+.popup {
+    width: 100;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #a4e0bb;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    margin-top: 20px;
+    /* Adjust gap between table and popup */
+    min-width: 260px;
+    min-height: 200px;
+    width: fit-content;
+    height: fit-content;
 }

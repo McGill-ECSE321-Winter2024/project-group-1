@@ -87,52 +87,5 @@ export default {
 };
 
 </script>
-  
-<!--UNDERSTAND THOSE UI PARTS-->
-<style scoped>
-    .fabian {
-        display: flex;
-        padding: 20px;
-        flex-direction: row;
-    }
-    .textDate {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-    }
-
-    .textStart{
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-    }
-
-    .textEnd{
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-    }
-    
-    .propose-activity,
-    .schedule-activity {
-        flex: 1;
-        padding: 20px; /* Add some padding */
-    }
-
-    ul {
-        list-style-type: none;
-        padding: 0;
-    }
-
-    li {
-        display: inline-block;
-        margin: 0 10px;
-    }
-
-    a {
-        color: white;
-    }
-</style>
 
 <style scoped src="../../assets/main.css"></style>
-  

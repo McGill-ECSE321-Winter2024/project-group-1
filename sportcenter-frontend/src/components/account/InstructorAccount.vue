@@ -12,29 +12,29 @@
             </p>
             
             <VBox id="verticalContainer">
-                <input id="inputBox" type="username" placeholder="New username" style="width: 100%;"></input>
-                <input id="inputBox" type="username" placeholder="Confirm new username" style="width: 100%;"></input>
+                <input id="inputBox" type="username" placeholder="New username"></input>
+                <input id="inputBox" type="username" placeholder="Confirm new username"></input>
                 <button id="mainButton" @click="updateUsername()" style="margin-left: 10px; align-self: center;"><b>Update</b></button>
             </VBox>
             <br>
 
             <VBox id="verticalContainer">
-                <input id="inputBox" type="oldPassword" placeholder="Old password" style="width: 100%;"></input>
-                <input id="inputBox" type="newPassword" placeholder="New password" style="width: 100%;"></input>
-                <input id="inputBox" type="confirmNewPassword" placeholder="Confirm new password" style="width: 100%;"></input>
+                <input id="inputBox" type="oldPassword" placeholder="Old password"></input>
+                <input id="inputBox" type="newPassword" placeholder="New password"></input>
+                <input id="inputBox" type="confirmNewPassword" placeholder="Confirm new password"></input>
                 <button id="mainButton" @click="updatePassword()" style="margin-left: 10px; align-self: center;"><b>Update</b></button>
             </VBox>
             <br>
 
             <VBox id="verticalContainer">
-                <input id="inputBox" type="newImageURL" placeholder="New image URL" style="width: 100%;"></input>
-                <input id="inputBox" type="confirmNewImageURL" placeholder="Confirm new image URL" style="width: 100%;"></input>
+                <input id="inputBox" type="newImageURL" placeholder="New image URL" style=";"></input>
+                <input id="inputBox" type="confirmNewImageURL" placeholder="Confirm new image URL" style=";"></input>
                 <button id="mainButton" @click="updateImageURL()" style="margin-left: 10px; align-self: center;"><b>Update</b></button>
             </VBox>
             <br>
 
             <VBox id="verticalContainer">
-                <input id="inputBox" type="newDescription" placeholder="New description" style="width: 100%;"></input>
+                <input id="inputBox" type="newDescription" placeholder="New description" style=";"></input>
                 <button id="mainButton" @click="updateDescription()" style="margin-left: 10px; align-self: center;"><b>Update</b></button>
             </VBox>
             <br>
@@ -81,13 +81,5 @@
         }
     }
 </script>
-
-<style scoped>
-    #profilePic {
-        border-radius: 50%;
-        margin-inline: 10px;
-        align-self: center;
-    }
-</style>
 
 <style src="../../assets/main.css"></style>

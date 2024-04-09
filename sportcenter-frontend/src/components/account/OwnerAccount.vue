@@ -8,16 +8,16 @@
             </p>
 
             <VBox id="verticalContainer">
-                <input id="inputBox" type="username" placeholder="New username" style="width: 100%;"></input>
-                <input id="inputBox" type="username" placeholder="Confirm new username" style="width: 100%;"></input>
+                <input id="inputBox" type="username" placeholder="New username"></input>
+                <input id="inputBox" type="username" placeholder="Confirm new username"></input>
                 <button id="mainButton" @click="updateUsername()" style="margin-left: 10px; align-self: center;"><b>Update</b></button>
             </VBox>
             <br>
 
             <VBox id="verticalContainer">
-                <input id="inputBox" type="oldPassword" placeholder="Old password" style="width: 100%;"></input>
-                <input id="inputBox" type="newPassword" placeholder="New password" style="width: 100%;"></input>
-                <input id="inputBox" type="confirmNewPassword" placeholder="Confirm new password" style="width: 100%;"></input>
+                <input id="inputBox" type="oldPassword" placeholder="Old password"></input>
+                <input id="inputBox" type="newPassword" placeholder="New password"></input>
+                <input id="inputBox" type="confirmNewPassword" placeholder="Confirm new password"></input>
                 <button id="mainButton" @click="updatePassword()" style="margin-left: 10px; align-self: center;"><b>Update</b></button>
             </VBox>
             <br>
@@ -56,14 +56,5 @@
         }
     }
 </script>
-
-<style>
-    #currentInformation {
-        margin-inline: 10px;
-        vertical-align: center;
-        text-align: center;
-        font-size: 20px;
-    }
-</style>
 
 <style scoped src="../../assets/main.css"></style>

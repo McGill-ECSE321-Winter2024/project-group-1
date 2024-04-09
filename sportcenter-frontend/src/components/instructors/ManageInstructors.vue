@@ -77,10 +77,4 @@
     }
 </script>
 
-<style scoped>
-  #profilePic {
-    border-radius: 15px;
-  }
-</style>
-
 <style scoped src="../../assets/main.css"></style>
