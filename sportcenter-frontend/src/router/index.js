@@ -13,13 +13,16 @@ import CustomerAccount from '@/components/account/CustomerAccount.vue'
 import InstructorAccount from '@/components/account/InstructorAccount.vue'
 import OwnerAccount from '@/components/account/OwnerAccount.vue'
 
-import Activity from '@/components/activity/Activity.vue'
-import ViewActivityTable from '@/components/activity/ViewActivityTable.vue'
 import Instructors from '@/components/instructors/Instructors.vue'
 import ViewInstructors from '@/components/instructors/ViewInstructors.vue'
 import ManageInstructors from '@/components/instructors/ManageInstructors.vue'
+
+import Activity from '@/components/activity/Activity.vue'
+import ViewActivityTable from '@/components/activity/ViewActivityTable.vue'
 import ProposeActivity from '@/components/activity/ProposeActivity.vue'
 import ScheduleActivity from '@/components/activity/ScheduleActivity.vue'
+import UpdateDeleteActivity from '@/components/activity/UpdateDeleteActivity.vue'
+import UpdateDeleteScheduledActivity from '@/components/activity/UpdateDeleteScheduledActivity.vue'
 
 Vue.use(Router)
 
@@ -89,6 +92,16 @@ export default new Router({
       path: '/app/activity/view-activity',
       name: 'ViewActivityTable',
       component: ViewActivityTable
+    },
+    {
+      path: '/app/activity/update-delete-activity',
+      name: 'UpdateDeleteActivity',
+      component: UpdateDeleteActivity
+    },
+    {
+      path: '/app/activity/update-delete-scheduled-activity',
+      name: 'UpdateDeleteScheduledActivity',
+      component: UpdateDeleteScheduledActivity
     },
     {
       path: '/app/instructors',

@@ -7,8 +7,8 @@
             <button id="mainButton" @click="goToDeleteActivity()">Delete an activity</button>
             <button id="mainButton" @click="goToViewActivity()">View an activity</button>
             <button id="mainButton" @click="goToScheduleActivity()">Schedule an activity</button>
-            <button id="mainButton" @click="goToUpdateScheduledActivity()">Update a scheduled activity</button>
-            <button id="mainButton" @click="goToDeleteScheduledActivity()">Delete a scheduled activity</button>
+            <button id="mainButton" @click="goToUpdateDeleteScheduledActivity()">Update a scheduled activity</button>
+            <button id="mainButton" @click="goToUpdateDeleteScheduledActivity()">Delete a scheduled activity</button>
         </VBox>
     </div>
 </template>
@@ -22,10 +22,10 @@
                 this.$router.push('/app/activity/propose-activity');
             },
             goToUpdateActivity() {
-                this.$router.push('/app/activity/update-activity');
+                this.$router.push('/app/activity/update-delete-activity');
             },
             goToDeleteActivity() {
-                this.$router.push('/app/activity/delete-activity');
+                this.$router.push('/app/activity/update-delete-activity');
             },
             goToViewActivity() {
                 this.$router.push('/app/activity/view-activity');
@@ -33,12 +33,9 @@
             goToScheduleActivity() {
                 this.$router.push('/app/activity/schedule-activity');
             },
-            goToUpdateScheduledActivity() {
-                this.$router.push('/app/activity/update-scheduled-activity');
+            goToUpdateDeleteScheduledActivity() {
+                this.$router.push('/app/activity/update-delete-scheduled-activity');
             },
-            goToDeleteScheduledActivity() {
-                this.$router.push('/app/activity/delete-scheduled-activity');
-            }
         }
     }
 </script>

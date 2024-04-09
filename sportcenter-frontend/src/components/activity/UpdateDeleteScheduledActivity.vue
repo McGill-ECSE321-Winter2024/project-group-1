@@ -1,43 +1,70 @@
 <template>
-<div class="ViewActivityTable" id="mainContainer">
-  <h1>View Activities</h1>
-  <br>
-    
-  <input id="inputBox" type="text" v-model="search" placeholder="Search activities">
+  <div style="width: 1200px;">
+    <div class="UpdateDeleteScheduledActivity" id="mainContainer" style="margin-bottom: 0px;">
+      <h1>Scheduled activities management</h1>
+      <br>
+      
+      <input id="inputBox" type="text" v-model="search" placeholder="Search a scheduled activity">
 
-    <table id="activityTable" align="center" width="700">
-      <thead>
-        <tr>
-          <th width="100">Name</th>
-          <th width="100">Category</th>
-          <th width="100">Date</th>
-          <th width="100">Capacity</th>
-        </tr>
-      </thead>
-      <tbody>
-        <template v-if="scheduledActivities.length === 0">
+      <table id="activityTable" align="center" width="700">
+        <thead>
           <tr>
-            <td colspan="4">No activities</td>
+            <th width="100">Name</th>
+            <th width="100">Category</th>
+            <th width="100">Date</th>
+            <th width="100">Capacity</th>
           </tr>
-        </template>
+        </thead>
+        <tbody>
+          <template v-if="scheduledActivities.length === 0">
+            <tr>
+              <td colspan="4">No activities</td>
+            </tr>
+          </template>
 
-        <template v-else>
-          <tr v-for="(activity, index) in filteredActivities" :key="index" @click="showActivityDetails(activity)">
-            <td>{{ activity.name }}</td>
-            <td>{{ activity.category }}</td>
-            <td>{{ activity.date }}</td>
-            <td>{{ activity.capacity }}</td>
-          </tr>
-        </template>
+          <template v-else>
+            <tr v-for="(activity, index) in filteredActivities" :key="index" @click="showActivityDetails(activity)">
+              <td>{{ activity.name }}</td>
+              <td>{{ activity.category }}</td>
+              <td>{{ activity.date }}</td>
+              <td>{{ activity.capacity }}</td>
+            </tr>
+          </template>
 
-      </tbody>
-    </table>
-    
-    <ViewActivity v-if="selectedActivity" :activity="selectedActivity" @close="closePopup" style="align-self: center;"/>
-    
-    <br>
-    <div class="button-container">
-      <button id="optionButton" type="button">Add Activity</button>
+        </tbody>
+      </table>
+      
+      <ViewActivity v-if="selectedActivity" :activity="selectedActivity" @close="closePopup" style="align-self: center;"/>
+      
+      <br>
+      <div class="button-container">
+        <button id="optionButton" type="button">Add Activity</button>
+      </div>
+    </div>
+
+    <div id="horizontalContainer">
+      <div id="mainContainer" style="width: 630px;">
+        <VBox id="verticalContainer">
+            <h1>Update schedule</h1>
+            <input id="inputBox" placeholder="Name of activity to update">
+            <HBox id="horizontalContainer">
+                <input id="datePickerInput" type="date" name="scheduled">
+                <h2 style="align-self:center;">from</h2>
+                <input id="datePickerInput" type="time" name="startTime">
+                <h2 style="align-self:center;">to</h2>
+                <input id="datePickerInput" type="time" name="endTime">
+            </HBox>
+            <button id="mainButton">Update</button>
+        </VBox>
+      </div>
+
+      <div id="mainContainer" style="width: 460px; margin-left: 80px;">
+        <h1>Delete schedule</h1>
+        <input id="inputBox" placeholder="Name of scheduled activity to delete">
+        <input id="inputBox" placeholder="Confirm name of activity to delete">
+        <input id="inputBox" placeholder="Write 'DELETE' to confirm deletion">
+        <button id="destroyButton" style="width: 100%;">Delete</button>
+      </div>
     </div>
   </div>
 </template>
