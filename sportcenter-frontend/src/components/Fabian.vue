@@ -37,7 +37,7 @@
                         <br>
                         <input type="text" placeholder="Capacity" v-model="capacity">
                     </div>
-                    <button id="scheduleActivity" @click="createScheduleActivity()"><b>Schedule Activity</b></button>
+                    <button id="scheduleActivity" @click="submitScheduleActivity()"><b>Schedule Activity</b></button>
                 </VBox>
             </div>
         </div>
@@ -56,13 +56,6 @@ const AXIOS = axios.create({
     headers: { 'Access-Control-Allow-Origin': frontendUrl }
 })
 
-/*
-const AXIOS = axios.create({
-    // IMPORTANT: baseURL, not baseUrl
-    //baseURL: config.dev.backendBaseURL
-});
-*/
-
 export default {
     name: 'Fabian',
     data () {
@@ -78,36 +71,6 @@ export default {
             capacity: ''
         };
     },
-    /*
-    async createActivity(activityName, description, subcategory){
-        try{
-            const response = await AXIOS.post(`http://localhost:8080/createActivity/${activityName}/${description}/${subcategory}`, {
-                activityName: activityName, 
-                description: description, 
-                subcategory: subcategory
-            });
-            this.createActivity = response.data.createActivity;
-        } catch(error){
-            console.error('Error creating activity', error.message); 
-        }
-    },
-    */
-    /*
-    async createScheduleActivity(date, startTime, endTime, accountRoleId, activityName2, capacity){
-        try{
-            const response = await AXIOS.post(`http://localhost:8080/createScheduledActivity/${date}/${startTime}/${endTime}/${instructorId}/${activityName2}/${capacity}`, {
-                date: date, 
-                startTime: startTime, 
-                endTime: endTime, 
-                accountRoleId: accountRoleId, 
-                activityName2: activityName2, 
-                capacity: capacity});
-            this.createScheduleActivity = response.data.createScheduleActivity;
-        } catch(error){
-            console.error('Error creating scheduled activity', error.message);
-        }
-    },
-    */
     methods:{
         async submitProposeActivity(){
             const newActivity = {
@@ -119,8 +82,8 @@ export default {
                 const response = await AXIOS.post('http://localhost:8080/createActivity', newActivity);
                 this.createActivity.push(response.data);
                 this.clearInputs();
-            } catch(error){y
-                console.error('Error creating activity', error.message); /*Handle error*/
+            } catch(error){
+                console.error('Error creating activity', error.message);
             }
         },
         async submitScheduleActivity(){
@@ -133,11 +96,11 @@ export default {
                 capacity: this.capacity
             };
             try{
-                const response = await AXIOS.cteateScheduleActivity("/createScheduleActivity", newScheduleActivity);
+                const response = await AXIOS.cteateScheduleActivity("http://localhost:8080/createScheduleActivity", newScheduleActivity);
                 this.createScheduleActivity.push(response.data);
                 this.clearInputs();
             } catch(error){
-                console.error('Error creating scheduled activity', error.message); /*Handle error*/
+                console.error('Error creating scheduled activity', error.message);
             }
         },
         clearInputs(){
