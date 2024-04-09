@@ -12,7 +12,9 @@
                         <br>
                         <input type="text" placeholder="Subcategory" v-model="subcategory">
                     </div>
+                    <button id="submitPropose" @click="created()"><b>Get Activities</b></button>
                     <button id="submitPropose" @click="submitProposeActivity()"><b>Propose to Owner</b></button>
+                    <button class="danger-btn" @click="deleteActivities()">Clear</button>
                 </VBox>
             </div>
             <div id="scheduleBox" class = "schedule-activity">
@@ -41,6 +43,23 @@
                 </VBox>
             </div>
         </div>
+        <h2>Activities</h2>
+        <div class="activities">
+        <table>
+            <tbody id="activities-tbody">
+                <tr>
+                    <th>Activity Name</th>
+                    <th>Description</th>
+                    <th>Subcategory</th>
+                </tr>
+                <tr v-for="a in activities">
+                    <td>{{ a.name }}</td>
+                    <td>{{ a.description }}</td>
+                    <td>{{ a.subcategory }}</td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
     </div>
 </template>
   
@@ -51,39 +70,48 @@ import config from "../../config";
 const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
 const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
 
-const AXIOS = axios.create({
+const client = axios.create({
     baseURL: backendUrl,
     headers: { 'Access-Control-Allow-Origin': frontendUrl }
 })
 
 export default {
-    name: 'Fabian',
-    data () {
+    name: "Activities",
+    data() {
         return {
-            activityName: '',
-            description: '',
-            subcategory: '',
-            date: '',
-            startTime: '',
-            endTime: '',
-            accountRoleId: '',
-            activityName2: '',
-            capacity: ''
+            activities: [],
+            activityName: null,
+            description: null,
+            subcategory: null,
+            date: null,
+            startTime: null,
+            endTime: null,
+            accountRoleId: null,
+            activityName2: null,
+            capacity: null
         };
     },
     methods:{
+        async created(){
+            try{
+                const response = await client.get('/activities');
+                this.activities = response.data;
+            } catch(error){
+                console.log('Error fetching activities', error.message);
+            }
+        },
         async submitProposeActivity(){
             const newActivity = {
-                name: this.activityName,
-                description: this.activityDescription,
-                subcategory: this.activitySubcategory
+                activityName: this.activityName,
+                description: this.description,
+                subcategory: this.subcategory
             };
             try{
-                const response = await AXIOS.post('http://localhost:8080/createActivity', newActivity);
-                this.createActivity.push(response.data);
+                const response = await client.post('/createActivity/' + this.activityName + '/' + this.description + '/' + this.subcategory);
+                this.activities.push(response.data);
                 this.clearInputs();
             } catch(error){
-                console.error('Error creating activity', error.message);
+                console.log('Error creating activity', error.message);
             }
         },
         async submitScheduleActivity(){
@@ -96,7 +124,7 @@ export default {
                 capacity: this.capacity
             };
             try{
-                const response = await AXIOS.cteateScheduleActivity("http://localhost:8080/createScheduleActivity", newScheduleActivity);
+                const response = await client.createScheduleActivity("/createScheduleActivity", newScheduleActivity);
                 this.createScheduleActivity.push(response.data);
                 this.clearInputs();
             } catch(error){
@@ -104,18 +132,27 @@ export default {
             }
         },
         clearInputs(){
-            this.activityName = '';
-            this.activityDescription = '';
-            this.activitySubcategory = '';
-            this.date = '';
-            this.startTime = '';
-            this.endTime = '';
-            this.accountRoleId = '';
-            this.activityName2 = '';
-            this.capacity = '';
+            this.activityName = null;
+            this.description = null;
+            this.subcategory = null;
+            this.date = null;
+            this.startTime = null;
+            this.endTime = null;
+            this.accountRoleId = null;
+            this.activityName2 = null;
+            this.capacity = null;
+        },
+        async deleteActivities(){
+            for(let activity of this.activities) {
+                try{
+                    await client.delete('/activity/delete/' + activity.name);
+                } catch(error){
+                    console.log('Error deleting activities', error.message);
+                }
+            }
+            this.activities = [];
         }
-
-    }
+    },
 };
 
 </script>
@@ -127,10 +164,25 @@ export default {
     padding: 20px;
     flex-direction: row;
 }
+
 .textDate {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+}
+.activities {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    font-weight: normal;
+    font-size: 18px;
+    align-items: center-stretch;
+}
+
+td,
+th {
+    padding: 0.5em;
+    border: 1px solid black;
 }
 
 .textStart{
