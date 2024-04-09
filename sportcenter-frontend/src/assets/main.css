@@ -121,7 +121,7 @@
     background-color: #2ed433;
 }
 
-#logoutButton {
+#destroyButton {
     background-color: #d00000;
     color: rgb(255, 255, 255);
     border: none;
@@ -138,10 +138,9 @@
     font-size: large;
 }
 
-#logoutButton:hover {
+#destroyButton:hover {
     background-color: #ff0000;
 }
-
 
 /* DEFAULT SECTION */
 ::placeholder {

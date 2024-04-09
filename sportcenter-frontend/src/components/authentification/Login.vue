@@ -5,6 +5,7 @@
             <VBox id="verticalContainer">
                 <input id="inputBox" type="username" placeholder="Username"></input>
                 <input id="inputBox" type="password" placeholder="Password"></input>
+                <!--TODO: ADD ACCOUNT TYPE LOGIN CHOICE-->
                 <button id="mainButton" @click="login()"><b>Login</b></button>
             </VBox>
             <br>
