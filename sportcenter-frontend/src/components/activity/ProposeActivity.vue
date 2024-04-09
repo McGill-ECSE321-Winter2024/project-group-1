@@ -7,7 +7,7 @@
             <input id="inputBox" type="text" placeholder="Activity name" v-model="activityName">
             <input id="inputBox" type="text" placeholder="Description" v-model="description">
             <input id="inputBox" type="text" placeholder="Subcategory" v-model="subcategory">
-            <button id="mainButton" @click="created()">GetActivities</button>
+            <!--<button id="mainButton" @click="created()">GetActivities</button>-->
             <button id="mainButton" @click="submitProposeActivity()">Propose to the owner</button>
         </VBox>
     </div>
@@ -30,7 +30,7 @@ export default {
     name: "Activities",
     data () {
         return {
-            accounts: [],
+            //accounts: [],
             activities: [],
             activityName: null,
             description: null,

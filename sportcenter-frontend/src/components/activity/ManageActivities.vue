@@ -8,16 +8,16 @@
             -->
 
             <table id="table">
-                <tbody id="activities-tbody">
+                <thead>
                     <tr>
                         <th>Activity Name</th>
-                        <th>Activity Type</th>
                         <th>Activity Description</th>
                         <th>Activity Approve</th>
                     </tr>
+                </thead>
+                <tbody id="activities-tbody">
                     <tr v-for="activity in activities">
                         <td>{{ activity.name }}</td>
-                        <td>{{ activity.type }}</td>
                         <td>{{ activity.description }}</td>
                         <td>
                             <VBox id="verticalContainer">
@@ -109,8 +109,7 @@ export default {
             activities: []
         }
     },
-    methods: {
-        async created(){
+    async created(){
             try{
                 const response = await AXIOS.get('/activities')
                 this.activities = response.data
@@ -118,9 +117,11 @@ export default {
                 console.log('Error fetching activities', error.message);
             }
         },
+    methods: {
+        
         async approveActivity(){
             try{
-                const response = await AXIOS.post('/approveActivity')
+                const response = await AXIOS.put('/approveActivity')
                 this.activities = response.data
             } catch (error){
                 console.log('Error fetching activities', error.message);
@@ -128,7 +129,7 @@ export default {
         },
         async dissaproveActivity(){
             try{
-                const response = await AXIOS.post('/dissaproveActivity')
+                const response = await AXIOS.put('/dissaproveActivity')
                 this.activities = response.data
             } catch (error){
                 console.log('Error fetching activities', error.message);

@@ -9,6 +9,7 @@
             <button id="mainButton" @click="goToScheduleActivity()">Schedule an activity</button>
             <button id="mainButton" @click="goToUpdateDeleteScheduledActivity()">Update a scheduled activity</button>
             <button id="mainButton" @click="goToUpdateDeleteScheduledActivity()">Delete a scheduled activity</button>
+            <button id="mainButton" @click="goToManageActivities()">Manage activities</button>
         </VBox>
     </div>
 </template>
@@ -35,6 +36,9 @@
             },
             goToUpdateDeleteScheduledActivity() {
                 this.$router.push('/app/activity/update-delete-scheduled-activity');
+            },
+            goToManageActivities() {
+                this.$router.push('/app/activity/manage-activities');
             },
         }
     }

@@ -66,6 +66,13 @@ export default {
         this.createdActivities();
     },
     methods:{
+        /*
+        formatDate(event){
+            const selectedDate = new Date(event.target.value);
+            const localDate = DateTime.fromJSDate(selectedDate).toLocal(); // Convert to local time zone
+            const formattedDate = localDate.toISODate(); 
+        },
+        */
         async createdAccounts(){
             try{
                 const response = await AXIOS.get('/accounts');
@@ -106,6 +113,17 @@ export default {
                 capacity: this.capacity
             };
             try{
+                /*
+                const localDate = DateTime.fromJSDate(date).toLocal(); // Convert to local date
+                date = localDate.toISODate(); 
+
+                const localStartTime = DateTime.fromJSTime(startTime).toLocal(); // Convert to local time zone
+                startTime = localStartTime.toISOTime();
+
+                const localEndTime = DateTime.fromJSTime(endTime).toLocal(); // Convert to local time zone
+                endTime = localEndTime.toISOTime(); 
+                */
+
                 const response = await AXIOS.createScheduleActivity("/createScheduleActivity", newScheduleActivity);
                 this.createScheduleActivity.push(response.data);
                 this.clearInputs();

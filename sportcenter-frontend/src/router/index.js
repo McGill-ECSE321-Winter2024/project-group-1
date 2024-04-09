@@ -16,8 +16,8 @@ import OwnerAccount from '@/components/account/OwnerAccount.vue'
 import Instructors from '@/components/instructors/Instructors.vue'
 import ViewInstructors from '@/components/instructors/ViewInstructors.vue'
 import ManageInstructors from '@/components/instructors/ManageInstructors.vue'
-import ManageActivities from '../components/instructors/ManageActivities.vue'
 
+import ManageActivities from '../components/activity/ManageActivities.vue'
 import Activity from '@/components/activity/Activity.vue'
 import ViewActivityTable from '@/components/activity/ViewActivityTable.vue'
 import ProposeActivity from '@/components/activity/ProposeActivity.vue'
@@ -120,7 +120,7 @@ export default new Router({
       component: ManageInstructors
     },
     {
-      path: '/app/instructors/manage-activities',
+      path: '/app/activity/manage-activities',
       name: 'ManageActivities',
       component: ManageActivities
     }
