@@ -2,7 +2,7 @@
     <div id="mainContainer">
         <h1>Activity menu</h1>
         <VBox id="verticalContainer">
-            <button id="mainButton" @click="goToFabian()">Create an activity</button> <!--CHANGED-->
+            <button id="mainButton" @click="goToProposeActivity()">Propose an activity</button> <!--CHANGED-->
             <button id="mainButton" @click="goToUpdateActivity()">Update an activity</button>
             <button id="mainButton" @click="goToDeleteActivity()">Delete an activity</button>
             <button id="mainButton" @click="goToViewActivity()">View an activity</button>
@@ -17,11 +17,9 @@
     export default {
         name: 'Activity',
         methods: {
-            goToFabian() {
-                this.$router.push('/app/activity/fabian');
-            },
-            goToCreateActivity() {
-                this.$router.push('/app/activity/create-activity');
+
+            goToProposeActivity() {
+                this.$router.push('/app/activity/propose-activity');
             },
             goToUpdateActivity() {
                 this.$router.push('/app/activity/update-activity');

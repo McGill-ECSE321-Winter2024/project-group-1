@@ -1,46 +1,39 @@
 <template>
-    <div class="Fabian">
-        <h1><b>Instructor Page</b></h1>
-        <div class="fabian">
-            <div id="proposeBox" class = "propose-activity">
-                <VBox id="containerF">
-                    <h1><b> Propose Activity</b></h1>
-                    <div class="left-text-fields"> 
-                        <input type="text" placeholder="Activity name" v-model="activityName">
-                        <br>
-                        <input type="text" placeholder="Description" v-model="description">
-                        <br>
-                        <input type="text" placeholder="Subcategory" v-model="subcategory">
-                    </div>
-                    <button id="submitPropose" @click="submitProposeActivity()"><b>Propose to Owner</b></button>
+    <div class="Fabian" id="mainContainer">
+        <h1>Schedule an activity</h1>
+
+        <Vbox id="verticalContainer">
+            <!-- <HBox id="horizontalContainer">
+                <VBox id="verticalContainer">
+                    <h2>Date</h2>
+                    <input id="datePickerInput" type="date" name="scheduled">
                 </VBox>
-            </div>
-            <div id="scheduleBox" class = "schedule-activity">
-                <VBox id="containerF2">
-                <h1><b>Schedule Activity</b></h1>
-                    <div class="right-text-fields">
-                        <div class="textDate">
-                            <h2> Date</h2>
-                            <input type="date" id="scheduled" name="scheduled">
-                        </div>
-                        <div class="textStart">
-                            <div class="textStart"></div>
-                            <input type="time" id="startTime" name="startTime">
-                        </div>
-                        <div class="textEnd">
-                            <h2> End Time</h2>
-                            <input type="time" id="endTime" name="endTime">
-                        </div>
-                        <input type="text" placeholder="Account Role Id" v-model="accountRoleId">
-                        <br>
-                        <input type="text" placeholder="Activity Name" v-model="activityName2">
-                        <br>
-                        <input type="text" placeholder="Capacity" v-model="capacity">
-                    </div>
-                    <button id="scheduleActivity" @click="submitScheduleActivity()"><b>Schedule Activity</b></button>
+
+                <VBox id="verticalContainer" style="margin-left: 20px;">
+                    <H2>Start time</h2>
+                    <input id="datePickerInput" type="time" name="startTime">
                 </VBox>
-            </div>
-        </div>
+
+                <VBox id="verticalContainer" style="margin-left: 20px;">
+                    <h2>End time</h2>
+                    <input id="datePickerInput" type="time" name="endTime">
+                </VBox>
+            </HBox> -->
+
+            <HBox id="horizontalContainer">
+                <input id="datePickerInput" type="date" name="scheduled">
+                <h2 style="align-self:center;">from</h2>
+                <input id="datePickerInput" type="time" name="startTime">
+                <h2 style="align-self:center;">to</h2>
+                <input id="datePickerInput" type="time" name="endTime">
+            </HBox>
+
+            <input id="inputBox" type="text" placeholder="Account Role Id" v-model="accountRoleId">
+            <input id="inputBox" type="text" placeholder="Activity Name" v-model="activityName2">
+            <input id="inputBox" type="text" placeholder="Capacity" v-model="capacity">
+            
+            <button id="mainButton" @click="submitScheduleActivity()">Schedule Activity</button>
+        </Vbox>
     </div>
 </template>
   
@@ -222,3 +215,4 @@ a {
 }
 </style>
   
+<style scoped src="../../assets/main.css"></style>

@@ -1,6 +1,9 @@
 <template>
     <div id="mainContainer">
-        <h1>Home menu</h1>
+        <h1>
+            Home menu<br>
+            <i style="color: crimson;">WARNING - Not updated</i>
+        </h1>
 
         <h2>Authentification</h2>
         <VBox id="verticalContainer">
