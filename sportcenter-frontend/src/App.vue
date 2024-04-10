@@ -15,7 +15,8 @@
       <button id="menuButton" v-if="$accountType === 'Owner'" @click="goOwnerAccount()">Account</button>
       <button id="menuButton" @click="goMyActivities()">My activities</button>
       <button id="menuButton" @click="goActivity()">All activities</button>
-      <button id="menuButton" @click="goInstructors()">Instructors</button>
+      <button id="menuButton" v-if="$accountType != 'Owner'" @click="goInstructors()">Instructors</button>
+      <button id="menuButton" v-if="$accountType=='Owner'" @click="goInstructorsForOwner()">Instructors</button>
       <button id="destroyButton" @click="goLogin()">Logout</button> <!--TO CHANGE-->
     </HBox>
     <HBox v-else>
@@ -30,7 +31,7 @@
 import Vue from 'vue';
 
 // 4 types: Guest, Customer, Instructor, Owner
-Vue.prototype.$accountType = "Customer";
+Vue.prototype.$accountType = "Owner";
 Vue.prototype.$username = 'JoeMama'; // guest = JoeMama
 Vue.prototype.$loggedIn = true;
 
