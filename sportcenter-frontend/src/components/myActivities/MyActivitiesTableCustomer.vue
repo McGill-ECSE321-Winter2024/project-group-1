@@ -55,10 +55,7 @@ export default {
       selectedActivity: null,
       search:'',
 
-
-
       //logic here would get all activities
-
       // scheduledActivities: [
       //   { name: 'Borneo', category: 'Expedition', date: '6 march', capacity: 30 },
       //   { name: 'Trifecta', category: 'YoloSwag', date: '6 april', capacity: 10 },

@@ -1,5 +1,5 @@
 <template>
-  <div class="popup" id="mainContainer" style="margin-top: 150px;">
+  <div class="popup" id="mainContainer" style="margin-top: 120px;">
     <div class="popup-content">
       <VBox id="verticalContainer">
         <h2>{{ activity.name }}</h2>

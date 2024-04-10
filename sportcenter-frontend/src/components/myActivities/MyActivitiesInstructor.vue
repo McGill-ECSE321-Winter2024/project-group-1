@@ -10,8 +10,8 @@
           Capacity: {{ activity.capacity }}
         </p>
 
-        <button id="subButton" @click="cancel">Cancel</button>
-        <button id="subButton" @click="close">Close</button>
+        <button id="subButton" @click="cancel()">Cancel</button>
+        <button id="subButton" @click="close()">Close</button>
       </VBox>
     </div>
   </div>

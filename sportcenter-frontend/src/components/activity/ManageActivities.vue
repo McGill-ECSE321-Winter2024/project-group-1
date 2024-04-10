@@ -16,6 +16,11 @@
                     </tr>
                 </thead>
                 <tbody id="activities-tbody">
+                    <template v-if="activities.length === 0">
+                        <tr>
+                            <td colspan="3">No activities</td>
+                        </tr>
+                    </template>
                     <tr v-for="activity in activities">
                         <td>{{ activity.name }}</td>
                         <td>{{ activity.description }}</td>

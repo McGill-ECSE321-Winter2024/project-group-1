@@ -36,9 +36,6 @@
     <ViewActivity v-if="selectedActivity" :activity="selectedActivity" @close="closePopup" style="align-self: center;"/>
     
     <br>
-    <div class="button-container">
-      <button id="mainButton" type="button">Add Activity</button>
-    </div>
   </div>
 </template>
 
