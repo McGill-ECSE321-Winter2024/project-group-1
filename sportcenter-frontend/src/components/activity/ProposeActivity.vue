@@ -60,24 +60,19 @@ export default {
   },
   methods: {
     async submitProposeActivity() {
-      const newActivity = {
-        activityName: this.activityName,
-        description: this.description,
-        subcategory: this.subcategory,
-      };
       try {
         const response = await AXIOS.post(
           "/createActivity/" +
-            activityName +
+            this.activityName +
             "/" +
-            description +
+            this.description +
             "/" +
-            subcategory
+            this.subcategory
         );
         console.log(response.data);
         this.clearInputs();
       } catch (error) {
-        alert("Problem proposing activity. Please try again.");
+        alert("Problem proposing activity. Please try again. " + error.message);
       }
     },
     clearInputs() {
