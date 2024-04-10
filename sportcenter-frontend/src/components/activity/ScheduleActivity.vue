@@ -10,7 +10,7 @@
         <h2 style="align-self: center">to</h2>
         <input id="datePickerInput" type="time" v-model="endTime" />
       </HBox>
-      <!--select v-model="selectAccount">
+      <select v-model="selectAccount">
         <option
           v-for="account in accounts"
           :key="account.accountRoleId"
@@ -18,8 +18,7 @@
         >
           {{ account.accountRoleId }}
         </option>
-        >
-      </select-->
+      </select>
       <br />
       <select v-model="selectActivity">
         <option
@@ -95,7 +94,7 @@ export default {
     async submitScheduleActivity() {
       try {
         const response1 = await AXIOS.get(
-          "/getInstructorByUsername/" + this.$username
+          "/getAccountId/" + this.$accountRoleId
         );
         const response = await AXIOS.post(
           "/createScheduledActivity/" +
