@@ -127,7 +127,7 @@ export default {
 
   mounted() {
     // Call method to fetch scheduled activities when the component is mounted
-    this.fetchScheduledActivities();
+    //this.fetchScheduledActivities();
   },
 
 
@@ -142,23 +142,29 @@ export default {
       console.log(this.$username);
       console.log(this.$loggedIn);
     },
-    fetchScheduledActivities() {
-      // Make HTTP request to fetch scheduled activities from backend
-      axios.get('/scheduledActivities')
-        .then(response => {
-          // Assign response data to scheduledActivities
-          this.scheduledActivities = response.data;
 
-          this.scheduledActivitiesTable = response.data.map(activity => ({
-          activityName: activity.activity.name,
-          activityCategory: activity.activity.category,
-          date: activity.date,
-          capacity: activity.capacity
-        }));
-        })
-        .catch(error => {
-          console.error('Error fetching scheduled activities:', error);
-        });
+
+    async fetchScheduledActivities() {
+      // Make HTTP request to fetch scheduled activities from backend
+     
+     try {
+
+      const response = await AXIOS.get('/scheduledActivities')
+      this.scheduledActivities = response.data
+
+      // this.scheduledActivitiesTable = response.data.map(activity => ({
+      //     activityName: activity.activity.name,
+      //     activityCategory: activity.activity.category,
+      //     date: activity.date,
+      //     capacity: activity.capacity
+      //     }));
+
+      }
+      catch (error) {
+
+        console.error('Error fetching scheduled activities:', error);
+      }
+        
     },
 
  
