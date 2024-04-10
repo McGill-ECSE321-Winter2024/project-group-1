@@ -2,10 +2,9 @@
     <div id="mainContainer">
         <h1>My customer account</h1>
         <VBox id="verticalContainer">
-            <p id="currentInformation">
-                Username: Joe Mama<br>
-                Email: joe@gym.com
-            </p>
+            <!--p id="currentInformation">
+                Username: {{ $username }} <br>
+            </p-->
 
             <VBox id="verticalContainer">
                 <input id="inputBox" type="text" placeholder="Username" v-model="oldUsername"></input>
@@ -37,7 +36,6 @@
 <script>
 import axios from "axios";
 import config from "../../../config";
-//import { use } from "vue/types/umd";
 
 const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
 const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
@@ -51,7 +49,6 @@ export default {
     name: 'CustomerAccount',
     data() {
         return {
-            accounts: [],
             oldUsername: null,
             newUsername: null,
             username: null,
@@ -61,27 +58,21 @@ export default {
     },
     methods: {
         async updateUsername() {
-            const newUsername = {
-                oldUsername: this.oldUsername,
-                newUsername: this.newUsername
-            };
             try{
                 const response = await AXIOS.put('/updateAccountUsername/' + this.oldUsername + '/' + this.newUsername);
-                this.accounts.push(response.data);
+                this.$username = this.newUsername;
+                console.log(response.data);
+                alert("New username updated successfully! It is now: " + this.$username);
                 this.clearInputs();
             } catch(error){
                 console.error('Error creating activity', error.message);
             }
         },
         async updatePassword() {
-            const newPassword = {
-                username: this.username,
-                newPassword: this.newPassword,
-                oldPassword: this.oldPassword
-            };
             try{
                 const response = await AXIOS.put('/updateAccountPassword/' + this.username + '/' + this.oldPassword + '/' + this.newPassword);
-                this.accounts.push(response.data);
+                console.log(response.data);
+                alert("New password updated successfully! It is now: " + this.newPassword);
                 this.clearInputs();
             } catch(error){
                 console.error('Error creating activity', error.message);
