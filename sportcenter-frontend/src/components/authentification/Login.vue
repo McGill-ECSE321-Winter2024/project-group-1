@@ -108,7 +108,8 @@ export default {
         },
         goToContinueAsGuest() {
             this.$accountType = 'Guest';
-            this.$router.push('/app/guest');
+            this.$loggedIn = true;
+            this.$router.push('/');
         },
         clearInputs() {
             this.username = null;

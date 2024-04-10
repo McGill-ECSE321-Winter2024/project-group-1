@@ -63,8 +63,8 @@ export default {
             this.$router.push('/app/auth/forgotpassword')
         },
         goToContinueAsGuest() {
-            $accountType = 'Guest';
-            this.$router.push('/app/guest');
+            this.$accountType = 'Guest';
+            this.$router.push('/');
         },
         clearInputs() {
             this.username = null;

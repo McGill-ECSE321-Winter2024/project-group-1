@@ -35,18 +35,13 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Login',
-      component: Login
+      name: 'Guest',
+      component: Guest
     },
     {
       path: '/app/home',
       name: 'Home',
       component: Home
-    },
-    {
-      path: '/app/guest',
-      name: 'Guest',
-      component: Guest
     },
     {
       path: '/app/auth',

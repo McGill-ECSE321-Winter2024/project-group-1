@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    
     <HBox id="horizontalContainer">
       <VBox id="verticalContainer" style="margin-right: 25px;">
         <h1>FullForm</h1>
@@ -16,6 +15,10 @@
       <button id="menuButton" @click="goInstructors()">Instructors</button>
       <button id="destroyButton" @click="goAuth()">Logout</button>
     </HBox>
+    <HBox v-else>
+      <button id="menuButton" @click="goAuth()">Login</button>
+      <button id="menuButton" @click="goAuth()">Create account</button>
+    </HBox>
     <router-view></router-view>
   </div>
 </template>
@@ -24,7 +27,7 @@
 import Vue from 'vue';
 
 // 4 types: Guest, Customer, Instructor, Owner
-Vue.prototype.$accountType = 'Customer';
+Vue.prototype.$accountType = 'Guest';
 Vue.prototype.$username = 'JoeMama'; // guest = JoeMama
 Vue.prototype.$loggedIn = false;
 
@@ -48,8 +51,7 @@ export default {
         this.$router.push('/app/activity');
       },
       goAuth() {
-        alert('You have been logged out: ' + this.$accountType);
-        this.$router.push('/app/auth');
+        this.$router.push('/app/auth/login');
       },
       goInstructors() {
         this.$router.push('/app/instructors');

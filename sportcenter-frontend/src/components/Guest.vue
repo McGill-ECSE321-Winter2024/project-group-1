@@ -38,7 +38,6 @@
             
             <br>
             <div class="button-container">
-            <button id="mainButton" type="button">Add Activity</button>
             </div>
         </div>
 
