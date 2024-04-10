@@ -4,6 +4,7 @@
         <VBox id="verticalContainer">
             <p id="currentInformation">
                 Username: {{ $username }} <br>
+                <!-- Password: {{ newPassword }} <br-->
             </p>
 
             <VBox id="verticalContainer">
@@ -21,13 +22,18 @@
             </VBox>
             <br>
 
-            <button id="subButton" @click="instructorRequest()" style="margin-left: 10px; align-self: center;">Request to become an instructor</button>
+            <VBox id="verticalContainer">
+                <!--input id="inputBox" type="text" placeholder="Username" v-model="instUsername"></input-->
+                <input id="inputBox" type="text" placeholder="Description" v-model="instDescription"></input>
+                <input id="inputBox" type="text" placeholder="Picture URL" v-model="instPictURL"></input>
+                <button id="mainButton" @click="instructorRequest()" style="margin-left: 10px; align-self: center;">Request to become an instructor</button>
+            </VBox>
             <br>
 
             <HBox id="containerH">
                 <button id="subButton" @click="goToInstructorMode()">Instructor mode</button>
                 <button id="subButton" @click="goToOwnerMode()">Owner mode</button>
-                <button id="destroyButton" @click="deleteAccount()">Delete account</button>
+                <!--button id="destroyButton" @click="deleteAccount()">Delete account</button-->
             </HBox>
         </VBox>
     </div>
@@ -53,7 +59,10 @@ export default {
             newUsername: null,
             username: null,
             oldPassword: null,
-            newPassword: null
+            newPassword: null,
+            //instUsername: null,
+            instDescription: null,
+            instPictURL: null
         }
     },
     methods: {
@@ -78,9 +87,17 @@ export default {
                 console.error('Error creating activity', error.message);
             }
         },
-        instructorRequest() {
-            alert("Instructor request button clicked");
-            console.log("Instructor request button clicked");
+        async instructorRequest() {
+            try {
+                const response = await AXIOS.post('/createInstructor/' + this.$username + '/' + this.instDescription + '/' + this.instPictURL);
+                console.log(response.data);
+                alert("Instructor request sent successfully!");
+                this.clearInputs();
+            } catch(error){
+                console.error('Error creating instructor', error.message);
+            }
+            //lert("Instructor request button clicked");
+            //console.log("Instructor request button clicked");
         },
         goToInstructorMode() {
             this.$router.push('/app/account/instructor-account');
@@ -98,6 +115,9 @@ export default {
             this.username = null;
             this.oldPassword = null;
             this.newPassword = null;
+            //this.instUsername = null;
+            this.instDescription = null;
+            this.instPictURL = null;
         }
     }
 }

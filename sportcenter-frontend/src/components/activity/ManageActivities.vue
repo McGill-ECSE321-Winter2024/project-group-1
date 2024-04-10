@@ -121,7 +121,7 @@ export default {
             } catch (error){
                 console.log('Error fetching activities', error.message);
             }
-    },
+        },
     methods: {
         
         async approveActivity(){
