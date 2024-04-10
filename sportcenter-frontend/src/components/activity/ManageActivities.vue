@@ -22,13 +22,13 @@
                         </tr>
                     </template>
                     <template v-else>
-                    <tr v-for="(activity, index) in activities" :key="index" @click="showActivityDetails(activity)">
+                    <tr v-for="(activity, index) in activities" :key="index">
                         <td>{{ activity.name }}</td>
                         <td>{{ activity.description }}</td>
                         <td>
                         <VBox id="verticalContainer">
-                                <button id="subButton" @click="approveActivity()">Approve</button>
-                                <button id="subButton" @click="dissaproveActivity()">Disapprove</button>
+                                <button id="approveSubButton" @click="approveActivity(activity.name)">Approve</button>
+                                <button id="disapproveSubButton" @click="dissaproveActivity(activity.name)">Disapprove</button>
                             </VBox>
                         </td>
                     </tr>
@@ -80,17 +80,17 @@ export default {
         },
     methods: {
         
-        async approveActivity(){
+        async approveActivity(activity){
             try{
-                const response = await AXIOS.put('/approveActivity')
+                const response = await AXIOS.put('/activity/approve/' + activity)
                 this.activities = response.data
             } catch (error){
                 console.log('Error fetching activities', error.message);
             }
         },
-        async dissaproveActivity(){
+        async dissaproveActivity(activity){
             try{
-                const response = await AXIOS.put('/dissaproveActivity')
+                const response = await AXIOS.put('/activity/disapprove/' + activity)
                 this.activities = response.data
             } catch (error){
                 console.log('Error fetching activities', error.message);
