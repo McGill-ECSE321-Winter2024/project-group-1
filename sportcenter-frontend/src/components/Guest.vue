@@ -5,7 +5,7 @@
         <button id="mainButton" @click="checkGlobalVariables()">Check Global Variables</button>
         <br>
             
-        <input id="inputBox" type="text" v-model="search" placeholder="Search activities">
+        <!--input id="inputBox" type="text" v-model="search" placeholder="Search activities"-->
 
             <table id="activityTable" align="center" width="700">
             <thead>
@@ -24,11 +24,12 @@
                 </template>
 
                 <template v-else>
-                <tr v-for="(activity, index) in filteredActivities" :key="index" @click="showActivityDetails(activity)">
-                    <td>{{ activity.name }}</td>
-                    <td>{{ activity.category }}</td>
-                    <td>{{ activity.date }}</td>
-                    <td>{{ activity.capacity }}</td>
+                <!--tr v-for="(activity, index) in filteredActivities" :key="index" @click="showActivityDetails(activity)"-->
+                <tr v-for="(scheduledActivity, index) in scheduledActivities" :key="index" @click="showActivityDetails(scheduledActivity)">
+                    <td>{{ scheduledActivity.activity.name }}</td>
+                    <td>{{ scheduledActivity.activity.subcategory }}</td>
+                    <td>{{ scheduledActivity.date }}</td>
+                    <td>{{ scheduledActivity.capacity }}</td>
                 </tr>
                 </template>
 
@@ -45,24 +46,32 @@
         <div id="mainContainer">
             <h1>View instructors</h1>
             <VBox id="verticalContainer">
-                <input id="inputBox" type="username" placeholder="Search by name"></input>
+                <!--input id="inputBox" type="username" placeholder="Search by name"></input-->
 
-                <table id="table">
-                    <thead>
+                <table id="instructorTable">
+                <thead>
+                    <tr>
+                        <th width="20%">Profile pic</th>
+                        <th width="16%">Name</th>
+                        <th width="48%">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <template v-if="instructors.length === 0">
                         <tr>
-                            <th width="20%">Profile pic</th>
-                            <th width="16%">Name</th>
-                            <th width="16%">Speciality</th>
-                            <th width="48%">Description</th>
+                            <td colspan="3">No instructor</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <!-- <template v-if="instructors.length === 0"> -->
-                            <!-- <tr>
-                                <td colspan="4">No instructor</td>
-                            </tr> -->
-                        <!-- </template> -->
-                        <tr>
+                    </template>
+
+                    <template v-else>
+                        <tr v-for="(instructor, index) in instructors" :key="index">
+                            <td>{{ instructor.profilePicURL }}</td>
+                            <td>{{ instructor.account.username }}</td>
+                            <td>{{ instructor.description }}</td>
+                        </tr>
+                    </template>
+                        <!--tr>
                             <td><img id="profilePic" src="@/assets/zyzz.jpg" alt="Instructor" width="140" height="140"></td>
                             <td id="information">Zyzz Ouh</td>
                             <td>YEET</td>
@@ -81,7 +90,7 @@
                             <td id="information">Jon Sepa</td>
                             <td>YEET</td>
                             <td>Expert in meditation, certified in memory loss and memes, never seen at the gym tbf, I don't even know if he's still active</td>
-                        </tr>
+                        </tr-->
                     </tbody>
                 </table>
             </VBox>
@@ -111,8 +120,6 @@ export default {
         selectedActivity: null,
         search:'',
 
-
-
       //logic here would get all activities
 
       // scheduledActivities: [
@@ -135,7 +142,40 @@ export default {
   
 
 
+  async created() {
+    if (this.$accountType === 'Owner' || this.$accountType === 'Instructor') {
+      try {
+        const response = await AXIOS.get('/getAllInstructors');
+        this.instructors = response.data;
+      } catch (error) {
+        console.error('Error fetching instructors:', error);
+      }
+      try {
+        const response = await AXIOS.get('/scheduledActivities');
+        this.scheduledActivities = response.data;
+      } catch (error) {
+        console.error('Error fetching scheduled activities:', error);
+      }
+    }
+    else {
+      try {
+        const response = await AXIOS.get('/getAllInstructorsByStatus/Active');
+        this.instructors = response.data;
+      } catch (error) {
+        console.error('Error fetching instructors:', error);
+      }
+      try {
+          const response = await AXIOS.get('/scheduledActivities');
+          this.scheduledActivities = response.data;
+        } catch (error) {
+          console.error('Error fetching scheduled activities:', error);
+        }
 
+    }
+    
+
+    
+  },
   methods: {
     async checkGlobalVariables() {
       console.log(this.$accountType);
@@ -143,31 +183,6 @@ export default {
       console.log(this.$loggedIn);
     },
 
-
-    async fetchScheduledActivities() {
-      // Make HTTP request to fetch scheduled activities from backend
-     
-     try {
-
-      const response = await AXIOS.get('/scheduledActivities')
-      this.scheduledActivities = response.data
-
-      // this.scheduledActivitiesTable = response.data.map(activity => ({
-      //     activityName: activity.activity.name,
-      //     activityCategory: activity.activity.category,
-      //     date: activity.date,
-      //     capacity: activity.capacity
-      //     }));
-
-      }
-      catch (error) {
-
-        console.error('Error fetching scheduled activities:', error);
-      }
-        
-    },
-
- 
     showActivityDetails(activity) {
       this.selectedActivity = activity;
     },
@@ -177,19 +192,6 @@ export default {
 
 
   }, //end of methods
-
-  computed: {
-  // Filter activities based on search query
-  filteredActivities: function() {
-    const query = this.search.toLowerCase();
-    return this.scheduledActivities.filter(activity =>
-      activity.name.toLowerCase().includes(query) ||
-      activity.category.toLowerCase().includes(query) ||
-      activity.date.toLowerCase().includes(query) ||
-      activity.capacity.toString().includes(query)
-    );
-  },
-  },
   components: {
     ViewActivity
   }
