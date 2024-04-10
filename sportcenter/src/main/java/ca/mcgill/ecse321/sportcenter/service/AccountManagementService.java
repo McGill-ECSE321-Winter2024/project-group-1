@@ -449,6 +449,29 @@ public class AccountManagementService {
     }
 
     /**
+     * Get all instructors by status
+     * 
+     * @param status
+     * @return List<Instructo>
+     */
+    @Transactional
+    public List<Instructor> getAllInstructorsByStatus(InstructorStatus status) {
+        if (status == null) {
+            throw new IllegalArgumentException("Status cannot be null!");
+        }
+
+        List<Instructor> instructors = toList(instructorRepository.findAll());
+        List<Instructor> instructorsByStatus = new ArrayList<Instructor>();
+
+        for (Instructor instructor : instructors) {
+            if (instructor.getStatus() == status) {
+                instructorsByStatus.add(instructor);
+            }
+        }
+        return instructorsByStatus;
+    }
+
+    /**
      * Get an owner by its accountRoleId (primary key)
      * 
      * @param accountRoleId
@@ -791,6 +814,68 @@ public class AccountManagementService {
     }
 
     // Extra functions
+
+    /**
+     * Approve an instructor
+     * 
+     * @param username
+     * @return Instructor
+     */
+    @Transactional
+    public Instructor approveInstructor(String username) {
+        if (username == null || username.trim().isEmpty() || username.contains(" ")) {
+            throw new IllegalArgumentException("Username cannot be null, empty and spaces!");
+        }
+
+        Account account = accountRepository.findAccountByUsername(username);
+        if (account == null) {
+            throw new IllegalArgumentException("Account does not exist!");
+        }
+
+        Instructor instructor = instructorRepository.findInstructorByAccountUsername(username);
+        if (instructor == null) {
+            throw new IllegalArgumentException("Instructor does not exist!");
+        }
+
+        if (instructor.getStatus() == InstructorStatus.Active) {
+            throw new IllegalArgumentException("Instructor is already approved!");
+        }
+
+        instructor.setStatus(InstructorStatus.Active);
+        instructorRepository.save(instructor);
+        return instructor;
+    }
+
+    /**
+     * Disapprove an instructor
+     * 
+     * @param username
+     * @return Instructor
+     */
+    @Transactional
+    public Instructor disapproveInstructor(String username) {
+        if (username == null || username.trim().isEmpty() || username.contains(" ")) {
+            throw new IllegalArgumentException("Username cannot be null, empty and spaces!");
+        }
+
+        Account account = accountRepository.findAccountByUsername(username);
+        if (account == null) {
+            throw new IllegalArgumentException("Account does not exist!");
+        }
+
+        Instructor instructor = instructorRepository.findInstructorByAccountUsername(username);
+        if (instructor == null) {
+            throw new IllegalArgumentException("Instructor does not exist!");
+        }
+
+        if (instructor.getStatus() == InstructorStatus.Inactive) {
+            throw new IllegalArgumentException("Instructor is already disapproved!");
+        }
+
+        instructor.setStatus(InstructorStatus.Inactive);
+        instructorRepository.save(instructor);
+        return instructor;
+    }
 
     /**
      * Check if account has customer role

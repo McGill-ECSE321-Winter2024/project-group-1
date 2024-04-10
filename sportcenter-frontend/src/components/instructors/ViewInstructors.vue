@@ -23,9 +23,9 @@
                     </template>
 
                     <template v-else>
-                        <tr v-for="(instructor, index) in filteredInstructors" :key="index">
+                        <tr v-for="(instructor, index) in instructors" :key="index">
                             <td>{{ instructor.profilePicURL }}</td>
-                            <td >{{ instructor.account.username }}</td>
+                            <td>{{ instructor.account.username }}</td>
                             <td>{{ instructor.description }}</td>
                         </tr>
                     </template>
@@ -71,28 +71,17 @@ const AXIOS = axios.create({
         data() {
             return {
                 instructors: [],
-                filteredInstructors: [],
                 search: '',
             };
         },
         async created() {
             try {
-                const response = await AXIOS.get('/getAllInstructors');
+                const response = await AXIOS.get('/getAllInstructorsByStatus/Active');
                 this.instructors = response.data;
-                this.filteredInstructors = this.instructors;
             } catch (error) {
                 console.error('Error fetching instructors', error.message);
             }
         },
-        computed: {
-            filteredInstructors() {
-                return this.instructors.filter(instructor => {
-                    return instructor.account.username.toLowerCase().includes(this.search.toLowerCase());
-                });
-            }
-        }
-
-
     }
 </script>
 

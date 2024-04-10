@@ -22,6 +22,7 @@ import ca.mcgill.ecse321.sportcenter.model.Account;
 import ca.mcgill.ecse321.sportcenter.model.Customer;
 import ca.mcgill.ecse321.sportcenter.model.Instructor;
 import ca.mcgill.ecse321.sportcenter.model.Owner;
+import ca.mcgill.ecse321.sportcenter.model.Instructor.InstructorStatus;
 import ca.mcgill.ecse321.sportcenter.service.AccountManagementService;
 
 /**
@@ -247,6 +248,19 @@ public class AccountManagementController {
     }
 
     /**
+     * Get all instructors by status
+     * 
+     * @param status
+     * @return List<InstructorDto>
+     */
+    @GetMapping(value = { "/getAllInstructorsByStatus/{status}", "/getAllInstructorsByStatus/{status}/" })
+    public List<InstructorDto> getAllInstructorsByStatus(@PathVariable("status") String status)
+            throws IllegalArgumentException {
+        List<Instructor> instructors = accountService.getAllInstructorsByStatus(InstructorStatus.valueOf(status));
+        return convertInstructorsToDto(instructors);
+    }
+
+    /**
      * Get an owner by its accountRoleId
      * 
      * @param accountRoleId
@@ -272,6 +286,31 @@ public class AccountManagementController {
     }
 
     // Update
+
+    /**
+     * Approve an instructor
+     * 
+     * @param username
+     * @return InstructorDto
+     */
+    @PutMapping(value = { "/approveInstructor/{username}", "/approveInstructor/{username}/" })
+    public InstructorDto approveInstructor(@PathVariable("username") String username) throws IllegalArgumentException {
+        Instructor instructor = accountService.approveInstructor(username);
+        return convertInstructorToDto(instructor);
+    }
+
+    /**
+     * Disapprove an instructor
+     * 
+     * @param username
+     * @return InstructorDto
+     */
+    @PutMapping(value = { "/disapproveInstructor/{username}", "/disapproveInstructor/{username}/" })
+    public InstructorDto disapproveInstructor(@PathVariable("username") String username)
+            throws IllegalArgumentException {
+        Instructor instructor = accountService.disapproveInstructor(username);
+        return convertInstructorToDto(instructor);
+    }
 
     /**
      * Update an account username
