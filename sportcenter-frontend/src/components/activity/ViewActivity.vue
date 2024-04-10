@@ -1,16 +1,22 @@
 <template>
-  <div class="popup" id="mainContainer" style="margin-top: 150px;">
+  <div class="popup" id="mainContainer" style="margin-top: 150px">
     <div class="popup-content">
       <VBox id="verticalContainer">
         <h2>{{ activity.name }}</h2>
 
         <p>
-          Category: {{ activity.category }}<br>
-          Date: {{ activity.date }}<br>
+          Category: {{ activity.category }}<br />
+          Date: {{ activity.date }}<br />
           Capacity: {{ activity.capacity }}
         </p>
 
-        <button id="subButton" @click="close">Register</button>
+        <button
+          id="subButton"
+          v-if="($accountType = 'Customer')"
+          @click="close"
+        >
+          Register
+        </button>
         <button id="subButton" @click="close">Close</button>
       </VBox>
     </div>
@@ -19,12 +25,12 @@
 
 <script>
 export default {
-  props: ['activity'],
+  props: ["activity"],
   methods: {
     close() {
-      this.$emit('close');
-    }
-  }
+      this.$emit("close");
+    },
+  },
 };
 </script>
 
