@@ -9,7 +9,9 @@
     </HBox>
     <br>
     <HBox v-if="$loggedIn">
-      <button id="menuButton" @click="goAccount()">Account</button>
+      <button id="menuButton" v-if="$accountType=='Customer'" @click="goCustomerAccount()">Account</button>
+      <button id="menuButton" v-if="$accountType=='Instructor'" @click="goInstructorAccount()">Account</button>
+      <button id="menuButton" v-if="$accountType=='Owner'" @click="goOwnerAccount()">Account</button>
       <button id="menuButton" @click="goMyActivities()">My Activities</button>
       <button id="menuButton" @click="goActivity()">All activities</button>
       <button id="menuButton" @click="goInstructors()">Instructors</button>
@@ -27,7 +29,7 @@
 import Vue from 'vue';
 
 // 4 types: Guest, Customer, Instructor, Owner
-Vue.prototype.$accountType = 'Guest';
+Vue.prototype.$accountType = 'Customer';
 Vue.prototype.$username = 'JoeMama'; // guest = JoeMama
 Vue.prototype.$loggedIn = false;
 
@@ -37,8 +39,14 @@ export default {
       goHome() {
         this.$router.push('/app/home');
       },
-      goAccount() {
-        this.$router.push('/app/account');
+      goCustomerAccount() {
+        this.$router.push('/app/account/customer-account');
+      },
+      goInstructorAccount() {
+        this.$router.push('/app/account/instructor-account');
+      },
+      goOwnerAccount() {
+        this.$router.push('/app/account/owner-account');
       },
       goMyActivities() {
         if (true) {
