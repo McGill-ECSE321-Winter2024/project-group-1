@@ -132,7 +132,7 @@ public class AccountManagementService {
      * @author Anslean AJ
      */
     @Transactional
-    public Instructor createInstructor(String username, InstructorStatus status, String description,
+    public Instructor createInstructor(String username, String description,
             String profilePicURL) {
         if (username == null || username.trim().isEmpty() || username.contains(" ")) {
             throw new IllegalArgumentException("Username cannot be null, empty and spaces!");

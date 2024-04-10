@@ -21,7 +21,6 @@ import ca.mcgill.ecse321.sportcenter.dto.OwnerDto;
 import ca.mcgill.ecse321.sportcenter.model.Account;
 import ca.mcgill.ecse321.sportcenter.model.Customer;
 import ca.mcgill.ecse321.sportcenter.model.Instructor;
-import ca.mcgill.ecse321.sportcenter.model.Instructor.InstructorStatus;
 import ca.mcgill.ecse321.sportcenter.model.Owner;
 import ca.mcgill.ecse321.sportcenter.service.AccountManagementService;
 
@@ -74,13 +73,12 @@ public class AccountManagementController {
      * @param profilePicURL
      * @return InstructorDto
      */
-    @PostMapping(value = { "/createInstructor/{username}/{status}/{description}/{profilePicURL}",
-            "/createInstructor/{username}/{status}/{description}/{profilePicURL}/" })
+    @PostMapping(value = { "/createInstructor/{username}/{description}/{profilePicURL}",
+            "/createInstructor/{username}/{description}/{profilePicURL}/" })
     public InstructorDto createInstructor(@PathVariable("username") String username,
-            @PathVariable("status") InstructorStatus status,
             @PathVariable("description") String description, @PathVariable("profilePicture") String profilePicURL)
             throws IllegalArgumentException {
-        Instructor instructor = accountService.createInstructor(username, status, description, profilePicURL);
+        Instructor instructor = accountService.createInstructor(username, description, profilePicURL);
         return convertInstructorToDto(instructor);
     }
 
