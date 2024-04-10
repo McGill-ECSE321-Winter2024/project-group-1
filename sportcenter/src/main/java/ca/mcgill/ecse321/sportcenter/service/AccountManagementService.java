@@ -652,7 +652,7 @@ public class AccountManagementService {
         if (account == null) {
             throw new IllegalArgumentException("Account does not exist!");
         }
-        Instructor instructor = instructorRepository.findInstructorByAccountRoleId(account.getAccountId());
+        Instructor instructor = instructorRepository.findInstructorByAccountUsername(username);
         if (instructor == null) {
             throw new IllegalArgumentException("Instructor does not exist!");
         }
@@ -680,6 +680,8 @@ public class AccountManagementService {
         if (account == null) {
             throw new IllegalArgumentException("Account does not exist");
         }
+
+
 
         accountRepository.deleteById(accountId);
         return true;
@@ -825,8 +827,14 @@ public class AccountManagementService {
             throw new IllegalArgumentException("Account does not exist!");
         }
 
-        Customer customer = customerRepository.findCustomerByAccountRoleId(accountId);
-        return customer == null;
+        Customer customer = customerRepository.findCustomerByAccountAccountId(accountId);
+        
+        if (customer == null) {
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 
     /**
@@ -846,8 +854,13 @@ public class AccountManagementService {
             throw new IllegalArgumentException("Account does not exist!");
         }
 
-        Instructor instructor = instructorRepository.findInstructorByAccountRoleId(accountId);
-        return instructor == null;
+        Instructor instructor = instructorRepository.findInstructorByAccountAccountId(accountId);
+        if (instructor == null) {
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 
     /**
@@ -867,7 +880,12 @@ public class AccountManagementService {
             throw new IllegalArgumentException("Account does not exist!");
         }
 
-        Owner owner = ownerRepository.findOwnerByAccountRoleId(accountId);
-        return owner == null;
+        Owner owner = ownerRepository.findOwnerByAccountAccountId(accountId);
+        if (owner == null) {
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 }

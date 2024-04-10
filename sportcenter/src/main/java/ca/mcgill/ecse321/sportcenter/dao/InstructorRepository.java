@@ -16,4 +16,6 @@ public interface InstructorRepository extends CrudRepository<Instructor, Integer
                                                                         // Username
     // is a field in AccountRole
 
+    public Instructor findInstructorByAccountAccountId(int accountId); // AccountId is unique
+
 }

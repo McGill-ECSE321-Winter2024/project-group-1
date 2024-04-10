@@ -399,7 +399,7 @@ public class AccountManagementController {
      * @param accountRoleId
      * @return boolean
      */
-    @GetMapping(value = { "/checkAccountHasCustomerRole/{accountRoleId}",
+    @GetMapping(value = { "/checkAccountHasCustomerRole/{accountId}",
             "/checkAccountHasCustomerRole/{accountRoleId}/" })
     public boolean checkAccountHasCustomerRole(@PathVariable("accountRoleId") int accountRoleId)
             throws IllegalArgumentException {
@@ -412,7 +412,7 @@ public class AccountManagementController {
      * @param accountRoleId
      * @return boolean
      */
-    @GetMapping(value = { "/checkAccountHasInstructorRole/{accountRoleId}",
+    @GetMapping(value = { "/checkAccountHasInstructorRole/{accountId}",
             "/checkAccountHasInstructorRole/{accountRoleId}/" })
     public boolean checkAccountHasInstructorRole(@PathVariable("accountRoleId") int accountRoleId)
             throws IllegalArgumentException {
@@ -425,7 +425,7 @@ public class AccountManagementController {
      * @param accountRoleId
      * @return boolean
      */
-    @GetMapping(value = { "/checkAccountHasOwnerRole/{accountRoleId}",
+    @GetMapping(value = { "/checkAccountHasOwnerRole/{accountId}",
             "/checkAccountHasOwnerRole/{accountRoleId}/" })
     public boolean checkAccountHasOwnerRole(@PathVariable("accountRoleId") int accountRoleId)
             throws IllegalArgumentException {
