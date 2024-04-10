@@ -130,7 +130,7 @@ public class AccountManagementController {
      * @param username
      * @return AccountDto
      */
-    @GetMapping(value = { "/account/{username}", "/account/{username}/" })
+    @GetMapping(value = { "/getAccountByUsername/{username}", "/getAccountByUsername/{username}/" })
     public AccountDto getAccountByUsername(@PathVariable("username") String username) throws IllegalArgumentException {
         Account account = accountService.getAccountByUsername(username);
         return convertAccountToDto(account);
@@ -154,7 +154,7 @@ public class AccountManagementController {
      * 
      * @return List<AccountDto>
      */
-    @GetMapping(value = { "/accounts", "/accounts/" })
+    @GetMapping(value = { "/getAllAccounts", "/getAllAccounts/" })
     public List<AccountDto> getAllAccounts() throws IllegalArgumentException {
         List<Account> accounts = accountService.getAllAccounts();
         return convertAccountsToDto(accounts);
@@ -191,7 +191,7 @@ public class AccountManagementController {
      * @param username
      * @return CustomerDto
      */
-    @GetMapping(value = { "/customer/{username}", "/customer/{username}/" })
+    @GetMapping(value = { "/getCustomerByUsername/{username}", "/getCustomerByUsername/{username}/" })
     public CustomerDto getCustomer(@PathVariable("username") String username) throws IllegalArgumentException {
         Customer customer = accountService.getCustomerByUsername(username);
         return convertCustomerToDto(customer);
