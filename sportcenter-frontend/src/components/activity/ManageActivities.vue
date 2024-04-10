@@ -25,7 +25,7 @@
                     <tr v-for="(activity, index) in activities" :key="index">
                         <td>{{ activity.name }}</td>
                         <td>{{ activity.description }}</td>
-                        <td>
+                        <td v-if="$accountType === 'Owner'">
                         <VBox id="verticalContainer">
                                 <button id="approveSubButton" @click="approveActivity(activity.name)">Approve</button>
                                 <button id="disapproveSubButton" @click="dissaproveActivity(activity.name)">Disapprove</button>

@@ -23,8 +23,8 @@
 
         <template v-else>
           <tr v-for="(activity, index) in filteredActivities" :key="index" @click="showActivityDetails(activity)">
-            <td>{{ activity.name }}</td>
-            <td>{{ activity.category }}</td>
+            <td>{{ activity.activity.name }}</td>
+            <td>{{ activity.activity.category }}</td>
             <td>{{ activity.date }}</td>
             <td>{{ activity.capacity }}</td>
           </tr>
@@ -73,20 +73,7 @@ export default {
   },
 
 
-  mounted() {
-    // Call method to fetch scheduled activities when the component is mounted
-    this.fetchScheduledActivities();
-  },
-
-
-
-  
-
-
-
-  methods: {
-
-    async fetchScheduledActivities() {
+  async created() {
       // Make HTTP request to fetch scheduled activities from backend
      
      try {
@@ -109,6 +96,13 @@ export default {
         
     },
 
+
+
+  
+
+
+
+  methods: {
  
     showActivityDetails(activity) {
       this.selectedActivity = activity;

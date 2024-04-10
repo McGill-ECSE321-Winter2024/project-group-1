@@ -2,7 +2,7 @@
 
 
     <div id="mainContainer">
-        <h1>Activity menu</h1>
+        <h1>Activity Menu</h1>
         <VBox id="CustomerContainer" v-if="$accountType=='Guest'">
             <button id="mainButton" @click="goToViewActivity()">View an activity</button>
         </VBox>
@@ -49,8 +49,8 @@
                     <tr v-for="(activity, index) in activities" :key="index">
                         <td>{{ activity.name }}</td>
                         <td>{{ activity.description }}</td>
-                        <td>
-                        <VBox <VBox v-if="$accountType ==='Owner'" id="verticalContainer">
+                        <td v-if="$accountType === 'Owner'">
+                            <VBox id="verticalContainer">
                                 <button id="subButton" @click="approveActivity(activity.name)">Approve</button>
                                 <button id="subButton" @click="dissaproveActivity(activity.name)">Disapprove</button>
                             </VBox>
