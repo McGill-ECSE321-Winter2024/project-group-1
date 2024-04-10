@@ -16,8 +16,8 @@
       <button id="destroyButton" @click="goAuth()">Logout</button>
     </HBox>
     <HBox v-else>
-      <button id="menuButton" @click="goAuth()">Login</button>
-      <button id="menuButton" @click="goAuth()">Create account</button>
+      <button id="menuButton" @click="goLogin()">Login</button>
+      <button id="menuButton" @click="goCreateAccount()">Create account</button>
     </HBox>
     <router-view></router-view>
   </div>
@@ -50,8 +50,11 @@ export default {
       goActivity() {
         this.$router.push('/app/activity');
       },
-      goAuth() {
+      goLogin() {
         this.$router.push('/app/auth/login');
+      },
+      goCreateAccount() {
+        this.$router.push('/app/auth/createaccount');
       },
       goInstructors() {
         this.$router.push('/app/instructors');
