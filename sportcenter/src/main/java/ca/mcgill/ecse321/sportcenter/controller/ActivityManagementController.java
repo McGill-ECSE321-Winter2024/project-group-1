@@ -80,7 +80,7 @@ public class ActivityManagementController {
      * @param subcategory
      * @return List<ActivityDto>
      */
-    @GetMapping(value = { "/activities/{subcategory}", "/activities/{subcategory}/" })
+    @GetMapping(value = { "/activitiesBySubcategory/{subcategory}", "/activitiesBySubcategory/{subcategory}/" })
     public List<ActivityDto> getActivitiesBySubcategory(
             @PathVariable("subcategory") Activity.ClassCategory subcategory) {
         List<Activity> activities = activityManagementService.getActivitiesBySubcategory(subcategory);
@@ -97,7 +97,7 @@ public class ActivityManagementController {
      * @param isApproved
      * @return List<ActivityDto>
      */
-    @GetMapping(value = { "/activities/{isApproved}", "/activities/{isApproved}/" })
+    @GetMapping(value = { "/activitiesByIsApproved/{isApproved}", "/activitiesByIsApproved/{isApproved}/" })
     public List<ActivityDto> getActivitiesByIsApproved(@PathVariable("isApproved") boolean isApproved) {
         List<Activity> activities = activityManagementService.getActivitiesByIsApproved(isApproved);
         List<ActivityDto> activityDtos = new ArrayList<ActivityDto>();
@@ -115,12 +115,12 @@ public class ActivityManagementController {
      * @param subcategory
      * @return ActivityDto
      */
-    @PutMapping(value = { "/activity/update/{name}/{newName}/{newDescription}/{newSubcategory}",
-            "/activity/update/{name}/{newName}/{newDescription}/{newSubcategory}/" })
-    public ActivityDto updateActivity(@PathVariable("name") String name, @PathVariable("newName") String newName,
+    @PutMapping(value = { "/activity/update/{name}/{newDescription}/{newSubcategory}",
+            "/activity/update/{name}/{newDescription}/{newSubcategory}/" })
+    public ActivityDto updateActivity(@PathVariable("name") String name,
             @PathVariable("newDescription") String newDescription,
             @PathVariable("newSubcategory") Activity.ClassCategory newSubcategory) throws IllegalArgumentException {
-        Activity activity = activityManagementService.updateActivity(name, newName, newDescription, newSubcategory);
+        Activity activity = activityManagementService.updateActivity(name, newDescription, newSubcategory);
         return convertToDto(activity);
     }
 
