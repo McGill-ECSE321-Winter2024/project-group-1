@@ -93,9 +93,10 @@ export default {
       // Make HTTP request to fetch scheduled activities from backend
      
      try {
-
-      const response = await AXIOS.get('/activities')
-      this.activities = response.data
+      const isApproved = true;
+      //const response = await AXIOS.get('/activities')
+      const response = await AXIOS.get('/activitiesByIsApproved/'+isApproved);
+      this.activities = response.data;
       }
       catch (error) {
 

@@ -10,6 +10,7 @@
         <h2 style="align-self: center">to</h2>
         <input id="datePickerInput" type="time" v-model="endTime" />
       </HBox>
+      <!--
       <select v-model="selectAccount">
         <option
           v-for="account in accounts"
@@ -19,7 +20,6 @@
           {{ account.accountRoleId }}
         </option>
       </select>
-      <br />
       <select v-model="selectActivity">
         <option
           v-for="activity in activities"
@@ -30,8 +30,9 @@
         </option>
         >
       </select>
-            <!--input id="inputBox" type="text" placeholder="Account Role Id" v-model="accountRoleId"-->
-            <!--input id="inputBox" type="text" placeholder="Activity Name" v-model="activityName2"-->
+      -->
+      <input id="inputBox" type="text" placeholder="Account Role Id" v-model="instructorId">
+      <input id="inputBox" type="text" placeholder="Activity Name" v-model="activityName2">
       <input
         id="inputBox"
         type="text"
@@ -64,23 +65,32 @@ export default {
   name: "ScheduleActivity",
   data() {
     return {
-      accounts: [],
-      selectAccount: null,
-      activities: [],
-      selectActivity: null,
+      //accounts: [],
+      //selectAccount: null,
+      //activities: [],
+      //selectActivity: null,
 
       activityName: null,
       description: null,
       subcategory: null,
+      instructorId: null,
+      activityName2: null,
       date: null,
       startTime: null,
       endTime: null,
       capacity: null,
     };
   },
+  /*
   created() {
     this.getActivities();
+
   },
+  mounted() {
+    this.selectAccount();
+    this.selectActivity();
+  },
+  */
 
   methods: {
     async getActivities() {
@@ -93,9 +103,14 @@ export default {
     },
     async submitScheduleActivity() {
       try {
+        date = date.toLocalDateString();
+        startTime = startTime.toLocalTimeString();
+        endTime = endTime.toLocalTimeString();
+        /*
         const response1 = await AXIOS.get(
           "/getAccountId/" + this.$accountRoleId
         );
+        */
         const response = await AXIOS.post(
           "/createScheduledActivity/" +
             this.date +
@@ -104,13 +119,14 @@ export default {
             "/" +
             this.endTime +
             "/" +
-            response1.accountRoleId +
+            this.instructorId +
             "/" +
-            this.selectActivity.name +
+            this.activityName2 +
             "/" +
             this.capacity
         );
         console.log(response.data);
+        this.clearInputs();
       } catch (error) {
         alert("Error creating scheduled activity");
         this.clearInputs();
@@ -123,6 +139,8 @@ export default {
       this.selectActivity = null;
       this.instructorId = null;
       this.activityName = null;
+      this.activityName2 = null;
+      this.accountRoleId = null;
       this.date = null;
       this.startTime = null;
       this.endTime = null;
