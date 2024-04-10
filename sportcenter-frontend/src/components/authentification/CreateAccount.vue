@@ -12,6 +12,7 @@
                 <v-divider>Other options</v-divider>
                 <button id="subButton" @click="goToLogin()">I already have an account</button>
                 <button id="subButton" @click="goToForgotPassword()">Forgot password</button>
+                <button id="subButton" @click="goToContinueAsGuest()">Continue as a guest</button>
             </VBox>
         </VBox>
     </div>
@@ -60,6 +61,10 @@ export default {
         },
         goToForgotPassword() {
             this.$router.push('/app/auth/forgotpassword')
+        },
+        goToContinueAsGuest() {
+            $accountType = 'Guest';
+            this.$router.push('/app/guest');
         },
         clearInputs() {
             this.username = null;

@@ -12,6 +12,7 @@
                 <v-divider>Other options</v-divider>
                 <button id="subButton" @click="goToLogin()"><b>I already have an account</b></button>
                 <button id="subButton" @click="goToCreateAccount()"><b>Create a new account</b></button>
+                <button id="subButton" @click="goToContinueAsGuest()">Continue as a guest</button>
             </VBox>
         </VBox>
     </div>
@@ -30,6 +31,10 @@
             },
             goToLogin() {
                 this.$router.push('/app/auth/login');
+            },
+            goToContinueAsGuest() {
+                $accountType = 'Guest';
+                this.$router.push('/app/guest');
             }
         }
     }

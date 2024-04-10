@@ -20,6 +20,7 @@
                 <v-divider>Other options</v-divider>
                 <button id="subButton" @click="goToForgotPassword()"><b>Forgot password</b></button>
                 <button id="subButton" @click="goToCreateAccount()"><b>Create a new account</b></button>
+                <button id="subButton" @click="goToContinueAsGuest()">Continue as a guest</button>
             </VBox>
         </VBox>
     </div>
@@ -104,6 +105,10 @@ export default {
         },
         goToCreateAccount() {
             this.$router.push('/app/auth/createaccount');
+        },
+        goToContinueAsGuest() {
+            this.$accountType = 'Guest';
+            this.$router.push('/app/guest');
         },
         clearInputs() {
             this.username = null;
