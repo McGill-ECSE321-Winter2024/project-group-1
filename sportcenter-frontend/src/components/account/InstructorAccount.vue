@@ -12,30 +12,25 @@
             </p>
             
             <VBox id="verticalContainer">
-                <input id="inputBox" type="username" placeholder="New username"></input>
-                <input id="inputBox" type="username" placeholder="Confirm new username"></input>
-                <button id="mainButton" @click="updateUsername()" style="margin-left: 10px; align-self: center;"><b>Update</b></button>
+                <input id="inputBox" type="text" placeholder="Username" v-model="oldUsername"></input>
+                <input id="inputBox" type="text" placeholder="New username" v-model="newUsername"></input>
+                <button id="mainButton" @click="updateUsername()" style="margin-left: 10px; align-self: center;"><b>Update Username</b></button>
             </VBox>
             <br>
 
             <VBox id="verticalContainer">
-                <input id="inputBox" type="oldPassword" placeholder="Old password"></input>
-                <input id="inputBox" type="newPassword" placeholder="New password"></input>
-                <input id="inputBox" type="confirmNewPassword" placeholder="Confirm new password"></input>
+                <input id="inputBox" type="text" placeholder="Username" v-model="username"></input>
+                <input id="inputBox" type="text" placeholder="Old password" v-model="oldPassword"></input>
+                <input id="inputBox" type="text" placeholder="New password" v-model="newPassword"></input>
                 <button id="mainButton" @click="updatePassword()" style="margin-left: 10px; align-self: center;"><b>Update</b></button>
             </VBox>
             <br>
 
             <VBox id="verticalContainer">
-                <input id="inputBox" type="newImageURL" placeholder="New image URL"></input>
-                <input id="inputBox" type="confirmNewImageURL" placeholder="Confirm new image URL"></input>
-                <button id="mainButton" @click="updateImageURL()" style="margin-left: 10px; align-self: center;"><b>Update</b></button>
-            </VBox>
-            <br>
-
-            <VBox id="verticalContainer">
-                <input id="inputBox" type="newDescription" placeholder="New description"></input>
-                <button id="mainButton" @click="updateDescription()" style="margin-left: 10px; align-self: center;"><b>Update</b></button>
+                <input id="inputBox" type="text" placeholder="Username" v-model="username2"></input>
+                <input id="inputBox" type="text" placeholder="New description" v-model="description"></input>
+                <input id="inputBox" type="text" placeholder="New image URL" v-model="picture"></input>
+                <button id="mainButton" @click="updateInstructorInfo()" style="margin-left: 10px; align-self: center;"><b>Update Instructor Info</b></button>
             </VBox>
             <br>
 
@@ -49,37 +44,104 @@
 </template>
 
 <script>
-    export default {
-        name: 'InstructorAccount',
-        methods: {
-            updateUsername() {
-                alert("Update button clicked");
-                console.log("Update button clicked");
-            },
-            updatePassword() {
-                alert("Update button clicked");
-                console.log("Update button clicked");
-            },
-            updateImageURL() {
-                alert("Update button clicked");
-                console.log("Update button clicked");
-            },
-            updateDescription() {
-                alert("Update button clicked");
-                console.log("Update button clicked");
-            },
-            goToCustomerMode() {
-                this.$router.push('/app/account/customer-account');
-            },
-            goToOwnerMode() {
-                this.$router.push('/app/account/owner-account');
-            },
-            deleteAccount() {
-                alert("Delete account button clicked");
-                console.log("Delete account button clicked");
+import axios from "axios";
+import config from "../../../config";
+//import { use } from "vue/types/umd";
+
+const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
+const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
+
+const AXIOS = axios.create({
+    baseURL: backendUrl,
+    headers: { 'Access-Control-Allow-Origin': frontendUrl }
+})
+export default {
+    name: 'InstructorAccount',
+    data() {
+        return {
+            accounts: [],
+            oldUsername: null,
+            newUsername: null,
+            username: null,
+            oldPassword: null,
+            newPassword: null,
+            username2: null,
+            description: null,
+            picture: null
+        }
+    },
+    methods: {
+        async updateUsername() {
+            const newUsername = {
+                oldUsername: this.oldUsername,
+                newUsername: this.newUsername
+            };
+            try{
+                const response = await AXIOS.put('/updateAccountUsername/' + this.oldUsername + '/' + this.newUsername);
+                this.accounts.push(response.data);
+                this.clearInputs();
+            } catch(error){
+                console.error('Error creating activity', error.message);
             }
+        },
+        async updatePassword() {
+            const newPassword = {
+                username: this.username,
+                newPassword: this.newPassword,
+                oldPassword: this.oldPassword
+            };
+            try{
+                const response = await AXIOS.put('/updateAccountPassword/' + this.username + '/' + this.oldPassword + '/' + this.newPassword);
+                this.accounts.push(response.data);
+                this.clearInputs();
+            } catch(error){
+                console.error('Error creating activity', error.message);
+            }
+        },
+        async updateInstructorInfo() {
+            const newInstructor = {
+                username2: this.username2,
+                description: this.description,
+                picture: this.picture
+            };
+            try{
+                const response = await AXIOS.put('/updateInstructor/' + this.username2 + '/' + this.description + '/' + this.picture);
+                this.accounts.push(response.data);
+                this.clearInputs();
+            } catch(error){
+                console.error('Error creating activity', error.message);
+            }
+        },
+        goToCustomerMode() {
+            this.$router.push('/app/account/customer-account');
+        },
+        goToOwnerMode() {
+            this.$router.push('/app/account/owner-account');
+        },
+        async deleteInstructorAccount() {
+            const deletedInstructor = {
+                username2: this.username2
+            };
+            try{
+                const response = await AXIOS.delete('/deleteInstructorByUsername/' + this.username2);
+                this.accounts.push(response.data);
+                this.clearInputs();
+            } catch(error){
+                console.error('Error creating activity', error.message);
+            }
+        },
+        clearInputs() {
+            this.oldUsername = null;
+            this.newUsername = null;
+            this.username = null;
+            this.oldPassword = null;
+            this.newPassword = null;
+            this.username2 = null;
+            this.description = null;
+            this.picture = null;
         }
     }
+}
 </script>
 
 <style src="../../assets/main.css"></style>

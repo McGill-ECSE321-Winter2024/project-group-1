@@ -8,17 +8,17 @@
             </p>
 
             <VBox id="verticalContainer">
-                <input id="inputBox" type="username" placeholder="New username"></input>
-                <input id="inputBox" type="username" placeholder="Confirm new username"></input>
-                <button id="mainButton" @click="updateUsername()" style="margin-left: 10px; align-self: center;"><b>Update</b></button>
+                <input id="inputBox" type="text" placeholder="Username" v-model="oldUsername"></input>
+                <input id="inputBox" type="text" placeholder="New username" v-model="newUsername"></input>
+                <button id="mainButton" @click="updateUsername()" style="margin-left: 10px; align-self: center;"><b>Update Username</b></button>
             </VBox>
             <br>
 
             <VBox id="verticalContainer">
-                <input id="inputBox" type="oldPassword" placeholder="Old password"></input>
-                <input id="inputBox" type="newPassword" placeholder="New password"></input>
-                <input id="inputBox" type="confirmNewPassword" placeholder="Confirm new password"></input>
-                <button id="mainButton" @click="updatePassword()" style="margin-left: 10px; align-self: center;"><b>Update</b></button>
+                <input id="inputBox" type="text" placeholder="Username" v-model="username"></input>
+                <input id="inputBox" type="text" placeholder="Old password" v-model="oldPassword"></input>
+                <input id="inputBox" type="text" placeholder="New password" v-model="newPassword"></input>
+                <button id="mainButton" @click="updatePassword()" style="margin-left: 10px; align-self: center;"><b>Update Password</b></button>
             </VBox>
             <br>
 
@@ -35,33 +35,81 @@
 </template>
 
 <script>
-    export default {
-        name: 'CustomerAccount',
-        methods: {
-            updateUsername() {
-                alert("Update button clicked");
-                console.log("Update button clicked");
-            },
-            updatePassword() {
-                alert("Update button clicked");
-                console.log("Update button clicked");
-            },
-            instructorRequest() {
-                alert("Instructor request button clicked");
-                console.log("Instructor request button clicked");
-            },
-            goToInstructorMode() {
-                this.$router.push('/app/account/instructor-account');
-            },
-            goToOwnerMode() {
-                this.$router.push('/app/account/owner-account');
-            },
-            deleteAccount() {
-                alert("Delete account button clicked");
-                console.log("Delete account button clicked");
+import axios from "axios";
+import config from "../../../config";
+//import { use } from "vue/types/umd";
+
+const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
+const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
+
+const AXIOS = axios.create({
+    baseURL: backendUrl,
+    headers: { 'Access-Control-Allow-Origin': frontendUrl }
+})
+
+export default {
+    name: 'CustomerAccount',
+    data() {
+        return {
+            accounts: [],
+            oldUsername: null,
+            newUsername: null,
+            username: null,
+            oldPassword: null,
+            newPassword: null
+        }
+    },
+    methods: {
+        async updateUsername() {
+            const newUsername = {
+                oldUsername: this.oldUsername,
+                newUsername: this.newUsername
+            };
+            try{
+                const response = await AXIOS.put('/updateAccountUsername/' + this.oldUsername + '/' + this.newUsername);
+                this.accounts.push(response.data);
+                this.clearInputs();
+            } catch(error){
+                console.error('Error creating activity', error.message);
             }
+        },
+        async updatePassword() {
+            const newPassword = {
+                username: this.username,
+                newPassword: this.newPassword,
+                oldPassword: this.oldPassword
+            };
+            try{
+                const response = await AXIOS.put('/updateAccountPassword/' + this.username + '/' + this.oldPassword + '/' + this.newPassword);
+                this.accounts.push(response.data);
+                this.clearInputs();
+            } catch(error){
+                console.error('Error creating activity', error.message);
+            }
+        },
+        instructorRequest() {
+            alert("Instructor request button clicked");
+            console.log("Instructor request button clicked");
+        },
+        goToInstructorMode() {
+            this.$router.push('/app/account/instructor-account');
+        },
+        goToOwnerMode() {
+            this.$router.push('/app/account/owner-account');
+        },
+        deleteAccount() {
+            alert("Delete account button clicked");
+            console.log("Delete account button clicked");
+        },
+        clearInputs() {
+            this.oldUsername = null;
+            this.newUsername = null;
+            this.username = null;
+            this.oldPassword = null;
+            this.newPassword = null;
         }
     }
+}
 </script>
 
 <style scoped src="../../assets/main.css"> /* OLD COLOR MODE BUTTON: 0e628f */ </style>
