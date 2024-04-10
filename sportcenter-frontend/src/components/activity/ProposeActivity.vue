@@ -26,11 +26,9 @@ const AXIOS = axios.create({
 })
 
 export default {
-    //name: 'ProposeActivity',
     name: "Activities",
     data () {
         return {
-            //accounts: [],
             activities: [],
             activityName: null,
             description: null,
@@ -44,24 +42,6 @@ export default {
         };
     },
     methods:{
-        /*
-        async createdAccounts(){
-            try{
-                const response = await AXIOS.get('/accounts');
-                this.accounts = response.data.accounts; // or response.data
-            } catch(error){
-                console.error('Error fetching accounts', error.message);
-            }
-        },
-        async createdActivities(){
-            try{
-                const response = await AXIOS.get('/activities');
-                this.activities = response.data;
-            } catch(error){
-                console.error('Error fetching activities', error.message);
-            }
-        },
-        */
         async submitProposeActivity(){
             const newActivity = {
                 activityName: this.activityName,
@@ -73,32 +53,13 @@ export default {
                 this.activities.push(response.data);
                 this.clearInputs();
             } catch(error){
-                console.error('Error creating activity', error.message);
+                alert(error.message);
             }
         },
-        /*
-        async submitScheduleActivity(){
-            const newScheduleActivity = {
-                date: this.date,
-                startTime: this.startTime,
-                endTime: this.endTime,
-                accountRoleId: this.accountRoleId,
-                activityName2: this.activityName2,
-                capacity: this.capacity
-            };
-            try{
-                const response = await AXIOS.cteateScheduleActivity("/createScheduleActivity", newScheduleActivity);
-                this.createScheduleActivity.push(response.data);
-                this.clearInputs();
-            } catch(error){
-                console.error('Error creating scheduled activity', error.message);
-            }
-        },
-        */
         clearInputs(){
             this.activityName = null;
-            this.activityDescription = null;
-            this.activitySubcategory = null;
+            this.description = null;
+            this.subcategory = null;
             this.date = null;
             this.startTime = null;
             this.endTime = null;

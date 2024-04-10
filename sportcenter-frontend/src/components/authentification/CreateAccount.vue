@@ -60,11 +60,18 @@ export default {
   methods: {
     async createAccount() {
       try {
-        const response = await AXIOS.post(
-          "/createAccount/" + this.username + "/" + this.password
-        );
+        const response = await AXIOS.post( "/createAccount/" + this.username + "/" + this.password );
+        console.log(response.data);
+        
       } catch (error) {
-        console.error("Error fetching accounts", error.message);
+        alert(error.message);
+      }
+      try {
+        const response2 = await AXIOS.post( "/createCustomer/" + this.username );
+        console.log(response2.data);
+        this.clearInputs();
+      } catch (error) {
+        alert(error.message);
       }
     },
     goToLogin() {

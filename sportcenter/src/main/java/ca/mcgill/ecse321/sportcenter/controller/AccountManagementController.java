@@ -493,7 +493,7 @@ public class AccountManagementController {
      * @return CustomerDto
      */
     public static CustomerDto convertCustomerToDto(Customer customer) {
-        return new CustomerDto(customer.getAccountRoleId());
+        return new CustomerDto(customer);
     }
 
     /**

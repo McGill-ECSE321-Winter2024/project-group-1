@@ -36,12 +36,12 @@ const AXIOS = axios.create({
 
 export default {
     name: 'Login',
-    data() {
-    return {
-        username: null,
-        password: null,
-    }
-},
+    data () {
+        return {
+            username: null,
+            password: null
+        };
+    },
     methods: {
         async loginCustomer() {
             try{
@@ -94,7 +94,8 @@ export default {
             this.username = null;
         }
     }
-}
+};
+
 </script>
 
 <style scoped src="../../assets/main.css"></style>

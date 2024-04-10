@@ -19,15 +19,6 @@ public class InstructorDto {
         this.account = new AccountDto(instructor.getAccount());
     }
 
-    public InstructorDto(int accountRoleId, InstructorStatus status, String description, String profilePicURL,
-            AccountDto account) {
-        this.accountRoleId = accountRoleId;
-        this.status = status;
-        this.description = description;
-        this.profilePicURL = profilePicURL;
-        this.account = account;
-    }
-
     // Getters
     public int getAccountRoleId() {
         return accountRoleId;
