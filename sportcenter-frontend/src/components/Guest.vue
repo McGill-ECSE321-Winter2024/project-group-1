@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="ViewActivityTable" id="mainContainer">
-        <h1>View Activities</h1>
+        <h1>View activities</h1>
         <br>
             
         <input id="inputBox" type="text" v-model="search" placeholder="Search activities">

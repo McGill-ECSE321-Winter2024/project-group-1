@@ -14,12 +14,13 @@
       <button id="menuButton" v-if="$accountType=='Owner'" @click="goOwnerAccount()">Account</button>
       <button id="menuButton" @click="goMyActivities()">My Activities</button>
       <button id="menuButton" @click="goActivity()">All activities</button>
-      <button id="menuButton" @click="goInstructors()">Instructors</button>
+      <button id="menuButton" v-if="$accountType != 'Owner'" @click="goInstructors()">Instructors</button>
+      <button id="menuButton" v-if="$accountType=='Owner'" @click="goInstructorsForOwner()">Instructors</button>
       <button id="destroyButton" @click="goAuth()">Logout</button>
     </HBox>
     <HBox v-else>
-      <button id="menuButton" @click="goAuth()">Login</button>
-      <button id="menuButton" @click="goAuth()">Create account</button>
+      <button id="menuButton" @click="goLogin()">Login</button>
+      <button id="menuButton" @click="goCreateAccount()">Create account</button>
     </HBox>
     <router-view></router-view>
   </div>
@@ -58,11 +59,17 @@ export default {
       goActivity() {
         this.$router.push('/app/activity');
       },
-      goAuth() {
+      goLogin() {
         this.$router.push('/app/auth/login');
       },
+      goCreateAccount() {
+        this.$router.push('/app/auth/createaccount');
+      },
       goInstructors() {
-        this.$router.push('/app/instructors');
+        this.$router.push('/app/instructors/view-instructors');
+      },
+      goInstructorsForOwner() {
+        this.$router.push('/app/instructors/manage-instructors');
       }
     }
   }
