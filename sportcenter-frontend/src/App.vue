@@ -13,7 +13,6 @@
     <br>
 
     <HBox>
-      <!-- <button id="menuButton" @click="goHome()">Home</button> -->
       <button id="menuButton" @click="goAccount()">Account</button>
       <button id="menuButton" @click="goMyActivities()">My Activities</button>
       <button id="menuButton" @click="goActivity()">All activities</button>
@@ -30,6 +29,8 @@ import Vue from 'vue';
 
 // 4 types: Guest, Customer, Instructor, Owner
 Vue.prototype.$accountType = 'Customer';
+Vue.prototype.$username = 'JoeMama'; // guest = JoeMama
+Vue.prototype.$loggedIn = false;
 
 export default {
     name: 'app',

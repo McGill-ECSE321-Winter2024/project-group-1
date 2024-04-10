@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import Home from '@/components/Home.vue'
+import Welcome from '@/components/Welcome.vue'
 
 import Authentification from '@/components/authentification/Authentification.vue'
 import Login from '@/components/authentification/Login.vue'
@@ -32,6 +33,11 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
+    {
+      path: '/',
+      name: 'Welcome',
+      component: Welcome
+    },
     {
       path: '/app/home',
       name: 'Home',
