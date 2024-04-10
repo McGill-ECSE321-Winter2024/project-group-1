@@ -362,7 +362,7 @@ public class AccountManagementController {
      * @param username
      * @return
      */
-    @DeleteMapping(value = { "/deleteCustomer/{username}", "/deleteCustomer/{username}/" })
+    @DeleteMapping(value = { "/deleteCustomerByUsername/{username}", "/deleteCustomerByUsername/{username}/" })
     public void deleteCustomer(@PathVariable("username") String username) throws IllegalArgumentException {
         accountService.deleteCustomerByUsername(username);
     }

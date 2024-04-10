@@ -723,7 +723,7 @@ public class AccountManagementService {
             throw new IllegalArgumentException("Account does not exist!");
         }
 
-        Customer customer = customerRepository.findCustomerByAccountRoleId(accountId);
+        Customer customer = customerRepository.findCustomerByAccountAccountId(accountId);
         if (customer == null) {
             throw new IllegalArgumentException("Customer does not exist!");
         }
@@ -748,7 +748,7 @@ public class AccountManagementService {
             throw new IllegalArgumentException("Account does not exist!");
         }
 
-        Customer customer = customerRepository.findCustomerByAccountRoleId(account.getAccountId());
+        Customer customer = customerRepository.findCustomerByAccountUsername(username);
         if (customer == null) {
             throw new IllegalArgumentException("Customer does not exist!");
         }
