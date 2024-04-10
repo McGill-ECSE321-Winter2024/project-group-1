@@ -11,23 +11,23 @@
           <tr>
             <th width="100">Name</th>
             <th width="100">Category</th>
-            <th width="100">Date</th>
-            <th width="100">Capacity</th>
+            <th width="100">Description</th>
+            <th width="100">Approved</th>
           </tr>
         </thead>
         <tbody>
-          <template v-if="scheduledActivities.length === 0">
+          <template v-if="activities.length === 0">
             <tr>
-              <td colspan="4">No activities</td>
+              <td colspan="4">No Activities</td>
             </tr>
           </template>
 
           <template v-else>
-            <tr v-for="(activity, index) in filteredActivities" :key="index">
-              <td>{{ activity.activity.name }}</td>
-              <td>{{ activity.activity.category }}</td>
-              <td>{{ activity.date }}</td>
-              <td>{{ activity.capacity }}</td>
+            <tr v-for="(activity, index) in activities" :key="index">
+              <td>{{ activity.name }}</td>
+              <td>{{ activity.category }}</td>
+              <td>{{ activity.description }}</td>
+              <td>{{ activity.is_approved }}</td>
             </tr>
           </template>
 
@@ -79,14 +79,12 @@ export default {
   data() {
     return {
       
-      scheduledActivities: [],
+      activities: [],
       filteredActivityData: [],
       selectedActivity: null,
       search:'',
 
 
-
-      //logic here would get all activities
 
     };
   },
@@ -96,39 +94,8 @@ export default {
      
      try {
 
-      const response = await AXIOS.get('/scheduledActivities')
-      this.scheduledActivities = response.data
-
-      // this.scheduledActivitiesTable = response.data.map(activity => ({
-      //     activityName: activity.activity.name,
-      //     activityCategory: activity.activity.category,
-      //     date: activity.date,
-      //     capacity: activity.capacity
-      //     }));
-
-      }
-      catch (error) {
-
-        console.error('Error fetching scheduled activities:', error);
-      }
-        
-    },
-
-    async created() {
-      // Make HTTP request to fetch scheduled activities from backend
-     
-     try {
-
-      const response = await AXIOS.get('/scheduledActivities')
-      this.scheduledActivities = response.data
-
-      // this.scheduledActivitiesTable = response.data.map(activity => ({
-      //     activityName: activity.activity.name,
-      //     activityCategory: activity.activity.category,
-      //     date: activity.date,
-      //     capacity: activity.capacity
-      //     }));
-
+      const response = await AXIOS.get('/activities')
+      this.activities = response.data
       }
       catch (error) {
 
