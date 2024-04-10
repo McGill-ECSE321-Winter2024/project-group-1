@@ -212,21 +212,21 @@ public class AccountManagementService {
 
         // If role is customer, check if account has customer role
         if (role.equals("customer")) {
-            if (customerRepository.findCustomerByAccountRoleId(account.getAccountId()) == null) {
+            if (customerRepository.findCustomerByAccountUsername(username) == null) {
                 throw new IllegalArgumentException("Account does not have customer role");
             }
         }
 
         // If role is instructor, check if account has instructor role
         if (role.equals("instructor")) {
-            if (instructorRepository.findInstructorByAccountRoleId(account.getAccountId()) == null) {
+            if (instructorRepository.findInstructorByAccountUsername(username) == null) {
                 throw new IllegalArgumentException("Account does not have instructor role");
             }
         }
 
         // If role is owner, check if account has owner role
         if (role.equals("owner")) {
-            if (ownerRepository.findOwnerByAccountRoleId(account.getAccountId()) == null) {
+            if (ownerRepository.findOwnerByAccountUsername(username) == null) {
                 throw new IllegalArgumentException("Account does not have owner role");
             }
         }

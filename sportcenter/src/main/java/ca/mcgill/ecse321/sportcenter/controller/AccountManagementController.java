@@ -396,40 +396,40 @@ public class AccountManagementController {
     /**
      * Check if account has customer role
      * 
-     * @param accountRoleId
+     * @param accountId
      * @return boolean
      */
     @GetMapping(value = { "/checkAccountHasCustomerRole/{accountId}",
-            "/checkAccountHasCustomerRole/{accountRoleId}/" })
-    public boolean checkAccountHasCustomerRole(@PathVariable("accountRoleId") int accountRoleId)
+            "/checkAccountHasCustomerRole/{accountId}/" })
+    public boolean checkAccountHasCustomerRole(@PathVariable("accountId") int accountId)
             throws IllegalArgumentException {
-        return accountService.checkAccountHasCustomerRole(accountRoleId);
+        return accountService.checkAccountHasCustomerRole(accountId);
     }
 
     /**
      * Check if account has instructor role
      * 
-     * @param accountRoleId
+     * @param accountId
      * @return boolean
      */
     @GetMapping(value = { "/checkAccountHasInstructorRole/{accountId}",
-            "/checkAccountHasInstructorRole/{accountRoleId}/" })
-    public boolean checkAccountHasInstructorRole(@PathVariable("accountRoleId") int accountRoleId)
+            "/checkAccountHasInstructorRole/{accountId}/" })
+    public boolean checkAccountHasInstructorRole(@PathVariable("accountId") int accountId)
             throws IllegalArgumentException {
-        return accountService.checkAccountHasInstructorRole(accountRoleId);
+        return accountService.checkAccountHasInstructorRole(accountId);
     }
 
     /**
      * Check if account has owner role
      * 
-     * @param accountRoleId
+     * @param accountId
      * @return boolean
      */
     @GetMapping(value = { "/checkAccountHasOwnerRole/{accountId}",
-            "/checkAccountHasOwnerRole/{accountRoleId}/" })
-    public boolean checkAccountHasOwnerRole(@PathVariable("accountRoleId") int accountRoleId)
+            "/checkAccountHasOwnerRole/{accountId}/" })
+    public boolean checkAccountHasOwnerRole(@PathVariable("accountId") int accountId)
             throws IllegalArgumentException {
-        return accountService.checkAccountHasOwnerRole(accountRoleId);
+        return accountService.checkAccountHasOwnerRole(accountId);
     }
 
     // Converters
