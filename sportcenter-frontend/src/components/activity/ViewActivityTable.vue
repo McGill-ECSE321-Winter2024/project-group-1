@@ -86,23 +86,27 @@ export default {
 
   methods: {
 
-    fetchScheduledActivities() {
+    async fetchScheduledActivities() {
       // Make HTTP request to fetch scheduled activities from backend
-      axios.get('/scheduledActivities')
-        .then(response => {
-          // Assign response data to scheduledActivities
-          this.scheduledActivities = response.data;
+     
+     try {
 
-          this.scheduledActivitiesTable = response.data.map(activity => ({
-          activityName: activity.activity.name,
-          activityCategory: activity.activity.category,
-          date: activity.date,
-          capacity: activity.capacity
-        }));
-        })
-        .catch(error => {
-          console.error('Error fetching scheduled activities:', error);
-        });
+      const response = await AXIOS.get('/scheduledActivities')
+      this.scheduledActivities = response.data
+
+      // this.scheduledActivitiesTable = response.data.map(activity => ({
+      //     activityName: activity.activity.name,
+      //     activityCategory: activity.activity.category,
+      //     date: activity.date,
+      //     capacity: activity.capacity
+      //     }));
+
+      }
+      catch (error) {
+
+        console.error('Error fetching scheduled activities:', error);
+      }
+        
     },
 
  

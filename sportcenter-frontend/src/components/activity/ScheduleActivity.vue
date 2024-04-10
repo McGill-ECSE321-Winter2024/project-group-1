@@ -104,12 +104,12 @@ export default {
             }
         },
         async submitScheduleActivity(){
-            const newScheduleActivity = {
+            const newScheduledActivity = {
                 date: this.date,
                 startTime: this.startTime,
                 endTime: this.endTime,
-                selectAccount: this.selectAccount,
-                selectActivity: this.selectActivity,
+                instructorId: this.instructorId,
+                activityName: this.activityName,
                 capacity: this.capacity
             };
             try{
@@ -124,24 +124,23 @@ export default {
                 endTime = localEndTime.toISOTime(); 
                 */
 
-                const response = await AXIOS.createScheduleActivity("/createScheduleActivity", newScheduleActivity);
-                this.createScheduleActivity.push(response.data);
+                const response = await AXIOS.post('/createScheduledActivity', newScheduledActivity);
+                this.createScheduledActivity.push(response.data);
                 this.clearInputs();
             } catch(error){
                 console.error('Error creating scheduled activity', error.message);
             }
         },
         clearInputs(){
+            this.description = null;
+            this.subcategory = null;
             this.selectAccount = null;
             this.selectActivity = null;
+            this.instructorId = null;
             this.activityName = null;
-            this.activityDescription = null;
-            this.activitySubcategory = null;
             this.date = null;
             this.startTime = null;
             this.endTime = null;
-            this.accountRoleId = null;
-            this.activityName2 = null;
             this.capacity = null;
         }
 
