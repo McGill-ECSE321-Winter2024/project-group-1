@@ -51,6 +51,7 @@ export default {
                 this.$loggedIn = true;
                 this.$accountType = 'Customer';
                 this.$username = this.username;
+                this.clearInputs();
                 this.$router.push('/');
             } catch(error){
                 alert(error.message);
@@ -64,6 +65,7 @@ export default {
                 this.$loggedIn = true;
                 this.$accountType = 'Instructor';
                 this.$username = this.username;
+                this.clearInputs();
                 this.$router.push('/');
             } catch(error){
                 alert(error.message);
@@ -77,6 +79,7 @@ export default {
                 this.$loggedIn = true;
                 this.$accountType = 'Owner';
                 this.$username = this.username;
+                this.clearInputs();
                 this.$router.push('/');
             } catch(error){
                 alert(error.message);
@@ -90,11 +93,13 @@ export default {
         },
         goToContinueAsGuest() {
             this.$accountType = 'Guest';
-            this.$loggedIn = true;
+            this.$username = 'JoeMama';
+            this.$loggedIn = false;
             this.$router.push('/');
         },
         clearInputs() {
             this.username = null;
+            this.password = null;
         }
     }
 };
