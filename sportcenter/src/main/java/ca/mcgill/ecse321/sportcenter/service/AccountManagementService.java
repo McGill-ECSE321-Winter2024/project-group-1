@@ -501,28 +501,12 @@ public class AccountManagementService {
      */
     @Transactional
     public Account updateAccountUsername(String oldUsername, String newUsername) {
-        if (oldUsername == null) {
-            throw new IllegalArgumentException("Old Username cannot be null");
-        }
-
-        if (newUsername == null) {
-            throw new IllegalArgumentException("New Username cannot be null");
-        }
-
-        if (oldUsername.trim().isEmpty()) {
+        if (oldUsername == null || oldUsername.trim().isEmpty() || oldUsername.contains(" ")) {
             throw new IllegalArgumentException("Old Username cannot be empty");
         }
 
-        if (newUsername.trim().isEmpty()) {
+        if (newUsername == null || newUsername.trim().isEmpty() || newUsername.contains(" ")) {
             throw new IllegalArgumentException("New Username cannot be empty");
-        }
-
-        if (oldUsername.contains(" ")) {
-            throw new IllegalArgumentException("Old Username cannot contain spaces");
-        }
-
-        if (newUsername.contains(" ")) {
-            throw new IllegalArgumentException("New Username cannot contain spaces");
         }
 
         Account account = accountRepository.findAccountByUsername(oldUsername);
@@ -681,8 +665,6 @@ public class AccountManagementService {
             throw new IllegalArgumentException("Account does not exist");
         }
 
-
-
         accountRepository.deleteById(accountId);
         return true;
     }
@@ -828,11 +810,10 @@ public class AccountManagementService {
         }
 
         Customer customer = customerRepository.findCustomerByAccountAccountId(accountId);
-        
+
         if (customer == null) {
             return false;
-        }
-        else {
+        } else {
             return true;
         }
     }
@@ -857,8 +838,7 @@ public class AccountManagementService {
         Instructor instructor = instructorRepository.findInstructorByAccountAccountId(accountId);
         if (instructor == null) {
             return false;
-        }
-        else {
+        } else {
             return true;
         }
     }
@@ -883,8 +863,7 @@ public class AccountManagementService {
         Owner owner = ownerRepository.findOwnerByAccountAccountId(accountId);
         if (owner == null) {
             return false;
-        }
-        else {
+        } else {
             return true;
         }
     }

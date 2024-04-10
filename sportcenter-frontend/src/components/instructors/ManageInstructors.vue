@@ -12,7 +12,6 @@
                     <tr>
                         <th width="12%">Profile pic</th>
                         <th width="16%">Name</th>
-                        <th width="16%">Speciality</th>
                         <th width="46%">Description</th>
                         <th width="10%">Action</th>
                     </tr>
@@ -20,14 +19,14 @@
                 <tbody>
                     <template v-if="instructors.length === 0"> 
                         <tr>
-                            <td colspan="5">No instructor</td>
+                            <td colspan="4">No instructor</td>
                         </tr> 
                     </template> 
                     <template v-else>
                         <tr v-for="(instructor, index) in filteredInstructors" :key="index">
-                            <td>{{ instructor.picture }}</td>
-                            <td>{{ instructor.name }}</td>
-                            <td>{{ instructor.speciality }}</td>
+                            <!--td><img id="profilePic" src="require(`../assets/${instructor.profilePicURL}`)" alt="Instructor" width="120" height="120"></td-->
+                            <td>{{ instructor.profilePicURL }}</td>
+                            <td>{{ instructor.account.username }}</td>
                             <td>{{ instructor.description }}</td>
                             <td>
                                 <VBox id="verticalContainer" v-if="instructor.status=='active'">
@@ -127,38 +126,21 @@ const AXIOS = axios.create({
 
             };
         },
-        
-        mounted() {
-            this.getInstructors();
-        },
-
-        methods: {
-            getInstructors() {
-                AXIOS.get('/instructors')
-                    .then(response => {
-                        this.instructors = response.data;
-
-                        this.instructorsTable= response.data.map(instructor => (
-                            {
-                                picture: instructor.picture,
-                                name: instructor.name,
-                                speciality: instructor.speciality,
-                                description: instructor.description
-                            }));
-                            })
-                            .catch(e => {
-                            console.error('Error fetching instructors', e);
-                    });
-            },
+        async created(){
+            try{
+                const response = await AXIOS.get('/getAllInstructors')
+                this.instructors = response.data
+                this.filteredInstructors = this.instructors;
+            } catch (error){
+                console.log('Error fetching instructors', error.message);
+            }
         },
         computed: {
-        
-            filteredInstructors: function() {
-                const query = this.search.toLowerCase();
-                return this.instructors.filter(instructor => 
-                    instructor.name.toLowerCase().includes(query)
-                );
-            },
+            filteredInstructors: function(){
+                return this.instructors.filter((instructor) => {
+                    return instructor.username.toLowerCase().includes(this.search.toLowerCase());
+                });
+            }
         }
 
 

@@ -12,7 +12,7 @@ Vue.config.productionTip = false
 
 // 4 types: Guest, Customer, Instructor, Owner
 Vue.prototype.$accountType = "Customer";
-Vue.prototype.$username = 'Andrew'; // guest = JoeMama
+Vue.prototype.$username = 'Cust1'; // guest = JoeMama
 Vue.prototype.$loggedIn = true;
 Vue.prototype.$time = new Date().getDate() + "/" + new Date().getMonth() + "/" + new Date().getFullYear();
 Vue.prototype.$debugging_mode = true;

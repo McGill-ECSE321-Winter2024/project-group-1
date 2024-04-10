@@ -6,13 +6,13 @@
             <br>
 
             <p id="currentInformation">
-                    Username: Joe Mama<br>
-                    Email: joe@gym.com<br>
-                    Description: Expert in goat yoga, certified in pilates and zumba, all the moms love me, I'm the best instructor in the world (I started a cult)
-            </p>
+                    Username: {{ $username }}<br>
+                    <!--Description: {{ this.currentDescription }}<br>
+                    Picture URL: {{ this.currentPicture }} <br-->
+            </p> <!--Expert in goat yoga, certified in pilates and zumba, all the moms love me, I'm the best instructor in the world (I started a cult)-->
             
             <VBox id="verticalContainer">
-                <input id="inputBox" type="text" placeholder="Username" v-model="oldUsername"></input>
+                <input id="inputBox" type="text" placeholder="Username" v-model="username1"></input>
                 <input id="inputBox" type="text" placeholder="New username" v-model="newUsername"></input>
                 <button id="mainButton" @click="updateUsername()" style="margin-left: 10px; align-self: center;"><b>Update Username</b></button>
             </VBox>
@@ -27,7 +27,7 @@
             <br>
 
             <VBox id="verticalContainer">
-                <input id="inputBox" type="text" placeholder="Username" v-model="username2"></input>
+                <input id="inputBox" type="text" placeholder="Username" v-model="username3"></input>
                 <input id="inputBox" type="text" placeholder="New description" v-model="description"></input>
                 <input id="inputBox" type="text" placeholder="New image URL" v-model="picture"></input>
                 <button id="mainButton" @click="updateInstructorInfo()" style="margin-left: 10px; align-self: center;"><b>Update Instructor Info</b></button>
@@ -37,7 +37,7 @@
             <HBox id="horizontalContainer">
                 <button id="subButton" @click="goToCustomerMode()">Customer mode</button>
                 <button id="subButton" @click="goToOwnerMode()">Owner mode</button>
-                <button id="destroyButton" @click="deleteAccount()">Delete account</button>
+                <!--button id="destroyButton" @click="deleteAccount()">Delete account</button-->
             </HBox>
         </VBox>
     </div>
@@ -46,7 +46,6 @@
 <script>
 import axios from "axios";
 import config from "../../../config";
-//import { use } from "vue/types/umd";
 
 const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
 const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
@@ -59,54 +58,52 @@ export default {
     name: 'InstructorAccount',
     data() {
         return {
-            accounts: [],
-            oldUsername: null,
+            username1: null,
             newUsername: null,
-            username: null,
+            username2: null,
             oldPassword: null,
             newPassword: null,
-            username2: null,
+            username3: null,
             description: null,
             picture: null
         }
     },
+    async getDescription() {
+        try{
+            const response = await AXIOS.get('/getInstructorByUsername/' + this.$username);
+            console.log(response.data);
+            this.currentDescription = response.data.description;
+        } catch(error){
+            console.error('Error creating activity', error.message);
+        }
+    },
     methods: {
         async updateUsername() {
-            const newUsername = {
-                oldUsername: this.oldUsername,
-                newUsername: this.newUsername
-            };
             try{
-                const response = await AXIOS.put('/updateAccountUsername/' + this.oldUsername + '/' + this.newUsername);
-                this.accounts.push(response.data);
+                const response = await AXIOS.put('/updateAccountUsername/' + this.username1 + '/' + this.newUsername);
+                this.$username = this.newUsername;
+                console.log(response.data);
+                alert("Username updated successfully! New username is: " + this.$username);
                 this.clearInputs();
             } catch(error){
                 console.error('Error creating activity', error.message);
             }
         },
         async updatePassword() {
-            const newPassword = {
-                username: this.username,
-                newPassword: this.newPassword,
-                oldPassword: this.oldPassword
-            };
             try{
-                const response = await AXIOS.put('/updateAccountPassword/' + this.username + '/' + this.oldPassword + '/' + this.newPassword);
-                this.accounts.push(response.data);
+                const response = await AXIOS.put('/updateAccountPassword/' + this.username2 + '/' + this.oldPassword + '/' + this.newPassword);
+                console.log(response.data);
+                alert("Password updated successfully! New password is: " + this.newPassword);
                 this.clearInputs();
             } catch(error){
                 console.error('Error creating activity', error.message);
             }
         },
         async updateInstructorInfo() {
-            const newInstructor = {
-                username2: this.username2,
-                description: this.description,
-                picture: this.picture
-            };
             try{
-                const response = await AXIOS.put('/updateInstructor/' + this.username2 + '/' + this.description + '/' + this.picture);
-                this.accounts.push(response.data);
+                const response = await AXIOS.put('/updateInstructor/' + this.username3 + '/' + this.description + '/' + this.picture);
+                console.log(response.data);
+                alert("Instructor info updated successfully! New description is: " + this.description + " and new image URL is: " + this.picture);
                 this.clearInputs();
             } catch(error){
                 console.error('Error creating activity', error.message);
@@ -119,24 +116,21 @@ export default {
             this.$router.push('/app/account/owner-account');
         },
         async deleteInstructorAccount() {
-            const deletedInstructor = {
-                username2: this.username2
-            };
             try{
-                const response = await AXIOS.delete('/deleteInstructorByUsername/' + this.username2);
-                this.accounts.push(response.data);
+                const response = await AXIOS.delete('/deleteInstructorByUsername/' + this.$username);
+                console.log(response.data);
                 this.clearInputs();
             } catch(error){
                 console.error('Error creating activity', error.message);
             }
         },
         clearInputs() {
-            this.oldUsername = null;
+            this.username1 = null;
             this.newUsername = null;
-            this.username = null;
+            this.username2 = null;
             this.oldPassword = null;
             this.newPassword = null;
-            this.username2 = null;
+            this.username3 = null;
             this.description = null;
             this.picture = null;
         }

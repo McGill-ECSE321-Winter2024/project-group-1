@@ -3,8 +3,7 @@
         <h1>My owner account</h1>
         <VBox id="verticalContainer">
             <p id="currentInformation">
-                Username: Joe Mama<br>
-                Email: joe@gym.com
+                Username: {{ $username }} <br>
             </p>
 
             <VBox id="verticalContainer">
@@ -25,7 +24,7 @@
             <HBox id="containerH">
                 <button id="subButton" @click="goToCustomerMode()">Customer mode</button>
                 <button id="subButton" @click="goToInstructorMode()">Instructor mode</button>
-                <button id="destroyButton" @click="deleteAccount()">Delete account</button>
+                <!--button id="destroyButton" @click="deleteAccount()">Delete account</button-->
             </HBox>
         </VBox>
     </div>
@@ -47,7 +46,6 @@ export default {
     name: 'OwnerAccount',
     data() {
         return {
-            accounts: [],
             oldUsername: null,
             newUsername: null,
             username: null,
@@ -57,27 +55,21 @@ export default {
     },
     methods: {
         async updateUsername() {
-            const newUsername = {
-                oldUsername: this.oldUsername,
-                newUsername: this.newUsername
-            };
             try{
                 const response = await AXIOS.put('/updateAccountUsername/' + this.oldUsername + '/' + this.newUsername);
-                this.accounts.push(response.data);
+                this.$username = this.newUsername;
+                alert('Username updated successfully! New username is: ' + this.newUsername);
+                console.log(response.data);
                 this.clearInputs();
             } catch(error){
                 console.error('Error creating activity', error.message);
             }
         },
         async updatePassword() {
-            const newPassword = {
-                username: this.username,
-                newPassword: this.newPassword,
-                oldPassword: this.oldPassword
-            };
             try{
                 const response = await AXIOS.put('/updateAccountPassword/' + this.username + '/' + this.oldPassword + '/' + this.newPassword);
-                this.accounts.push(response.data);
+                alert('Password updated successfully! New password is: ' + this.newPassword);
+                console.log(response.data);
                 this.clearInputs();
             } catch(error){
                 console.error('Error creating activity', error.message);
@@ -95,7 +87,7 @@ export default {
             };
             try{
                 const response = await AXIOS.delete('/deleteInstructorByUsername/' + this.username);
-                this.accounts.push(response.data);
+                console.log(response.data);
                 this.clearInputs();
             } catch(error){
                 console.error('Error creating activity', error.message);

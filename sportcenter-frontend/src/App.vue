@@ -36,13 +36,9 @@
 
 <script>
 import Vue from 'vue';
-import CreateAccount from './components/authentification/CreateAccount.vue';
 
 export default {
     name: 'app',
-    components: {
-      CreateAccount
-    },
     methods: {
       goHome() {
         this.$router.push('/');
