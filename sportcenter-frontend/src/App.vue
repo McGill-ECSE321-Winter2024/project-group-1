@@ -8,18 +8,14 @@
       </VBox>
       <img src="./assets/gym-icon.jpg" alt="Logo" contain height="110px" width="110px" style="border-radius: 55px;" @click="goHome()"></img>
     </HBox>
-
-
     <br>
-
-    <HBox>
+    <HBox v-if="$loggedIn">
       <button id="menuButton" @click="goAccount()">Account</button>
       <button id="menuButton" @click="goMyActivities()">My Activities</button>
       <button id="menuButton" @click="goActivity()">All activities</button>
       <button id="menuButton" @click="goInstructors()">Instructors</button>
       <button id="destroyButton" @click="goAuth()">Logout</button>
     </HBox>
-
     <router-view></router-view>
   </div>
 </template>
