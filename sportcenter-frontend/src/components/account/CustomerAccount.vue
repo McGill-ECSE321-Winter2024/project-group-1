@@ -2,9 +2,9 @@
     <div id="mainContainer">
         <h1>My customer account</h1>
         <VBox id="verticalContainer">
-            <!--p id="currentInformation">
+            <p id="currentInformation">
                 Username: {{ $username }} <br>
-            </p-->
+            </p>
 
             <VBox id="verticalContainer">
                 <input id="inputBox" type="text" placeholder="Username" v-model="oldUsername"></input>
