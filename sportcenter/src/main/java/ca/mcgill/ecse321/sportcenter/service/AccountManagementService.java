@@ -194,17 +194,41 @@ public class AccountManagementService {
      * @param password
      * @return Account
      */
-    public Account login(String username, String password) {
+    public Account login(String username, String password, String role) {
         if (username == null || username.trim().isEmpty() || username.contains(" ")) {
             throw new IllegalArgumentException("Username cannot be null, empty and spaces!");
         }
         if (password == null || password.trim().isEmpty() || password.contains(" ")) {
             throw new IllegalArgumentException("Password cannot be empty");
         }
+        if (role == null || role.trim().isEmpty() || role.contains(" ")) {
+            throw new IllegalArgumentException("Role cannot be empty");
+        }
 
         Account account = accountRepository.findAccountByUsername(username);
         if (account == null) {
             throw new IllegalArgumentException("Account does not exist");
+        }
+
+        // If role is customer, check if account has customer role
+        if (role.equals("customer")) {
+            if (customerRepository.findCustomerByAccountRoleId(account.getAccountId()) == null) {
+                throw new IllegalArgumentException("Account does not have customer role");
+            }
+        }
+
+        // If role is instructor, check if account has instructor role
+        if (role.equals("instructor")) {
+            if (instructorRepository.findInstructorByAccountRoleId(account.getAccountId()) == null) {
+                throw new IllegalArgumentException("Account does not have instructor role");
+            }
+        }
+
+        // If role is owner, check if account has owner role
+        if (role.equals("owner")) {
+            if (ownerRepository.findOwnerByAccountRoleId(account.getAccountId()) == null) {
+                throw new IllegalArgumentException("Account does not have owner role");
+            }
         }
         return account;
     }

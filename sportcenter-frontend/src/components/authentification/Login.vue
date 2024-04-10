@@ -4,11 +4,7 @@
         <VBox id="verticalContainer">
             <VBox id="verticalContainer">
                 <input id="inputBox" type="text" placeholder="Username" v-model="username"></input>
-                <!--<input id="inputBox" type="password" placeholder="Password"></input>-->
-                <!--<input id="inputBox" type="text" placeholder="Status" v-model="status"> --><!-- This is not the correct type it should be InstructorStatus-->
-                <input id="inputBox" type="text" placeholder="Description (for Instructor)" v-model="description">
-                <input id="inputBox" type="text" placeholder="ProfilePicURL (for Instructor)" v-model="profilePicURL">
-                <!--TODO: ADD ACCOUNT TYPE LOGIN CHOICE-->
+                <input id="inputBox" type="password" placeholder="Password" v-model="password"></input>
                 <HBox id="horizontalContainer">
                     <button id="mainButton" @click="loginCustomer()"><b>Login as customer</b></button>
                     <button id="mainButton" @click="loginInstructor()"><b>Login as instructor</b></button>
@@ -42,62 +38,45 @@ export default {
     name: 'Login',
     data() {
     return {
-        customers: [],
-        instructors: [],
-        owners: [],
         username: null,
-        //status: null,
-        description: null,
-        profilePicURL: null
+        password: null,
     }
 },
     methods: {
         async loginCustomer() {
-            //alert("Create account button clicked");
-            //console.log("Create account button clicked");
-            const newCustomer = {
-                username: this.username
-            };
             try{
-                const response = await AXIOS.post('/createCustomer/' + this.username);
-                this.customers.push(response.data);
-                this.clearInputs();
-                //this.accounts = response.data.accounts; // or response.data
+                const response = await AXIOS.get('/loginCustomer/' + this.username + '/' + this.password + '/customer');
+                // Set user to logged in
+                this.$loggedIn = true;
+                this.$accountType = 'Customer';
+                this.$username = this.username;
+                this.$router.push('/');
             } catch(error){
-                console.error('Error fetching accounts', error.message);
+                alert(error.message);
             }
         },
         async loginInstructor() {
-            //alert("Create account button clicked");
-            //console.log("Create account button clicked");
-            const newInstructor = {
-                username: this.username,
-                //status: this.status,
-                description: this.description,
-                profilePicURL: this.profilePicURL
-            };
             try{
-                const response = await AXIOS.post('/createInstructor/' + this.username + '/' + this.description + '/' + this.profilePicURL);
-                this.instructors.push(response.data);
-                this.clearInputs();
-                //this.accounts = response.data.accounts; // or response.data
+                const response = await AXIOS.get('/loginInstructor/' + this.username + '/' + this.password + '/instructor');
+                // Set user to logged in
+                this.$loggedIn = true;
+                this.$accountType = 'Instructor';
+                this.$username = this.username;
+                this.$router.push('/');
             } catch(error){
-                console.error('Error fetching accounts', error.message);
+                alert(error.message);
             }
         },
         async loginOwner() {
-            //alert("Create account button clicked");
-            //console.log("Create account button clicked");
-            const newOwner = {
-                username: this.username
-            };
             try{
-                const response = await AXIOS.post('/createOwner/' + this.username);
-                this.owners.push(response.data);
-                this.clearInputs();
-                //this.accounts = response.data.accounts; // or response.data
+                const response = await AXIOS.get('/loginOwner/' + this.username + '/' + this.password + '/owner');
+                // Set user to logged in
+                this.$loggedIn = true;
+                this.$accountType = 'Owner';
+                this.$username = this.username;
+                this.$router.push('/');
             } catch(error){
-                console.error('Error fetching accounts', error.message);
+                alert(error.message);
             }
         },
         goToForgotPassword() {
