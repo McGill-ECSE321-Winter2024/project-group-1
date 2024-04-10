@@ -95,6 +95,9 @@ export default {
         capacity: this.capacity,
       };
       try {
+        date = date.toLocalDateString();
+        startTime = startTime.toLocalTimeString();
+        endTime = endTime.toLocalTimeString();
         /*
                 const localDate = DateTime.fromJSDate(date).toLocal(); // Convert to local date
                 date = localDate.toISODate(); 
@@ -121,6 +124,7 @@ export default {
             capacity
         );
         console.log(response.data);
+        this.clearInputs();
       } catch (error) {
         alert("Error creating scheduled activity");
         this.clearInputs();
