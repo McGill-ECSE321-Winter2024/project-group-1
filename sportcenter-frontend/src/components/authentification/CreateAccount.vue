@@ -53,8 +53,8 @@ export default {
   name: "CreateAccount",
   data() {
     return {
-      username: null,
-      password: null,
+      username:'',
+      password: '',
     };
   },
   methods: {
@@ -63,7 +63,7 @@ export default {
         const response = await AXIOS.post( "/createAccount/" + this.username + "/" + this.password );
         console.log(response.data);
       } catch (error) {
-        alert("Problem creating account. Please try again.");
+        alert("Problem creating account. Please try again.", error);
       }
       try {
         const response2 = await AXIOS.post( "/createCustomer/" + this.username );
