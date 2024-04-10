@@ -4,8 +4,14 @@
       <VBox id="verticalContainer" style="margin-right: 25px;">
         <h1>FullForm</h1>
         <h2>Put yourself first</h2>
-      </VBox>
+        <h2>{{ $time }}</h2>
+      </VBox id="verticalContainer">
       <img src="./assets/gym-icon.jpg" alt="Logo" contain height="110px" width="110px" style="border-radius: 55px;" @click="goHome()"></img>
+      <VBox>
+        <h2>{{ $accountType }}</h2>
+        <h2>{{ $username }}</h2>
+        <h2 v-if="$loggedIn">Logged in</h2>
+      </VBox>
     </HBox>
     <br>
     <HBox v-if="$loggedIn">
@@ -23,7 +29,8 @@
       <button id="menuButton" @click="goLogin()">Login</button>
       <button id="menuButton" @click="goCreateAccount()">Create account</button>
     </HBox>
-    <router-view></router-view>
+    <router-view style="margin-bottom: 80px;"></router-view>
+    <p style="margin-bottom: 80px;">© 2023 FullForm (Group 1)</p>
   </div>
 </template>
 
@@ -34,6 +41,7 @@ import Vue from 'vue';
 Vue.prototype.$accountType = "Owner";
 Vue.prototype.$username = 'JoeMama'; // guest = JoeMama
 Vue.prototype.$loggedIn = true;
+Vue.prototype.$time = new Date().getDate() + "/" + new Date().getMonth() + "/" + new Date().getFullYear();
 
 export default {
     name: 'app',
