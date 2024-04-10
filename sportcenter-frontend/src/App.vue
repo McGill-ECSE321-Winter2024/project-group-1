@@ -9,14 +9,14 @@
     </HBox>
     <br>
     <HBox v-if="$loggedIn">
-      <button id="menuButton" v-if="$accountType=='Customer'" @click="goCustomerAccount()">Account</button>
-      <button id="menuButton" v-if="$accountType=='Instructor'" @click="goInstructorAccount()">Account</button>
-      <button id="menuButton" v-if="$accountType=='Owner'" @click="goOwnerAccount()">Account</button>
-      <button id="menuButton" @click="goMyActivities()">My Activities</button>
+      <button id="menuButton" @click="goHome()">Home</button>
+      <button id="menuButton" v-if="$accountType === 'Customer'" @click="goCustomerAccount()">Account</button>
+      <button id="menuButton" v-if="$accountType === 'Instructor'" @click="goInstructorAccount()">Account</button>
+      <button id="menuButton" v-if="$accountType === 'Owner'" @click="goOwnerAccount()">Account</button>
+      <button id="menuButton" @click="goMyActivities()">My activities</button>
       <button id="menuButton" @click="goActivity()">All activities</button>
-      <button id="menuButton" v-if="$accountType != 'Owner'" @click="goInstructors()">Instructors</button>
-      <button id="menuButton" v-if="$accountType=='Owner'" @click="goInstructorsForOwner()">Instructors</button>
-      <button id="destroyButton" @click="goAuth()">Logout</button>
+      <button id="menuButton" @click="goInstructors()">Instructors</button>
+      <button id="destroyButton" @click="goLogin()">Logout</button> <!--TO CHANGE-->
     </HBox>
     <HBox v-else>
       <button id="menuButton" @click="goLogin()">Login</button>
@@ -30,15 +30,15 @@
 import Vue from 'vue';
 
 // 4 types: Guest, Customer, Instructor, Owner
-Vue.prototype.$accountType = 'Customer';
+Vue.prototype.$accountType = "Customer";
 Vue.prototype.$username = 'JoeMama'; // guest = JoeMama
-Vue.prototype.$loggedIn = false;
+Vue.prototype.$loggedIn = true;
 
 export default {
     name: 'app',
     methods: {
       goHome() {
-        this.$router.push('/app/home');
+        this.$router.push('/');
       },
       goCustomerAccount() {
         this.$router.push('/app/account/customer-account');
@@ -50,9 +50,9 @@ export default {
         this.$router.push('/app/account/owner-account');
       },
       goMyActivities() {
-        if (true) {
+        if (this.$accountType === 'Customer') {
           this.$router.push('/app/my-activities/customer');
-        } else {
+        } else if (this.$accountType === 'Instructor') {
           this.$router.push('/app/my-activities/instructor');
         }
       },

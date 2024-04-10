@@ -4,7 +4,7 @@
         <VBox id="CustomerContainer" v-if="$accountType=='Guest'">
             <button id="mainButton" @click="goToViewActivity()">View an activity</button>
         </VBox>
-        <VBox id="CustomerContainer" v-if="$accountType=='Customer'">
+        <VBox id="CustomerContainer" v-if="$accountType === 'Customer'">
             <button id="mainButton" @click="goToViewActivity()">View an activity</button>
         </VBox>
         <VBox id="CustomerContainer" v-if="$accountType=='Instructor'">
@@ -16,7 +16,7 @@
             <button id="mainButton" @click="goToUpdateDeleteScheduledActivity()">Update a scheduled activity</button>
             <button id="mainButton" @click="goToUpdateDeleteScheduledActivity()">Delete a scheduled activity</button>
         </VBox>
-        <VBox id="verticalContainer" v-if="$accountType=='Owner'">
+        <VBox id="verticalContainer" v-if="$accountType ==='Owner'">
             
             <button id="mainButton" @click="goToUpdateActivity()">Update an activity</button>
             <button id="mainButton" @click="goToDeleteActivity()">Delete an activity</button>
