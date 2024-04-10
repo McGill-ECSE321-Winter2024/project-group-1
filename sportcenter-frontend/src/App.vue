@@ -20,12 +20,17 @@
       <button id="menuButton" @click="goInstructors()">Instructors</button>
       <button id="destroyButton" @click="goAuth()">Logout</button>
     </HBox>
-    
+
     <router-view></router-view>
   </div>
 </template>
 
 <script>
+import Vue from 'vue';
+
+// 4 types: Guest, Customer, Instructor, Owner
+Vue.prototype.$accountType = 'Customer';
+
 export default {
     name: 'app',
     methods: {
@@ -46,6 +51,7 @@ export default {
         this.$router.push('/app/activity');
       },
       goAuth() {
+        alert('You have been logged out: ' + this.$accountType);
         this.$router.push('/app/auth');
       },
       goInstructors() {

@@ -3,7 +3,7 @@
         <h1>Activity menu</h1>
         <VBox id="verticalContainer">
             <button id="mainButton" @click="goToProposeActivity()">Propose an activity</button> <!--CHANGED-->
-            <button id="mainButton" @click="goToUpdateActivity()">Update an activity</button>
+            <button id="mainButton" @click="goToUpdateActivity()" v-if="true">Update an activity</button>
             <button id="mainButton" @click="goToDeleteActivity()">Delete an activity</button>
             <button id="mainButton" @click="goToViewActivity()">View an activity</button>
             <button id="mainButton" @click="goToScheduleActivity()">Schedule an activity</button>
