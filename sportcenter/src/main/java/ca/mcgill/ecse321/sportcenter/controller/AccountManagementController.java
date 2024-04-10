@@ -104,10 +104,10 @@ public class AccountManagementController {
      * 
      * @return AccountDto
      */
-    @GetMapping(value = { "/login/{username}/{password}", "/login/{username}/{password}/" })
-    public AccountDto login(@PathVariable("username") String username, @PathVariable("password") String password)
-            throws IllegalArgumentException {
-        Account account = accountService.login(username, password);
+    @GetMapping(value = { "/login/{username}/{password}/{role}", "/login/{username}/{password}/{role}/" })
+    public AccountDto login(@PathVariable("username") String username, @PathVariable("password") String password,
+            @PathVariable("role") String role) throws IllegalArgumentException {
+        Account account = accountService.login(username, password, role);
         return convertAccountToDto(account);
     }
 
