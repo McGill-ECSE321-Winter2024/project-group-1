@@ -10,6 +10,13 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 Vue.use(BootstrapVue)
 Vue.config.productionTip = false
 
+// 4 types: Guest, Customer, Instructor, Owner
+Vue.prototype.$accountType = "Customer";
+Vue.prototype.$username = 'Andrew'; // guest = JoeMama
+Vue.prototype.$loggedIn = true;
+Vue.prototype.$time = new Date().getDate() + "/" + new Date().getMonth() + "/" + new Date().getFullYear();
+Vue.prototype.$debugging_mode = true;
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

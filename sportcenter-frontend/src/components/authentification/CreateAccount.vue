@@ -62,14 +62,24 @@ export default {
       try {
         const response = await AXIOS.post( "/createAccount/" + this.username + "/" + this.password );
         console.log(response.data);
-        
       } catch (error) {
-        alert(error.message);
+        alert("Problem creating account. Please try again.");
       }
       try {
         const response2 = await AXIOS.post( "/createCustomer/" + this.username );
         console.log(response2.data);
         this.clearInputs();
+      } catch (error) {
+        alert("Problem creating customer. Please try again.");
+      }
+      try {
+        this.$loggedIn = true;
+        console.log("Logged in!", this.$loggedIn );
+        this.$accountType = "Customer";
+        console.log("Account type:", this.$accountType );
+        this.$username = this.username;
+        console.log("Username:", this.$username );
+        this.$router.push("/");
       } catch (error) {
         alert(error.message);
       }

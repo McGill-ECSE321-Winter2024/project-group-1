@@ -2,6 +2,7 @@
     <div>
         <div class="ViewActivityTable" id="mainContainer">
         <h1>View activities</h1>
+        <button id="mainButton" @click="checkGlobalVariables()">Check Global Variables</button>
         <br>
             
         <input id="inputBox" type="text" v-model="search" placeholder="Search activities">
@@ -136,7 +137,11 @@ export default {
 
 
   methods: {
-
+    async checkGlobalVariables() {
+      console.log(this.$accountType);
+      console.log(this.$username);
+      console.log(this.$loggedIn);
+    },
     fetchScheduledActivities() {
       // Make HTTP request to fetch scheduled activities from backend
       axios.get('/scheduledActivities')

@@ -36,17 +36,13 @@
 
 <script>
 import Vue from 'vue';
-
-// 4 types: Guest, Customer, Instructor, Owner
-Vue.prototype.$accountType = "Customer";
-Vue.prototype.$username = 'JoeMama'; // guest = JoeMama
-Vue.prototype.$loggedIn = true;
-Vue.prototype.$time = new Date().getDate() + "/" + new Date().getMonth() + "/" + new Date().getFullYear();
-
-Vue.prototype.$debugging_mode = true;
+import CreateAccount from './components/authentification/CreateAccount.vue';
 
 export default {
     name: 'app',
+    components: {
+      CreateAccount
+    },
     methods: {
       goHome() {
         this.$router.push('/');
@@ -75,6 +71,8 @@ export default {
       },
       goLogout() {
         this.$router.push('/app/auth/login');
+        this.$accountType = 'Guest';
+        this.$username = 'JoeMama';
         this.$loggedIn = false;
       },
       goCreateAccount() {

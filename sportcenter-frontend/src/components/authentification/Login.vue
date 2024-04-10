@@ -15,7 +15,7 @@
             <VBox id="verticalContainer" style="width: 40%; align-self: center;">
                 <v-divider>Other options</v-divider>
                 <button id="subButton" @click="goToForgotPassword()"><b>Forgot password</b></button>
-                <button id="subButton" @click="goToCreateAccount()"><b>Create a new account</b></button>
+                <!--button id="subButton" @click="goToCreateAccount()"><b>Create a new account</b></button-->
                 <button id="subButton" @click="goToContinueAsGuest()">Continue as a guest</button>
             </VBox>
         </VBox>
