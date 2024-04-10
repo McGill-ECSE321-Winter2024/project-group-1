@@ -11,7 +11,6 @@
                     <tr>
                         <th width="20%">Profile pic</th>
                         <th width="16%">Name</th>
-                        <th width="16%">Speciality</th>
                         <th width="48%">Description</th>
                     </tr>
                 </thead>
@@ -19,15 +18,14 @@
 
                     <template v-if="instructors.length === 0">
                         <tr>
-                            <td colspan="4">No instructor</td>
+                            <td colspan="3">No instructor</td>
                         </tr>
                     </template>
 
                     <template v-else>
                         <tr v-for="(instructor, index) in filteredInstructors" :key="index">
-                            <td>{{ instructor.picture }}</td>
-                            <td >{{ instructor.name }}</td>
-                            <td>{{ instructor.speciality }}</td>
+                            <td>{{ instructor.profilePicURL }}</td>
+                            <td >{{ instructor.account.username }}</td>
                             <td>{{ instructor.description }}</td>
                         </tr>
                     </template>
@@ -77,38 +75,21 @@ const AXIOS = axios.create({
                 search: '',
             };
         },
-
-        mounted() {
-            this.getInstructors();
-        },
-
-        methods: {
-            getInstructors() {
-                AXIOS.get('/instructors')
-                    .then(response => {
-                        this.instructors = response.data;
-
-                        this.instructorsTable= response.data.map(instructor => (
-                            {
-                                picture: instructor.picture,
-                                name: instructor.name,
-                                speciality: instructor.speciality,
-                                description: instructor.description
-                            }));
-                            })
-                            .catch(e => {
-                            console.error('Error fetching instructors', e);
-                    });
-            },
+        async created() {
+            try {
+                const response = await AXIOS.get('/getAllInstructors');
+                this.instructors = response.data;
+                this.filteredInstructors = this.instructors;
+            } catch (error) {
+                console.error('Error fetching instructors', error.message);
+            }
         },
         computed: {
-        
-            filteredInstructors: function() {
-                const query = this.search.toLowerCase();
-                return this.instructors.filter(instructor => 
-                    instructor.name.toLowerCase().includes(query)
-                );
-            },
+            filteredInstructors() {
+                return this.instructors.filter(instructor => {
+                    return instructor.account.username.toLowerCase().includes(this.search.toLowerCase());
+                });
+            }
         }
 
 
