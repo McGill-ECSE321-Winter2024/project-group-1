@@ -9,14 +9,11 @@
         <VBox id="CustomerContainer" v-else-if="$accountType === 'Customer'">
             <button id="mainButton" @click="goToViewActivity()">View an activity</button>
         </VBox>
-        <VBox id="CustomerContainer" v-else-if="$accountType=='Instructor'">
+        <VBox id="CustomerContainer" v-else-if="$accountType === 'Instructor'">
             <button id="mainButton" @click="goToProposeActivity()">Propose an activity</button> <!--CHANGED-->
-            <button id="mainButton" @click="goToUpdateActivity()">Update an activity</button>
             <button id="mainButton" @click="goToScheduleActivity()">Schedule an activity</button>
-            <button id="mainButton" @click="goToUpdateDeleteScheduledActivity()">Update a scheduled activity</button>
         </VBox>
         <VBox id="verticalContainer" v-else="$accountType ==='Owner'">
-            
             <button id="mainButton" @click="goToUpdateActivity()">Update an activity</button>
             <button id="mainButton" @click="goToUpdateDeleteScheduledActivity()">Update a scheduled activity</button>
             <button id="mainButton" @click="goToManageActivities()">Manage activities</button>
