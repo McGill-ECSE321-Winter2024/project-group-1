@@ -1,12 +1,25 @@
 <template>
     <div id="mainContainer">
         <h1>Activity menu</h1>
-        <VBox id="verticalContainer">
-            <button id="mainButton" @click="goToProposeActivity()">Propose an activity</button> <!--CHANGED-->
-            <button id="mainButton" @click="goToUpdateActivity()" v-if="true">Update an activity</button>
-            <button id="mainButton" @click="goToDeleteActivity()">Delete an activity</button>
+        <VBox id="CustomerContainer" v-if="$accountType=='Guest'">
             <button id="mainButton" @click="goToViewActivity()">View an activity</button>
+        </VBox>
+        <VBox id="CustomerContainer" v-if="$accountType=='Customer'">
+            <button id="mainButton" @click="goToViewActivity()">View an activity</button>
+        </VBox>
+        <VBox id="CustomerContainer" v-if="$accountType=='Instructor'">
+            <button id="mainButton" @click="goToViewActivity()">View an activity</button>
+            <button id="mainButton" @click="goToProposeActivity()">Propose an activity</button> <!--CHANGED-->
+            <button id="mainButton" @click="goToUpdateActivity()">Update an activity</button>
+            <button id="mainButton" @click="goToUpdateActivity()">Update an activity</button>
             <button id="mainButton" @click="goToScheduleActivity()">Schedule an activity</button>
+            <button id="mainButton" @click="goToUpdateDeleteScheduledActivity()">Update a scheduled activity</button>
+            <button id="mainButton" @click="goToUpdateDeleteScheduledActivity()">Delete a scheduled activity</button>
+        </VBox>
+        <VBox id="verticalContainer" v-if="$accountType=='Owner'">
+            
+            <button id="mainButton" @click="goToUpdateActivity()">Update an activity</button>
+            <button id="mainButton" @click="goToDeleteActivity()">Delete an activity</button>
             <button id="mainButton" @click="goToUpdateDeleteScheduledActivity()">Update a scheduled activity</button>
             <button id="mainButton" @click="goToUpdateDeleteScheduledActivity()">Delete a scheduled activity</button>
             <button id="mainButton" @click="goToManageActivities()">Manage activities</button>
