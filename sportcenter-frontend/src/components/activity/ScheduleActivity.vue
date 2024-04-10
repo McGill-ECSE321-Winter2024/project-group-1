@@ -4,13 +4,13 @@
 
     <Vbox id="verticalContainer">
       <HBox id="horizontalContainer">
-        <input id="datePickerInput" type="date" name="scheduled" />
+        <input id="datePickerInput" type="date" v-model="date" />
         <h2 style="align-self: center">from</h2>
-        <input id="datePickerInput" type="time" name="startTime" />
+        <input id="datePickerInput" type="time" v-model="startTime" />
         <h2 style="align-self: center">to</h2>
-        <input id="datePickerInput" type="time" name="endTime" />
+        <input id="datePickerInput" type="time" v-model="endTime" />
       </HBox>
-      <select v-model="selectAccount">
+      <!--select v-model="selectAccount">
         <option
           v-for="account in accounts"
           :key="account.accountRoleId"
@@ -19,7 +19,7 @@
           {{ account.accountRoleId }}
         </option>
         >
-      </select>
+      </select-->
       <br />
       <select v-model="selectActivity">
         <option
@@ -31,10 +31,8 @@
         </option>
         >
       </select>
-      <!--
-            <input id="inputBox" type="text" placeholder="Account Role Id" v-model="accountRoleId">
-            <input id="inputBox" type="text" placeholder="Activity Name" v-model="activityName2">
-            -->
+            <!--input id="inputBox" type="text" placeholder="Account Role Id" v-model="accountRoleId"-->
+            <!--input id="inputBox" type="text" placeholder="Activity Name" v-model="activityName2"-->
       <input
         id="inputBox"
         type="text"
@@ -78,53 +76,42 @@ export default {
       date: null,
       startTime: null,
       endTime: null,
-      //accountRoleId: null,
-      //activityName2: null,
       capacity: null,
     };
   },
+  created() {
+    this.getActivities();
+  },
 
   methods: {
-    async submitScheduleActivity() {
-      const newScheduledActivity = {
-        date: this.date,
-        startTime: this.startTime,
-        endTime: this.endTime,
-        instructorId: this.instructorId,
-        activityName: this.activityName,
-        capacity: this.capacity,
-      };
+    async getActivities() {
       try {
-        date = date.toLocalDateString();
-        startTime = startTime.toLocalTimeString();
-        endTime = endTime.toLocalTimeString();
-        /*
-                const localDate = DateTime.fromJSDate(date).toLocal(); // Convert to local date
-                date = localDate.toISODate(); 
-
-                const localStartTime = DateTime.fromJSTime(startTime).toLocal(); // Convert to local time zone
-                startTime = localStartTime.toISOTime();
-
-                const localEndTime = DateTime.fromJSTime(endTime).toLocal(); // Convert to local time zone
-                endTime = localEndTime.toISOTime(); 
-                */
-
+        const response = await AXIOS.get("/activities");
+        this.activities = response.data;
+      } catch (error) {
+        alert("Error getting activities");
+      }
+    },
+    async submitScheduleActivity() {
+      try {
+        const response1 = await AXIOS.get(
+          "/getInstructorByUsername/" + this.$username
+        );
         const response = await AXIOS.post(
           "/createScheduledActivity/" +
-            date +
+            this.date +
             "/" +
-            startTime +
+            this.startTime +
             "/" +
-            endTime +
+            this.endTime +
             "/" +
-            instructorId +
+            response1.accountRoleId +
             "/" +
-            activityName +
+            this.selectActivity.name +
             "/" +
-            capacity
+            this.capacity
         );
         console.log(response.data);
-        this.clearInputs();
       } catch (error) {
         alert("Error creating scheduled activity");
         this.clearInputs();
