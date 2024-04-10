@@ -35,7 +35,7 @@ const AXIOS = axios.create({
 })
 
 export default {
-    name: 'Login',
+    name: "Login",
     data () {
         return {
             username: null,
@@ -45,7 +45,8 @@ export default {
     methods: {
         async loginCustomer() {
             try{
-                const response = await AXIOS.get('/loginCustomer/' + this.username + '/' + this.password + '/customer');
+                const response = await AXIOS.get('/login/' + this.username + '/' + this.password + '/customer');
+                console.log(response.data);
                 // Set user to logged in
                 this.$loggedIn = true;
                 this.$accountType = 'Customer';
@@ -57,7 +58,8 @@ export default {
         },
         async loginInstructor() {
             try{
-                const response = await AXIOS.get('/loginInstructor/' + this.username + '/' + this.password + '/instructor');
+                const response = await AXIOS.get('/login/' + this.username + '/' + this.password + '/instructor');
+                console.log(response.data);
                 // Set user to logged in
                 this.$loggedIn = true;
                 this.$accountType = 'Instructor';
@@ -69,7 +71,8 @@ export default {
         },
         async loginOwner() {
             try{
-                const response = await AXIOS.get('/loginOwner/' + this.username + '/' + this.password + '/owner');
+                const response = await AXIOS.get('/login/' + this.username + '/' + this.password + '/owner');
+                console.log(response.data);
                 // Set user to logged in
                 this.$loggedIn = true;
                 this.$accountType = 'Owner';
