@@ -1,9 +1,9 @@
 package ca.mcgill.ecse321.sportcenter.dto;
 
+import ca.mcgill.ecse321.sportcenter.model.Instructor;
+import ca.mcgill.ecse321.sportcenter.model.Instructor.InstructorStatus;
+
 public class InstructorDto {
-    public enum InstructorStatus {
-        Active, Inactive, Pending
-    }
 
     private int accountRoleId;
     private InstructorStatus status;
@@ -11,8 +11,12 @@ public class InstructorDto {
     private String profilePicURL;
     private AccountDto account;
 
-    public InstructorDto(int accountRoleId) {
-        this.accountRoleId = accountRoleId;
+    public InstructorDto(Instructor instructor) {
+        this.accountRoleId = instructor.getAccountRoleId();
+        this.status = instructor.getStatus();
+        this.description = instructor.getDescription();
+        this.profilePicURL = instructor.getProfilePicURL();
+        this.account = new AccountDto(instructor.getAccount());
     }
 
     public InstructorDto(int accountRoleId, InstructorStatus status, String description, String profilePicURL,

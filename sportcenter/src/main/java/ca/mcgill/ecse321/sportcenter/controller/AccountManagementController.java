@@ -27,6 +27,7 @@ import ca.mcgill.ecse321.sportcenter.service.AccountManagementService;
 /**
  * Controller class for the AccountManagement
  * 
+ * @author Mathias Lamina & Patrick Zacharia & Andrew Nemr
  */
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -76,7 +77,7 @@ public class AccountManagementController {
     @PostMapping(value = { "/createInstructor/{username}/{description}/{profilePicURL}",
             "/createInstructor/{username}/{description}/{profilePicURL}/" })
     public InstructorDto createInstructor(@PathVariable("username") String username,
-            @PathVariable("description") String description, @PathVariable("profilePicture") String profilePicURL)
+            @PathVariable("description") String description, @PathVariable("profilePicURL") String profilePicURL)
             throws IllegalArgumentException {
         Instructor instructor = accountService.createInstructor(username, description, profilePicURL);
         return convertInstructorToDto(instructor);
@@ -468,7 +469,7 @@ public class AccountManagementController {
      * @return InstructorDto
      */
     public static InstructorDto convertInstructorToDto(Instructor instructor) {
-        return new InstructorDto(instructor.getAccountRoleId());
+        return new InstructorDto(instructor);
     }
 
     /**

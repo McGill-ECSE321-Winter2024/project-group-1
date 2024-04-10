@@ -22,7 +22,7 @@ import ca.mcgill.ecse321.sportcenter.service.ScheduledActivityManagementService;
 /**
  * Rest controller for the ScheduledActivity entity
  * 
- * @author Fabian Saldana
+ * @author Fabian Saldana & Patrick Zakaria
  */
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
