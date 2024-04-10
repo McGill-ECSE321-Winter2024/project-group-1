@@ -35,7 +35,8 @@
                     <tr>
                         <th width="100">Activity Name</th>
                         <th width="100">Activity Description</th>
-                        <th width="100">Activity Approve</th>
+
+                        <th v-if="$accountType ==='Owner'" width="100">Activity Approve</th>
                     </tr>
                 </thead>
                 <tbody id="activities-tbody">
@@ -45,13 +46,13 @@
                         </tr>
                     </template>
                     <template v-else>
-                    <tr v-for="(activity, index) in activities" :key="index" @click="showActivityDetails(activity)">
+                    <tr v-for="(activity, index) in activities" :key="index">
                         <td>{{ activity.name }}</td>
                         <td>{{ activity.description }}</td>
                         <td>
-                        <VBox id="verticalContainer">
-                                <button id="subButton" @click="approveActivity()">Approve</button>
-                                <button id="subButton" @click="dissaproveActivity()">Disapprove</button>
+                        <VBox <VBox v-if="$accountType ==='Owner'" id="verticalContainer">
+                                <button id="subButton" @click="approveActivity(activity.name)">Approve</button>
+                                <button id="subButton" @click="dissaproveActivity(activity.name)">Disapprove</button>
                             </VBox>
                         </td>
                     </tr>
@@ -75,6 +76,7 @@
 <script>
 import axios from 'axios';
 import config from '../../../config';
+import ManageActivities from './ManageActivities.vue';
 
 const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
 const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
@@ -126,6 +128,25 @@ const AXIOS = axios.create({
             goToManageActivities() {
                 this.$router.push('/app/activity/manage-activities');
             },
+
+            async approveActivity(activity){
+            try{
+                const response = await AXIOS.put('/activity/approve/' + activity)
+                this.activities = response.data
+            } catch (error){
+                console.log('Error fetching activities', error.message);
+            }
+            },
+            async dissaproveActivity(activity){
+                try{
+                    const response = await AXIOS.put('/activity/disapprove/' + activity)
+                    this.activities = response.data
+                } catch (error){
+                    console.log('Error fetching activities', error.message);
+                }
+            }
+
+
         }
     }
 </script>
