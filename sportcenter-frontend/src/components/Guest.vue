@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="width: 1200px;">
         <div class="ViewActivityTable" id="mainContainer">
         <h1>View activities</h1>
         <button id="mainButton" @click="checkGlobalVariables()">Check Global Variables</button>
@@ -7,13 +7,13 @@
             
         <!--input id="inputBox" type="text" v-model="search" placeholder="Search activities"-->
 
-            <table id="activityTable" align="center" width="700">
+            <table id="activityTable" align="center" width="900px">
             <thead>
                 <tr>
-                <th width="100">Name</th>
-                <th width="100">Category</th>
-                <th width="100">Date</th>
-                <th width="100">Capacity</th>
+                <th width="25%">Name</th>
+                <th width="25%">Category</th>
+                <th width="25%">Date</th>
+                <th width="25%">Capacity</th>
                 </tr>
             </thead>
             <tbody>
