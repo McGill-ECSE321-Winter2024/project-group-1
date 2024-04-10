@@ -17,7 +17,10 @@ import Instructors from '@/components/instructors/Instructors.vue'
 import ViewInstructors from '@/components/instructors/ViewInstructors.vue'
 import ManageInstructors from '@/components/instructors/ManageInstructors.vue'
 
-import ManageActivities from '../components/activity/ManageActivities.vue'
+import MyActivitiesTableCustomer from '@/components/myActivities/MyActivitiesTableCustomer.vue'
+import MyActivitiesTableInstructor from '@/components/myActivities/MyActivitiesTableInstructor.vue'
+
+import ManageActivities from '@/components/activity/ManageActivities.vue'
 import Activity from '@/components/activity/Activity.vue'
 import ViewActivityTable from '@/components/activity/ViewActivityTable.vue'
 import ProposeActivity from '@/components/activity/ProposeActivity.vue'
@@ -103,6 +106,16 @@ export default new Router({
       path: '/app/activity/update-delete-scheduled-activity',
       name: 'UpdateDeleteScheduledActivity',
       component: UpdateDeleteScheduledActivity
+    },
+    {
+      path: '/app/my-activities/customer',
+      name: 'MyActivitiesTableCustomer',
+      component: MyActivitiesTableCustomer
+    },
+        {
+      path: '/app/my-activities/instructor',
+      name: 'MyActivitiesTableInstructor',
+      component: MyActivitiesTableInstructor
     },
     {
       path: '/app/instructors',

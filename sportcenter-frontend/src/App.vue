@@ -15,7 +15,8 @@
     <HBox>
       <!-- <button id="menuButton" @click="goHome()">Home</button> -->
       <button id="menuButton" @click="goAccount()">Account</button>
-      <button id="menuButton" @click="goActivity()">Activity</button>
+      <button id="menuButton" @click="goMyActivities()">My Activities</button>
+      <button id="menuButton" @click="goActivity()">All activities</button>
       <button id="menuButton" @click="goInstructors()">Instructors</button>
       <button id="destroyButton" @click="goAuth()">Logout</button>
     </HBox>
@@ -33,6 +34,13 @@ export default {
       },
       goAccount() {
         this.$router.push('/app/account');
+      },
+      goMyActivities() {
+        if (true) {
+          this.$router.push('/app/my-activities/customer');
+        } else {
+          this.$router.push('/app/my-activities/instructor');
+        }
       },
       goActivity() {
         this.$router.push('/app/activity');

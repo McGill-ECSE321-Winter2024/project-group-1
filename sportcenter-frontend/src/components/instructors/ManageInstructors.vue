@@ -30,7 +30,7 @@
                             <VBox id="verticalContainer">
                                 <button id="subButton">Approve</button>
                                 <button id="subButton">Disapprove</button>
-                                <button id="subButton">Other</button>
+                                <button id="subButton">Active/Inactive</button>
                             </VBox>
                         </td>
                     </tr>
@@ -44,7 +44,7 @@
                             <VBox id="verticalContainer">
                                 <button id="subButton">Approve</button>
                                 <button id="subButton">Disapprove</button>
-                                <button id="subButton">Other</button>
+                                <button id="subButton">Active/Inactive</button>
                             </VBox>
                         </td>
                     </tr>
@@ -58,7 +58,7 @@
                             <VBox id="verticalContainer">
                                 <button id="subButton">Approve</button>
                                 <button id="subButton">Disapprove</button>
-                                <button id="subButton">Other</button>
+                                <button id="subButton">Active/Inactive</button>
                             </VBox>
                         </td>
                     </tr>
@@ -72,7 +72,7 @@
                             <VBox id="verticalContainer">
                                 <button id="subButton">Approve</button>
                                 <button id="subButton">Disapprove</button>
-                                <button id="subButton">Other</button>
+                                <button id="subButton">Active/Inactive</button>
                             </VBox>
                         </td>
                     </tr>
