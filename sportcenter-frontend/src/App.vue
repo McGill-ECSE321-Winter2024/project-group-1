@@ -48,12 +48,6 @@ export default {
         debugging_mode: localStorage.getItem('debugging_mode') === 'true'
       };
     },
-    watch: {
-      // Watch for changes in accountType and update localStorage
-      accountType(newVal) {
-        localStorage.setItem('accountType', newVal);
-      }
-    },
     methods: {
       goHome() {
         this.$router.push('/');

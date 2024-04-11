@@ -51,6 +51,8 @@ export default {
                 this.$loggedIn = true;
                 this.$accountType = 'Customer';
                 this.$username = this.username;
+                LocalStorage.setItem('accountType',JSON.stringify(accountType));
+                LocalStorage.setItem('username',JSON.stringify(username));
                 this.clearInputs();
                 this.$router.push('/');
             } catch(error){
@@ -65,6 +67,8 @@ export default {
                 this.$loggedIn = true;
                 this.$accountType = 'Instructor';
                 this.$username = this.username;
+                LocalStorage.setItem('accountType',JSON.stringify(accountType));
+                LocalStorage.setItem('username',JSON.stringify(username));
                 this.clearInputs();
                 this.$router.push('/');
             } catch(error){
@@ -79,6 +83,8 @@ export default {
                 this.$loggedIn = true;
                 this.$accountType = 'Owner';
                 this.$username = this.username;
+                LocalStorage.setItem('accountType',JSON.stringify(accountType));
+                LocalStorage.setItem('username',JSON.stringify(username));
                 this.clearInputs();
                 this.$router.push('/');
             } catch(error){

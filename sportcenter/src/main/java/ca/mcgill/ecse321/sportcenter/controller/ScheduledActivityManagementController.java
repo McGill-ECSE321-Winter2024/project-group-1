@@ -48,12 +48,12 @@ public class ScheduledActivityManagementController {
                         "/createScheduledActivity/{date}/{startTime}/{endTime}/{instructorId}/{activityName}/{capacity}/" })
         public ScheduledActivityDto createScheduledActivity(@PathVariable("date") LocalDate date,
                         @PathVariable("startTime") LocalTime startTime, @PathVariable("endTime") LocalTime endTime,
-                        @PathVariable("instructorId") int instructorId,
+                        @PathVariable("instructorId") int accountRoleId,
                         @PathVariable("activityName") String activityName,
                         @PathVariable("capacity") int capacity) throws IllegalArgumentException {
                 ScheduledActivity scheduledActivity = scheduledActivityService.createScheduledActivity(date, startTime,
                                 endTime,
-                                instructorId, activityName, capacity);
+                                accountRoleId, activityName, capacity);
                 return convertToDto(scheduledActivity);
         }
 
