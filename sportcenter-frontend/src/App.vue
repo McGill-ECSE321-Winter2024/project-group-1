@@ -39,6 +39,21 @@ import Vue from 'vue';
 
 export default {
     name: 'app',
+    data() {
+      return {
+        accountType: localStorage.getItem('accountType') || 'Guest',
+        username: localStorage.getItem('username') || 'JoeMama',
+        loggedIn: localStorage.getItem('loggedIn') === 'true',
+        time: localStorage.getItem('time') || (new Date().getDate() + "/" + (new Date().getMonth() + 1) + "/" + new Date().getFullYear()),
+        debugging_mode: localStorage.getItem('debugging_mode') === 'true'
+      };
+    },
+    watch: {
+      // Watch for changes in accountType and update localStorage
+      accountType(newVal) {
+        localStorage.setItem('accountType', newVal);
+      }
+    },
     methods: {
       goHome() {
         this.$router.push('/');
