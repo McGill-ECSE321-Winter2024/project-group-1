@@ -1,75 +1,89 @@
 <template>
   <div class="MyActivitiesTableCustomer" id="mainContainer">
     <h1>View the activities I'm registered for</h1>
-    <br>
-    
-    <table id="activityTable" align="center" width="700">
-      <thead>
-        <tr>
-          <th width="100">Name</th>
-          <th width="100">Category</th>
-          <th width="100">Date</th>
-          <th width="100">Capacity</th>
-        </tr>
-      </thead>
-      <tbody>
-        <template v-if="scheduledActivities.length === 0">
+    <br />
+
+    <VBox id="verticalContainer">
+      <table id="activityTable">
+        <thead>
           <tr>
-            <td colspan="4">No activities</td>
+            <th width="100">Name</th>
+            <th width="100">Category</th>
+            <th width="100">Date</th>
+            <th width="100">Capacity</th>
           </tr>
-        </template>
-        <template v-else>
-          <tr v-for="(scheduledActivities, index) in scheduledActivities" :key="index" @click="showActivityDetails(activity)">
-            <td>{{ scheduledActivities.activity.name }}</td>
-            <td>{{ scheduledActivities.activity.subCategory }}</td>
-            <td>{{ scheduledActivities.date }}</td>
-            <td>{{ scheduledActivities.capacity }}</td>
-          </tr>
-        </template>
-      </tbody>
-    </table>
-    
-    <ViewActivity v-if="selectedActivity" :activity="selectedActivity" @close="closePopup" style="align-self: center;"/>
+        </thead>
+        <tbody id="myActivities">
+          <template v-if="registrations.length === 0">
+            <tr>
+              <td colspan="4">No activities</td>
+            </tr>
+          </template>
+          <template v-else>
+            <tr
+              v-for="(registrations, index) in registrations"
+              :key="index"
+              @click="showActivityDetails(activity)"
+            >
+              <td>{{ registrations.scheduledActivity.activity.name }}</td>
+              <td>
+                {{ registrations.scheduledActivity.activity.subCategory }}
+              </td>
+              <td>{{ registrations.scheduledActivity.date }}</td>
+              <td>{{ registrations.scheduledActivity.capacity }}</td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </VBox>
+
+    <ViewActivity
+      v-if="selectedActivity"
+      :activity="selectedActivity"
+      @close="closePopup"
+      style="align-self: center"
+    />
   </div>
 </template>
 
 <script>
+import axios from "axios";
+import config from "../../../config";
+import ViewActivity from "./MyActivitiesCustomer.vue";
 
-import axios from 'axios'
-import config from '../../../config'
-import ViewActivity from './MyActivitiesCustomer.vue';
-
-const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
-const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
+const frontendUrl = "http://" + config.dev.host + ":" + config.dev.port;
+const backendUrl =
+  "http://" + config.dev.backendHost + ":" + config.dev.backendPort;
 const AXIOS = axios.create({
   baseURL: backendUrl,
-  headers: { 'Access-Control-Allow-Origin': frontendUrl }
-})
+  headers: { "Access-Control-Allow-Origin": frontendUrl },
+});
 
 export default {
   data() {
     return {
-      
-      scheduledActivities: [],
+      isCustomer: this.getAccountType() === "Customer",
+      customerId: this.getAccountId(),
+      registrations: [],
       filteredActivityData: [],
       selectedActivity: null,
-      search:'',
+      search: "",
     };
   },
 
-    async created() {
+  async created() {
     // Make HTTP request to fetch scheduled activities from backend
-      try {
-      alert(this.getUsername());
-      const customer = await AXIOS.get('/getCustomerAccountRoleIdByUsername/' + this.getUsername());
-      alert(customer.data);
-      const response = await AXIOS.get('/scheduledActivities/customer/' + customer.data);
-      
-      this.scheduledActivities = response.data;
+    try {
+      const id = await AXIOS.get(
+        "/getCustomerAccountRoleIdByUsername/" + this.getUsername()
+      );
+      const response = await AXIOS.get(
+        "/getRegistrationsByAccountRoleId/" + id.data
+      );
+      this.registrations = response.data;
+    } catch (error) {
+      console.error("Error fetching scheduled activities:", error);
     }
-    catch (error) {
-      console.error('Error fetching scheduled activities:', error);
-    } 
   },
 
   // mounted() {
@@ -78,6 +92,23 @@ export default {
   // },
 
   methods: {
+    fetchSchedulesActivities() {
+      axios
+        .get("/getRegistrationsByAccountRoleId/" + this.customerId)
+        .then((response) => {
+          this.registrations = response.data;
+
+          this.scheduledActivitiesTable = response.data.map((registration) => ({
+            activityName: registration.scheduledActivity.activity.name,
+            activityCategory: registration.scheduledActivity.activity.category,
+            date: registration.scheduledAtivity.date,
+            capacity: registration.sheduledActivity.capacity,
+          }));
+        })
+        .catch((error) => {
+          console.error("Error fetching scheduled activities:", error);
+        });
+    },
     // fetchScheduledActivities() {
     //   // Make HTTP request to fetch scheduled activities from backend
     //   axios.get('/scheduledActivities')
@@ -96,8 +127,17 @@ export default {
     //       console.error('Error fetching scheduled activities:', error);
     //     });
     // },
+    getAccountId() {
+      return localStorage.getItem("id");
+    },
 
- 
+    getAccountType() {
+      return localStorage.getItem("accountType");
+    },
+    getUsername() {
+      return localStorage.getItem("username");
+    },
+
     showActivityDetails(activity) {
       this.selectedActivity = activity;
     },
@@ -105,26 +145,26 @@ export default {
       this.selectedActivity = null;
     },
     getUsername() {
-      return localStorage.getItem('username');
+      return localStorage.getItem("username");
     },
-
   }, //end of methods
 
   computed: {
-  // Filter activities based on search query
-  filteredActivities: function() {
-    const query = this.search.toLowerCase();
-    return this.scheduledActivities.filter(activity =>
-      activity.name.toLowerCase().includes(query) ||
-      activity.category.toLowerCase().includes(query) ||
-      activity.date.toLowerCase().includes(query) ||
-      activity.capacity.toString().includes(query)
-    );
-  },
+    // Filter activities based on search query
+    filteredActivities: function () {
+      const query = this.search.toLowerCase();
+      return this.scheduledActivities.filter(
+        (activity) =>
+          activity.name.toLowerCase().includes(query) ||
+          activity.category.toLowerCase().includes(query) ||
+          activity.date.toLowerCase().includes(query) ||
+          activity.capacity.toString().includes(query)
+      );
+    },
   },
   components: {
-    ViewActivity
-  }
+    ViewActivity,
+  },
 };
 </script>
 
