@@ -61,6 +61,7 @@ public class AccountManagementController {
      * @return CustomerDto
      */
     @PostMapping(value = { "/createCustomer/{username}", "/createCustomer/{username}/" })
+    @ResponseStatus(HttpStatus.CREATED)
     public CustomerDto createCustomer(@PathVariable("username") String username) throws IllegalArgumentException {
         Customer customer = accountService.createCustomer(username);
         return convertCustomerToDto(customer);
@@ -77,6 +78,7 @@ public class AccountManagementController {
      */
     @PostMapping(value = { "/createInstructor/{username}/{description}/{profilePicURL}",
             "/createInstructor/{username}/{description}/{profilePicURL}/" })
+    @ResponseStatus(HttpStatus.CREATED)
     public InstructorDto createInstructor(@PathVariable("username") String username,
             @PathVariable("description") String description, @PathVariable("profilePicURL") String profilePicURL)
             throws IllegalArgumentException {
@@ -91,6 +93,7 @@ public class AccountManagementController {
      * @return OwnerDto
      */
     @PostMapping(value = { "/createOwner/{username}", "/createOwner/{username}/" })
+    @ResponseStatus(HttpStatus.CREATED)
     public OwnerDto createOwner(@PathVariable("username") String username) throws IllegalArgumentException {
         Owner owner = accountService.createOwner(username);
         return convertOwnerToDto(owner);

@@ -146,7 +146,40 @@ export default {
     goInstructorsForOwner() {
       this.$router.push('/app/instructors/manage-instructors');
     }
-  }
+  },
+
+
+  watch: {
+  // Watch for changes in the accountType variable
+  accountType: {
+    handler(newVal) {
+      // Update UI or perform actions based on the new value
+      console.log('Account Type changed:', newVal);
+    },
+    immediate: true // Trigger the watcher immediately upon component creation
+  },
+
+  // Similarly, define watchers for other global variables like username, loggedIn, etc.
+  username: {
+    handler(newVal) {
+      console.log('Username changed:', newVal);
+    },
+    immediate: true
+  },
+
+  loggedIn: {
+    handler(newVal) {
+      console.log('LoggedIn changed:', newVal);
+    },
+    immediate: true
+  },
+
+  // Define watchers for other global variables here...
+}
+
+
+
+
 }
 </script>
 
