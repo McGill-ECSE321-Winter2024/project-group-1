@@ -19,14 +19,14 @@
             <th width="100">Name</th>
             <th width="100">Description</th>
             <th width="100">Subcategory</th>
-            <th width="100">Status</th>
+            <!--th width="100">Status</th-->
             <th width="100">Action</th>
           </tr>
         </thead>
         <tbody>
           <template v-if="activities.length === 0">
             <tr>
-              <td colspan="5">No activities available for schedueling</td>
+              <td colspan="4">No activities available for schedueling</td>
             </tr>
           </template>
           <template v-else>
@@ -34,7 +34,7 @@
               <td>{{ activity.name }}</td>
               <td>{{ activity.description }}</td>
               <td>{{ activity.subcategory }}</td>
-              <td>{{ activity.status }}</td>
+              <!--td>{{ activity.isApproved ? "Approved" : "Not Approved" }}</td-->
               <td>
                 <button @click="selectActivity(activity)">Select</button>
               </td>
@@ -82,7 +82,7 @@ export default {
   
   async created(){
     try {
-      const response = await AXIOS.get("/activities");
+      const response = await AXIOS.get("/activitiesByIsApproved/true");
       this.activities = response.data;
     } catch (error) {
       console.error("Error getting activities", error);
@@ -95,36 +95,39 @@ export default {
 
     async submitScheduleActivity() {
       let instructorId = '';
+      let dateInput = this.date;
+      let startTimeInput = this.startTime;
+      let endTimeInput = this.endTime;
       try {
         instructorId = await AXIOS.get("/getInstructorAccountRoleIdByUsername/" + this.getUsername());
+        console.log(instructorId.data);
       } catch (error) {
         alert("Error getting instructor id");
         return;
       }
       try {
-        date = date.toLocalDateString();
-        startTime = startTime.toLocalTimeString();
-        endTime = endTime.toLocalTimeString();
+        // dateInput = dateInput.toLocalDateString();
+        // startTimeInput = startTimeInput.toLocalTimeString();
+        // endTimeInput = endTimeInput.toLocalTimeString();
 
         const response = await AXIOS.post(
           "/createScheduledActivity/" +
-            this.date +
+            dateInput +
             "/" +
-            this.startTime +
+            startTimeInput +
             "/" +
-            this.endTime +
+            endTimeInput +
             "/" +
-            instructorId +
+            instructorId.data +
             "/" +
-            this.selectedActivity +
+            this.selectedActivity.name +
             "/" +
             this.capacity
         );
         console.log(response.data);
         this.clearInputs();
       } catch (error) {
-        alert("Error creating scheduled activity");
-        this.clearInputs();
+        alert("Error creating scheduled activity " + error).getMessage();
       }
     },
     clearInputs() {
