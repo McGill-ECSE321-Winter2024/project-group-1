@@ -20,7 +20,8 @@
       <button id="menuButton" v-if="this.getAccountType() === 'Customer'" @click="goCustomerAccount()">Account</button>
       <button id="menuButton" v-if="getAccountType() === 'Instructor'" @click="goInstructorAccount()">Account</button>
       <button id="menuButton" v-if="getAccountType() === 'Owner'" @click="goOwnerAccount()">Account</button>
-      <button id="menuButton" v-if="getAccountType() === 'Customer' || $accountType === 'Instructor'" @click="goMyActivities()">My Activities</button>
+      <button id="menuButton" v-if="getAccountType() === 'Customer'" @click="goCustomerMyActivities()">My Activities</button>
+      <button id="menuButton" v-if="getAccountType() === 'Instructor'" @click="goInstructorMyActivities()">My Activities</button>
       <button id="menuButton" @click="goActivity()">All activities</button>
       <button id="menuButton" v-if="getAccountType() != 'Owner'" @click="goInstructors()">Instructors</button>
       <button id="menuButton" v-if="getAccountType() =='Owner'" @click="goInstructorsForOwner()">Instructors</button>
@@ -114,12 +115,11 @@ export default {
     goOwnerAccount() {
       this.$router.push('/app/account/owner-account');
     },
-    goMyActivities() {
-      if (this.$accountType === 'Customer') {
-        this.$router.push('/app/my-activities/customer');
-      } else if (this.$accountType === 'Instructor') {
-        this.$router.push('/app/my-activities/instructor');
-      }
+    goCustomerMyActivities() {
+      this.$router.push('/app/my-activities/customer');
+    },
+    goInstructorMyActivities() {
+      this.$router.push('/app/my-activities/instructor');
     },
     goActivity() {
       this.$router.push('/app/activity');
@@ -146,6 +146,7 @@ export default {
     goInstructorsForOwner() {
       this.$router.push('/app/instructors/manage-instructors');
     }
+  
   },
 
 
