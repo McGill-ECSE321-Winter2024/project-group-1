@@ -10,7 +10,7 @@
         <h2 style="align-self: center">to</h2>
         <input id="datePickerInput" type="time" v-model="endTime" />
       </HBox>
-      <input id="inputBox" type="text" placeholder="Account Role Id" v-model="instructorId">
+      <!--input id="inputBox" type="text" placeholder="Account Role Id" v-model="instructorId"-->
       <input id="inputBox" type="text" placeholder="Capacity" v-model="capacity">
 
       <table id="availableActivityTable" align="center" width="700">
@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios, { Axios } from "axios";
 import config from "../../../config";
 
 const frontendUrl = "http://" + config.dev.host + ":" + config.dev.port;
@@ -67,14 +67,12 @@ const AXIOS = axios.create({
 });
 
 export default {
-  //name: 'Fabian',
   name: "ScheduleActivity",
   data() {
     return {
 
       activities: [],
       selectedActivity: null,
-      instructorId: null,
       date: null,
       startTime: null,
       endTime: null,
@@ -84,10 +82,10 @@ export default {
   
   async created(){
     try {
-    const response = await AXIOS.get("/activities");
-    this.activities = response.data;
+      const response = await AXIOS.get("/activities");
+      this.activities = response.data;
     } catch (error) {
-    console.error("Error getting activities", error);
+      console.error("Error getting activities", error);
     }
   },
   methods:{
@@ -96,6 +94,13 @@ export default {
     },
 
     async submitScheduleActivity() {
+      let instructorId = '';
+      try {
+        instructorId = await AXIOS.get("/getInstructorAccountRoleIdByUsername/" + this.getUsername());
+      } catch (error) {
+        alert("Error getting instructor id");
+        return;
+      }
       try {
         date = date.toLocalDateString();
         startTime = startTime.toLocalTimeString();
@@ -109,7 +114,7 @@ export default {
             "/" +
             this.endTime +
             "/" +
-            this.instructorId +
+            instructorId +
             "/" +
             this.selectedActivity +
             "/" +
@@ -122,14 +127,54 @@ export default {
         this.clearInputs();
       }
     },
-    
     clearInputs() {
-      this.instructorId = null;
       this.date = null;
       this.startTime = null;
       this.endTime = null;
       this.capacity = null;
       this.selectedActivity = null;
+    },
+    getAccountType() {
+      return localStorage.getItem('accountType');
+    },
+    setAccountType(accountType) {
+      localStorage.setItem('accountType', accountType);
+    },
+    getUsername() {
+      return localStorage.getItem('username');
+    },
+    setUsername(username) {
+      localStorage.setItem('username', username);
+    },
+    getLoggedIn() {
+      return localStorage.getItem('loggedIn') === 'true';
+    },
+    setLoggedIn(loggedIn) {
+      localStorage.setItem('loggedIn', loggedIn);
+    },
+    getTime() {
+      return localStorage.getItem('time');
+    },
+    setTime(time) {
+      localStorage.setItem('time', time);
+    },
+    getDebuggingMode() {
+      return localStorage.getItem('debugging_mode') === 'true';
+    },
+    setDebuggingMode(debugging_mode) {
+      localStorage.setItem('debugging_mode', debugging_mode);
+    },
+    getLanguage() {
+      return localStorage.getItem('language');
+    },
+    setLanguage(language) {
+      localStorage.setItem('language', language);
+    },
+    getDarkMode() {
+      return localStorage.getItem('dark_mode') === 'true';
+    },
+    setDarkMode(dark_mode) {
+      localStorage.setItem('dark_mode', dark_mode);
     },
   },
 };
