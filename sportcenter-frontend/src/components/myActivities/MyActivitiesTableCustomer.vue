@@ -12,15 +12,6 @@
           <th width="100">Capacity</th>
         </tr>
       </thead>
-      <tbody>
-        <template v-if="scheduledActivities.length === 0">
-          <tr>
-            <th width="100">Name</th>
-            <th width="100">Category</th>
-            <th width="100">Date</th>
-            <th width="100">Capacity</th>
-          </tr>
-        </thead>
         <tbody id="myActivities">
           <template v-if="registrations.length === 0">
             <tr>
