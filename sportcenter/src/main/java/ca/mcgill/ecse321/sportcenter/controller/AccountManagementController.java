@@ -288,6 +288,43 @@ public class AccountManagementController {
         return convertOwnerToDto(owner);
     }
 
+    /**
+     * Get accountId by username
+     * 
+     * @param username
+     * @return int
+     */
+    @GetMapping(value = { "/getAccountIdByUsername/{username}", "/getAccountIdByUsername/{username}/" })
+    public int getAccountIdByUsername(@PathVariable("username") String username) throws IllegalArgumentException {
+        return accountService.getAccountIdByUsername(username);
+    }
+
+    /**
+     * Get customer accountRoleId by username
+     * 
+     * @param username
+     * @return int
+     */
+    @GetMapping(value = { "/getCustomerAccountRoleIdByUsername/{username}",
+            "/getCustomerAccountRoleIdByUsername/{username}/" })
+    public int getCustomerAccountRoleIdByUsername(@PathVariable("username") String username)
+            throws IllegalArgumentException {
+        return accountService.getCustomerAccountRoleIdByUsername(username);
+    }
+
+    /**
+     * Get instructor accountRoleId by username
+     * 
+     * @param username
+     * @return int
+     */
+    @GetMapping(value = { "/getInstructorAccountRoleIdByUsername/{username}",
+            "/getInstructorAccountRoleIdByUsername/{username}/" })
+    public int getInstructorAccountRoleIdByUsername(@PathVariable("username") String username)
+            throws IllegalArgumentException {
+        return accountService.getInstructorAccountRoleIdByUsername(username);
+    }
+
     // Update
 
     /**
