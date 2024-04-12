@@ -7,14 +7,12 @@
             </p>
 
             <VBox id="verticalContainer">
-                <input id="inputBox" type="text" placeholder="Username" v-model="oldUsername"></input>
                 <input id="inputBox" type="text" placeholder="New username" v-model="newUsername"></input>
                 <button id="mainButton" @click="updateUsername()" style="margin-left: 10px; align-self: center;"><b>Update Username</b></button>
             </VBox>
             <br>
 
             <VBox id="verticalContainer">
-                <input id="inputBox" type="text" placeholder="Username" v-model="username"></input>
                 <input id="inputBox" type="text" placeholder="Old password" v-model="oldPassword"></input>
                 <input id="inputBox" type="text" placeholder="New password" v-model="newPassword"></input>
                 <button id="mainButton" @click="updatePassword()" style="margin-left: 10px; align-self: center;"><b>Update Password</b></button>
@@ -22,8 +20,8 @@
             <br>
 
             <HBox id="containerH">
-                <button id="subButton" @click="goToCustomerMode()">Customer mode</button>
-                <button id="subButton" @click="goToInstructorMode()">Instructor mode</button>
+                <button id="subButton" v-if="this.isACustomer()" @click="goToCustomerMode()">Customer mode</button>
+                <button id="subButton" v-if="this.isAnInstructor()" @click="goToInstructorMode()">Instructor mode</button>
                 <!--button id="destroyButton" @click="deleteAccount()">Delete account</button-->
             </HBox>
         </VBox>
@@ -56,25 +54,78 @@ export default {
     methods: {
         async updateUsername() {
             try{
-                const response = await AXIOS.put('/updateAccountUsername/' + this.oldUsername + '/' + this.newUsername);
-                this.$username = this.newUsername;
-                alert('Username updated successfully! New username is: ' + this.newUsername);
-                console.log(response.data);
-                this.clearInputs();
+                const response = await AXIOS.put('/updateAccountUsername/' + this.getUsername() + '/' + this.newUsername);
+                
+                if (response.data == 200) {
+                  this.setUsername(this.newUsername);
+                  alert('Username updated successfully! New username is: ' + this.newUsername);
+                  console.log(response.data);
+                  this.clearInputs();
+                }
+                
             } catch(error){
                 console.error('Error creating activity', error.message);
             }
         },
         async updatePassword() {
             try{
-                const response = await AXIOS.put('/updateAccountPassword/' + this.username + '/' + this.oldPassword + '/' + this.newPassword);
-                alert('Password updated successfully! New password is: ' + this.newPassword);
+                const response = await AXIOS.put('/updateAccountPassword/' + this.getUsername() + '/' + this.oldPassword + '/' + this.newPassword);
+                alert('Password updated successfully!');
                 console.log(response.data);
                 this.clearInputs();
             } catch(error){
                 console.error('Error creating activity', error.message);
             }
         },
+
+        async isACustomer() {
+
+          try {
+
+          console.log(this.getAccountId());
+
+          const response = await AXIOS.get('/checkAccountHasCustomerRole/' + this.getAccountId());
+
+
+          if (response.status == 200) {
+              return true;
+          } else {
+              return false;
+          }
+
+
+          } catch(error){
+              console.error('Error verifying', error.message);
+          }          
+
+        },
+
+
+        async isAnInstructor() {
+
+          try {
+
+            console.log(this.getAccountId());
+
+            const response = await AXIOS.get('/checkAccountHasInstructorRole/' + this.getAccountId());
+
+            
+            if (response.status == 200) {
+              return true;
+            } else {
+              return false;
+            }
+            
+
+          } catch(error){
+              console.error('Error verifying', error.message);
+          }          
+
+        },
+
+
+
+
         goToCustomerMode() {
             this.$router.push('/app/account/customer-account');
         },
@@ -100,6 +151,15 @@ export default {
             this.oldPassword = null;
             this.newPassword = null;
         },
+
+
+
+    setAccountId(id) {
+      localStorage.setItem('id', id);
+    },
+    getAccountId() {
+      return localStorage.getItem('id');
+    },        
      getAccountType() {
       return localStorage.getItem('accountType');
     },

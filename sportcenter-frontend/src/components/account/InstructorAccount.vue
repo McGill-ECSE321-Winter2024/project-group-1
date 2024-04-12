@@ -6,20 +6,18 @@
             <br>
 
             <p id="currentInformation">
-                    Username: {{ getUsername() }}<br>
+                    Current Username: {{ getUsername() }}<br>
                     <!--Description: {{ this.currentDescription }}<br>
                     Picture URL: {{ this.currentPicture }} <br-->
-            </p> <!--Expert in goat yoga, certified in pilates and zumba, all the moms love me, I'm the best instructor in the world (I started a cult)-->
+            </p> 
             
             <VBox id="verticalContainer">
-                <input id="inputBox" type="text" placeholder="Username" v-model="username1"></input>
                 <input id="inputBox" type="text" placeholder="New username" v-model="newUsername"></input>
                 <button id="mainButton" @click="updateUsername()" style="margin-left: 10px; align-self: center;"><b>Update Username</b></button>
             </VBox>
             <br>
 
             <VBox id="verticalContainer">
-                <input id="inputBox" type="text" placeholder="Username" v-model="username"></input>
                 <input id="inputBox" type="text" placeholder="Old password" v-model="oldPassword"></input>
                 <input id="inputBox" type="text" placeholder="New password" v-model="newPassword"></input>
                 <button id="mainButton" @click="updatePassword()" style="margin-left: 10px; align-self: center;"><b>Update</b></button>
@@ -35,8 +33,8 @@
             <br>
 
             <HBox id="horizontalContainer">
-                <button id="subButton" @click="goToCustomerMode()">Customer mode</button>
-                <button id="subButton" @click="goToOwnerMode()">Owner mode</button>
+                <button id="subButton" v-if="this.isACustomer()" @click="goToCustomerMode()">Customer mode</button>
+                <button id="subButton" v-if="this.isAnOwner()" @click="goToOwnerMode()">Owner mode</button>
                 <!--button id="destroyButton" @click="deleteAccount()">Delete account</button-->
             </HBox>
         </VBox>
@@ -80,19 +78,24 @@ export default {
     methods: {
         async updateUsername() {
             try{
-                const response = await AXIOS.put('/updateAccountUsername/' + this.username1 + '/' + this.newUsername);
-                this.$username = this.newUsername;
-                console.log(response.data);
-                alert("Username updated successfully! New username is: " + this.$username);
-                this.clearInputs();
+                const response = await AXIOS.put('/updateAccountUsername/' + this.getUsername() + '/' + this.newUsername);
+                
+                if (response.data == 200) {
+                  this.$username = this.username;
+                  this.setUsername(this.newUsername);
+                  alert('Username updated successfully! New username is: ' + this.newUsername);
+                  console.log(response.data);
+                  this.clearInputs();
+                }
+
             } catch(error){
                 console.error('Error creating activity', error.message);
             }
         },
         async updatePassword() {
             try{
-                const response = await AXIOS.put('/updateAccountPassword/' + this.username2 + '/' + this.oldPassword + '/' + this.newPassword);
-                console.log(response.data);
+                const response = await AXIOS.put('/updateAccountPassword/' + this.getUsername() + '/' + this.oldPassword + '/' + this.newPassword);
+                //console.log(response.data);
                 alert("Password updated successfully! New password is: " + this.newPassword);
                 this.clearInputs();
             } catch(error){
@@ -101,14 +104,60 @@ export default {
         },
         async updateInstructorInfo() {
             try{
-                const response = await AXIOS.put('/updateInstructor/' + this.username3 + '/' + this.description + '/' + this.picture);
-                console.log(response.data);
+                const response = await AXIOS.put('/updateInstructor/' + this.getUsername() + '/' + this.description + '/' + this.picture);
+                //console.log(response.data);
                 alert("Instructor info updated successfully! New description is: " + this.description + " and new image URL is: " + this.picture);
                 this.clearInputs();
             } catch(error){
                 console.error('Error creating activity', error.message);
             }
         },
+
+        async isAnOwner() {
+
+            try {
+
+            
+
+            const response = await AXIOS.get('/checkAccountHasOwnerRole/' + this.getAccountId());
+
+            
+            if (response.status == 200) {
+                return true;
+            } else {
+                return false;
+            }
+            
+
+            } catch(error){
+                console.error('Error verifying', error.message);
+            }          
+
+        },
+
+        async isACustomer() {
+
+            try {
+
+            
+
+            const response = await AXIOS.get('/checkAccountHasCustomerRole/' + this.getAccountId());
+
+
+            if (response.status == 200) {
+                return true;
+            } else {
+                return false;
+            }
+
+
+            } catch(error){
+                console.error('Error verifying', error.message);
+            }          
+
+        },
+
+
         goToCustomerMode() {
             this.$router.push('/app/account/customer-account');
         },
@@ -134,6 +183,14 @@ export default {
             this.description = null;
             this.picture = null;
         },
+
+
+    setAccountId(id) {
+      localStorage.setItem('id', id);
+    },
+    getAccountId() {
+      return localStorage.getItem('id');
+    },    
             // Methods for global variables
     getAccountType() {
       return localStorage.getItem('accountType');

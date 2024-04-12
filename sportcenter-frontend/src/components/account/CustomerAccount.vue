@@ -110,7 +110,6 @@ export default {
             try {
 
                 const response = await AXIOS.post('/createInstructor/' + this.getUsername() + '/' + this.instructorDescription + '/' + this.instructorPictURL);
-                console.log(response.data);
 
                 if (response.status == 200) { 
 
@@ -134,7 +133,6 @@ export default {
 
           try {
 
-            console.log(this.getAccountId());
 
             const response = await AXIOS.get('/checkAccountHasInstructorRole/' + this.getAccountId());
 
