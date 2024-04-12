@@ -59,15 +59,6 @@ export default {
       filteredActivityData: [],
       selectedActivity: null,
       search:'',
-
-
-
-      // scheduledActivities: [
-      //   { name: 'Borneo', category: 'Expedition', date: '6 march', capacity: 30 },
-      //   { name: 'Trifecta', category: 'YoloSwag', date: '6 april', capacity: 10 },
-      //   { name: 'Running', category: 'Cardio', date: '6 january', capacity: 20 },
-      //   { name: 'INSTAGATION', category: 'Vroom', date: '6 january', capacity: 20 },
-      // ],
     };
   },
 
@@ -75,19 +66,13 @@ export default {
   async created() {
     // Make HTTP request to fetch scheduled activities from backend
     try {
-      const response = await AXIOS.get('/scheduledActivities')
+      const response = await AXIOS.get('/scheduledActivities');
       this.scheduledActivities = response.data;
     }
     catch (error) {
       console.error('Error fetching scheduled activities:', error);
     } 
   },
-
-
-
-  
-
-
 
   methods: {
  

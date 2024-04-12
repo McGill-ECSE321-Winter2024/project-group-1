@@ -19,11 +19,11 @@
           </tr>
         </template>
         <template v-else>
-          <tr v-for="(activity, index) in filteredActivities" :key="index" @click="showActivityDetails(activity)">
-            <td>{{ activity.name }}</td>
-            <td>{{ activity.category }}</td>
-            <td>{{ activity.date }}</td>
-            <td>{{ activity.capacity }}</td>
+          <tr v-for="(scheduledActivities, index) in scheduledActivities" :key="index" @click="showActivityDetails(activity)">
+            <td>{{ scheduledActivities.activity.name }}</td>
+            <td>{{ scheduledActivities.activity.subCategory }}</td>
+            <td>{{ scheduledActivities.date }}</td>
+            <td>{{ scheduledActivities.capacity }}</td>
           </tr>
         </template>
       </tbody>
@@ -54,49 +54,48 @@ export default {
       filteredActivityData: [],
       selectedActivity: null,
       search:'',
-
-      //logic here would get all activities
-      // scheduledActivities: [
-      //   { name: 'Borneo', category: 'Expedition', date: '6 march', capacity: 30 },
-      //   { name: 'Trifecta', category: 'YoloSwag', date: '6 april', capacity: 10 },
-      //   { name: 'Running', category: 'Cardio', date: '6 january', capacity: 20 },
-      //   { name: 'INSTAGATION', category: 'Vroom', date: '6 january', capacity: 20 },
-      // ],
     };
   },
 
-
-  mounted() {
-    // Call method to fetch scheduled activities when the component is mounted
-    this.fetchScheduledActivities();
+    async created() {
+    // Make HTTP request to fetch scheduled activities from backend
+      try {
+      alert(this.getUsername());
+      const customer = await AXIOS.get('/getCustomerAccountRoleIdByUsername/' + this.getUsername());
+      alert(customer.data);
+      const response = await AXIOS.get('/scheduledActivities/customer/' + customer.data);
+      
+      this.scheduledActivities = response.data;
+    }
+    catch (error) {
+      console.error('Error fetching scheduled activities:', error);
+    } 
   },
 
-
-
-  
-
-
+  // mounted() {
+  //   // Call method to fetch scheduled activities when the component is mounted
+  //   this.fetchScheduledActivities();
+  // },
 
   methods: {
+    // fetchScheduledActivities() {
+    //   // Make HTTP request to fetch scheduled activities from backend
+    //   axios.get('/scheduledActivities')
+    //     .then(response => {
+    //       // Assign response data to scheduledActivities
+    //       this.scheduledActivities = response.data;
 
-    fetchScheduledActivities() {
-      // Make HTTP request to fetch scheduled activities from backend
-      axios.get('/scheduledActivities')
-        .then(response => {
-          // Assign response data to scheduledActivities
-          this.scheduledActivities = response.data;
-
-          this.scheduledActivitiesTable = response.data.map(activity => ({
-          activityName: activity.activity.name,
-          activityCategory: activity.activity.category,
-          date: activity.date,
-          capacity: activity.capacity
-        }));
-        })
-        .catch(error => {
-          console.error('Error fetching scheduled activities:', error);
-        });
-    },
+    //       this.scheduledActivitiesTable = response.data.map(activity => ({
+    //       activityName: activity.activity.name,
+    //       activityCategory: activity.activity.category,
+    //       date: activity.date,
+    //       capacity: activity.capacity
+    //     }));
+    //     })
+    //     .catch(error => {
+    //       console.error('Error fetching scheduled activities:', error);
+    //     });
+    // },
 
  
     showActivityDetails(activity) {
@@ -105,7 +104,9 @@ export default {
     closePopup() {
       this.selectedActivity = null;
     },
-
+    getUsername() {
+      return localStorage.getItem('username');
+    },
 
   }, //end of methods
 
