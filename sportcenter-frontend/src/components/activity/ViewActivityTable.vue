@@ -1,6 +1,6 @@
 <template>
 <div class="ViewActivityTable" id="mainContainer">
-  <h1>View Activities</h1>
+  <h1>View scheduled activities</h1>
   <br>
     
   <input id="inputBox" type="text" v-model="search" placeholder="Search activities">
@@ -22,14 +22,13 @@
         </template>
 
         <template v-else>
-          <tr v-for="(activity, index) in filteredActivities" :key="index" @click="showActivityDetails(activity)">
-            <td>{{ activity.activity.name }}</td>
-            <td>{{ activity.activity.category }}</td>
-            <td>{{ activity.date }}</td>
-            <td>{{ activity.capacity }}</td>
+          <tr v-for="(scheduledActivity, index) in scheduledActivities" :key="index" @click="showActivityDetails(activity)">
+            <td>{{ scheduledActivity.activity.name }}</td>
+            <td>{{ scheduledActivity.activity.subCategory }}</td>
+            <td>{{ scheduledActivity.date }}</td>
+            <td>{{ scheduledActivity.capacity }}</td>
           </tr>
         </template>
-
       </tbody>
     </table>
     
@@ -74,27 +73,15 @@ export default {
 
 
   async created() {
-      // Make HTTP request to fetch scheduled activities from backend
-     
-     try {
-
+    // Make HTTP request to fetch scheduled activities from backend
+    try {
       const response = await AXIOS.get('/scheduledActivities')
-      this.scheduledActivities = response.data
-
-      // this.scheduledActivitiesTable = response.data.map(activity => ({
-      //     activityName: activity.activity.name,
-      //     activityCategory: activity.activity.category,
-      //     date: activity.date,
-      //     capacity: activity.capacity
-      //     }));
-
-      }
-      catch (error) {
-
-        console.error('Error fetching scheduled activities:', error);
-      }
-        
-    },
+      this.scheduledActivities = response.data;
+    }
+    catch (error) {
+      console.error('Error fetching scheduled activities:', error);
+    } 
+  },
 
 
 

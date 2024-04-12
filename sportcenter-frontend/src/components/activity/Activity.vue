@@ -4,10 +4,10 @@
     <div id="mainContainer">
         <h1>Activity Menu</h1>
         <VBox id="CustomerContainer" v-if="getAccountType()=='Guest'">
-            <button id="mainButton" @click="goToViewActivity()">View an activity</button>
+            <button id="mainButton" @click="goToViewActivity()">View scheduled activities</button>
         </VBox>
         <VBox id="CustomerContainer" v-else-if="getAccountType() === 'Customer'">
-            <button id="mainButton" @click="goToViewActivity()">View an activity</button>
+            <button id="mainButton" @click="goToViewActivity()">View scheduled activities</button>
         </VBox>
         <VBox id="CustomerContainer" v-else-if="getAccountType() === 'Instructor'">
             <button id="mainButton" @click="goToProposeActivity()">Propose an activity</button> <!--CHANGED-->
@@ -57,19 +57,9 @@
                     </tr>
                     </template>
                 </tbody>
-                   
             </table>
-                
-
- 
         </Vbox>
-
-
     </div>
-
-
-
-
 </template>
 
 <script>

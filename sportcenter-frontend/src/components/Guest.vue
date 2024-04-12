@@ -39,12 +39,11 @@
                 <!--tr v-for="(activity, index) in filteredActivities" :key="index" @click="showActivityDetails(activity)"-->
                 <tr v-for="(scheduledActivity, index) in scheduledActivities" :key="index" @click="showActivityDetails(scheduledActivity)">
                     <td>{{ scheduledActivity.activity.name }}</td>
-                    <td>{{ scheduledActivity.activity.subcategory }}</td>
+                    <td>{{ scheduledActivity.activity.subCategory }}</td>
                     <td>{{ scheduledActivity.date }}</td>
                     <td>{{ scheduledActivity.capacity }}</td>
                 </tr>
                 </template>
-
             </tbody>
             </table>
             
