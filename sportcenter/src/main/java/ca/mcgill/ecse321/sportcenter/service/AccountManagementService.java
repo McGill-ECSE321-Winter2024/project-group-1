@@ -520,6 +520,76 @@ public class AccountManagementService {
     }
 
     /**
+     * Get an accountId by username
+     * 
+     * @param username
+     * @return accountId
+     */
+    @Transactional
+    public int getAccountIdByUsername(String username) {
+        if (username == null || username.trim().isEmpty() || username.contains(" ")) {
+            throw new IllegalArgumentException("Username cannot be null, empty and spaces!");
+        }
+
+        Account account = accountRepository.findAccountByUsername(username);
+        if (account == null) {
+            throw new IllegalArgumentException("Account does not exist!");
+        }
+
+        return account.getAccountId();
+    }
+
+    /**
+     * Get an customer accountRoleId by username
+     * 
+     * @param username
+     * @return accountRoleId
+     */
+    @Transactional
+    public int getCustomerAccountRoleIdByUsername(String username) {
+        if (username == null || username.trim().isEmpty() || username.contains(" ")) {
+            throw new IllegalArgumentException("Username cannot be null, empty and spaces!");
+        }
+
+        Account account = accountRepository.findAccountByUsername(username);
+        if (account == null) {
+            throw new IllegalArgumentException("Account does not exist!");
+        }
+
+        Customer customer = customerRepository.findCustomerByAccountUsername(username);
+        if (customer == null) {
+            throw new IllegalArgumentException("Customer does not exist!");
+        }
+
+        return customer.getAccountRoleId();
+    }
+
+    /**
+     * Get an instructor accountRoleId by username
+     * 
+     * @param username
+     * @return accountRoleId
+     */
+    @Transactional
+    public int getInstructorAccountRoleIdByUsername(String username) {
+        if (username == null || username.trim().isEmpty() || username.contains(" ")) {
+            throw new IllegalArgumentException("Username cannot be null, empty and spaces!");
+        }
+
+        Account account = accountRepository.findAccountByUsername(username);
+        if (account == null) {
+            throw new IllegalArgumentException("Account does not exist!");
+        }
+
+        Instructor instructor = instructorRepository.findInstructorByAccountUsername(username);
+        if (instructor == null) {
+            throw new IllegalArgumentException("Instructor does not exist!");
+        }
+
+        return instructor.getAccountRoleId();
+    }
+
+    /**
      * Update an account's username
      * 
      * @param accountId

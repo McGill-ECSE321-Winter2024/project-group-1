@@ -166,7 +166,7 @@ export default {
     getAccountId() {
       return localStorage.getItem('id');
     },        
-     getAccountType() {
+    getAccountType() {
       return localStorage.getItem('accountType');
     },
     setAccountType(accountType) {

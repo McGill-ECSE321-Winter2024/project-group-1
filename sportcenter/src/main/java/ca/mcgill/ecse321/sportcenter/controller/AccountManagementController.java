@@ -288,6 +288,43 @@ public class AccountManagementController {
         return convertOwnerToDto(owner);
     }
 
+    /**
+     * Get accountId by username
+     * 
+     * @param username
+     * @return int
+     */
+    @GetMapping(value = { "/getAccountIdByUsername/{username}", "/getAccountIdByUsername/{username}/" })
+    public int getAccountIdByUsername(@PathVariable("username") String username) throws IllegalArgumentException {
+        return accountService.getAccountIdByUsername(username);
+    }
+
+    /**
+     * Get customer accountRoleId by username
+     * 
+     * @param username
+     * @return int
+     */
+    @GetMapping(value = { "/getCustomerAccountRoleIdByUsername/{username}",
+            "/getCustomerAccountRoleIdByUsername/{username}/" })
+    public int getCustomerAccountRoleIdByUsername(@PathVariable("username") String username)
+            throws IllegalArgumentException {
+        return accountService.getCustomerAccountRoleIdByUsername(username);
+    }
+
+    /**
+     * Get instructor accountRoleId by username
+     * 
+     * @param username
+     * @return int
+     */
+    @GetMapping(value = { "/getInstructorAccountRoleIdByUsername/{username}",
+            "/getInstructorAccountRoleIdByUsername/{username}/" })
+    public int getInstructorAccountRoleIdByUsername(@PathVariable("username") String username)
+            throws IllegalArgumentException {
+        return accountService.getInstructorAccountRoleIdByUsername(username);
+    }
+
     // Update
 
     /**
@@ -355,7 +392,7 @@ public class AccountManagementController {
      * @param String picture
      * @param String InstructorStatus
      */
-    @PutMapping(value = { "/updateInstructor/{username}/{description}/{picture}/",
+    @PutMapping(value = { "/updateInstructor/{username}/{description}/{picture}",
             "/updateInstructor/{username}/{description}/{picture}/" })
     public void updateInstructor(@PathVariable("username") String username,
             @PathVariable("description") String description,
