@@ -101,7 +101,7 @@ export default {
       this.username = null;
       this.password = null;
     },
-        getAccountType() {
+    getAccountType() {
       return localStorage.getItem('accountType');
     },
     setAccountType(accountType) {

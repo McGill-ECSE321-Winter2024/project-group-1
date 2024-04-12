@@ -101,6 +101,18 @@ public class AccountManagementController {
     // Get
 
     /**
+     * Check if instructor is approved
+     * 
+     * @param username
+     * @return boolean
+     */
+    @GetMapping(value = { "/checkInstructorIsApproved/{username}", "/checkInstructorIsApproved/{username}/" })
+    public boolean checkInstructorIsApproved(@PathVariable("username") String username)
+            throws IllegalArgumentException {
+        return accountService.checkInstructorIsApproved(username);
+    }
+
+    /**
      * Login
      * 
      * @param username

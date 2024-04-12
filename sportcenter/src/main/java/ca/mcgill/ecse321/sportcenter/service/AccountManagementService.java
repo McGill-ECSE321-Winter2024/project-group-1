@@ -179,7 +179,7 @@ public class AccountManagementService {
         Customer customer = new Customer(account);
         customerRepository.save(customer);
         Instructor instructor = new Instructor(InstructorStatus.Active, "Owner",
-                "https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.m.wikipedia.org%2Fwiki%2FFile%3ADefault_pfp.svg&psig=AOvVaw2LGv8_zxUx2ndrlCJuwJzN&ust=1713035294286000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCIiJ2fKvvYUDFQAAAAAdAAAAABAE",
+                "none",
                 account);
         instructorRepository.save(instructor);
         Owner owner = new Owner(account);
@@ -587,6 +587,31 @@ public class AccountManagementService {
         }
 
         return instructor.getAccountRoleId();
+    }
+
+    /**
+     * Check if instructor is approved
+     * 
+     * @param username
+     * @return boolean
+     */
+    @Transactional
+    public boolean checkInstructorIsApproved(String username) {
+        if (username == null || username.trim().isEmpty() || username.contains(" ")) {
+            throw new IllegalArgumentException("Username cannot be null, empty and spaces!");
+        }
+
+        Account account = accountRepository.findAccountByUsername(username);
+        if (account == null) {
+            throw new IllegalArgumentException("Account does not exist!");
+        }
+
+        Instructor instructor = instructorRepository.findInstructorByAccountUsername(username);
+        if (instructor == null) {
+            throw new IllegalArgumentException("Instructor does not exist!");
+        }
+
+        return instructor.getStatus() == InstructorStatus.Active;
     }
 
     /**
