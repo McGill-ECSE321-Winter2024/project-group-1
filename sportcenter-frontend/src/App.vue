@@ -4,7 +4,7 @@
       <VBox id="verticalContainer" style="margin-right: 25px;">
         <h1>FullForm</h1>
         <h2>Put yourself first<br>{{ $time }}</h2>
-        <p> {{ getAccountType() }}</p>
+        <p>{{ getAccountType() }}</p>
       </VBox id="verticalContainer">
       <img src="./assets/gym-icon.jpg" alt="Logo" contain height="140px" width="140px" style="border-radius: 50%;" @click="goHome()"></img>
       <VBox v-if="$debugging_mode" style="margin-left: 15px;">
@@ -42,7 +42,7 @@ export default {
     name: 'app',
     data() {
       return {
-        accountType: "",//localStorage.getItem('accountType') || 'Guest',
+        accountType: localStorage.getItem('accountType') || 'Guest',
         username: localStorage.getItem('username') || 'JoeMama',
         loggedIn: localStorage.getItem('loggedIn') === 'true',
         time: localStorage.getItem('time') || (new Date().getDate() + "/" + (new Date().getMonth() + 1) + "/" + new Date().getFullYear()),
@@ -50,9 +50,13 @@ export default {
       };
     },
   methods: {
-    getAccountType() {
-        localStorage.setItem('accountType', Math.random() < 0.5 ? "Customer" : "Instructor_1");
-        return localStorage.getItem('accountType')
+      getAccountType() {
+        //localStorage.setItem('accountType', Math.random() < 0.5 ? "Customer" : "Instructor_1");
+        // return localStorage.getItem('accountType')
+      },
+      setAccountType() {
+        // this.accountType = Math.random() < 0.5 ? "Customer" : "Instructor_1";
+        return "fml";
       },
       goHome() {
         this.$router.push('/');

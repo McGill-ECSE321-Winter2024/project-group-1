@@ -2,6 +2,7 @@
     <div style="width: 1200px;">
         <div class="ViewActivityTable" id="mainContainer">
         <h1>View activities</h1>
+        <p>{{ getAccountType() }}</p>
         <button id="mainButton" @click="checkGlobalVariables()">Check Global Variables</button>
         <br>
             
@@ -99,7 +100,7 @@
 </template>
 
 <script>
-
+import Vue from 'vue'
 import axios from 'axios'
 import config from '../../config'
 import ViewActivity from './activity/ViewActivity.vue';
@@ -112,8 +113,10 @@ const AXIOS = axios.create({
 })
 
 export default {
+  name: 'Guest',
   data() {
     return {
+        accountType: 'Guest',
         instructors: [],
         scheduledActivities: [],
         filteredActivityData: [],
@@ -130,7 +133,6 @@ export default {
       // ],
     };
   },
-
 
   mounted() {
     // Call method to fetch scheduled activities when the component is mounted
@@ -189,6 +191,11 @@ export default {
     closePopup() {
       this.selectedActivity = null;
     },
+
+    getAccountType() {
+      localStorage.setItem('accountType', Math.random() < 0.5 ? "Customer" : "Instructor_1");
+      return localStorage.getItem('accountType')
+    }
 
 
   }, //end of methods

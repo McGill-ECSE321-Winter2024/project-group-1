@@ -1,6 +1,7 @@
 <template>
     <div id="mainContainer">
         <h1>Login</h1>
+        <button id="menuButton" @click="setAccountType()">TYPE</button>
         <VBox id="verticalContainer">
             <VBox id="verticalContainer">
                 <input id="inputBox" type="text" placeholder="Username" v-model="username"></input>
@@ -43,6 +44,9 @@ export default {
         };
     },
     methods: {
+        setAccountType() {
+            localStorage.setItem('accountType', Math.random() < 0.5 ? "Customer" : "Instructor_1");
+        },
         async loginCustomer() {
             try{
                 const response = await AXIOS.get('/login/' + this.username + '/' + this.password + '/customer');
