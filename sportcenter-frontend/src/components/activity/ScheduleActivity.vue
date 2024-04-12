@@ -91,7 +91,7 @@ export default {
     }
   },
   methods:{
-    selectedActivity(activity){
+    async selectActivity(activity){
       this.selectedActivity = activity;
     },
 
