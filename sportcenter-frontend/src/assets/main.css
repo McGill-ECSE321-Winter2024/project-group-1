@@ -299,3 +299,15 @@ a {
     width: fit-content;
     height: fit-content;
 }
+
+.rounded-button {
+    border-radius: 50%;
+    border: none;
+    background-color: #ffffff;
+    padding: 5px;
+    margin: 5px;
+}
+
+.rounded-button img {
+    border-radius: 50%;
+}

@@ -2,7 +2,10 @@
     <div id="mainContainer">
         <h1>My instructor account</h1>
         <VBox id="verticalContainer">
-            <img id="profilePic" src="@/assets/zyzz.jpg" alt="Instructor" width="200" height="200">
+
+
+
+        
             <br>
 
             <p id="currentInformation">
@@ -25,10 +28,27 @@
             <br>
 
             <VBox id="verticalContainer">
-                <input id="inputBox" type="text" placeholder="Username" v-model="username3"></input>
                 <input id="inputBox" type="text" placeholder="New description" v-model="description"></input>
                 <input id="inputBox" type="text" placeholder="New image URL" v-model="picture"></input>
-                <button id="mainButton" @click="updateInstructorInfo()" style="margin-left: 10px; align-self: center;"><b>Update Instructor Info</b></button>
+                <p style="margin: 10px; font-weight: bold;" id="currentInformation">Choose a Profile Picture</p>
+                
+                <VBox style="margin: 10px; font-weight: bold; font-weight: bold;" id="mainContainer">
+
+                    <HBox id="horizontalContainer">
+                        <button v-for="(picture, index) in profilePictures" :key="index" @click="selectProfilePicture(index)" class="rounded-button">
+                            <img :src="picture.url" alt="Profile Picture" width="100" height="100">
+                         </button>
+                    </HBox>
+                </VBox>    
+
+                <div v-if="selectedProfilePicture !== null" style="margin-top: 20px;">
+                    <p style="margin: 10px; font-weight: bold;" id="currentInformation">Profile Picture Selected:</p>
+                    <div>
+                        <img :src="profilePictures[selectedProfilePicture-1].url" alt="Selected Profile Picture" width="150" height="150" class="rounded-button">
+                    </div>
+                </div>
+                
+                <button id="mainButton" @click="updateInstructorInfo()" style="margin-left: 10px; align-self: center; margin:10px;"><b>Update Instructor Info</b></button>
             </VBox>
             <br>
 
@@ -56,6 +76,19 @@ export default {
     name: 'InstructorAccount',
     data() {
         return {
+
+            profilePictures: [
+                { url: require('@/assets/ProfilePictures/john.jpg'), number: 1 },
+                { url: require('@/assets/ProfilePictures/logo_internet.png'), number: 2 },
+                { url: require('@/assets/ProfilePictures/messi.jpg'), number: 3 },
+                { url: require('@/assets/ProfilePictures/ronnie.jpeg'), number: 4 },
+                { url: require('@/assets/ProfilePictures/zyzz.jpg'), number: 5 },
+                // Add more pictures here with their respective URLs and unique numbers
+            ],
+
+
+
+            selectedProfilePicture: null,
             isCustomer: false,
             isOwner: false,
             username1: null,
@@ -68,6 +101,20 @@ export default {
             picture: null
         }
     },
+
+
+    computed: {
+        selectedProfilePictureUrl() {
+            if (this.selectedProfilePictureId) {
+                const selectedPicture = this.profilePictures.find(picture => picture.number === this.selectedProfilePictureId);
+                return selectedPicture ? selectedPicture.url : ''; // Return URL if picture is found, otherwise return empty string
+            } else {
+                return ''; // Return empty string if no picture is selected
+            }
+        }
+    },
+
+
     async getDescription() {
         try{
             const response = await AXIOS.get('/getInstructorByUsername/' + this.$username);
@@ -78,6 +125,28 @@ export default {
         }
     },
     methods: {
+
+        selectProfilePicture(index) {
+            this.selectedProfilePicture = this.profilePictures[index].number;
+            console.log(this.selectedProfilePicture);
+        },
+
+        async showProfilePicture() {
+
+            try {
+                const response = await AXIOS.put('/updateAccountUsername/' + this.getUsername() + '/' + this.newUsername);
+
+
+            } catch(error) {
+                console.error('Error finding image', error.message);
+                return;   
+            }
+
+
+
+        },
+
+
         async updateUsername() {
             try{
                 const response = await AXIOS.put('/updateAccountUsername/' + this.getUsername() + '/' + this.newUsername);
@@ -108,9 +177,12 @@ export default {
         },
         async updateInstructorInfo() {
             try{
-                const response = await AXIOS.put('/updateInstructor/' + this.getUsername() + '/' + this.description + '/' + this.picture);
+
+                
+
+                const response = await AXIOS.put('/updateInstructor/' + this.getUsername() + '/' + this.description + '/' + this.selectedProfilePicture + '/');
                 //console.log(response.data);
-                alert("Instructor info updated successfully! New description is: " + this.description + " and new image URL is: " + this.picture);
+                alert("Instructor info updated successfully! New description is: " + this.description + " and new image URL is: " + this.selectedProfilePicture);
                 this.clearInputs();
             } catch(error){
                 console.error('Error creating activity', error.message);
@@ -257,4 +329,8 @@ export default {
 }
 </script>
 
-<style src="../../assets/main.css"></style>
+<style src="../../assets/main.css">
+
+
+
+</style>

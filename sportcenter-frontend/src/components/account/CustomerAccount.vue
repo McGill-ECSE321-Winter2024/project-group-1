@@ -28,7 +28,6 @@
 
 
                 <input id="inputBox" type="text" placeholder="Description" v-model="instructorDescription"></input>
-                <input id="inputBox" type="text" placeholder="Picture URL" v-model="instructorPictURL"></input>
                 <button id="mainButton" @click="instructorRequest()" style="margin-left: 10px; align-self: center;">Request to become an instructor</button>
             </VBox>
             <br>
@@ -118,7 +117,7 @@ export default {
         async instructorRequest() {
             try {
 
-                const response = await AXIOS.post('/createInstructor/' + this.getUsername() + '/' + this.instructorDescription + '/' + this.instructorPictURL);
+                const response = await AXIOS.post('/createInstructor/' + this.getUsername() + '/' + this.instructorDescription + '/' + '2');
 
                 if (response.status == 200) { 
 
