@@ -32,7 +32,7 @@
                     <tr>
                         <th width="100">Activity Name</th>
                         <th width="100">Activity Description</th>
-                        <th width="100">Activity Status</th>
+                        <th v-if="getAccountType() === 'Instructor' || getAccountType() === 'Owner'" width="100">Activity Status</th>
 
                         <th v-if="getAccountType() ==='Owner'" width="100">Activity Approve</th>
                     </tr>
@@ -47,7 +47,7 @@
                     <tr v-for="(activity, index) in activities" :key="index">
                         <td>{{ activity.name }}</td>
                         <td>{{ activity.description }}</td>
-                        <td> {{ activity.isApproved ? "Approved" : "Not Approved" }} </td>
+                        <td v-if="getAccountType() === 'Instructor' | getAccountType() === 'Owner'"> {{ activity.isApproved ? "Approved" : "Not Approved" }} </td>
                         <td v-if="getAccountType() === 'Owner'">
                             <VBox id="verticalContainer">
                                 <button id="subButton" @click="approveActivity(activity.name)">Approve</button>
