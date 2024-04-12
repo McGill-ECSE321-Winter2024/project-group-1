@@ -13,8 +13,9 @@
         <button
           id="subButton"
           v-if="(getAccountType() === 'Customer')"
-          @click="close"
+          @click="registerActivity(activity)" 
         >
+        <!--@click="close"-->
           Register
         </button>
         <button id="subButton" @click="close">Close</button>
@@ -27,10 +28,26 @@
 export default {
   props: ["activity"],
   methods: {
+    getAccountId() {
+      return localStorage.getItem('accountId'); //Needs to be changed
+    },
+    async registerActivity(activity) {
+      activityid = activity.id;
+      customerId = this.getAccountId();
+      try {
+        const response = await this.$axios.post(
+          "/registerActivity/" + customerId + "/" + activityid
+        );
+        console.log(response.data);
+        this.close();
+      } catch (error) {
+        console.error("Error registering activity", error);
+      }
+    },
     close() {
       this.$emit("close");
     },
-        getAccountType() {
+    getAccountType() {
       return localStorage.getItem('accountType');
     },
     setAccountType(accountType) {
