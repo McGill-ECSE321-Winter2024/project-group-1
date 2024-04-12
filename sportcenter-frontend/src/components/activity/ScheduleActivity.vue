@@ -10,35 +10,41 @@
         <h2 style="align-self: center">to</h2>
         <input id="datePickerInput" type="time" v-model="endTime" />
       </HBox>
-      <!--
-      <select v-model="selectAccount">
-        <option
-          v-for="account in accounts"
-          :key="account.accountRoleId"
-          :value="account.accountRoleId"
-        >
-          {{ account.accountRoleId }}
-        </option>
-      </select>
-      <select v-model="selectActivity">
-        <option
-          v-for="activity in activities"
-          :key="activity.name"
-          :value="activity.name"
-        >
-          {{ activity.name }}
-        </option>
-        >
-      </select>
-      -->
       <input id="inputBox" type="text" placeholder="Account Role Id" v-model="instructorId">
-      <input id="inputBox" type="text" placeholder="Activity Name" v-model="activityName2">
-      <input
-        id="inputBox"
-        type="text"
-        placeholder="Capacity"
-        v-model="capacity"
-      />
+      <input id="inputBox" type="text" placeholder="Capacity" v-model="capacity">
+
+      <table id="availableActivityTable" align="center" width="700">
+        <thead>
+          <tr>
+            <th width="100">Name</th>
+            <th width="100">Description</th>
+            <th width="100">Subcategory</th>
+            <th width="100">Status</th>
+            <th width="100">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template v-if="activities.length === 0">
+            <tr>
+              <td colspan="5">No activities available for schedueling</td>
+            </tr>
+          </template>
+          <template v-else>
+            <tr v-for="(activity, index) in activities" :key="index">
+              <td>{{ activity.name }}</td>
+              <td>{{ activity.description }}</td>
+              <td>{{ activity.subcategory }}</td>
+              <td>{{ activity.status }}</td>
+              <td>
+                <button @click="selectActivity(activity)">Select</button>
+              </td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+      <div v-if="selectedActivity">
+        <h2>Selected Activity: {{ selectedActivity.name }}</h2>
+      </div>
 
       <button id="mainButton" @click="submitScheduleActivity()">
         <b>Schedule Activity</b>
@@ -65,52 +71,36 @@ export default {
   name: "ScheduleActivity",
   data() {
     return {
-      //accounts: [],
-      //selectAccount: null,
-      //activities: [],
-      //selectActivity: null,
 
-      activityName: null,
-      description: null,
-      subcategory: null,
+      activities: [],
+      selectedActivity: null,
       instructorId: null,
-      activityName2: null,
       date: null,
       startTime: null,
       endTime: null,
       capacity: null,
     };
   },
-  /*
-  created() {
-    this.getActivities();
-
+  
+  async created(){
+    try {
+    const response = await AXIOS.get("/activities");
+    this.activities = response.data;
+    } catch (error) {
+    console.error("Error getting activities", error);
+    }
   },
-  mounted() {
-    this.selectAccount();
-    this.selectActivity();
-  },
-  */
-
-  methods: {
-    async getActivities() {
-      try {
-        const response = await AXIOS.get("/activities");
-        this.activities = response.data;
-      } catch (error) {
-        alert("Error getting activities");
-      }
+  methods:{
+    selectedActivity(activity){
+      this.selectedActivity = activity;
     },
+
     async submitScheduleActivity() {
       try {
         date = date.toLocalDateString();
         startTime = startTime.toLocalTimeString();
         endTime = endTime.toLocalTimeString();
-        /*
-        const response1 = await AXIOS.get(
-          "/getAccountId/" + this.$accountRoleId
-        );
-        */
+
         const response = await AXIOS.post(
           "/createScheduledActivity/" +
             this.date +
@@ -121,7 +111,7 @@ export default {
             "/" +
             this.instructorId +
             "/" +
-            this.activityName2 +
+            this.selectedActivity +
             "/" +
             this.capacity
         );
@@ -132,19 +122,14 @@ export default {
         this.clearInputs();
       }
     },
+    
     clearInputs() {
-      this.description = null;
-      this.subcategory = null;
-      this.selectAccount = null;
-      this.selectActivity = null;
       this.instructorId = null;
-      this.activityName = null;
-      this.activityName2 = null;
-      this.accountRoleId = null;
       this.date = null;
       this.startTime = null;
       this.endTime = null;
       this.capacity = null;
+      this.selectedActivity = null;
     },
   },
 };
