@@ -32,6 +32,7 @@
                     <tr>
                         <th width="100">Activity Name</th>
                         <th width="100">Activity Description</th>
+                        <th width="100">Activity Status</th>
 
                         <th v-if="getAccountType() ==='Owner'" width="100">Activity Approve</th>
                     </tr>
@@ -39,13 +40,14 @@
                 <tbody id="activities-tbody">
                     <template v-if="activities.length === 0">
                         <tr>
-                            <td colspan="3">No activities</td>
+                            <td colspan="4">No activities</td>
                         </tr>
                     </template>
                     <template v-else>
                     <tr v-for="(activity, index) in activities" :key="index">
                         <td>{{ activity.name }}</td>
                         <td>{{ activity.description }}</td>
+                        <td> {{ activity.isApproved ? "Approved" : "Not Approved" }} </td>
                         <td v-if="getAccountType() === 'Owner'">
                             <VBox id="verticalContainer">
                                 <button id="subButton" @click="approveActivity(activity.name)">Approve</button>
@@ -129,7 +131,8 @@ const AXIOS = axios.create({
             async approveActivity(activity){
             try{
                 const response = await AXIOS.put('/activity/approve/' + activity)
-                this.activities = response.data
+                this.$forceUpdate();
+                //this.activities = response.data
             } catch (error){
                 console.log('Error fetching activities', error.message);
             }
@@ -137,7 +140,8 @@ const AXIOS = axios.create({
             async dissaproveActivity(activity){
                 try{
                     const response = await AXIOS.put('/activity/disapprove/' + activity)
-                    this.activities = response.data
+                    this.$forceUpdate();
+                    //this.activities = response.data
                 } catch (error){
                     console.log('Error fetching activities', error.message);
                 }
