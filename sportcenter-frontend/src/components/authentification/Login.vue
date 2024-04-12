@@ -43,28 +43,30 @@ export default {
         };
     },
     methods: {
-        setAccountType() {
-            localStorage.setItem('accountType', Math.random() < 0.5 ? "Customer" : "Instructor_1");
-        },
-        async loginCustomer() {
+
+
+        loginCustomer() {
             try{
-                const response = await AXIOS.get('/login/' + this.username + '/' + this.password + '/customer');
+                const response = AXIOS.get('/login/' + this.username + '/' + this.password + '/customer');
                 console.log(response.data);
+                //alert(response.data.message);
                 // Set user to logged in
-                this.$loggedIn = true;
-                this.$accountType = 'Customer';
-                this.$username = this.username;
-                LocalStorage.setItem('accountType',JSON.stringify(accountType));
-                LocalStorage.setItem('username',JSON.stringify(username));
+                // this.$loggedIn = true;
+                // this.$accountType = 'Customer';
+                // this.$username = this.username;
+                setLoggedIn('true');
+                setAccountType('Customer');
+                setUsername(this.username);
                 this.clearInputs();
                 this.$router.push('/');
             } catch(error){
                 alert(error.message);
             }
         },
-        async loginInstructor() {
+
+        loginInstructor() {
             try{
-                const response = await AXIOS.get('/login/' + this.username + '/' + this.password + '/instructor');
+                const response = AXIOS.get('/login/' + this.username + '/' + this.password + '/instructor');
                 console.log(response.data);
                 // Set user to logged in
                 this.$loggedIn = true;
@@ -78,9 +80,10 @@ export default {
                 alert(error.message);
             }
         },
-        async loginOwner() {
+       
+        loginOwner() {
             try{
-                const response = await AXIOS.get('/login/' + this.username + '/' + this.password + '/owner');
+                const response = AXIOS.get('/login/' + this.username + '/' + this.password + '/owner');
                 console.log(response.data);
                 // Set user to logged in
                 this.$loggedIn = true;
@@ -94,6 +97,7 @@ export default {
                 alert(error.message);
             }
         },
+
         goToForgotPassword() {
             this.$router.push('/app/auth/forgotpassword');
         },
