@@ -8,14 +8,13 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 Vue.use(BootstrapVue)
-Vue.config.productionTip = false
 
 // 4 types: Guest, Customer, Instructor, Owner
-localStorage.setItem($accountType, 'Owner');
-localStorage.setItem($username, 'Instr1');
-localStorage.setItem($loggedIn, true);
-localStorage.setItem($time, new Date().getDate() + "/" + new Date().getMonth() + "/" + new Date().getFullYear());
-localStorage.setItem($debugging_mode, true);
+localStorage.setItem('accountType', 'Owner');
+localStorage.setItem('username', 'Instr1');
+localStorage.setItem('loggedIn', true);
+localStorage.setItem('time', new Date().getDate() + "/" + new Date().getMonth() + "/" + new Date().getFullYear());
+localStorage.setItem('debugging_mode', true);
 // Vue.prototype.$accountType = "Owner";
 // Vue.prototype.$username = 'Instr1'; // guest = JoeMama
 // Vue.prototype.$loggedIn = true;
