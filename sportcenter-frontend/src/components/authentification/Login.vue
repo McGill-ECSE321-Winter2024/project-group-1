@@ -45,57 +45,74 @@ export default {
     methods: {
 
 
-        loginCustomer() {
+        async loginCustomer() {
             try{
-                const response = AXIOS.get('/login/' + this.username + '/' + this.password + '/customer');
+                const response = await AXIOS.get('/login/' + this.username + '/' + this.password + '/customer');
                 console.log(response.data);
-                //alert(response.data.message);
-                // Set user to logged in
-                // this.$loggedIn = true;
-                // this.$accountType = 'Customer';
-                // this.$username = this.username;
-                setLoggedIn('true');
-                setAccountType('Customer');
-                setUsername(this.username);
+                
+              if (response.status == 200) {
+                this.setLoggedIn(true);
+                this.setAccountType('Customer');
+                this.setUsername(this.username);
                 this.clearInputs();
                 this.$router.push('/');
+              }  else {
+                // Handle unsuccessful login
+                console.log('Login unsuccessful');
+              } 
+
+
             } catch(error){
                 alert(error.message);
             }
+
         },
 
-        loginInstructor() {
-            try{
-                const response = AXIOS.get('/login/' + this.username + '/' + this.password + '/instructor');
-                console.log(response.data);
-                // Set user to logged in
-                this.$loggedIn = true;
-                this.$accountType = 'Instructor';
-                this.$username = this.username;
-                LocalStorage.setItem('accountType',JSON.stringify(accountType));
-                LocalStorage.setItem('username',JSON.stringify(username));
-                this.clearInputs();
-                this.$router.push('/');
+        async loginInstructor() {
+          try{
+                const response = await AXIOS.get('/login/' + this.username + '/' + this.password + '/instructor');
+                console.log(response);
+
+                //console.log(response.status);
+
+                if (response.status == 200) {
+                  this.setLoggedIn(true);
+                  this.setAccountType('Instructor');
+                  this.setUsername(this.username);
+                  this.clearInputs();
+                  this.$router.push('/');
+                }  else {
+                // Handle unsuccessful login
+                console.log('Login unsuccessful');
+                } 
+
             } catch(error){
                 alert(error.message);
             }
         },
        
-        loginOwner() {
-            try{
-                const response = AXIOS.get('/login/' + this.username + '/' + this.password + '/owner');
+        async loginOwner() {
+          try{
+                const response = await AXIOS.get('/login/' + this.username + '/' + this.password + '/owner');
                 console.log(response.data);
-                // Set user to logged in
-                this.$loggedIn = true;
-                this.$accountType = 'Owner';
-                this.$username = this.username;
-                LocalStorage.setItem('accountType',JSON.stringify(accountType));
-                LocalStorage.setItem('username',JSON.stringify(username));
+
+
+              if (response.status == 200) {
+                this.setLoggedIn(true);
+                this.setAccountType('Owner');
+                this.setUsername(this.username);
                 this.clearInputs();
                 this.$router.push('/');
+              }  else {
+                // Handle unsuccessful login
+                console.log('Login unsuccessful');
+              } 
+
             } catch(error){
                 alert(error.message);
             }
+
+
         },
 
         goToForgotPassword() {
@@ -156,6 +173,9 @@ export default {
     setDarkMode(dark_mode) {
       localStorage.setItem('dark_mode', dark_mode);
     },
+
+
+
     }
 };
 

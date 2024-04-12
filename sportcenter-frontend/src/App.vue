@@ -10,13 +10,13 @@
         <h3 style="font-style: italic;">Debugging</h3>
         <p>{{ getAccountType() }}</p>
         <p>{{ getUsername() }}</p>
-        <p v-if="getLoggedIn()">Logged in</p>
+        <p>{{ getLoggedIn() }}</p>
       </VBox>
     </HBox>
     <br>
-    <HBox v-if="getLoggedIn()">
-      <button id="menuButton" @click="goHome()">Home</button>
-      <button id="menuButton" v-if="getAccountType() === 'Customer'" @click="goCustomerAccount()">Account</button>
+    <HBox v-if="this.getLoggedIn() == 'true'">
+      <button id="menuButton" @click="this.goHome()">Home</button>
+      <button id="menuButton" v-if="this.getAccountType() === 'Customer'" @click="goCustomerAccount()">Account</button>
       <button id="menuButton" v-if="getAccountType() === 'Instructor'" @click="goInstructorAccount()">Account</button>
       <button id="menuButton" v-if="getAccountType() === 'Owner'" @click="goOwnerAccount()">Account</button>
       <button id="menuButton" v-if="getAccountType() === 'Customer' || $accountType === 'Instructor'" @click="goMyActivities()">My Activities</button>
@@ -43,7 +43,7 @@ export default {
       return {
         accountType: localStorage.getItem('accountType') || 'Guest',
         username: localStorage.getItem('username') || 'JoeMama',
-        loggedIn: localStorage.getItem('loggedIn') === 'false',
+        loggedIn: localStorage.getItem('loggedIn') === 'true',
         time: localStorage.getItem('time') || (new Date().getDate() + "/" + (new Date().getMonth() + 1) + "/" + new Date().getFullYear()),
         debugging_mode: localStorage.getItem('debugging_mode') === 'true',
         language: localStorage.getItem('language') || 'en',
@@ -65,7 +65,7 @@ export default {
       localStorage.setItem('username', username);
     },
     getLoggedIn() {
-      return localStorage.getItem('loggedIn') === 'false';
+      return localStorage.getItem('loggedIn');
     },
     setLoggedIn(loggedIn) {
       localStorage.setItem('loggedIn', loggedIn);
@@ -121,10 +121,13 @@ export default {
       this.$router.push('/app/auth/login');
     },
     goLogout() {
+      
+      
+      this.setLoggedIn(false);
+      this.setAccountType('Guest');
+      this.setUsername('');
       this.$router.push('/app/auth/login');
-      this.$accountType = 'Guest';
-      this.$username = 'JoeMama';
-      this.$loggedIn = false;
+
     },
     goCreateAccount() {
       this.$router.push('/app/auth/createaccount');

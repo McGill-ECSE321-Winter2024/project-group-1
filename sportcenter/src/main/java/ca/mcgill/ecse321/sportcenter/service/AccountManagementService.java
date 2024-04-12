@@ -206,8 +206,13 @@ public class AccountManagementService {
         }
 
         Account account = accountRepository.findAccountByUsername(username);
+
         if (account == null) {
             throw new IllegalArgumentException("Account does not exist");
+        }
+
+        if (!account.getPassword().equals(password)) {
+            throw new IllegalArgumentException("Password does not match!");
         }
 
         // If role is customer, check if account has customer role
