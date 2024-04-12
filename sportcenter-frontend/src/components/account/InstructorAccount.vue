@@ -80,8 +80,8 @@ export default {
             try{
                 const response = await AXIOS.put('/updateAccountUsername/' + this.getUsername() + '/' + this.newUsername);
                 
-                if (response.data == 200) {
-                  this.$username = this.username;
+                if (response.status == 200) {
+                  this.$username = this.newUsername;
                   this.setUsername(this.newUsername);
                   alert('Username updated successfully! New username is: ' + this.newUsername);
                   console.log(response.data);
@@ -118,7 +118,6 @@ export default {
             try {
 
             
-
             const response = await AXIOS.get('/checkAccountHasOwnerRole/' + this.getAccountId());
 
             

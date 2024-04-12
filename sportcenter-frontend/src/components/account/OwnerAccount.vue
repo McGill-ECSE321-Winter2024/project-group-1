@@ -53,13 +53,14 @@ export default {
     },
     methods: {
         async updateUsername() {
+
             try{
                 const response = await AXIOS.put('/updateAccountUsername/' + this.getUsername() + '/' + this.newUsername);
                 
-                if (response.data == 200) {
+                if (response.status == 200) {
+
                   this.setUsername(this.newUsername);
                   alert('Username updated successfully! New username is: ' + this.newUsername);
-                  console.log(response.data);
                   this.clearInputs();
                 }
                 
@@ -69,10 +70,12 @@ export default {
         },
         async updatePassword() {
             try{
+
                 const response = await AXIOS.put('/updateAccountPassword/' + this.getUsername() + '/' + this.oldPassword + '/' + this.newPassword);
                 alert('Password updated successfully!');
-                console.log(response.data);
+                console.log(response.status);
                 this.clearInputs();
+
             } catch(error){
                 console.error('Error creating activity', error.message);
             }
@@ -81,8 +84,6 @@ export default {
         async isACustomer() {
 
           try {
-
-          console.log(this.getAccountId());
 
           const response = await AXIOS.get('/checkAccountHasCustomerRole/' + this.getAccountId());
 
@@ -104,8 +105,6 @@ export default {
         async isAnInstructor() {
 
           try {
-
-            console.log(this.getAccountId());
 
             const response = await AXIOS.get('/checkAccountHasInstructorRole/' + this.getAccountId());
 
