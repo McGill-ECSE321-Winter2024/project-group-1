@@ -1,6 +1,6 @@
 <template>
   <div class="MyActivitiesTable" id="mainContainer">
-    <h1>View the activities I have to teach</h1>
+    <h1>Activities I have to teach</h1>
     <br />
 
     <VBox id="verticalContainer">
@@ -66,15 +66,6 @@ export default {
       filteredActivityData: [],
       selectedActivity: null,
       search: "",
-
-      //logic here would get all activities
-
-      // scheduledActivities: [
-      //   { name: 'Borneo', category: 'Expedition', date: '6 march', capacity: 30 },
-      //   { name: 'Trifecta', category: 'YoloSwag', date: '6 april', capacity: 10 },
-      //   { name: 'Running', category: 'Cardio', date: '6 january', capacity: 20 },
-      //   { name: 'INSTAGATION', category: 'Vroom', date: '6 january', capacity: 20 },
-      // ],
     };
   },
 

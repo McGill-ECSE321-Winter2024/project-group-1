@@ -18,15 +18,11 @@
             <button id="mainButton" @click="goToUpdateDeleteScheduledActivity()">Update a scheduled activity</button>
             <button id="mainButton" @click="goToManageActivities()">Manage activities</button>
         </VBox>
-    
+    <br>
+    <br>
 
-
+    <h1>Our selection</h1>
     <VBox id="verticalContainer">
-            <!--
-            <input id="inputBox" type="username" placeholder="Search by name"></input>
-            <input id="inputBox" type="username" placeholder="Search by activity"></input>
-            -->
-
             <table id="table">
                 <thead>
                     <tr>

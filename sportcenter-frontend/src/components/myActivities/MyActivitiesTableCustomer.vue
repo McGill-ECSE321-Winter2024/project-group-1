@@ -1,6 +1,6 @@
 <template>
   <div class="MyActivitiesTableCustomer" id="mainContainer">
-    <h1>View the activities I'm registered for</h1>
+    <h1>Activities I'm registered for</h1>
     <br>
     
     <table id="activityTable" align="center" width="700">

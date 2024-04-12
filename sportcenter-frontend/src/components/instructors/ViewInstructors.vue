@@ -1,6 +1,6 @@
 <template>
     <div class="ViewInstructor" id="mainContainer">
-        <h1>View instructors</h1>
+        <h1>Our instructors</h1>
         <br>
         
         <VBox id="verticalContainer">
