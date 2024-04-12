@@ -33,8 +33,8 @@
             <br>
 
             <HBox id="horizontalContainer">
-                <button id="subButton" v-if="this.isACustomer()" @click="goToCustomerMode()">Customer mode</button>
-                <button id="subButton" v-if="this.isAnOwner()" @click="goToOwnerMode()">Owner mode</button>
+                <button id="subButton" v-if="isCustomer" @click="goToCustomerMode()">Customer mode</button>
+                <button id="subButton" v-if="isOwner" @click="goToOwnerMode()">Owner mode</button>
                 <!--button id="destroyButton" @click="deleteAccount()">Delete account</button-->
             </HBox>
         </VBox>
@@ -56,6 +56,8 @@ export default {
     name: 'InstructorAccount',
     data() {
         return {
+            isCustomer: false,
+            isOwner: false,
             username1: null,
             newUsername: null,
             username2: null,
@@ -90,6 +92,7 @@ export default {
 
             } catch(error){
                 console.error('Error creating activity', error.message);
+                return;
             }
         },
         async updatePassword() {
@@ -100,6 +103,7 @@ export default {
                 this.clearInputs();
             } catch(error){
                 console.error('Error creating activity', error.message);
+                return;
             }
         },
         async updateInstructorInfo() {
@@ -110,8 +114,16 @@ export default {
                 this.clearInputs();
             } catch(error){
                 console.error('Error creating activity', error.message);
+                return;
             }
         },
+
+        async checkRoles() {
+
+            this.isCustomer = await this.isACustomer();
+            this.isOwner = await this.isAnOwner();
+        },
+
 
         async isAnOwner() {
 
@@ -122,14 +134,13 @@ export default {
 
             
             if (response.status == 200) {
-                return true;
-            } else {
-                return false;
-            }
+                return response.data;
+            } 
             
 
             } catch(error){
                 console.error('Error verifying', error.message);
+                return;
             }          
 
         },
@@ -144,14 +155,13 @@ export default {
 
 
             if (response.status == 200) {
-                return true;
-            } else {
-                return false;
-            }
+                return response.data;
+            } 
 
 
             } catch(error){
                 console.error('Error verifying', error.message);
+                return;
             }          
 
         },
@@ -170,6 +180,7 @@ export default {
                 this.clearInputs();
             } catch(error){
                 console.error('Error creating activity', error.message);
+                return;
             }
         },
         clearInputs() {
@@ -233,7 +244,12 @@ export default {
     setDarkMode(dark_mode) {
       localStorage.setItem('dark_mode', dark_mode);
     },
+    },
+
+    created() {
+      this.checkRoles();
     }
+
 }
 </script>
 

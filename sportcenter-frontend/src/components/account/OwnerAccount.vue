@@ -20,8 +20,8 @@
             <br>
 
             <HBox id="containerH">
-                <button id="subButton" v-if="this.isACustomer()" @click="goToCustomerMode()">Customer mode</button>
-                <button id="subButton" v-if="this.isAnInstructor()" @click="goToInstructorMode()">Instructor mode</button>
+                <button id="subButton" v-if="isCustomer" @click="goToCustomerMode()">Customer mode</button>
+                <button id="subButton" v-if="isInstructor" @click="goToInstructorMode()">Instructor mode</button>
                 <!--button id="destroyButton" @click="deleteAccount()">Delete account</button-->
             </HBox>
         </VBox>
@@ -44,6 +44,8 @@ export default {
     name: 'OwnerAccount',
     data() {
         return {
+            isInstructor: false,
+            isCustomer: false,
             oldUsername: null,
             newUsername: null,
             username: null,
@@ -81,6 +83,13 @@ export default {
             }
         },
 
+
+        async checkRoles() {
+
+          this.isInstructor = await this.isAnInstructor();
+          this.isCustomer = await this.isACustomer();
+        },
+
         async isACustomer() {
 
           try {
@@ -89,9 +98,8 @@ export default {
 
 
           if (response.status == 200) {
-              return true;
-          } else {
-              return false;
+
+              return response.data;
           }
 
 
@@ -110,9 +118,8 @@ export default {
 
             
             if (response.status == 200) {
-              return true;
-            } else {
-              return false;
+
+              return response.data;
             }
             
 
@@ -201,7 +208,13 @@ export default {
     setDarkMode(dark_mode) {
       localStorage.setItem('dark_mode', dark_mode);
     }
+    },
+
+    created() {
+      this.checkRoles();
     }
+
+
 }
 </script>
 

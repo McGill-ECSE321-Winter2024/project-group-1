@@ -20,7 +20,7 @@
             </VBox>
             <br>
 
-            <VBox id="verticalContainer" v-if="this.isAnInstructor()">
+            <VBox id="verticalContainer" v-if="!isInstructor">
                 <input id="inputBox" type="text" placeholder="Description" v-model="instructorDescription"></input>
                 <input id="inputBox" type="text" placeholder="Picture URL" v-model="instructorPictURL"></input>
                 <button id="mainButton" @click="instructorRequest()" style="margin-left: 10px; align-self: center;">Request to become an instructor</button>
@@ -28,8 +28,8 @@
             <br>
 
             <HBox id="containerH">
-                <button id="subButton" v-if="this.isAnInstructor()" @click="goToInstructorMode()">Instructor mode</button>
-                <button id="subButton" v-if="this.isAnOwner()" @click="goToOwnerMode()">Owner mode</button>
+                <button id="subButton" v-if="isInstructor" @click="goToInstructorMode()">Instructor mode</button>
+                <button id="subButton" v-if="isOwner" @click="goToOwnerMode()">Owner mode</button>
                 <!--button id="destroyButton" @click="deleteAccount()">Delete account</button-->
             </HBox>
         </VBox>
@@ -52,12 +52,13 @@ export default {
     name: 'CustomerAccount',
     data() {
         return {
+            isInstructor: false,
+            isOwner: false,
             oldUsername: null,
             newUsername: null,
             username: null,
             oldPassword: null,
             newPassword: null,
-            //instUsername: null,
             instDescription: null,
             instPictURL: null
         }
@@ -81,6 +82,7 @@ export default {
 
             } catch(error){
                 console.error('Error creating activity', error.message);
+                return;
             }
         },
 
@@ -103,6 +105,7 @@ export default {
 
             } catch(error){
                 console.error('Error creating activity', error.message);
+                return;
             }
         },
 
@@ -125,8 +128,15 @@ export default {
 
             } catch(error){
                 console.error('Error creating instructor', error.message);
+                return;
             }
 
+        },
+
+        async checkRoles() {
+
+          this.isInstructor = await this.isAnInstructor();
+          this.isOwner = await this.isAnOwner();
         },
 
         async isAnInstructor() {
@@ -138,14 +148,12 @@ export default {
 
             
             if (response.status == 200) {
-              return true;
-            } else {
-              return false;
-            }
-            
+              return response.data;
+            } 
 
           } catch(error){
               console.error('Error verifying', error.message);
+              return;
           }          
         
         },
@@ -164,13 +172,12 @@ export default {
             const response = await AXIOS.get('/checkAccountHasOwnerRole/' + this.getAccountId());
 
             if (response.status == 200) {
-              return true;
-            } else {
-              return false;
-            }
+              return response.data;
+            } 
 
             } catch(error){
                 console.error('Error verifying', error.message);
+                return;
             }          
 
           },        
@@ -243,6 +250,10 @@ export default {
     setDarkMode(dark_mode) {
       localStorage.setItem('dark_mode', dark_mode);
     },
+    },
+
+    created() {
+      this.checkRoles();
     }
 }
 </script>
