@@ -1,17 +1,16 @@
 <template>
     <div id="mainContainer">
-        <h1>My instructor account</h1>
+        <h1>My Instructor Account</h1>
         <VBox id="verticalContainer">
 
 
+            
+            <img id="profilePic" :src="profilePicURL" alt="Instructor" width="200" height="200">
 
-        
             <br>
 
             <p id="currentInformation">
                     Current Username: {{ getUsername() }}<br>
-                    <!--Description: {{ this.currentDescription }}<br>
-                    Picture URL: {{ this.currentPicture }} <br-->
             </p> 
             
             <VBox id="verticalContainer">
@@ -29,7 +28,6 @@
 
             <VBox id="verticalContainer">
                 <input id="inputBox" type="text" placeholder="New description" v-model="description"></input>
-                <input id="inputBox" type="text" placeholder="New image URL" v-model="picture"></input>
                 <p style="margin: 10px; font-weight: bold;" id="currentInformation">Choose a Profile Picture</p>
                 
                 <VBox style="margin: 10px; font-weight: bold; font-weight: bold;" id="mainContainer">
@@ -87,7 +85,7 @@ export default {
             ],
 
 
-
+            profilePicURL: '',
             selectedProfilePicture: null,
             isCustomer: false,
             isOwner: false,
@@ -101,7 +99,23 @@ export default {
             picture: null
         }
     },
-
+    async mounted() {
+    try {
+        const response = await AXIOS.get('/getInstructorByUsername/' + this.getUsername() + '/');
+        if(response.status == 200) {
+                let pictureId = response.data.profilePicURL;
+                let pictureString;
+                if (pictureId == 1) { pictureString = require("@/assets/ProfilePictures/john.jpg") };
+                if (pictureId == 2) { pictureString = require("@/assets/ProfilePictures/logo_internet.png") };
+                if (pictureId == 3) { pictureString = require("@/assets/ProfilePictures/messi.jpg") };
+                if (pictureId == 4) { pictureString = require("@/assets/ProfilePictures/ronnie.jpeg") };
+                if (pictureId == 5) { pictureString = require("@/assets/ProfilePictures/zyzz.jpg") };
+                this.profilePicURL = pictureString;
+            }
+        } catch(error) {
+            console.error(error);
+        }
+    },
 
     computed: {
         selectedProfilePictureUrl() {
@@ -134,7 +148,26 @@ export default {
         async showProfilePicture() {
 
             try {
-                const response = await AXIOS.put('/updateAccountUsername/' + this.getUsername() + '/' + this.newUsername);
+                const response = await AXIOS.get('/getInstructorByUsername/' + this.getUsername() + '/');
+
+                let pictureId = 0;
+
+                if(response.status == 200) {
+
+                    pictureId = response.data.profilePicURL;
+
+                    let pictureString;
+
+                    if (pictureId == 1) { pictureString = "@/assets/ProfilePictures/john.jpg" };
+                    if (pictureId == 2) { pictureString = "@/assets/ProfilePictures/logo_internet.png" };
+                    if (pictureId == 3) { pictureString = "@/assets/ProfilePictures/messi.jpg" };
+                    if (pictureId == 4) { pictureString = "@/assets/ProfilePictures/ronnie.jpeg" };
+                    if (pictureId == 5) { pictureString = "@/assets/ProfilePictures/zyzz.jpg" };
+
+                    console.log(pictureString);
+                    return pictureString;
+
+                }
 
 
             } catch(error) {
