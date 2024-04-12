@@ -25,7 +25,7 @@
                     <tr v-for="(activity, index) in activities" :key="index">
                         <td>{{ activity.name }}</td>
                         <td>{{ activity.description }}</td>
-                        <td v-if="$accountType === 'Owner'">
+                        <td v-if="getAccountType() === 'Owner'">
                         <VBox id="verticalContainer">
                                 <button id="approveSubButton" @click="approveActivity(activity.name)">Approve</button>
                                 <button id="disapproveSubButton" @click="dissaproveActivity(activity.name)">Disapprove</button>
@@ -95,6 +95,9 @@ export default {
             } catch (error){
                 console.log('Error fetching activities', error.message);
             }
+        },
+        getAccountType(){
+            return localStorage.getItem('accountType');
         }
     }
 };

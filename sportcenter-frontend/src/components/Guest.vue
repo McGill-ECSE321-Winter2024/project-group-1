@@ -2,7 +2,6 @@
     <div style="width: 1200px;">
         <div class="ViewActivityTable" id="mainContainer">
         <h1>View activities</h1>
-        <p>{{ getAccountType() }}</p>
         <button id="mainButton" @click="checkGlobalVariables()">Check Global Variables</button>
         <br>
             

@@ -3,17 +3,17 @@
 
     <div id="mainContainer">
         <h1>Activity Menu</h1>
-        <VBox id="CustomerContainer" v-if="$accountType=='Guest'">
+        <VBox id="CustomerContainer" v-if="getAccountType()=='Guest'">
             <button id="mainButton" @click="goToViewActivity()">View an activity</button>
         </VBox>
-        <VBox id="CustomerContainer" v-else-if="$accountType === 'Customer'">
+        <VBox id="CustomerContainer" v-else-if="getAccountType() === 'Customer'">
             <button id="mainButton" @click="goToViewActivity()">View an activity</button>
         </VBox>
-        <VBox id="CustomerContainer" v-else-if="$accountType === 'Instructor'">
+        <VBox id="CustomerContainer" v-else-if="getAccountType() === 'Instructor'">
             <button id="mainButton" @click="goToProposeActivity()">Propose an activity</button> <!--CHANGED-->
             <button id="mainButton" @click="goToScheduleActivity()">Schedule an activity</button>
         </VBox>
-        <VBox id="verticalContainer" v-else="$accountType ==='Owner'">
+        <VBox id="verticalContainer" v-else-if="getAccountType() ==='Owner'">
             <button id="mainButton" @click="goToUpdateActivity()">Update an activity</button>
             <button id="mainButton" @click="goToUpdateDeleteScheduledActivity()">Update a scheduled activity</button>
             <button id="mainButton" @click="goToManageActivities()">Manage activities</button>
@@ -33,7 +33,7 @@
                         <th width="100">Activity Name</th>
                         <th width="100">Activity Description</th>
 
-                        <th v-if="$accountType ==='Owner'" width="100">Activity Approve</th>
+                        <th v-if="getAccountType() ==='Owner'" width="100">Activity Approve</th>
                     </tr>
                 </thead>
                 <tbody id="activities-tbody">
@@ -46,7 +46,7 @@
                     <tr v-for="(activity, index) in activities" :key="index">
                         <td>{{ activity.name }}</td>
                         <td>{{ activity.description }}</td>
-                        <td v-if="$accountType === 'Owner'">
+                        <td v-if="getAccountType() === 'Owner'">
                             <VBox id="verticalContainer">
                                 <button id="subButton" @click="approveActivity(activity.name)">Approve</button>
                                 <button id="subButton" @click="dissaproveActivity(activity.name)">Disapprove</button>
@@ -141,9 +141,10 @@ const AXIOS = axios.create({
                 } catch (error){
                     console.log('Error fetching activities', error.message);
                 }
-            }
-
-
+            },
+            getAccountType() {
+                return localStorage.getItem('accountType');
+            },
         }
     }
 </script>

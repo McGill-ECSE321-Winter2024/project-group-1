@@ -1,7 +1,6 @@
 <template>
     <div id="mainContainer">
         <h1>Login</h1>
-        <button id="menuButton" @click="setAccountType()">TYPE</button>
         <VBox id="verticalContainer">
             <VBox id="verticalContainer">
                 <input id="inputBox" type="text" placeholder="Username" v-model="username"></input>
@@ -110,7 +109,49 @@ export default {
         clearInputs() {
             this.username = null;
             this.password = null;
-        }
+        },
+            getAccountType() {
+      return localStorage.getItem('accountType');
+    },
+    setAccountType(accountType) {
+      localStorage.setItem('accountType', accountType);
+    },
+    getUsername() {
+      return localStorage.getItem('username');
+    },
+    setUsername(username) {
+      localStorage.setItem('username', username);
+    },
+    getLoggedIn() {
+      return localStorage.getItem('loggedIn') === 'true';
+    },
+    setLoggedIn(loggedIn) {
+      localStorage.setItem('loggedIn', loggedIn);
+    },
+    getTime() {
+      return localStorage.getItem('time');
+    },
+    setTime(time) {
+      localStorage.setItem('time', time);
+    },
+    getDebuggingMode() {
+      return localStorage.getItem('debugging_mode') === 'true';
+    },
+    setDebuggingMode(debugging_mode) {
+      localStorage.setItem('debugging_mode', debugging_mode);
+    },
+    getLanguage() {
+      return localStorage.getItem('language');
+    },
+    setLanguage(language) {
+      localStorage.setItem('language', language);
+    },
+    getDarkMode() {
+      return localStorage.getItem('dark_mode') === 'true';
+    },
+    setDarkMode(dark_mode) {
+      localStorage.setItem('dark_mode', dark_mode);
+    },
     }
 };
 
