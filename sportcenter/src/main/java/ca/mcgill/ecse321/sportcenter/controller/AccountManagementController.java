@@ -89,13 +89,12 @@ public class AccountManagementController {
     /**
      * Create an owner from username
      * 
-     * @param username
      * @return OwnerDto
      */
-    @PostMapping(value = { "/createOwner/{username}", "/createOwner/{username}/" })
+    @PostMapping(value = { "/createOwner", "/createOwner/" })
     @ResponseStatus(HttpStatus.CREATED)
-    public OwnerDto createOwner(@PathVariable("username") String username) throws IllegalArgumentException {
-        Owner owner = accountService.createOwner(username);
+    public OwnerDto createOwner() throws IllegalArgumentException {
+        Owner owner = accountService.createOwner();
         return convertOwnerToDto(owner);
     }
 

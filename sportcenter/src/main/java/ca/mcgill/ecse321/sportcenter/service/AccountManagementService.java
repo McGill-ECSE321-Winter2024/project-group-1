@@ -166,23 +166,23 @@ public class AccountManagementService {
      * @return Owner
      */
     @Transactional
-    public Owner createOwner(String username) {
-        if (username == null || username.trim().isEmpty() || username.contains(" ")) {
-            throw new IllegalArgumentException("Username cannot be null, empty or contain spaces!");
+    public Owner createOwner() {
+        // Check if owner already exists
+        Account account = accountRepository.findAccountByUsername("owner");
+        if (account != null) {
+            return ownerRepository.findOwnerByAccountUsername("owner");
         }
 
-        Account account = accountRepository.findAccountByUsername(username);
-        if (account == null) {
-            throw new IllegalArgumentException("Account does not exist!");
-        }
-
-        // Can only have 1 Owner
-        if (ownerRepository.findAll().iterator().hasNext()) {
-            throw new IllegalArgumentException("Owner already exists!");
-        }
-
-        Owner owner = new Owner();
-        owner.setAccount(account);
+        // Create owner account and give all permissions
+        account = new Account("owner", "owner");
+        accountRepository.save(account);
+        Customer customer = new Customer(account);
+        customerRepository.save(customer);
+        Instructor instructor = new Instructor(InstructorStatus.Active, "Owner",
+                "https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.m.wikipedia.org%2Fwiki%2FFile%3ADefault_pfp.svg&psig=AOvVaw2LGv8_zxUx2ndrlCJuwJzN&ust=1713035294286000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCIiJ2fKvvYUDFQAAAAAdAAAAABAE",
+                account);
+        instructorRepository.save(instructor);
+        Owner owner = new Owner(account);
         ownerRepository.save(owner);
         return owner;
     }

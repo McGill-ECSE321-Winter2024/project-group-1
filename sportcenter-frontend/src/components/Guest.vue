@@ -180,10 +180,16 @@ export default {
         }
 
     }
-    
+    try {
+        const response = await AXIOS.post('/createOwner');
+        console.log("Owner should be created " + response.data);
+      } catch (error) {
+        console.log('Error creating owner', error.message);
+      }
 
     
   },
+
   methods: {
     async checkGlobalVariables() {
       console.log(this.$accountType);
