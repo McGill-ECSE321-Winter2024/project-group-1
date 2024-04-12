@@ -8,31 +8,28 @@
             </p>
 
             <VBox id="verticalContainer">
-                <input id="inputBox" type="text" placeholder="Username" v-model="oldUsername"></input>
                 <input id="inputBox" type="text" placeholder="New username" v-model="newUsername"></input>
                 <button id="mainButton" @click="updateUsername()" style="margin-left: 10px; align-self: center;"><b>Update Username</b></button>
             </VBox>
             <br>
 
             <VBox id="verticalContainer">
-                <input id="inputBox" type="text" placeholder="Username" v-model="username"></input>
                 <input id="inputBox" type="text" placeholder="Old password" v-model="oldPassword"></input>
                 <input id="inputBox" type="text" placeholder="New password" v-model="newPassword"></input>
                 <button id="mainButton" @click="updatePassword()" style="margin-left: 10px; align-self: center;"><b>Update Password</b></button>
             </VBox>
             <br>
 
-            <VBox id="verticalContainer">
-                <!--input id="inputBox" type="text" placeholder="Username" v-model="instUsername"></input-->
-                <input id="inputBox" type="text" placeholder="Description" v-model="instDescription"></input>
-                <input id="inputBox" type="text" placeholder="Picture URL" v-model="instPictURL"></input>
+            <VBox id="verticalContainer" v-if="this.isAnInstructor()">
+                <input id="inputBox" type="text" placeholder="Description" v-model="instructorDescription"></input>
+                <input id="inputBox" type="text" placeholder="Picture URL" v-model="instructorPictURL"></input>
                 <button id="mainButton" @click="instructorRequest()" style="margin-left: 10px; align-self: center;">Request to become an instructor</button>
             </VBox>
             <br>
 
             <HBox id="containerH">
-                <button id="subButton" @click="goToInstructorMode()">Instructor mode</button>
-                <button id="subButton" @click="goToOwnerMode()">Owner mode</button>
+                <button id="subButton" v-if="this.isAnInstructor()" @click="goToInstructorMode()">Instructor mode</button>
+                <button id="subButton" v-if="this.isAnOwner()" @click="goToOwnerMode()">Owner mode</button>
                 <!--button id="destroyButton" @click="deleteAccount()">Delete account</button-->
             </HBox>
         </VBox>
@@ -68,42 +65,122 @@ export default {
     methods: {
         async updateUsername() {
             try{
-                const response = await AXIOS.put('/updateAccountUsername/' + this.oldUsername + '/' + this.newUsername);
-                this.$username = this.newUsername;
+                const response = await AXIOS.put('/updateAccountUsername/' + this.getUsername() + '/' + this.newUsername);
+                this.username = this.newUsername;
                 console.log(response.data);
-                alert("New username updated successfully! It is now: " + this.$username);
-                this.clearInputs();
+
+                if (response.status == 200) {
+                  
+                  this.setUsername(this.username);
+                  alert("New username updated successfully! It is now: " + this.username);
+                  this.clearInputs();
+                }  else {
+                // Handle unsuccessful login
+                  console.log('Updating unsucessful');
+                }        
+
             } catch(error){
                 console.error('Error creating activity', error.message);
             }
         },
+
         async updatePassword() {
             try{
-                const response = await AXIOS.put('/updateAccountPassword/' + this.username + '/' + this.oldPassword + '/' + this.newPassword);
+                const response = await AXIOS.put('/updateAccountPassword/' + this.getUsername() + '/' + this.oldPassword + '/' + this.newPassword);
                 console.log(response.data);
-                alert("New password updated successfully! It is now: " + this.newPassword);
-                this.clearInputs();
+
+
+                if (response.status == 200) { 
+
+                  this.setUsername(this.username);
+                  alert("New password updated successfully!");
+                  this.clearInputs();
+                } else {
+                // Handle unsuccessful login
+                  console.log('Updating password unsucessful');
+                } 
+
+
             } catch(error){
                 console.error('Error creating activity', error.message);
             }
         },
+
         async instructorRequest() {
             try {
-                const response = await AXIOS.post('/createInstructor/' + this.$username + '/' + this.instDescription + '/' + this.instPictURL);
+
+                const response = await AXIOS.post('/createInstructor/' + this.getUsername() + '/' + this.instructorDescription + '/' + this.instructorPictURL);
                 console.log(response.data);
-                alert("Instructor request sent successfully!");
-                this.clearInputs();
+
+                if (response.status == 200) { 
+
+                  this.setUsername(this.username);
+                  alert("Instructor request sent successfully!");
+                  this.clearInputs();
+
+                } else {
+                // Handle unsuccessful login
+                  console.log('Instructor submission failed');
+                } 
+
+
             } catch(error){
                 console.error('Error creating instructor', error.message);
             }
-            //lert("Instructor request button clicked");
-            //console.log("Instructor request button clicked");
+
         },
-        goToInstructorMode() {
+
+        async isAnInstructor() {
+
+          try {
+
+            console.log(this.getAccountId());
+
+            const response = await AXIOS.get('/checkAccountHasInstructorRole/' + this.getAccountId());
+
+            
+            if (response.status == 200) {
+              return true;
+            } else {
+              return false;
+            }
+            
+
+          } catch(error){
+              console.error('Error verifying', error.message);
+          }          
+        
+        },
+
+        async goToInstructorMode() { 
+
+
             this.$router.push('/app/account/instructor-account');
+
         },
-        goToOwnerMode() {
+
+        async isAnOwner() {
+
+          try {
+
+            const response = await AXIOS.get('/checkAccountHasOwnerRole/' + this.getAccountId());
+
+            if (response.status == 200) {
+              return true;
+            } else {
+              return false;
+            }
+
+            } catch(error){
+                console.error('Error verifying', error.message);
+            }          
+
+          },        
+
+        async goToOwnerMode() {
+
             this.$router.push('/app/account/owner-account');
+
         },
         deleteAccount() {
             alert("Delete account button clicked");
@@ -120,6 +197,12 @@ export default {
             this.instPictURL = null;
         },
             // Methods for global variables
+    setAccountId(id) {
+      localStorage.setItem('id', id);
+    },
+    getAccountId() {
+      return localStorage.getItem('id');
+    },
     getAccountType() {
       return localStorage.getItem('accountType');
     },

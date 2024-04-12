@@ -11,6 +11,7 @@
         <p>{{ getAccountType() }}</p>
         <p>{{ getUsername() }}</p>
         <p>{{ getLoggedIn() }}</p>
+        <p>{{ getAccountId() }}</p>
       </VBox>
     </HBox>
     <br>
@@ -52,6 +53,12 @@ export default {
     },
   methods: {
     // Methods for global variables
+    setAccountId(id) {
+      localStorage.setItem('id', id);
+    },
+    getAccountId() {
+      return localStorage.getItem('id');
+    },
     getAccountType() {
       return localStorage.getItem('accountType');
     },
@@ -126,6 +133,7 @@ export default {
       this.setLoggedIn(false);
       this.setAccountType('Guest');
       this.setUsername('');
+      this.setAccountId('');
       this.$router.push('/app/auth/login');
 
     },

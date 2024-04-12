@@ -14,7 +14,6 @@
             <br>
             <VBox id="verticalContainer" style="width: 40%; align-self: center;">
                 <v-divider>Other options</v-divider>
-                <button id="subButton" @click="goToForgotPassword()"><b>Forgot password</b></button>
                 <button id="subButton" @click="goToCreateAccount()"><b>Create a new account</b></button>
                 <button id="subButton" @click="goToContinueAsGuest()">Continue as a Guest</button>
             </VBox>
@@ -54,6 +53,26 @@ export default {
                 this.setLoggedIn(true);
                 this.setAccountType('Customer');
                 this.setUsername(this.username);
+
+
+                  //Set up ID
+
+                  let id = '0';
+                  const responseForId = await AXIOS.get('/getAllAccounts');
+                  console.log(responseForId.data);
+
+                  for (const account of responseForId.data) {
+
+                    if (account.username === this.username && account.password === this.password) {
+                      id = account.accountId;
+                      break; // Exit the loop once we find a matching account
+                    }
+                  }
+
+                  this.setAccountId(id);                 
+
+
+
                 this.clearInputs();
                 this.$router.push('/');
               }  else {
@@ -79,6 +98,24 @@ export default {
                   this.setLoggedIn(true);
                   this.setAccountType('Instructor');
                   this.setUsername(this.username);
+
+                  //Set up ID
+
+                  let id = '0';
+                  const responseForId = await AXIOS.get('/getAllAccounts');
+                  console.log(responseForId.data);
+
+                  for (const account of responseForId.data) {
+
+                    if (account.username === this.username && account.password === this.password) {
+                      id = account.accountId;
+                      break; // Exit the loop once we find a matching account
+                    }
+                  }
+
+                  this.setAccountId(id); 
+                    
+
                   this.clearInputs();
                   this.$router.push('/');
                 }  else {
@@ -94,13 +131,31 @@ export default {
         async loginOwner() {
           try{
                 const response = await AXIOS.get('/login/' + this.username + '/' + this.password + '/owner');
-                console.log(response.data);
+                //console.log(response.data);
 
 
               if (response.status == 200) {
                 this.setLoggedIn(true);
                 this.setAccountType('Owner');
                 this.setUsername(this.username);
+
+                  //Set up ID
+
+                  let id = '0';
+                  const responseForId = await AXIOS.get('/getAllAccounts');
+
+                  for (const account of responseForId.data) {
+
+                    if (account.username === this.username && account.password === this.password) {
+                      id = account.accountId;
+                      break; // Exit the loop once we find a matching account
+                    }
+                  }
+
+                  this.setAccountId(id); 
+
+
+
                 this.clearInputs();
                 this.$router.push('/');
               }  else {
@@ -134,6 +189,13 @@ export default {
             getAccountType() {
       return localStorage.getItem('accountType');
     },
+
+    setAccountId(id) {
+      localStorage.setItem('id', id);
+    },
+    getAccountId() {
+      return localStorage.getItem('id');
+    },
     setAccountType(accountType) {
       localStorage.setItem('accountType', accountType);
     },
@@ -144,7 +206,7 @@ export default {
       localStorage.setItem('username', username);
     },
     getLoggedIn() {
-      return localStorage.getItem('loggedIn') === 'true';
+      return localStorage.getItem('loggedIn');
     },
     setLoggedIn(loggedIn) {
       localStorage.setItem('loggedIn', loggedIn);

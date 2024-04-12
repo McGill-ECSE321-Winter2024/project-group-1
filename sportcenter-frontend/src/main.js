@@ -13,13 +13,9 @@ Vue.use(BootstrapVue)
 localStorage.setItem('accountType', 'Guest');
 localStorage.setItem('username', '');
 localStorage.setItem('loggedIn', false);
+localStorage.setItem('id', 0);
 localStorage.setItem('time', new Date().getDate() + "/" + new Date().getMonth() + "/" + new Date().getFullYear());
 localStorage.setItem('debugging_mode', true);
-// Vue.prototype.$accountType = "Owner";
-// Vue.prototype.$username = 'Instr1'; // guest = JoeMama
-// Vue.prototype.$loggedIn = true;
-// Vue.prototype.$time = new Date().getDate() + "/" + new Date().getMonth() + "/" + new Date().getFullYear();
-// Vue.prototype.$debugging_mode = true; 
 
 /* eslint-disable no-new */
 new Vue({
