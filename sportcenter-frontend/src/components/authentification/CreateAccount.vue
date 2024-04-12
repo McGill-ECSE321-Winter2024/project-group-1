@@ -70,7 +70,6 @@ export default {
       try {
         response2 = await AXIOS.post( "/createCustomer/" + this.username );
         console.log(response2.data);
-        this.clearInputs();
       } catch (error) {
         alert("Problem creating customer. Please try again.");
       }
@@ -81,6 +80,7 @@ export default {
           this.setLoggedIn(true);
           this.setAccountType("Customer");
           this.setUsername(this.username);
+          this.clearInputs();
           this.$router.push("/");
         }
       } catch (error) {
