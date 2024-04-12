@@ -1,11 +1,24 @@
 <template>
     <div style="width: 1200px;">
+
+        <div id="loginOrCreate">
+
+          <HBox style="margin:20px;" id="horizontalContainer">
+          <button style="width:18%;" id="mainButton" @click="goCreateAccount()"><b>Create Account</b></button>
+          
+
+          <button style="width:10%" id="mainButton" @click="goLogin()"><b>Login</b></button>
+          </HBox>
+
+        </div>
+
         <div class="ViewActivityTable" id="mainContainer">
-        <h1>View activities</h1>
+        <h1>View Activities</h1>
         <button id="mainButton" @click="checkGlobalVariables()">Check Global Variables</button>
         <br>
             
         <!--input id="inputBox" type="text" v-model="search" placeholder="Search activities"-->
+
 
             <table id="activityTable" align="center" width="900px">
             <thead>
@@ -19,7 +32,7 @@
             <tbody>
                 <template v-if="scheduledActivities.length === 0">
                 <tr>
-                    <td colspan="4">No activities</td>
+                    <td colspan="4">No Scheduled Activities</td>
                 </tr>
                 </template>
 
@@ -44,7 +57,7 @@
         </div>
 
         <div id="mainContainer">
-            <h1>View instructors</h1>
+            <h1>View Instructors</h1>
             <VBox id="verticalContainer">
                 <!--input id="inputBox" type="username" placeholder="Search by name"></input-->
 
@@ -60,7 +73,7 @@
 
                     <template v-if="instructors.length === 0">
                         <tr>
-                            <td colspan="3">No instructor</td>
+                            <td colspan="3">No Instructor</td>
                         </tr>
                     </template>
 
@@ -133,12 +146,6 @@ export default {
     };
   },
 
-  mounted() {
-    // Call method to fetch scheduled activities when the component is mounted
-    //this.fetchScheduledActivities();
-  },
-
-
 
   
 
@@ -182,6 +189,14 @@ export default {
       console.log(this.$accountType);
       console.log(this.$username);
       console.log(this.$loggedIn);
+    },
+
+    goLogin() {
+      this.$router.push('/app/auth/login');
+    },
+
+    goCreateAccount() {
+      this.$router.push('/app/auth/createaccount');
     },
 
     showActivityDetails(activity) {

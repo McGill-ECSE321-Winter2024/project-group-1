@@ -19,7 +19,7 @@
       <button id="menuButton" v-if="getAccountType() === 'Customer'" @click="goCustomerAccount()">Account</button>
       <button id="menuButton" v-if="getAccountType() === 'Instructor'" @click="goInstructorAccount()">Account</button>
       <button id="menuButton" v-if="getAccountType() === 'Owner'" @click="goOwnerAccount()">Account</button>
-      <button id="menuButton" v-if="getAccountType() === 'Customer' || $accountType === 'Instructor'" @click="goMyActivities()">My activities</button>
+      <button id="menuButton" v-if="getAccountType() === 'Customer' || $accountType === 'Instructor'" @click="goMyActivities()">My Activities</button>
       <button id="menuButton" @click="goActivity()">All activities</button>
       <button id="menuButton" v-if="getAccountType() != 'Owner'" @click="goInstructors()">Instructors</button>
       <button id="menuButton" v-if="getAccountType() =='Owner'" @click="goInstructorsForOwner()">Instructors</button>
@@ -43,7 +43,7 @@ export default {
       return {
         accountType: localStorage.getItem('accountType') || 'Guest',
         username: localStorage.getItem('username') || 'JoeMama',
-        loggedIn: localStorage.getItem('loggedIn') === 'true',
+        loggedIn: localStorage.getItem('loggedIn') === 'false',
         time: localStorage.getItem('time') || (new Date().getDate() + "/" + (new Date().getMonth() + 1) + "/" + new Date().getFullYear()),
         debugging_mode: localStorage.getItem('debugging_mode') === 'true',
         language: localStorage.getItem('language') || 'en',
@@ -65,7 +65,7 @@ export default {
       localStorage.setItem('username', username);
     },
     getLoggedIn() {
-      return localStorage.getItem('loggedIn') === 'true';
+      return localStorage.getItem('loggedIn') === 'false';
     },
     setLoggedIn(loggedIn) {
       localStorage.setItem('loggedIn', loggedIn);

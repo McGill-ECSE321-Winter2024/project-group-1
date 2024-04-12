@@ -6,17 +6,17 @@
                 <input id="inputBox" type="text" placeholder="Username" v-model="username"></input>
                 <input id="inputBox" type="password" placeholder="Password" v-model="password"></input>
                 <HBox id="horizontalContainer">
-                    <button id="mainButton" @click="loginCustomer()"><b>Login as customer</b></button>
-                    <button id="mainButton" @click="loginInstructor()"><b>Login as instructor</b></button>
-                    <button id="mainButton" @click="loginOwner()"><b>Login as owner</b></button>
+                    <button id="mainButton" @click="loginCustomer()"><b>Login as Customer</b></button>
+                    <button id="mainButton" @click="loginInstructor()"><b>Login as Instructor</b></button>
+                    <button id="mainButton" @click="loginOwner()"><b>Login as Owner</b></button>
                 </HBox>
             </VBox>
             <br>
             <VBox id="verticalContainer" style="width: 40%; align-self: center;">
                 <v-divider>Other options</v-divider>
                 <button id="subButton" @click="goToForgotPassword()"><b>Forgot password</b></button>
-                <!--button id="subButton" @click="goToCreateAccount()"><b>Create a new account</b></button-->
-                <button id="subButton" @click="goToContinueAsGuest()">Continue as a guest</button>
+                <button id="subButton" @click="goToCreateAccount()"><b>Create a new account</b></button>
+                <button id="subButton" @click="goToContinueAsGuest()">Continue as a Guest</button>
             </VBox>
         </VBox>
     </div>
