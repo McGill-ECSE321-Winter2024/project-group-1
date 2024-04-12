@@ -10,12 +10,16 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 Vue.use(BootstrapVue)
 
 // 4 types: Guest, Customer, Instructor, Owner
-localStorage.setItem('accountType', 'Guest');
-localStorage.setItem('username', '');
-localStorage.setItem('loggedIn', false);
-localStorage.setItem('id', 0);
-localStorage.setItem('time', new Date().getDate() + "/" + new Date().getMonth() + "/" + new Date().getFullYear());
-localStorage.setItem('debugging_mode', true);
+// Check if global variables are already initialized in localStorage
+if (!localStorage.getItem('accountType')) {
+  // Initialize global variables
+  localStorage.setItem('accountType', 'Guest');
+  localStorage.setItem('username', '');
+  localStorage.setItem('loggedIn', false);
+  localStorage.setItem('id', '0');
+  localStorage.setItem('time', new Date().getDate() + "/" + new Date().getMonth() + "/" + new Date().getFullYear());
+  localStorage.setItem('debugging_mode', true);
+}
 
 /* eslint-disable no-new */
 new Vue({
