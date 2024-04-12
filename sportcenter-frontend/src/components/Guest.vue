@@ -14,7 +14,6 @@
 
         <div class="ViewActivityTable" id="mainContainer">
         <h1>View Activities</h1>
-        <button id="mainButton" @click="checkGlobalVariables()">Check Global Variables</button>
         <br>
             
         <!--input id="inputBox" type="text" v-model="search" placeholder="Search activities"-->
@@ -151,7 +150,7 @@ export default {
 
 
   async created() {
-    if (this.$accountType === 'Owner' || this.$accountType === 'Instructor') {
+    if (this.getAccountType() === 'Owner' || this.getAccountType() === 'Instructor') {
       try {
         const response = await AXIOS.get('/getAllInstructors');
         this.instructors = response.data;
@@ -191,12 +190,6 @@ export default {
   },
 
   methods: {
-    async checkGlobalVariables() {
-      console.log(this.$accountType);
-      console.log(this.$username);
-      console.log(this.$loggedIn);
-    },
-
     goLogin() {
       this.$router.push('/app/auth/login');
     },
@@ -215,7 +208,50 @@ export default {
     getAccountType() {
       localStorage.setItem('accountType', Math.random() < 0.5 ? "Customer" : "Instructor_1");
       return localStorage.getItem('accountType')
-    }
+    },
+
+    getAccountType() {
+      return localStorage.getItem('accountType');
+    },
+    setAccountType(accountType) {
+      localStorage.setItem('accountType', accountType);
+    },
+    getUsername() {
+      return localStorage.getItem('username');
+    },
+    setUsername(username) {
+      localStorage.setItem('username', username);
+    },
+    getLoggedIn() {
+      return localStorage.getItem('loggedIn') === 'true';
+    },
+    setLoggedIn(loggedIn) {
+      localStorage.setItem('loggedIn', loggedIn);
+    },
+    getTime() {
+      return localStorage.getItem('time');
+    },
+    setTime(time) {
+      localStorage.setItem('time', time);
+    },
+    getDebuggingMode() {
+      return localStorage.getItem('debugging_mode') === 'true';
+    },
+    setDebuggingMode(debugging_mode) {
+      localStorage.setItem('debugging_mode', debugging_mode);
+    },
+    getLanguage() {
+      return localStorage.getItem('language');
+    },
+    setLanguage(language) {
+      localStorage.setItem('language', language);
+    },
+    getDarkMode() {
+      return localStorage.getItem('dark_mode') === 'true';
+    },
+    setDarkMode(dark_mode) {
+      localStorage.setItem('dark_mode', dark_mode);
+    },
 
 
   }, //end of methods
