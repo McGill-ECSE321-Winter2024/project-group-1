@@ -16,7 +16,7 @@
     </HBox>
     <br>
     <HBox v-if="this.getLoggedIn() == 'true'">
-      <button id="menuButton" @click="this.goHome()">Home</button>
+      <button id="menuButton" @click="goHome()">Home</button>
       <button id="menuButton" v-if="this.getAccountType() === 'Customer'" @click="goCustomerAccount()">Account</button>
       <button id="menuButton" v-if="getAccountType() === 'Instructor'" @click="goInstructorAccount()">Account</button>
       <button id="menuButton" v-if="getAccountType() === 'Owner'" @click="goOwnerAccount()">Account</button>
@@ -145,6 +145,9 @@ export default {
     },
     goInstructorsForOwner() {
       this.$router.push('/app/instructors/manage-instructors');
+    },
+    goHome() {
+      this.$router.push('/');
     }
   
   },
