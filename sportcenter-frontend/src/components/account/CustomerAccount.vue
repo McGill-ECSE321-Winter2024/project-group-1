@@ -21,6 +21,12 @@
             <br>
 
             <VBox id="verticalContainer" v-if="!isInstructor">
+
+
+
+
+
+
                 <input id="inputBox" type="text" placeholder="Description" v-model="instructorDescription"></input>
                 <input id="inputBox" type="text" placeholder="Picture URL" v-model="instructorPictURL"></input>
                 <button id="mainButton" @click="instructorRequest()" style="margin-left: 10px; align-self: center;">Request to become an instructor</button>
@@ -143,7 +149,7 @@ export default {
 
           try {
 
-
+            
             const response = await AXIOS.get('/checkAccountHasInstructorRole/' + this.getAccountId());
 
             
@@ -160,7 +166,7 @@ export default {
 
         async goToInstructorMode() { 
 
-
+            this.setAccountType('Instructor');
             this.$router.push('/app/account/instructor-account');
 
         },
@@ -184,6 +190,7 @@ export default {
 
         async goToOwnerMode() {
 
+            this.setAccountType('Owner');
             this.$router.push('/app/account/owner-account');
 
         },

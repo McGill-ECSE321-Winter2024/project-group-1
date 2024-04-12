@@ -133,9 +133,11 @@ export default {
 
 
         goToCustomerMode() {
+            this.setAccountType('Customer');
             this.$router.push('/app/account/customer-account');
         },
         goToInstructorMode() {
+            this.setAccountType('Instructor');
             this.$router.push('/app/account/instructor-account');
         },
         async deleteAccount() {
