@@ -392,7 +392,7 @@ public class AccountManagementController {
      * @param String picture
      * @param String InstructorStatus
      */
-    @PutMapping(value = { "/updateInstructor/{username}/{description}/{picture}/",
+    @PutMapping(value = { "/updateInstructor/{username}/{description}/{picture}",
             "/updateInstructor/{username}/{description}/{picture}/" })
     public void updateInstructor(@PathVariable("username") String username,
             @PathVariable("description") String description,
