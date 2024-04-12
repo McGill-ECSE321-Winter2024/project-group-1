@@ -1,10 +1,7 @@
 <template>
 <div class="ViewActivityTable" id="mainContainer">
-  <h1>View scheduled activities</h1>
+  <h1>Future classes</h1>
   <br>
-    
-  <input id="inputBox" type="text" v-model="search" placeholder="Search activities">
-
     <table id="activityTable" align="center" width="700">
       <thead>
         <tr>
@@ -20,9 +17,8 @@
             <td colspan="4">No activities</td>
           </tr>
         </template>
-
         <template v-else>
-          <tr v-for="(scheduledActivity, index) in scheduledActivities" :key="index" @click="showActivityDetails(activity)">
+          <tr v-for="scheduledActivity in scheduledActivities" :key="scheduledActivity" @click="showActivityDetails(scheduledActivity)">
             <td>{{ scheduledActivity.activity.name }}</td>
             <td>{{ scheduledActivity.activity.subCategory }}</td>
             <td>{{ scheduledActivity.date }}</td>
@@ -40,9 +36,11 @@
 
 <script>
 
+import { ref } from 'vue'
 import axios from 'axios'
 import config from '../../../config'
 import ViewActivity from './ViewActivity.vue';
+let input = ref("");
 
 const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
 const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
@@ -59,15 +57,6 @@ export default {
       filteredActivityData: [],
       selectedActivity: null,
       search:'',
-
-
-
-      // scheduledActivities: [
-      //   { name: 'Borneo', category: 'Expedition', date: '6 march', capacity: 30 },
-      //   { name: 'Trifecta', category: 'YoloSwag', date: '6 april', capacity: 10 },
-      //   { name: 'Running', category: 'Cardio', date: '6 january', capacity: 20 },
-      //   { name: 'INSTAGATION', category: 'Vroom', date: '6 january', capacity: 20 },
-      // ],
     };
   },
 
@@ -75,19 +64,13 @@ export default {
   async created() {
     // Make HTTP request to fetch scheduled activities from backend
     try {
-      const response = await AXIOS.get('/scheduledActivities')
+      const response = await AXIOS.get('/scheduledActivities');
       this.scheduledActivities = response.data;
     }
     catch (error) {
       console.error('Error fetching scheduled activities:', error);
     } 
   },
-
-
-
-  
-
-
 
   methods: {
  
@@ -139,25 +122,25 @@ export default {
     setDarkMode(dark_mode) {
       localStorage.setItem('dark_mode', dark_mode);
     },
-
-
   }, //end of methods
 
   computed: {
-  // Filter activities based on search query
-  filteredActivities: function() {
-    const query = this.search.toLowerCase();
-    return this.scheduledActivities.filter(activity =>
-      activity.name.toLowerCase().includes(query) ||
-      activity.category.toLowerCase().includes(query) ||
-      activity.date.toLowerCase().includes(query) ||
-      activity.capacity.toString().includes(query)
-    );
+    // Filter activities based on search query
+    filteredActivities() {
+      return this.scheduledActivities.filter(activity => {
+        return activity.name.toLowerCase().includes(this.input.toLowerCase());
+      });
+    }
   },
-  },
+
   components: {
     ViewActivity
-  }
+  },
+}
+function filteredList() {
+  return this.scheduledActivities.filter((activity) => {
+    activity.name.toLowerCase().includes(this.input.toLowerCase());
+  });
 };
 </script>
 

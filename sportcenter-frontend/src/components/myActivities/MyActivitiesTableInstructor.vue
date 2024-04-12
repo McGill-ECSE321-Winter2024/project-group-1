@@ -1,6 +1,6 @@
 <template>
   <div class="MyActivitiesTable" id="mainContainer">
-    <h1>View the activities I have to teach</h1>
+    <h1>Activities I have to teach</h1>
     <br />
 
     <VBox id="verticalContainer">
@@ -21,14 +21,14 @@
           </template>
           <template v-else>
             <tr
-              v-for="(activity, index) in activities"
+              v-for="(scheduledActivities, index) in scheduledActivities"
               :key="index"
               @click="showActivityDetails(activity)"
             >
-              <td>{{ activity.name }}</td>
-              <td>{{ activity.category }}</td>
-              <td>{{ activity.date }}</td>
-              <td>{{ activity.capacity }}</td>
+              <td>{{ scheduledActivities.activity.name }}</td>
+              <td>{{ scheduledActivities.activity.subCategory }}</td>
+              <td>{{ scheduledActivities.date }}</td>
+              <td>{{ scheduledActivities.capacity }}</td>
             </tr>
           </template>
         </tbody>
@@ -66,21 +66,18 @@ export default {
       filteredActivityData: [],
       selectedActivity: null,
       search: "",
-
-      //logic here would get all activities
-
-      // scheduledActivities: [
-      //   { name: 'Borneo', category: 'Expedition', date: '6 march', capacity: 30 },
-      //   { name: 'Trifecta', category: 'YoloSwag', date: '6 april', capacity: 10 },
-      //   { name: 'Running', category: 'Cardio', date: '6 january', capacity: 20 },
-      //   { name: 'INSTAGATION', category: 'Vroom', date: '6 january', capacity: 20 },
-      // ],
     };
   },
 
-  mounted() {
-    // Call method to fetch scheduled activities when the component is mounted
-    this.fetchScheduledActivities();
+  async created() {
+    // Make HTTP request to fetch scheduled activities from backend
+    try {
+      const id = await AXIOS.get("/getInstructorAccountRoleIdByUsername/" + this.getUsername());
+      const response = await AXIOS.get("/scheduledActivities/instructor/" + id.data);
+      this.scheduledActivities = response.data;
+    } catch (error) {
+      console.error("Error fetching scheduled activities:", error);
+    }
   },
 
   methods: {
@@ -111,7 +108,9 @@ export default {
     getAccountType() {
       return localStorage.getItem("accountType");
     },
-
+    getUsername() {
+      return localStorage.getItem("username");
+    },
     showActivityDetails(activity) {
       this.selectedActivity = activity;
     },

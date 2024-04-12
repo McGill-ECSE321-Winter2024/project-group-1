@@ -13,7 +13,7 @@
         </div>
 
         <div class="ViewActivityTable" id="mainContainer">
-        <h1>View Activities</h1>
+        <h1>Future classes</h1>
         <br>
             
         <!--input id="inputBox" type="text" v-model="search" placeholder="Search activities"-->
@@ -55,7 +55,7 @@
         </div>
 
         <div id="mainContainer">
-            <h1>View Instructors</h1>
+            <h1>Our instructors</h1>
             <VBox id="verticalContainer">
                 <!--input id="inputBox" type="username" placeholder="Search by name"></input-->
 
