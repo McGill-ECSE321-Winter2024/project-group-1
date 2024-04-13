@@ -47,6 +47,7 @@ export default {
         const customerID = await AXIOS.get('/getCustomerAccountRoleIdByUsername/' + this.getUsername());
         const scheduledActivityID = activity.scheduledActivityId;
         await AXIOS.post('/register/' + customerID.data + '/' + scheduledActivityID);
+        alert('Activity registered successfully');
       } catch (error) {
         console.error(error);
       }

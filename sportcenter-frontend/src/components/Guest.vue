@@ -1,17 +1,5 @@
 <template>
     <div style="width: 1200px;">
-
-        <div id="loginOrCreate">
-
-          <HBox style="margin:20px;" id="horizontalContainer">
-          <button style="width:18%;" id="mainButton" @click="goCreateAccount()"><b>Create Account</b></button>
-          
-
-          <button style="width:10%" id="mainButton" @click="goLogin()"><b>Login</b></button>
-          </HBox>
-
-        </div>
-
         <div class="ViewActivityTable" id="mainContainer">
         <h1>Future classes</h1>
         <br>

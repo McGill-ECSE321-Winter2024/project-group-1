@@ -198,56 +198,34 @@ export default {
           },        
 
         async goToOwnerMode() {
-
             this.setAccountType('Owner');
             this.$router.push('/app/account/owner-account');
-
         },
-
-
-
         async deleteCustomer() {
-
           try {
               const response = await AXIOS.get('/getCustomerByUsername/' + this.getUsername() + '/');
               
               if (response.status == 200) {
-              
-
                   if (response.data.account.password == this.passwordDeletion) {
-
                       try {
-                          
-                        // console.log(response.data.password);
-
                           const responseDelete = await AXIOS.delete('/deleteCustomerByUsername/' + this.getUsername()+ '/');
-
                           if (responseDelete.status == 200) {
-
                               this.setLoggedIn(false);
                               this.setAccountType('Guest');
                               this.setUsername('');
                               this.setAccountId('');
                               this.$router.push('/app/auth/login');
-
                           }
-
                       } catch(error) {
                           console.error('deletion went wrong', error.message);
                           return;
                       }
                   } 
               }
-              
-
           } catch(error) {
               console.error('Cannot check password', error.message);
               return;
           }
-
-
-
-
 },
 
 

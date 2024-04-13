@@ -3,13 +3,13 @@
     <h1>Activities I'm registered for</h1>
     <br />
 
-    <table id="activityTable" align="center" width="700">
+    <table id="activityTable" align="center">
       <thead>
         <tr>
-          <th width="100">Name</th>
-          <th width="100">Category</th>
-          <th width="100">Date</th>
-          <th width="100">Capacity</th>
+          <th width="20%">Name</th>
+          <th width="20%">Category</th>
+          <th width="20%">Date</th>
+          <th width="20%">Capacity</th>
         </tr>
       </thead>
       <tbody id="myActivities">
@@ -20,21 +20,21 @@
         </template>
         <template v-else>
           <tr
-            v-for="(registrations, index) in registrations"
+            v-for="(registration, index) in registrations"
             :key="index"
             @click="showActivityDetails(activity)"
           >
-            <td>{{ registrations.scheduledActivity.activity.name }}</td>
+            <td>{{ registration.scheduledActivity.activity.name }}</td>
             <td>
-              {{ registrations.scheduledActivity.activity.subCategory }}
+              {{ registration.scheduledActivity.activity.subCategory }}
             </td>
-            <td>{{ registrations.scheduledActivity.date }}</td>
-            <td>{{ registrations.scheduledActivity.capacity }}</td>
+            <td>{{ registration.scheduledActivity.date }}</td>
+            <td>{{ registration.scheduledActivity.capacity }}</td>
             <td>
               <VBox id="verticalContainer">
                 <button
-                  id="cancelRegistrationButton"
-                  @click="cancelRegistration(registrations)"
+                  id="subButton"
+                  @click="cancelRegistration(registration)"
                 >
                   Cancel Registration
                 </button>
@@ -118,32 +118,19 @@ export default {
         });
     },
 
-    cancelRegistration(registrations) {
-      axios
-        .delete("/registration/" + registrations.id)
-        .then(() => {})
-        .catch((error) => {
-          console.error("Error deleting registration:", error);
-        });
-    },
-    // fetchScheduledActivities() {
-    //   // Make HTTP request to fetch scheduled activities from backend
-    //   axios.get('/scheduledActivities')
-    //     .then(response => {
-    //       // Assign response data to scheduledActivities
-    //       this.scheduledActivities = response.data;
+    async cancelRegistration(registration) {
+      try {
+        const response = await AXIOS.delete("/registration/" + registration.registrationId);
 
-    //       this.scheduledActivitiesTable = response.data.map(activity => ({
-    //       activityName: activity.activity.name,
-    //       activityCategory: activity.activity.category,
-    //       date: activity.date,
-    //       capacity: activity.capacity
-    //     }));
-    //     })
-    //     .catch(error => {
-    //       console.error('Error fetching scheduled activities:', error);
-    //     });
-    // },
+        if (response.status === 200) {
+          alert("Registration cancelled successfully!");
+          $forceUpdate();
+        }
+      } catch (error) {
+        return;
+      }
+    },
+
     getAccountId() {
       return localStorage.getItem("id");
     },
