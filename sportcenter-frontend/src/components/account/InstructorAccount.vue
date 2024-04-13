@@ -6,6 +6,7 @@
             <br>
             <p id="currentInformation">
                     Current Username: {{ getUsername() }}<br>
+                    
             </p> 
             <VBox id="verticalContainer">
                 <p style="margin: 10px; font-weight: bold;" id="currentInformation">Change Username</p>
@@ -180,6 +181,17 @@ export default {
         },
         async updateInstructorInfo() {
             try{
+
+                const responseForNullPicture = await AXIOS.get('/getInstructorByUsername/' + this.getUsername() + '/');
+                if (this.selectedProfilePicture == null) {
+
+                    this.selectedProfilePicture = responseForNullPicture.data.profilePicURL;
+                }
+
+                if (this.description == null) {
+                    this.description = responseForNullPicture.data.description;
+                }
+
                 const response = await AXIOS.put('/updateInstructor/' + this.getUsername() + '/' + this.description + '/' + this.selectedProfilePicture + '/');
                 alert("Instructor info updated successfully! New description is: " + this.description + " and new image URL is: " + this.selectedProfilePicture);
                 this.clearInputs();
