@@ -3,8 +3,6 @@
     <div class="UpdateDeleteScheduledActivity" id="mainContainer" style="margin-bottom: 0px;">
       <h1>Scheduled activities management</h1>
       <br>
-      
-      <input id="inputBox" type="text" v-model="search" placeholder="Search a scheduled activity">
 
       <table id="activityTable" align="center" width="700">
         <thead>
@@ -23,9 +21,9 @@
           </template>
 
           <template v-else>
-            <tr v-for="(activity, index) in filteredActivities" :key="index">
+            <tr v-for="(activity, index) in scheduledActivities" :key="index">
               <td>{{ activity.activity.name }}</td>
-              <td>{{ activity.activity.category }}</td>
+              <td>{{ activity.activity.subCategory }}</td>
               <td>{{ activity.date }}</td>
               <td>{{ activity.capacity }}</td>
             </tr>

@@ -4,8 +4,6 @@
         <br>
         
         <VBox id="verticalContainer">
-            <input id="inputBox" type="text" v-model='search' placeholder="Search by name"></input>
-
             <table id="instructorTable">
                 <thead>
                     <tr>

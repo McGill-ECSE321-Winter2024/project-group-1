@@ -86,7 +86,6 @@ name: 'Guest',
 			scheduledActivities: [],
 			filteredActivityData: [],
 			selectedActivity: null,
-			search:'',
 		};
 	},
 	async created() {

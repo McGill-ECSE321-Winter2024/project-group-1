@@ -3,8 +3,6 @@
     <div class="UpdateDeleteActivity" id="mainContainer" style="margin-bottom: 0px;">
       <h1>Activity Management</h1>
       <br>
-      
-      <input id="inputBox" type="text" v-model="search" placeholder="Search activities">
 
       <table id="activityTable" align="center" width="700">
         <thead>
@@ -24,8 +22,8 @@
 
           <template v-else>
             <tr v-for="(activity, index) in activities" :key="index">
-              <td>{{ activity.name }}</td>
-              <td>{{ activity.category }}</td>
+              <td>{{ activity.activity.name }}</td>
+              <td>{{ activity.activity.subCategory }}</td>
               <td>{{ activity.description }}</td>
               <td>{{ activity.is_approved }}</td>
             </tr>
@@ -87,8 +85,8 @@ export default {
      
      try {
       const isApproved = true;
-      const response = await AXIOS.get('/activitiesByIsApproved/'+isApproved);
-      this.activities = response.data;
+      const response = await AXIOS.get('/activitiesByIsApproved/' + isApproved);
+       this.activities = response.data;
       }
       catch (error) {
         console.error('Error fetching scheduled activities:', error);

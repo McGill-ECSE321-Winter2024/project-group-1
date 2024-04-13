@@ -31,7 +31,6 @@
                     </template> 
                     <template v-else>
                         <tr v-for="(instructor, index) in instructors" :key="index">
-                            <!--td><img id="profilePic" src="require(`../assets/${instructor.profilePicURL}`)" alt="Instructor" width="120" height="120"></td-->
                             <td>{{ instructor.profilePicURL }}</td>
                             <td>{{ instructor.account.username }}</td>
                             <td>{{ instructor.description }}</td>
