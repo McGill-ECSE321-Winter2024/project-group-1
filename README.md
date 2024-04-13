@@ -54,10 +54,10 @@ Our team of developers have been put in charge of creating a fully functional we
 | Name | GitHub Username| Deliverable 1 | Deliverable 2 | Deliverable 3 | Total Hours |
 | :----: | :----------------:| :---: | :---: | :---: | :---: |
 | Mathias Nahuel Pacheco Lemina |[mathias-pl](https://github.com/mathias-pl)| 10 | 21 | 31 | 62 |
-| Patrick Zakaria |[Nomber1-1](https://github.com/Nomber1-1)| 10 | 23 | | |
-| Anslean Albert Jeyaras |[GumballGB](https://github.com/GumballGB)| 10 | 21 | | |
-| Fabian Saldana |[FabianSaldana](https://github.com/FabianSaldana)| 10 | 20 | | |
-| Emilie Ruel |[emilieruel](https://github.com/emilieruel)| 10 | 22 | | |
-| Andrew Nemr |[andrewnemr123](https://github.com/andrewnemr123)| 10 | 20 | | |
+| Patrick Zakaria |[Nomber1-1](https://github.com/Nomber1-1)| 10 | 23 | 22 | 55 |
+| Anslean Albert Jeyaras |[GumballGB](https://github.com/GumballGB)| 10 | 21 | 28 | 59 |
+| Fabian Saldana |[FabianSaldana](https://github.com/FabianSaldana)| 10 | 20 | 22 | 52 |
+| Emilie Ruel |[emilieruel](https://github.com/emilieruel)| 10 | 22 | 25 | 57 |
+| Andrew Nemr |[andrewnemr123](https://github.com/andrewnemr123)| 10 | 20 | 25| 55 |
 
 ***
