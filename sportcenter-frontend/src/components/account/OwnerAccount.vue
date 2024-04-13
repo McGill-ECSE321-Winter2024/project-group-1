@@ -22,7 +22,6 @@
             <HBox id="containerH">
                 <button id="subButton" v-if="isCustomer" @click="goToCustomerMode()">Customer mode</button>
                 <button id="subButton" v-if="isInstructor" @click="goToInstructorMode()">Instructor mode</button>
-                <!--button id="destroyButton" @click="deleteAccount()">Delete account</button-->
             </HBox>
         </VBox>
     </div>
@@ -31,7 +30,6 @@
 <script>
 import axios from "axios";
 import config from "../../../config";
-//import { use } from "vue/types/umd";
 
 const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
 const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
@@ -82,8 +80,6 @@ export default {
                 console.error('Error creating activity', error.message);
             }
         },
-
-
         async checkRoles() {
 
           this.isInstructor = await this.isAnInstructor();
@@ -128,9 +124,6 @@ export default {
           }          
 
         },
-
-
-
 
         goToCustomerMode() {
             this.setAccountType('Customer');

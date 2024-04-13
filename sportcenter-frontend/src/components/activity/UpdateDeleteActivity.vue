@@ -90,11 +90,9 @@ export default {
   },
 
   async created() {
-      // Make HTTP request to fetch scheduled activities from backend
      
      try {
       const isApproved = true;
-      //const response = await AXIOS.get('/activities')
       const response = await AXIOS.get('/activitiesByIsApproved/'+isApproved);
       this.activities = response.data;
       }
@@ -151,10 +149,9 @@ export default {
     },
 
 
-  }, //end of methods
+  },
 
   computed: {
-  // Filter activities based on search query
   filteredActivities: function() {
     const query = this.search.toLowerCase();
     return this.scheduledActivities.filter(activity =>

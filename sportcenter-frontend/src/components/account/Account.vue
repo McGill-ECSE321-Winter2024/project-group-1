@@ -22,7 +22,6 @@
             goToOwnerMode() {
                 this.$router.push('/app/account/owner-account');
             },
-                // Methods for global variables
     getAccountType() {
       return localStorage.getItem('accountType');
     },

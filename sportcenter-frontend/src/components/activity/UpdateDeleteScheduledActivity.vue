@@ -88,17 +88,11 @@ export default {
       selectedActivity: null,
       search:'',
 
-
-
-      //logic here would get all activities
-
     };
   },
 
 
   async created() {
-      // Make HTTP request to fetch scheduled activities from backend
-     
      try {
 
       const response = await AXIOS.get('/scheduledActivities')
@@ -110,15 +104,7 @@ export default {
       }
         
     },
-
-
-  
-
-
-
   methods: {
-
- 
     showActivityDetails(activity) {
       this.selectedActivity = activity;
     },
@@ -169,19 +155,18 @@ export default {
     },
 
 
-  }, //end of methods
+  },
 
   computed: {
-  // Filter activities based on search query
-  filteredActivities: function() {
-    const query = this.search.toLowerCase();
-    return this.scheduledActivities.filter(activity =>
-      activity.name.toLowerCase().includes(query) ||
-      activity.category.toLowerCase().includes(query) ||
-      activity.date.toLowerCase().includes(query) ||
-      activity.capacity.toString().includes(query)
-    );
-  },
+    filteredActivities: function() {
+      const query = this.search.toLowerCase();
+      return this.scheduledActivities.filter(activity =>
+        activity.name.toLowerCase().includes(query) ||
+        activity.category.toLowerCase().includes(query) ||
+        activity.date.toLowerCase().includes(query) ||
+        activity.capacity.toString().includes(query)
+      );
+    },
   },
   components: {
     ViewActivity

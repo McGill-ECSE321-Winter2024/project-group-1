@@ -62,7 +62,6 @@ export default {
 
 
   async created() {
-    // Make HTTP request to fetch scheduled activities from backend
     try {
       const response = await AXIOS.get('/scheduledActivities');
       this.scheduledActivities = response.data;
@@ -122,10 +121,9 @@ export default {
     setDarkMode(dark_mode) {
       localStorage.setItem('dark_mode', dark_mode);
     },
-  }, //end of methods
+  },
 
   computed: {
-    // Filter activities based on search query
     filteredActivities() {
       return this.scheduledActivities.filter(activity => {
         return activity.name.toLowerCase().includes(this.input.toLowerCase());

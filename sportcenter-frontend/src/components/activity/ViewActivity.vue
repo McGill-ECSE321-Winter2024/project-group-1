@@ -15,7 +15,6 @@
           v-if="(getAccountType() === 'Customer')"
           @click="registerActivity(activity)" 
         >
-        <!--@click="close"-->
           Register
         </button>
         <button id="subButton" @click="close">Close</button>
@@ -39,9 +38,6 @@ const AXIOS = axios.create({
 export default {
   props: ["activity"],
   methods: {
-    getAccountId() {
-      return localStorage.getItem('accountId'); //Needs to be changed
-    },
     async registerActivity(activity) {
       try {
         const customerID = await AXIOS.get('/getCustomerAccountRoleIdByUsername/' + this.getUsername());

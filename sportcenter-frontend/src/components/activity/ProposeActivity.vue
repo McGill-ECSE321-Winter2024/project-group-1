@@ -21,7 +21,6 @@
         placeholder="Subcategory - Cardio, Strength, Stretch"
         v-model="subcategory"
       />
-      <!--<button id="mainButton" @click="created()">GetActivities</button>-->
       <button id="mainButton" @click="submitProposeActivity()">
         Propose to the owner
       </button>

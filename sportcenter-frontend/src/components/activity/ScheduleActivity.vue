@@ -1,7 +1,6 @@
 <template>
   <div class="ScheduleAcivity" id="mainContainer">
     <h1>Schedule an activity</h1>
-
     <Vbox id="verticalContainer">
       <HBox id="horizontalContainer">
         <input id="datePickerInput" type="date" v-model="date" />
@@ -10,16 +9,13 @@
         <h2 style="align-self: center">to</h2>
         <input id="datePickerInput" type="time" v-model="endTime" />
       </HBox>
-      <!--input id="inputBox" type="text" placeholder="Account Role Id" v-model="instructorId"-->
       <input id="inputBox" type="text" placeholder="Capacity" v-model="capacity">
-
       <table id="availableActivityTable" align="center" width="700">
         <thead>
           <tr>
             <th width="100">Name</th>
             <th width="100">Description</th>
             <th width="100">Subcategory</th>
-            <!--th width="100">Status</th-->
             <th width="100">Action</th>
           </tr>
         </thead>
@@ -34,7 +30,6 @@
               <td>{{ activity.name }}</td>
               <td>{{ activity.description }}</td>
               <td>{{ activity.subcategory }}</td>
-              <!--td>{{ activity.isApproved ? "Approved" : "Not Approved" }}</td-->
               <td>
                 <button @click="selectActivity(activity)">Select</button>
               </td>
@@ -45,7 +40,6 @@
       <div v-if="selectedActivity">
         <h2>Selected Activity: {{ selectedActivity.name }}</h2>
       </div>
-
       <button id="mainButton" @click="submitScheduleActivity()">
         <b>Schedule Activity</b>
       </button>
@@ -106,10 +100,6 @@ export default {
         return;
       }
       try {
-        // dateInput = dateInput.toLocalDateString();
-        // startTimeInput = startTimeInput.toLocalTimeString();
-        // endTimeInput = endTimeInput.toLocalTimeString();
-
         const response = await AXIOS.post(
           "/createScheduledActivity/" +
             dateInput +

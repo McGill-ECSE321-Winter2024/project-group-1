@@ -4,49 +4,34 @@
         <VBox id="verticalContainer">
             <p id="currentInformation">
                 Username: {{ getUsername() }} <br>
-                <!-- Password: {{ newPassword }} <br-->
             </p>
-
             <VBox id="verticalContainer">
                 <input id="inputBox" type="text" placeholder="New username" v-model="newUsername"></input>
                 <button id="mainButton" @click="updateUsername()" style="margin-left: 10px; align-self: center;"><b>Update Username</b></button>
             </VBox>
             <br>
-
             <VBox id="verticalContainer">
                 <input id="inputBox" type="text" placeholder="Old password" v-model="oldPassword"></input>
                 <input id="inputBox" type="text" placeholder="New password" v-model="newPassword"></input>
                 <button id="mainButton" @click="updatePassword()" style="margin-left: 10px; align-self: center;"><b>Update Password</b></button>
             </VBox>
             <br>
-
             <VBox id="verticalContainer" v-if="!isInstructor">
-
-
-
-
-
-
                 <input id="inputBox" type="text" placeholder="Description" v-model="instructorDescription"></input>
                 <button id="mainButton" @click="instructorRequest()" style="margin-left: 10px; align-self: center;">Request to become an instructor</button>
             </VBox>
             <br>
-
             <HBox id="containerH">
                 <button id="subButton" v-if="isInstructor" @click="goToInstructorMode()">Instructor mode</button>
                 <button id="subButton" v-if="isOwner" @click="goToOwnerMode()">Owner mode</button>
-                <!--button id="destroyButton" @click="deleteAccount()">Delete account</button-->
             </HBox>
         </VBox>
-
         <div style="margin-bottom: 40px;" id="mainContainer">
             <p style="margin: 10px; font-weight: bold;" id="currentInformation">Delete Account</p> 
             <p style="margin: 10px; size: 10;" id="currentInformation">Enter your Password to Confirm</p>
             <input id="inputBox" type="text" placeholder="Enter Password for Deletion" v-model="passwordDeletion"></input>
             <button id="destroyButton" @click="deleteCustomer()">Delete Account</button>
-
         </div>
-
     </div>
 </template>
 
@@ -84,119 +69,83 @@ export default {
                 const response = await AXIOS.put('/updateAccountUsername/' + this.getUsername() + '/' + this.newUsername);
                 this.username = this.newUsername;
                 console.log(response.data);
-
                 if (response.status == 200) {
-                  
                   this.setUsername(this.username);
                   alert("New username updated successfully! It is now: " + this.username);
                   this.clearInputs();
                 }  else {
-                // Handle unsuccessful login
                   console.log('Updating unsucessful');
                 }        
-
             } catch(error){
                 console.error('Error creating activity', error.message);
                 return;
             }
         },
-
         async updatePassword() {
             try{
                 const response = await AXIOS.put('/updateAccountPassword/' + this.getUsername() + '/' + this.oldPassword + '/' + this.newPassword);
                 console.log(response.data);
-
-
                 if (response.status == 200) { 
-
                   this.setUsername(this.username);
                   alert("New password updated successfully!");
                   this.clearInputs();
                 } else {
-                // Handle unsuccessful login
                   console.log('Updating password unsucessful');
                 } 
-
-
             } catch(error){
                 console.error('Error creating activity', error.message);
                 return;
             }
         },
-
         async instructorRequest() {
             try {
-
                 const response = await AXIOS.post('/createInstructor/' + this.getUsername() + '/' + this.instructorDescription + '/' + '2');
-
                 if (response.status == 200) { 
-
                   this.setUsername(this.username);
                   alert("Instructor request sent successfully!");
                   this.clearInputs();
-
                 } else {
-                // Handle unsuccessful login
                   console.log('Instructor submission failed');
                 } 
-
-
             } catch(error){
                 console.error('Error creating instructor', error.message);
                 return;
             }
-
         },
 
         async checkRoles() {
-
           this.isInstructor = await this.isAnInstructor();
           this.isOwner = await this.isAnOwner();
         },
 
         async isAnInstructor() {
-
           try {
-
-            
             const response = await AXIOS.get('/checkAccountHasInstructorRole/' + this.getAccountId());
-
-            
             if (response.status == 200) {
               return response.data;
             } 
-
           } catch(error){
               console.error('Error verifying', error.message);
               return;
           }          
-        
         },
 
         async goToInstructorMode() { 
-
             this.setAccountType('Instructor');
             this.$router.push('/app/account/instructor-account');
-
         },
 
         async isAnOwner() {
-
           try {
-
             const response = await AXIOS.get('/checkAccountHasOwnerRole/' + this.getAccountId());
-
             if (response.status == 200) {
               return response.data;
             } 
-
-            } catch(error){
-                console.error('Error verifying', error.message);
-                return;
-            }          
-
-          },        
-
+          } catch(error){
+              console.error('Error verifying', error.message);
+              return;
+          }          
+        },        
         async goToOwnerMode() {
             this.setAccountType('Owner');
             this.$router.push('/app/account/owner-account');
@@ -204,7 +153,6 @@ export default {
         async deleteCustomer() {
           try {
               const response = await AXIOS.get('/getCustomerByUsername/' + this.getUsername() + '/');
-              
               if (response.status == 200) {
                   if (response.data.account.password == this.passwordDeletion) {
                       try {
@@ -226,13 +174,7 @@ export default {
               console.error('Cannot check password', error.message);
               return;
           }
-},
-
-
-
-
-
-
+        },
         deleteAccount() {
             alert("Delete account button clicked");
             console.log("Delete account button clicked");
@@ -243,11 +185,9 @@ export default {
             this.username = null;
             this.oldPassword = null;
             this.newPassword = null;
-            //this.instUsername = null;
             this.instDescription = null;
             this.instPictURL = null;
         },
-            // Methods for global variables
     setAccountId(id) {
       localStorage.setItem('id', id);
     },
@@ -304,4 +244,4 @@ export default {
 }
 </script>
 
-<style scoped src="../../assets/main.css"> /* OLD COLOR MODE BUTTON: 0e628f */ </style>
+<style scoped src="../../assets/main.css"></style>

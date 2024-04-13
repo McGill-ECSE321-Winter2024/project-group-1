@@ -115,19 +115,17 @@ const AXIOS = axios.create({
             },
 
             async approveActivity(activity){
-            try{
-                const response = await AXIOS.put('/activity/approve/' + activity)
-                this.$forceUpdate();
-                //this.activities = response.data
-            } catch (error){
-                console.log('Error fetching activities', error.message);
-            }
+                try{
+                    const response = await AXIOS.put('/activity/approve/' + activity)
+                    this.$forceUpdate();
+                } catch (error){
+                    console.log('Error fetching activities', error.message);
+                }
             },
             async dissaproveActivity(activity){
                 try{
                     const response = await AXIOS.put('/activity/disapprove/' + activity)
                     this.$forceUpdate();
-                    //this.activities = response.data
                 } catch (error){
                     console.log('Error fetching activities', error.message);
                 }

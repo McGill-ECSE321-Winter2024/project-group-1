@@ -2,11 +2,6 @@
     <div id="mainContainer">
         <h1>Manage activities</h1>
         <VBox id="verticalContainer">
-            <!--
-            <input id="inputBox" type="username" placeholder="Search by name"></input>
-            <input id="inputBox" type="username" placeholder="Search by activity"></input>
-            -->
-
             <table id="table">
                 <thead>
                     <tr>
