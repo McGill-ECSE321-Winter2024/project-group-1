@@ -214,7 +214,7 @@ public class TestActivityManagementService {
         Activity activity = null;
 
         try {
-            activity = activityManagementService.updateActivity(CREATED_ACTIVITY_KEY, NEW_NAME, NEW_DESCRIPTION,
+            activity = activityManagementService.updateActivity(CREATED_ACTIVITY_KEY, NEW_DESCRIPTION,
                     NEW_SUBCATEGORY);
         } catch (IllegalArgumentException e) {
             fail();
@@ -231,7 +231,7 @@ public class TestActivityManagementService {
         String error = null;
 
         try {
-            activityManagementService.updateActivity(null, NEW_NAME, NEW_DESCRIPTION, NEW_SUBCATEGORY);
+            activityManagementService.updateActivity(null, NEW_DESCRIPTION, NEW_SUBCATEGORY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -244,7 +244,7 @@ public class TestActivityManagementService {
         String error = null;
 
         try {
-            activityManagementService.updateActivity("", NEW_NAME, NEW_DESCRIPTION, NEW_SUBCATEGORY);
+            activityManagementService.updateActivity("", NEW_DESCRIPTION, NEW_SUBCATEGORY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -257,7 +257,7 @@ public class TestActivityManagementService {
         String error = null;
 
         try {
-            activityManagementService.updateActivity("       ", NEW_NAME, NEW_DESCRIPTION, NEW_SUBCATEGORY);
+            activityManagementService.updateActivity("       ",  NEW_DESCRIPTION, NEW_SUBCATEGORY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -265,53 +265,13 @@ public class TestActivityManagementService {
         assertEquals("Name cannot be empty!", error);
     }
 
-    @Test
-    public void testUpdateActivityNewNameNull() {
-        String error = null;
-
-        try {
-            activityManagementService.updateActivity(CREATED_ACTIVITY_KEY, null, NEW_DESCRIPTION,
-                    NEW_SUBCATEGORY);
-        } catch (IllegalArgumentException e) {
-            error = e.getMessage();
-        }
-
-        assertEquals("New name cannot be empty!", error);
-    }
-
-    @Test
-    public void testUpdateActivityNewNameEmpty() {
-        String error = null;
-
-        try {
-            activityManagementService.updateActivity(CREATED_ACTIVITY_KEY, "", NEW_DESCRIPTION, NEW_SUBCATEGORY);
-        } catch (IllegalArgumentException e) {
-            error = e.getMessage();
-        }
-
-        assertEquals("New name cannot be empty!", error);
-    }
-
-    @Test
-    public void testUpdateActivityNewNameWhitespace() {
-        String error = null;
-
-        try {
-            activityManagementService.updateActivity(CREATED_ACTIVITY_KEY, "       ", NEW_DESCRIPTION,
-                    NEW_SUBCATEGORY);
-        } catch (IllegalArgumentException e) {
-            error = e.getMessage();
-        }
-
-        assertEquals("New name cannot be empty!", error);
-    }
 
     @Test
     public void testUpdateActivityNewDescriptionNull() {
         String error = null;
 
         try {
-            activityManagementService.updateActivity(CREATED_ACTIVITY_KEY, NEW_NAME, null, NEW_SUBCATEGORY);
+            activityManagementService.updateActivity(CREATED_ACTIVITY_KEY, null, NEW_SUBCATEGORY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -324,7 +284,7 @@ public class TestActivityManagementService {
         String error = null;
 
         try {
-            activityManagementService.updateActivity(CREATED_ACTIVITY_KEY, NEW_NAME, "", NEW_SUBCATEGORY);
+            activityManagementService.updateActivity(CREATED_ACTIVITY_KEY, "", NEW_SUBCATEGORY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -337,7 +297,7 @@ public class TestActivityManagementService {
         String error = null;
 
         try {
-            activityManagementService.updateActivity(CREATED_ACTIVITY_KEY, NEW_NAME, "       ", NEW_SUBCATEGORY);
+            activityManagementService.updateActivity(CREATED_ACTIVITY_KEY, "       ", NEW_SUBCATEGORY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -350,7 +310,7 @@ public class TestActivityManagementService {
         String error = null;
 
         try {
-            activityManagementService.updateActivity(CREATED_ACTIVITY_KEY, NEW_NAME, NEW_DESCRIPTION, null);
+            activityManagementService.updateActivity(CREATED_ACTIVITY_KEY, NEW_DESCRIPTION, null);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -363,7 +323,7 @@ public class TestActivityManagementService {
         String error = null;
 
         try {
-            activityManagementService.updateActivity("does not exist", NEW_NAME, NEW_DESCRIPTION,
+            activityManagementService.updateActivity("does not exist", NEW_DESCRIPTION,
                     NEW_SUBCATEGORY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
@@ -377,7 +337,7 @@ public class TestActivityManagementService {
         String error = null;
 
         try {
-            activityManagementService.updateActivity(APPROVED_ACTIVITY_KEY, NEW_NAME, NEW_DESCRIPTION,
+            activityManagementService.updateActivity(APPROVED_ACTIVITY_KEY, NEW_DESCRIPTION,
                     NEW_SUBCATEGORY);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();

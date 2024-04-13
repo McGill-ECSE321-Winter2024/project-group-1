@@ -211,6 +211,7 @@ export default {
           }
         },
 
+
         clearInputs() {
             this.oldUsername = null;
             this.newUsername = null;

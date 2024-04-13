@@ -22,9 +22,9 @@ import ca.mcgill.ecse321.sportcenter.service.ScheduledActivityManagementService;
 /**
  * Rest controller for the ScheduledActivity entity
  * 
- * @author Fabian Saldana
+ * @author Fabian Saldana & Patrick Zakaria
  */
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 public class ScheduledActivityManagementController {
 
@@ -48,12 +48,12 @@ public class ScheduledActivityManagementController {
                         "/createScheduledActivity/{date}/{startTime}/{endTime}/{instructorId}/{activityName}/{capacity}/" })
         public ScheduledActivityDto createScheduledActivity(@PathVariable("date") LocalDate date,
                         @PathVariable("startTime") LocalTime startTime, @PathVariable("endTime") LocalTime endTime,
-                        @PathVariable("instructorId") int instructorId,
+                        @PathVariable("instructorId") int accountRoleId,
                         @PathVariable("activityName") String activityName,
                         @PathVariable("capacity") int capacity) throws IllegalArgumentException {
                 ScheduledActivity scheduledActivity = scheduledActivityService.createScheduledActivity(date, startTime,
                                 endTime,
-                                instructorId, activityName, capacity);
+                                accountRoleId, activityName, capacity);
                 return convertToDto(scheduledActivity);
         }
 

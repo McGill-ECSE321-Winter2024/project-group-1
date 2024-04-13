@@ -117,7 +117,7 @@ public class TestAccountInstructorService {
         Instructor instructor = null;
 
         try {
-            instructor = accountService.createInstructor(USERNAME_NONDUPLICATE, InstructorStatus.Pending, "description",
+            instructor = accountService.createInstructor(USERNAME_NONDUPLICATE, "description",
                     "image");
         } catch (IllegalArgumentException e) {
             fail(e.getMessage());
@@ -133,7 +133,7 @@ public class TestAccountInstructorService {
         Instructor instructor = null;
 
         try {
-            instructor = accountService.createInstructor(USERNAME, InstructorStatus.Pending, "description", "image");
+            instructor = accountService.createInstructor(USERNAME, "description", "image");
         } catch (IllegalArgumentException e) {
             assertEquals("Instructor already exists!", e.getMessage());
             assertNull(instructor);
@@ -144,7 +144,7 @@ public class TestAccountInstructorService {
     public void testCreateInstructorUsernameEmpty() { // make an empty username
         Instructor instructor = null;
         try {
-            instructor = accountService.createInstructor("", InstructorStatus.Pending, "description", "image");
+            instructor = accountService.createInstructor("", "description", "image");
         } catch (IllegalArgumentException e) {
             assertEquals("Username cannot be null, empty and spaces!", e.getMessage());
             assertNull(instructor);
@@ -155,7 +155,7 @@ public class TestAccountInstructorService {
     public void testCreateInstructorUsernameSpaces() { // make an empty username
         Instructor instructor = null;
         try {
-            instructor = accountService.createInstructor(" ", InstructorStatus.Pending, "description", "image");
+            instructor = accountService.createInstructor(" ", "description", "image");
         } catch (IllegalArgumentException e) {
             assertEquals("Username cannot be null, empty and spaces!", e.getMessage());
             assertNull(instructor);
@@ -166,7 +166,7 @@ public class TestAccountInstructorService {
     public void testCreateInstructorDescriptionNull() { // make an empty username
         Instructor instructor = null;
         try {
-            instructor = accountService.createInstructor(USERNAME_NONDUPLICATE, InstructorStatus.Pending, null,
+            instructor = accountService.createInstructor(USERNAME_NONDUPLICATE, null,
                     "image");
         } catch (IllegalArgumentException e) {
             assertEquals("Description cannot be null, empty and spaces!", e.getMessage());
@@ -179,7 +179,7 @@ public class TestAccountInstructorService {
     public void testCreateInstructorDescriptionEmpty() { // make an empty username
         Instructor instructor = null;
         try {
-            instructor = accountService.createInstructor(USERNAME_NONDUPLICATE, InstructorStatus.Pending, "",
+            instructor = accountService.createInstructor(USERNAME_NONDUPLICATE, "",
                     "image");
         } catch (IllegalArgumentException e) {
             assertEquals("Description cannot be null, empty and spaces!", e.getMessage());
@@ -191,7 +191,7 @@ public class TestAccountInstructorService {
     public void testCreateInstructorDescriptionSpaces() { // make an empty username
         Instructor instructor = null;
         try {
-            instructor = accountService.createInstructor(USERNAME_NONDUPLICATE, InstructorStatus.Pending, " ",
+            instructor = accountService.createInstructor(USERNAME_NONDUPLICATE, " ",
                     "image");
         } catch (IllegalArgumentException e) {
             assertEquals("Description cannot be null, empty and spaces!", e.getMessage());
@@ -203,7 +203,7 @@ public class TestAccountInstructorService {
     public void testCreateInstructorStatusNull() { // make an empty username
         Instructor instructor = null;
         try {
-            instructor = accountService.createInstructor(USERNAME_NONDUPLICATE, null, "description", "image");
+            instructor = accountService.createInstructor(USERNAME_NONDUPLICATE, "description", "image");
         } catch (IllegalArgumentException e) {
             assertEquals("Instructor already exists!", e.getMessage());
             assertNull(instructor);
@@ -214,7 +214,7 @@ public class TestAccountInstructorService {
     public void testCreateInstructorStatusEmpty() { // make an empty username
         Instructor instructor = null;
         try {
-            instructor = accountService.createInstructor(USERNAME_NONDUPLICATE, InstructorStatus.Pending, "description",
+            instructor = accountService.createInstructor(USERNAME_NONDUPLICATE, "description",
                     "image");
         } catch (IllegalArgumentException e) {
             assertEquals("Instructor already exists!", e.getMessage());
@@ -226,7 +226,7 @@ public class TestAccountInstructorService {
     public void testCreateInstructorStatusSpaces() { // make an empty username
         Instructor instructor = null;
         try {
-            instructor = accountService.createInstructor(USERNAME_NONDUPLICATE, InstructorStatus.Pending, "description",
+            instructor = accountService.createInstructor(USERNAME_NONDUPLICATE, "description",
                     "image");
         } catch (IllegalArgumentException e) {
             assertEquals("Instructor already exists!", e.getMessage());
@@ -238,7 +238,7 @@ public class TestAccountInstructorService {
     public void testCreateInstructorImageNull() { // make an empty username
         Instructor instructor = null;
         try {
-            instructor = accountService.createInstructor(USERNAME_NONDUPLICATE, InstructorStatus.Pending, "description",
+            instructor = accountService.createInstructor(USERNAME_NONDUPLICATE, "description",
                     null);
         } catch (IllegalArgumentException e) {
             assertEquals("ProfilePic URL cannot be null, empty and spaces!", e.getMessage());
@@ -250,7 +250,7 @@ public class TestAccountInstructorService {
     public void testCreateInstructorImageEmpty() { // make an empty username
         Instructor instructor = null;
         try {
-            instructor = accountService.createInstructor(USERNAME_NONDUPLICATE, InstructorStatus.Pending, "description",
+            instructor = accountService.createInstructor(USERNAME_NONDUPLICATE, "description",
                     "");
         } catch (IllegalArgumentException e) {
             assertEquals("ProfilePic URL cannot be null, empty and spaces!", e.getMessage());
@@ -262,7 +262,7 @@ public class TestAccountInstructorService {
     public void testCreateInstructorImageSpaces() { // make an empty username
         Instructor instructor = null;
         try {
-            instructor = accountService.createInstructor(USERNAME_NONDUPLICATE, InstructorStatus.Pending, "description",
+            instructor = accountService.createInstructor(USERNAME_NONDUPLICATE, "description",
                     " ");
         } catch (IllegalArgumentException e) {
             assertEquals("ProfilePic URL cannot be null, empty and spaces!", e.getMessage());
@@ -274,7 +274,7 @@ public class TestAccountInstructorService {
     public void testCreateInstructorAlreadyExists() {
         Instructor instructor = null;
         try {
-            instructor = accountService.createInstructor(USERNAME, InstructorStatus.Pending, "description", "image");
+            instructor = accountService.createInstructor(USERNAME, "description", "image");
         } catch (IllegalArgumentException e) {
             assertEquals("Instructor already exists!", e.getMessage());
             assertNull(instructor);

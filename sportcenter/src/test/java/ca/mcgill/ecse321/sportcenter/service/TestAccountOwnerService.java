@@ -136,28 +136,12 @@ public class TestAccountOwnerService {
     public void testCreateOwnerAccount() {
         Owner owner = null;
         try {
-            owner = accountManagementService.createOwner(OWNER_USERNAME);
+            owner = accountManagementService.createOwner();
         } catch (IllegalArgumentException e) {
             fail(e.getMessage());
         }
         assertNotNull(owner);
         assertEquals(OWNER_USERNAME, owner.getAccount().getUsername());
-    }
-
-    /**
-     * Test for creating an owner account with invalid username -> Fail
-     */
-    @Test
-    public void testCreateOwnerAccountInvalidUsername() {
-        Owner owner = null;
-        String error = null;
-        try {
-            owner = accountManagementService.createOwner(INVALID_USERNAME);
-        } catch (IllegalArgumentException e) {
-            error = e.getMessage();
-        }
-        assertNull(owner);
-        assertEquals("Username cannot be null, empty or contain spaces!", error);
     }
 
     /**

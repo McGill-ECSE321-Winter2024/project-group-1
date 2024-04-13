@@ -16,9 +16,9 @@ import ca.mcgill.ecse321.sportcenter.service.RegistrationManagementService;
 /**
  * Rest controller for the Registration entity
  * 
- * @author Emilie Ruel
+ * @author Emilie Ruel & Patrick Zakaria
  */
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 public class RegistrationManagementController {
 

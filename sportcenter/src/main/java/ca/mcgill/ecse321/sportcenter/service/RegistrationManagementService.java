@@ -283,6 +283,19 @@ public class RegistrationManagementService {
         if (registration == null) {
             throw new IllegalArgumentException("Registration does not exist");
         }
+
+        // TODO : ADD SERVICE AND INTEGRATION TESTS
+        // Check if scheduled activity is in the past
+        Date date = new Date(System.currentTimeMillis());
+        if (registration.getScheduledActivity().getDate().isBefore(date.toLocalDate())) {
+            throw new IllegalArgumentException("Scheduled activity is in the past");
+        }
+
+        // TODO : ADD SERVICE AND INTEGRATION TESTS
+        // Check if scheduled activity starts in less than 48 hours
+        if (registration.getScheduledActivity().getDate().isBefore(date.toLocalDate().plusDays(2))) {
+            throw new IllegalArgumentException("Scheduled activity starts in less than 48 hours");
+        }
         registrationRepository.delete(registration);
         return true;
     }

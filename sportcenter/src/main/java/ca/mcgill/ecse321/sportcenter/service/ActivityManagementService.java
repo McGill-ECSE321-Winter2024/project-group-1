@@ -141,17 +141,13 @@ public class ActivityManagementService {
      * Update an activity
      * 
      * @param name
-     * @param newName
      * @return Activity
      **/
     @Transactional
-    public Activity updateActivity(String name, String newName, String newDescription, ClassCategory newSubcategory) {
+    public Activity updateActivity(String name, String newDescription, ClassCategory newSubcategory) {
 
         if (name == null || name.trim().length() == 0) {
             throw new IllegalArgumentException("Name cannot be empty!");
-        }
-        if (newName == null || newName.trim().length() == 0) {
-            throw new IllegalArgumentException("New name cannot be empty!");
         }
         if (newDescription == null || newDescription.trim().length() == 0) {
             throw new IllegalArgumentException("New description cannot be empty!");
@@ -169,7 +165,6 @@ public class ActivityManagementService {
             throw new IllegalArgumentException("Activity is already approved!");
         }
 
-        activity.setName(newName);
         activity.setDescription(newDescription);
         activity.setSubCategory(newSubcategory);
         activityRepository.save(activity);
