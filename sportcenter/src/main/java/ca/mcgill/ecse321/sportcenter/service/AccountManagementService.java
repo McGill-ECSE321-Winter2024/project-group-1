@@ -132,7 +132,7 @@ public class AccountManagementService {
      * @author Anslean AJ
      */
     @Transactional
-    public Instructor createInstructor(String username, InstructorStatus status, String description,
+    public Instructor createInstructor(String username, String description,
             String profilePicURL) {
         if (username == null || username.trim().isEmpty() || username.contains(" ")) {
             throw new IllegalArgumentException("Username cannot be null, empty and spaces!");
@@ -166,23 +166,23 @@ public class AccountManagementService {
      * @return Owner
      */
     @Transactional
-    public Owner createOwner(String username) {
-        if (username == null || username.trim().isEmpty() || username.contains(" ")) {
-            throw new IllegalArgumentException("Username cannot be null, empty or contain spaces!");
+    public Owner createOwner() {
+        // Check if owner already exists
+        Account account = accountRepository.findAccountByUsername("owner");
+        if (account != null) {
+            return ownerRepository.findOwnerByAccountUsername("owner");
         }
 
-        Account account = accountRepository.findAccountByUsername(username);
-        if (account == null) {
-            throw new IllegalArgumentException("Account does not exist!");
-        }
-
-        // Can only have 1 Owner
-        if (ownerRepository.findAll().iterator().hasNext()) {
-            throw new IllegalArgumentException("Owner already exists!");
-        }
-
-        Owner owner = new Owner();
-        owner.setAccount(account);
+        // Create owner account and give all permissions
+        account = new Account("owner", "owner");
+        accountRepository.save(account);
+        Customer customer = new Customer(account);
+        customerRepository.save(customer);
+        Instructor instructor = new Instructor(InstructorStatus.Active, "Owner",
+                "none",
+                account);
+        instructorRepository.save(instructor);
+        Owner owner = new Owner(account);
         ownerRepository.save(owner);
         return owner;
     }
@@ -194,17 +194,46 @@ public class AccountManagementService {
      * @param password
      * @return Account
      */
-    public Account login(String username, String password) {
+    public Account login(String username, String password, String role) {
         if (username == null || username.trim().isEmpty() || username.contains(" ")) {
             throw new IllegalArgumentException("Username cannot be null, empty and spaces!");
         }
         if (password == null || password.trim().isEmpty() || password.contains(" ")) {
             throw new IllegalArgumentException("Password cannot be empty");
         }
+        if (role == null || role.trim().isEmpty() || role.contains(" ")) {
+            throw new IllegalArgumentException("Role cannot be empty");
+        }
 
         Account account = accountRepository.findAccountByUsername(username);
+
         if (account == null) {
             throw new IllegalArgumentException("Account does not exist");
+        }
+
+        if (!account.getPassword().equals(password)) {
+            throw new IllegalArgumentException("Password does not match!");
+        }
+
+        // If role is customer, check if account has customer role
+        if (role.equals("customer")) {
+            if (customerRepository.findCustomerByAccountUsername(username) == null) {
+                throw new IllegalArgumentException("Account does not have customer role");
+            }
+        }
+
+        // If role is instructor, check if account has instructor role
+        if (role.equals("instructor")) {
+            if (instructorRepository.findInstructorByAccountUsername(username) == null) {
+                throw new IllegalArgumentException("Account does not have instructor role");
+            }
+        }
+
+        // If role is owner, check if account has owner role
+        if (role.equals("owner")) {
+            if (ownerRepository.findOwnerByAccountUsername(username) == null) {
+                throw new IllegalArgumentException("Account does not have owner role");
+            }
         }
         return account;
     }
@@ -406,7 +435,7 @@ public class AccountManagementService {
             throw new IllegalArgumentException("Account does not exist!");
         }
 
-        Instructor instructor = instructorRepository.findInstructorByAccountRoleId(account.getAccountId());
+        Instructor instructor = instructorRepository.findInstructorByAccountUsername(username);
         if (instructor == null) {
             throw new IllegalArgumentException("Instructor does not exist!");
         }
@@ -422,6 +451,29 @@ public class AccountManagementService {
     @Transactional
     public List<Instructor> getAllInstructors() {
         return toList(instructorRepository.findAll());
+    }
+
+    /**
+     * Get all instructors by status
+     * 
+     * @param status
+     * @return List<Instructo>
+     */
+    @Transactional
+    public List<Instructor> getAllInstructorsByStatus(InstructorStatus status) {
+        if (status == null) {
+            throw new IllegalArgumentException("Status cannot be null!");
+        }
+
+        List<Instructor> instructors = toList(instructorRepository.findAll());
+        List<Instructor> instructorsByStatus = new ArrayList<Instructor>();
+
+        for (Instructor instructor : instructors) {
+            if (instructor.getStatus() == status) {
+                instructorsByStatus.add(instructor);
+            }
+        }
+        return instructorsByStatus;
     }
 
     /**
@@ -468,6 +520,101 @@ public class AccountManagementService {
     }
 
     /**
+     * Get an accountId by username
+     * 
+     * @param username
+     * @return accountId
+     */
+    @Transactional
+    public int getAccountIdByUsername(String username) {
+        if (username == null || username.trim().isEmpty() || username.contains(" ")) {
+            throw new IllegalArgumentException("Username cannot be null, empty and spaces!");
+        }
+
+        Account account = accountRepository.findAccountByUsername(username);
+        if (account == null) {
+            throw new IllegalArgumentException("Account does not exist!");
+        }
+
+        return account.getAccountId();
+    }
+
+    /**
+     * Get an customer accountRoleId by username
+     * 
+     * @param username
+     * @return accountRoleId
+     */
+    @Transactional
+    public int getCustomerAccountRoleIdByUsername(String username) {
+        if (username == null || username.trim().isEmpty() || username.contains(" ")) {
+            throw new IllegalArgumentException("Username cannot be null, empty and spaces!");
+        }
+
+        Account account = accountRepository.findAccountByUsername(username);
+        if (account == null) {
+            throw new IllegalArgumentException("Account does not exist!");
+        }
+
+        Customer customer = customerRepository.findCustomerByAccountUsername(username);
+        if (customer == null) {
+            throw new IllegalArgumentException("Customer does not exist!");
+        }
+
+        return customer.getAccountRoleId();
+    }
+
+    /**
+     * Get an instructor accountRoleId by username
+     * 
+     * @param username
+     * @return accountRoleId
+     */
+    @Transactional
+    public int getInstructorAccountRoleIdByUsername(String username) {
+        if (username == null || username.trim().isEmpty() || username.contains(" ")) {
+            throw new IllegalArgumentException("Username cannot be null, empty and spaces!");
+        }
+
+        Account account = accountRepository.findAccountByUsername(username);
+        if (account == null) {
+            throw new IllegalArgumentException("Account does not exist!");
+        }
+
+        Instructor instructor = instructorRepository.findInstructorByAccountUsername(username);
+        if (instructor == null) {
+            throw new IllegalArgumentException("Instructor does not exist!");
+        }
+
+        return instructor.getAccountRoleId();
+    }
+
+    /**
+     * Check if instructor is approved
+     * 
+     * @param username
+     * @return boolean
+     */
+    @Transactional
+    public boolean checkInstructorIsApproved(String username) {
+        if (username == null || username.trim().isEmpty() || username.contains(" ")) {
+            throw new IllegalArgumentException("Username cannot be null, empty and spaces!");
+        }
+
+        Account account = accountRepository.findAccountByUsername(username);
+        if (account == null) {
+            throw new IllegalArgumentException("Account does not exist!");
+        }
+
+        Instructor instructor = instructorRepository.findInstructorByAccountUsername(username);
+        if (instructor == null) {
+            throw new IllegalArgumentException("Instructor does not exist!");
+        }
+
+        return instructor.getStatus() == InstructorStatus.Active;
+    }
+
+    /**
      * Update an account's username
      * 
      * @param accountId
@@ -477,28 +624,12 @@ public class AccountManagementService {
      */
     @Transactional
     public Account updateAccountUsername(String oldUsername, String newUsername) {
-        if (oldUsername == null) {
-            throw new IllegalArgumentException("Old Username cannot be null");
-        }
-
-        if (newUsername == null) {
-            throw new IllegalArgumentException("New Username cannot be null");
-        }
-
-        if (oldUsername.trim().isEmpty()) {
+        if (oldUsername == null || oldUsername.trim().isEmpty() || oldUsername.contains(" ")) {
             throw new IllegalArgumentException("Old Username cannot be empty");
         }
 
-        if (newUsername.trim().isEmpty()) {
+        if (newUsername == null || newUsername.trim().isEmpty() || newUsername.contains(" ")) {
             throw new IllegalArgumentException("New Username cannot be empty");
-        }
-
-        if (oldUsername.contains(" ")) {
-            throw new IllegalArgumentException("Old Username cannot contain spaces");
-        }
-
-        if (newUsername.contains(" ")) {
-            throw new IllegalArgumentException("New Username cannot contain spaces");
         }
 
         Account account = accountRepository.findAccountByUsername(oldUsername);
@@ -628,7 +759,7 @@ public class AccountManagementService {
         if (account == null) {
             throw new IllegalArgumentException("Account does not exist!");
         }
-        Instructor instructor = instructorRepository.findInstructorByAccountRoleId(account.getAccountId());
+        Instructor instructor = instructorRepository.findInstructorByAccountUsername(username);
         if (instructor == null) {
             throw new IllegalArgumentException("Instructor does not exist!");
         }
@@ -699,7 +830,7 @@ public class AccountManagementService {
             throw new IllegalArgumentException("Account does not exist!");
         }
 
-        Customer customer = customerRepository.findCustomerByAccountRoleId(accountId);
+        Customer customer = customerRepository.findCustomerByAccountAccountId(accountId);
         if (customer == null) {
             throw new IllegalArgumentException("Customer does not exist!");
         }
@@ -724,7 +855,7 @@ public class AccountManagementService {
             throw new IllegalArgumentException("Account does not exist!");
         }
 
-        Customer customer = customerRepository.findCustomerByAccountRoleId(account.getAccountId());
+        Customer customer = customerRepository.findCustomerByAccountUsername(username);
         if (customer == null) {
             throw new IllegalArgumentException("Customer does not exist!");
         }
@@ -773,7 +904,7 @@ public class AccountManagementService {
             throw new IllegalArgumentException("Account does not exist!");
         }
 
-        Instructor instructor = instructorRepository.findInstructorByAccountRoleId(account.getAccountId());
+        Instructor instructor = instructorRepository.findInstructorByAccountUsername(username);
         if (instructor == null) {
             throw new IllegalArgumentException("Instructor does not exist!");
         }
@@ -783,6 +914,68 @@ public class AccountManagementService {
     }
 
     // Extra functions
+
+    /**
+     * Approve an instructor
+     * 
+     * @param username
+     * @return Instructor
+     */
+    @Transactional
+    public Instructor approveInstructor(String username) {
+        if (username == null || username.trim().isEmpty() || username.contains(" ")) {
+            throw new IllegalArgumentException("Username cannot be null, empty and spaces!");
+        }
+
+        Account account = accountRepository.findAccountByUsername(username);
+        if (account == null) {
+            throw new IllegalArgumentException("Account does not exist!");
+        }
+
+        Instructor instructor = instructorRepository.findInstructorByAccountUsername(username);
+        if (instructor == null) {
+            throw new IllegalArgumentException("Instructor does not exist!");
+        }
+
+        if (instructor.getStatus() == InstructorStatus.Active) {
+            throw new IllegalArgumentException("Instructor is already approved!");
+        }
+
+        instructor.setStatus(InstructorStatus.Active);
+        instructorRepository.save(instructor);
+        return instructor;
+    }
+
+    /**
+     * Disapprove an instructor
+     * 
+     * @param username
+     * @return Instructor
+     */
+    @Transactional
+    public Instructor disapproveInstructor(String username) {
+        if (username == null || username.trim().isEmpty() || username.contains(" ")) {
+            throw new IllegalArgumentException("Username cannot be null, empty and spaces!");
+        }
+
+        Account account = accountRepository.findAccountByUsername(username);
+        if (account == null) {
+            throw new IllegalArgumentException("Account does not exist!");
+        }
+
+        Instructor instructor = instructorRepository.findInstructorByAccountUsername(username);
+        if (instructor == null) {
+            throw new IllegalArgumentException("Instructor does not exist!");
+        }
+
+        if (instructor.getStatus() == InstructorStatus.Inactive) {
+            throw new IllegalArgumentException("Instructor is already disapproved!");
+        }
+
+        instructor.setStatus(InstructorStatus.Inactive);
+        instructorRepository.save(instructor);
+        return instructor;
+    }
 
     /**
      * Check if account has customer role
@@ -801,8 +994,13 @@ public class AccountManagementService {
             throw new IllegalArgumentException("Account does not exist!");
         }
 
-        Customer customer = customerRepository.findCustomerByAccountRoleId(accountId);
-        return customer == null;
+        Customer customer = customerRepository.findCustomerByAccountAccountId(accountId);
+
+        if (customer == null) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     /**
@@ -822,8 +1020,12 @@ public class AccountManagementService {
             throw new IllegalArgumentException("Account does not exist!");
         }
 
-        Instructor instructor = instructorRepository.findInstructorByAccountRoleId(accountId);
-        return instructor == null;
+        Instructor instructor = instructorRepository.findInstructorByAccountAccountId(accountId);
+        if (instructor == null) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     /**
@@ -843,7 +1045,11 @@ public class AccountManagementService {
             throw new IllegalArgumentException("Account does not exist!");
         }
 
-        Owner owner = ownerRepository.findOwnerByAccountRoleId(accountId);
-        return owner == null;
+        Owner owner = ownerRepository.findOwnerByAccountAccountId(accountId);
+        if (owner == null) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }

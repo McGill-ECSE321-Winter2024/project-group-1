@@ -5,30 +5,28 @@ import java.util.*;
 
 public class CustomerDto {
     private int accountRoleId;
+    private AccountDto account;
 
     public CustomerDto() {
     }
 
-    public CustomerDto(int accountRoleId) {
-        this.accountRoleId = accountRoleId;
+    public CustomerDto(Customer customer) {
+        this.accountRoleId = customer.getAccountRoleId();
+        this.account = new AccountDto(customer.getAccount());
     }
 
     public int getAccountRoleId() {
         return accountRoleId;
     }
 
-    public void setAccountRoleId(int accountRoleId) {
-        this.accountRoleId = accountRoleId;
-    }
-
-    public static CustomerDto convertToDto(Customer customer) {
-        return new CustomerDto(customer.getAccountRoleId());
+    public AccountDto getAccount() {
+        return account;
     }
 
     public static List<CustomerDto> convertToDto(List<Customer> customers) {
         List<CustomerDto> customerDto = new ArrayList<CustomerDto>(customers.size());
         for (Customer customer : customers) {
-            customerDto.add(CustomerDto.convertToDto(customer));
+            customerDto.add(new CustomerDto(customer));
         }
         return customerDto;
     }

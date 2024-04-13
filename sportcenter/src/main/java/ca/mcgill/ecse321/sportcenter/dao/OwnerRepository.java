@@ -14,4 +14,7 @@ public interface OwnerRepository extends CrudRepository<Owner, Integer> {
 
     public Owner findOwnerByAccountUsername(String username);
 
+    public Owner findOwnerByAccountAccountId(int accountId); // AccountId is unique
+
+
 }

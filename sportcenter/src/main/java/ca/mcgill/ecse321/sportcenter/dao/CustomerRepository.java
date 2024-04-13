@@ -16,4 +16,5 @@ public interface CustomerRepository extends CrudRepository<Customer, Integer> {
 
     public Customer findCustomerByAccountAccountId(int accountId); // AccountId is unique
 
+
 }

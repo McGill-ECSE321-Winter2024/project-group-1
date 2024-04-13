@@ -1,0 +1,313 @@
+/* CONTAINER SECTION */
+#app {
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+    margin-top: 30px;
+    align-content: center;
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+}
+
+#mainContainer {
+    font-family: 'Avenir', Helvetica, Arial sans-serif;
+    margin-top: 60px;
+    margin-bottom: 60px;
+    border-radius: 30px;
+    padding: 40px;
+    box-shadow: 0 100px 100px 0 rgba(57, 92, 48, 0.4);
+    color: #2c3e50;
+    background: #e4e3e394;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    max-height: fit-content;
+    text-align: center;
+}
+
+#verticalContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#horizontalContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#profilePic {
+    border-radius: 50%;
+    margin-inline: 10px;
+    align-self: center;
+}
+
+/* INPUT SECTION */
+#inputBox {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    border-radius: 30px;
+    text-align: center;
+}
+
+#inputBox:hover {
+    outline: none;
+    border: 1px solid #609349;
+    background-color: #edededf3;
+}
+
+#inputBox:focus {
+    outline: none;
+    border: 3px solid #609349;
+}
+
+#datePickerInput {
+    width: fit-content;
+    height: fit-content;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    border-radius: 30px;
+    text-align: center;
+    margin-inline: 20px;
+}
+
+#datePickerInput:hover {
+    outline: none;
+    border: 1px solid #609349;
+    background-color: #edededf3;
+}
+
+#datePickerInput:focus {
+    outline: none;
+    border: 2px solid #609349;
+}
+
+/* BUTTON SECTION */
+#mainButton {
+    background-color: #3f5b0b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: large;
+    width: 100%;
+}
+
+#mainButton:hover {
+    background-color: #6D8517;
+}
+
+#subButton {
+    background-color: #6D8517;
+    color: rgb(255, 255, 255);
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: large;
+    /* width: 100%; */
+}
+
+#subButton:hover {
+    background-color: #d1b834;
+}
+
+#menuButton {
+    background-color: #609349;
+    color: rgb(255, 255, 255);
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: large;
+}
+
+#menuButton:hover {
+    background-color: #2ed433;
+}
+
+#destroyButton {
+    background-color: #d00000;
+    color: rgb(255, 255, 255);
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: large;
+    width: fit-content;
+}
+
+#destroyButton:hover {
+    background-color: #ff0000;
+}
+
+/* DEFAULT SECTION */
+::placeholder {
+    color: #2c3e50;
+    opacity: 0.5;
+}
+
+h1 {
+    font-size: 2.5em;
+    font-weight: bold;
+}
+
+h2 {
+    font-size: 2em;
+    font-style: italic;
+    margin-top: 20px;
+}
+
+#currentInformation {
+    margin-inline: 10px;
+    vertical-align: center;
+    text-align: center;
+    font-size: 20px;
+}
+
+/* TABLE SECTION */
+table {
+    background-color: #3f5b0b;
+    color: rgb(255, 255, 255);
+    font-family: Arial, Helvetica, sans-serif;
+    width: 100%;
+    align-self: center;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+
+td,
+th {
+    border: 1px solid #000000;
+    padding: 10px;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #a5a5a5;
+    /* Set even row color */
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #c2c2c2;
+    /* Set odd row color */
+}
+
+tbody tr:hover {
+    background-color: #2a4a37;
+    color: rgb(255, 255, 255);
+}
+
+tbody {
+    color: #000000;
+}
+
+/* FABIAN STUFF */
+.textDate {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.textStart {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.textEnd {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.propose-activity,
+.schedule-activity {
+    flex: 1;
+    padding: 20px;
+    /* Add some padding */
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    display: inline-block;
+    margin: 0 10px;
+}
+
+a {
+    color: white;
+}
+
+.popup {
+    width: 100;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #a4e0bb;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    margin-top: 20px;
+    /* Adjust gap between table and popup */
+    min-width: 260px;
+    min-height: 200px;
+    width: fit-content;
+    height: fit-content;
+}
+
+.rounded-button {
+    border-radius: 50%;
+    border: none;
+    background-color: #ffffff;
+    padding: 5px;
+    margin: 5px;
+}
+
+.rounded-button img {
+    border-radius: 50%;
+}
