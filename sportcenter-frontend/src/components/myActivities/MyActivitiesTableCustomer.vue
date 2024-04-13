@@ -1,8 +1,8 @@
 <template>
   <div class="MyActivitiesTableCustomer" id="mainContainer">
     <h1>Activities I'm registered for</h1>
-    <br>
-    
+    <br />
+
     <table id="activityTable" align="center" width="700">
       <thead>
         <tr>
@@ -12,29 +12,38 @@
           <th width="100">Capacity</th>
         </tr>
       </thead>
-        <tbody id="myActivities">
-          <template v-if="registrations.length === 0">
-            <tr>
-              <td colspan="4">No activities</td>
-            </tr>
-          </template>
-          <template v-else>
-            <tr
-              v-for="(registrations, index) in registrations"
-              :key="index"
-              @click="showActivityDetails(activity)"
-            >
-              <td>{{ registrations.scheduledActivity.activity.name }}</td>
-              <td>
-                {{ registrations.scheduledActivity.activity.subCategory }}
-              </td>
-              <td>{{ registrations.scheduledActivity.date }}</td>
-              <td>{{ registrations.scheduledActivity.capacity }}</td>
-            </tr>
-          </template>
-        </tbody>
-      </table>
-    </VBox>
+      <tbody id="myActivities">
+        <template v-if="registrations.length === 0">
+          <tr>
+            <td colspan="5">No activities</td>
+          </tr>
+        </template>
+        <template v-else>
+          <tr
+            v-for="(registrations, index) in registrations"
+            :key="index"
+            @click="showActivityDetails(activity)"
+          >
+            <td>{{ registrations.scheduledActivity.activity.name }}</td>
+            <td>
+              {{ registrations.scheduledActivity.activity.subCategory }}
+            </td>
+            <td>{{ registrations.scheduledActivity.date }}</td>
+            <td>{{ registrations.scheduledActivity.capacity }}</td>
+            <td>
+              <VBox id="verticalContainer">
+                <button
+                  id="cancelRegistrationButton"
+                  @click="cancelRegistration(registrations)"
+                >
+                  Cancel Registration
+                </button>
+              </VBox>
+            </td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
 
     <ViewActivity
       v-if="selectedActivity"
@@ -106,6 +115,15 @@ export default {
         })
         .catch((error) => {
           console.error("Error fetching scheduled activities:", error);
+        });
+    },
+
+    cancelRegistration(registrations) {
+      axios
+        .delete("/registration/" + registrations.id)
+        .then(() => {})
+        .catch((error) => {
+          console.error("Error deleting registration:", error);
         });
     },
     // fetchScheduledActivities() {

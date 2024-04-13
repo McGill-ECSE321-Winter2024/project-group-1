@@ -435,7 +435,7 @@ public class AccountManagementService {
             throw new IllegalArgumentException("Account does not exist!");
         }
 
-        Instructor instructor = instructorRepository.findInstructorByAccountRoleId(account.getAccountId());
+        Instructor instructor = instructorRepository.findInstructorByAccountUsername(username);
         if (instructor == null) {
             throw new IllegalArgumentException("Instructor does not exist!");
         }
