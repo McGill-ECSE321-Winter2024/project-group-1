@@ -657,7 +657,26 @@ public class AccountManagementService {
             throw new IllegalArgumentException("Account does not exist");
         }
 
-        accountRepository.deleteById(accountId);
+        //now check if this account has anything else
+
+        Owner owner = ownerRepository.findOwnerByAccountAccountId(accountId);
+        if (owner != null) {
+            throw new IllegalArgumentException("Owner cannot be removed");
+        }
+
+        Customer customer = customerRepository.findCustomerByAccountAccountId(accountId);
+        if (customer != null) {
+            customerRepository.delete(customer);
+        }
+
+        Instructor instructor = instructorRepository.findInstructorByAccountAccountId(accountId);
+        if (instructor != null) {
+            instructorRepository.delete(instructor);
+        }
+
+    
+
+        accountRepository.delete(account);
         return true;
     }
 
