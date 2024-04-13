@@ -6,13 +6,6 @@
         <h2>Put yourself first<br>{{ getTime() }}</h2>
       </VBox id="verticalContainer">
       <img src="./assets/gym-icon.jpg" alt="Logo" contain height="140px" width="140px" style="border-radius: 50%;" @click="goHome()"></img>
-      <VBox v-if="getDebuggingMode()" style="margin-left: 15px;">
-        <h3 style="font-style: italic;">Debugging</h3>
-        <p>{{ getAccountType() }}</p>
-        <p>{{ getUsername() }}</p>
-        <p>{{ getLoggedIn() }}</p>
-        <p>{{ getAccountId() }}</p>
-      </VBox>
     </HBox>
     <br>
     <HBox v-if="this.getLoggedIn() == 'true'">

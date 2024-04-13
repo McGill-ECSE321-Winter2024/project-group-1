@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import Home from '@/components/Home.vue'
 import Guest from '@/components/Guest.vue'
 
 import Authentification from '@/components/authentification/Authentification.vue'
@@ -37,11 +36,6 @@ export default new Router({
       path: '/',
       name: 'Guest',
       component: Guest
-    },
-    {
-      path: '/app/home',
-      name: 'Home',
-      component: Home
     },
     {
       path: '/app/auth',

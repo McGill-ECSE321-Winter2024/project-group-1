@@ -18,7 +18,7 @@
       <input
         id="inputBox"
         type="text"
-        placeholder="Subcategory"
+        placeholder="Subcategory - Cardio, Strength, Stretch"
         v-model="subcategory"
       />
       <!--<button id="mainButton" @click="created()">GetActivities</button>-->
