@@ -46,7 +46,14 @@ Our team of developers have been put in charge of creating a fully functional we
 <br>
 
 > ### Deliverable 3
-> *Released later in the development process*
+**The main goal of this deliverable is to implement the frontend services to the application. This means involving the use of frameworks and coding in the 3 languages of frontend development.**
+* Creation of the frontend folder and files. This means installing the necessary dependencies.
+* Calling the backend services to perform the requirements for the frontend.
+* Applying white-box testing to check for any problems during runtime.
+* Understanding how the application communicates with the different ports and servers.
+* Choosing an acceptable colour and styling pattern for the application.
+* Ensuring navigability and ease for the user, making the application easier.
+<br>
 
 ***
 
