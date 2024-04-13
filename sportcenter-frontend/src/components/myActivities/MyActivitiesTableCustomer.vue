@@ -94,11 +94,6 @@ export default {
     }
   },
 
-  // mounted() {
-  //   // Call method to fetch scheduled activities when the component is mounted
-  //   this.fetchScheduledActivities();
-  // },
-
   methods: {
     fetchSchedulesActivities() {
       axios
