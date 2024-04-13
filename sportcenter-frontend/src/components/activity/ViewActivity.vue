@@ -1,11 +1,11 @@
 <template>
-  <div class="popup" id="mainContainer" style="margin-top: 150px">
+  <div class="popup" id="mainContainer" style="margin-top: 150px;">
     <div class="popup-content">
       <VBox id="verticalContainer">
-        <h2>{{ activity.name }}</h2> 
+        <h2>{{ activity.activity.name }}</h2> 
 
         <p>
-          Category: {{ activity.category }}<br />
+          Category: {{ activity.activity.subCategory }}<br />
           Date: {{ activity.date }}<br />
           Capacity: {{ activity.capacity }}
         </p>
@@ -25,6 +25,17 @@
 </template>
 
 <script>
+import axios from 'axios';
+import config from '../../../config';
+
+const frontendUrl = "http://" + config.dev.host + ":" + config.dev.port;
+const backendUrl =
+  "http://" + config.dev.backendHost + ":" + config.dev.backendPort;
+const AXIOS = axios.create({
+  baseURL: backendUrl,
+  headers: { "Access-Control-Allow-Origin": frontendUrl },
+});
+
 export default {
   props: ["activity"],
   methods: {
@@ -32,20 +43,19 @@ export default {
       return localStorage.getItem('accountId'); //Needs to be changed
     },
     async registerActivity(activity) {
-      activityid = activity.id;
-      customerId = this.getAccountId();
       try {
-        const response = await this.$axios.post(
-          "/registerActivity/" + customerId + "/" + activityid
-        );
-        console.log(response.data);
-        this.close();
+        const customerID = await AXIOS.get('/getCustomerAccountRoleIdByUsername/' + this.getUsername());
+        const scheduledActivityID = activity.scheduledActivityId;
+        await AXIOS.post('/register/' + customerID.data + '/' + scheduledActivityID);
       } catch (error) {
-        console.error("Error registering activity", error);
+        console.error(error);
       }
     },
     close() {
       this.$emit("close");
+    },
+    getAccountId() {
+      return localStorage.getItem('accountId');
     },
     getAccountType() {
       return localStorage.getItem('accountType');
