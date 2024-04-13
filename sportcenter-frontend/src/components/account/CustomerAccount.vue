@@ -1,6 +1,6 @@
 <template>
     <div id="mainContainer">
-        <h1>My customer account</h1>
+        <h1>My Customer Account</h1>
         <VBox id="verticalContainer">
             <p id="currentInformation">
                 Username: {{ getUsername() }} <br>
@@ -38,6 +38,15 @@
                 <!--button id="destroyButton" @click="deleteAccount()">Delete account</button-->
             </HBox>
         </VBox>
+
+        <div style="margin-bottom: 40px;" id="mainContainer">
+            <p style="margin: 10px; font-weight: bold;" id="currentInformation">Delete Account</p> 
+            <p style="margin: 10px; size: 10;" id="currentInformation">Enter your Password to Confirm</p>
+            <input id="inputBox" type="text" placeholder="Enter Password for Deletion" v-model="passwordDeletion"></input>
+            <button id="destroyButton" @click="deleteCustomer()">Delete Account</button>
+
+        </div>
+
     </div>
 </template>
 
@@ -65,7 +74,8 @@ export default {
             oldPassword: null,
             newPassword: null,
             instDescription: null,
-            instPictURL: null
+            instPictURL: null,
+            passwordDeletion: ''
         }
     },
     methods: {
@@ -193,6 +203,58 @@ export default {
             this.$router.push('/app/account/owner-account');
 
         },
+
+
+
+        async deleteCustomer() {
+
+          try {
+              const response = await AXIOS.get('/getCustomerByUsername/' + this.getUsername() + '/');
+              
+              if (response.status == 200) {
+              
+
+                  if (response.data.account.password == this.passwordDeletion) {
+
+                      try {
+                          
+                        // console.log(response.data.password);
+
+                          const responseDelete = await AXIOS.delete('/deleteCustomerByUsername/' + this.getUsername()+ '/');
+
+                          if (responseDelete.status == 200) {
+
+                              this.setLoggedIn(false);
+                              this.setAccountType('Guest');
+                              this.setUsername('');
+                              this.setAccountId('');
+                              this.$router.push('/app/auth/login');
+
+                          }
+
+                      } catch(error) {
+                          console.error('deletion went wrong', error.message);
+                          return;
+                      }
+                  } 
+              }
+              
+
+          } catch(error) {
+              console.error('Cannot check password', error.message);
+              return;
+          }
+
+
+
+
+},
+
+
+
+
+
+
         deleteAccount() {
             alert("Delete account button clicked");
             console.log("Delete account button clicked");

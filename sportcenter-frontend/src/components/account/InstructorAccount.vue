@@ -14,12 +14,14 @@
             </p> 
             
             <VBox id="verticalContainer">
+                <p style="margin: 10px; font-weight: bold;" id="currentInformation">Change Username</p>
                 <input id="inputBox" type="text" placeholder="New username" v-model="newUsername"></input>
                 <button id="mainButton" @click="updateUsername()" style="margin-left: 10px; align-self: center;"><b>Update Username</b></button>
             </VBox>
             <br>
 
             <VBox id="verticalContainer">
+                <p style="margin: 10px; font-weight: bold;" id="currentInformation">Change Password</p>
                 <input id="inputBox" type="text" placeholder="Old password" v-model="oldPassword"></input>
                 <input id="inputBox" type="text" placeholder="New password" v-model="newPassword"></input>
                 <button id="mainButton" @click="updatePassword()" style="margin-left: 10px; align-self: center;"><b>Update</b></button>
@@ -27,6 +29,7 @@
             <br>
 
             <VBox id="verticalContainer">
+                <p style="margin: 10px; font-weight: bold;" id="currentInformation">Update Description and Picture</p>
                 <input id="inputBox" type="text" placeholder="New description" v-model="description"></input>
                 <p style="margin: 10px; font-weight: bold;" id="currentInformation">Choose a Profile Picture</p>
                 
@@ -56,7 +59,23 @@
                 <!--button id="destroyButton" @click="deleteAccount()">Delete account</button-->
             </HBox>
         </VBox>
+
+        <div style="margin: 10px;" id="mainContainer">
+            <p style="margin: 10px; font-weight: bold;" id="currentInformation">Delete Instructor Account</p> 
+            <p style="margin: 10px; size: 10;" id="currentInformation">Enter your Password to Confirm</p>
+            <input id="inputBox" type="text" placeholder="Enter Password for Deletion" v-model="passwordDeletion"></input>
+            <button id="destroyButton" @click="deleteInstructor()">Delete Instructor Account</button>
+
+        </div>
+
+        
     </div>
+
+
+
+
+
+
 </template>
 
 <script>
@@ -96,7 +115,9 @@ export default {
             newPassword: null,
             username3: null,
             description: null,
-            picture: null
+            picture: null,
+            passwordDeletion: ''
+
         }
     },
     async mounted() {
@@ -268,6 +289,50 @@ export default {
                 console.error('Error verifying', error.message);
                 return;
             }          
+
+        },
+
+        async deleteInstructor() {
+
+            try {
+                const response = await AXIOS.get('/getInstructorByUsername/' + this.getUsername() + '/');
+                
+                if (response.status == 200) {
+                
+
+                    if (response.data.account.password == this.passwordDeletion) {
+
+                        try {
+                            
+                           // console.log(response.data.password);
+
+                            const responseDelete = await AXIOS.delete('/deleteInstructorByUsername/' + this.getUsername()+ '/');
+
+                            if (responseDelete.status == 200) {
+
+                                this.setLoggedIn(false);
+                                this.setAccountType('Guest');
+                                this.setUsername('');
+                                this.setAccountId('');
+                                this.$router.push('/app/auth/login');
+
+                            }
+
+                        } catch(error) {
+                            console.error('deletion went wrong', error.message);
+                            return;
+                        }
+                    } 
+                }
+                
+
+            } catch(error) {
+                console.error('Cannot check password', error.message);
+                return;
+            }
+
+
+
 
         },
 
