@@ -33,9 +33,7 @@
 
         </tbody>
       </table>
-      
       <ViewActivity v-if="selectedActivity" :activity="selectedActivity" @close="closePopup" style="align-self: center;"/>
-      
       <br>
     </div>
 
@@ -78,14 +76,10 @@ const AXIOS = axios.create({
 export default {
   data() {
     return {
-      
       activities: [],
       filteredActivityData: [],
       selectedActivity: null,
       search:'',
-
-
-
     };
   },
 
@@ -97,16 +91,11 @@ export default {
       this.activities = response.data;
       }
       catch (error) {
-
         console.error('Error fetching scheduled activities:', error);
       }
-        
     },
 
-
-  methods: {
-
-    
+  methods: {    
     async updateActivity() {
       const updatedActivity = {
         name: this.name,
@@ -147,8 +136,6 @@ export default {
     closePopup() {
       this.selectedActivity = null;
     },
-
-
   },
 
   computed: {
