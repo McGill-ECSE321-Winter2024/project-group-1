@@ -122,7 +122,6 @@ export default {
 
         },
 
-
         async isAnInstructor() {
 
           try {
@@ -169,8 +168,6 @@ export default {
             this.oldPassword = null;
             this.newPassword = null;
         },
-
-
 
     setAccountId(id) {
       localStorage.setItem('id', id);
@@ -225,8 +222,6 @@ export default {
     created() {
       this.checkRoles();
     }
-
-
 }
 </script>
 

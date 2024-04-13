@@ -91,12 +91,9 @@ export default {
       this.activities = response.data;
       }
       catch (error) {
-
         console.error('Error fetching scheduled activities:', error);
       }
-        
     },
-
 
   methods: {    
     async updateActivity() {
@@ -139,8 +136,6 @@ export default {
     closePopup() {
       this.selectedActivity = null;
     },
-
-
   },
 
   computed: {

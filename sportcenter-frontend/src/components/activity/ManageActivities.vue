@@ -28,12 +28,8 @@
                         </td>
                     </tr>
                     </template>
-                </tbody>
-                   
+                </tbody>  
             </table>
-                
-
- 
         </Vbox>
     </div>
 </template>

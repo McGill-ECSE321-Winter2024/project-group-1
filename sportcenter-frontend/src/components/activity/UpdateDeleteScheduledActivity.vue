@@ -30,12 +30,9 @@
               <td>{{ activity.capacity }}</td>
             </tr>
           </template>
-
         </tbody>
       </table>
-      
       <ViewActivity v-if="selectedActivity" :activity="selectedActivity" @close="closePopup" style="align-self: center;"/>
-      
       <br>
     </div>
 

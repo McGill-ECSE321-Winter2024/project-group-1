@@ -243,7 +243,6 @@ export default {
                                 this.setUsername('');
                                 this.setAccountId('');
                                 this.$router.push('/app/auth/login');
-
                             }
 
                         } catch(error) {
@@ -252,8 +251,6 @@ export default {
                         }
                     } 
                 }
-                
-
             } catch(error) {
                 console.error('Cannot check password', error.message);
                 return;
