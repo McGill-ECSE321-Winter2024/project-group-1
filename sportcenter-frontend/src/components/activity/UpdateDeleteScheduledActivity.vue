@@ -91,15 +91,12 @@ export default {
     };
   },
 
-
   async created() {
      try {
-
       const response = await AXIOS.get('/scheduledActivities')
       this.scheduledActivities = response.data
       }
       catch (error) {
-
         console.error('Error fetching scheduled activities:', error);
       }
         

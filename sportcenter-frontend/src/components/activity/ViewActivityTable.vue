@@ -27,9 +27,7 @@
         </template>
       </tbody>
     </table>
-    
     <ViewActivity v-if="selectedActivity" :activity="selectedActivity" @close="closePopup" style="align-self: center;"/>
-    
     <br>
   </div>
 </template>
@@ -59,8 +57,6 @@ export default {
       search:'',
     };
   },
-
-
   async created() {
     try {
       const response = await AXIOS.get('/scheduledActivities');
